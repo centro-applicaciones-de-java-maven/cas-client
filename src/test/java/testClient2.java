@@ -7,15 +7,19 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import static javafx.application.Application.launch;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.stage.StageStyle;
 import org.guanzon.appdriver.base.GRider;
+
 import org.guanzon.cas.client.controller.ClientMasterTransactionCompanyController;
 import org.guanzon.cas.client.controller.ClientMasterParameterController;
 import org.guanzon.cas.client.controller.ClientMasterTransactionIndividualController;
+import org.guanzon.cas.client.controller.GClientsController;
 import org.guanzon.cas.client.controller.NewCustomerController;
 
-public class testClient extends Application {
+public class testClient2 extends Application {
 
     GRider instance;
 
@@ -29,6 +33,7 @@ public class testClient extends Application {
     @Override
     public void start(Stage primaryStage) {
         try {
+            //INITIALIZE DATA
             String path;
             if (System.getProperty("os.name").toLowerCase().contains("win")) {
                 path = "D:/GGC_Maven_Systems";
@@ -46,8 +51,11 @@ public class testClient extends Application {
             System.out.println("sBranch code = " + instance.getBranchCode());
             System.out.println("Connected");
             System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/");
+
             
-            //Buttons for different actions
+            
+            
+            //HARD CODED BUTTONS FOR TESTING
             Button openDialogButton = new Button("ClientMasterParameter");
             openDialogButton.setOnAction(event -> openDialog(primaryStage, "ClientMasterParameter"));
 
@@ -73,7 +81,6 @@ public class testClient extends Application {
             primaryStage.setScene(new Scene(mainPane, 400, 300));
             primaryStage.show();
 
-
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -88,44 +95,51 @@ public class testClient extends Application {
                 case "ClientMasterParameter":
                     num = 0;
                     lsfxml = "ClientMasterParameter.fxml";
-                    ((ClientMasterParameterController) classArray[num]).setGRider(instance);
                     break;
                 case "ClientMasterTransactionCompany":
                     num = 1;
                     lsfxml = "ClientMasterTransactionCompany.fxml";
-                    ((ClientMasterTransactionCompanyController) classArray[num]).setGRider(instance);
                     break;
                 case "ClientMasterTransactionIndividual":
                     num = 2;
                     lsfxml = "ClientMasterTransactionIndividual.fxml";
-                    ((ClientMasterTransactionIndividualController) classArray[num]).setGRider(instance);
                     break;
                 case "NewCustomer":
                     num = 3;
                     lsfxml = "NewCustomer.fxml";
-                    ((NewCustomerController) classArray[num]).setGRider(instance);
                     break;
             }
 
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/views/" + lsfxml));
-            loader.setController(classArray[num]);
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/GClients.fxml"));
             Pane dialogPane = loader.load();
+            GClientsController mainController = loader.getController();
+            mainController.loadContent("/org/guanzon/cas/views/" + lsfxml, num, instance);
+
+            // Set up the scene
             Scene dialogScene = new Scene(dialogPane);
 
+            // Apply stylesheets
             String cssPath = getClass().getResource("/org/guanzon/cas/css/MainPanelStyle.css").toExternalForm();
-            String cssPath2 = getClass().getResource("/org/guanzon/cas/css/StyleSheet.css").toExternalForm();
+            String cssPath2 = getClass().getResource("/org/guanzon/cas/css/Tables.css").toExternalForm();
+            String cssPath3 = getClass().getResource("/org/guanzon/cas/css/StyleSheet.css").toExternalForm();
             dialogScene.getStylesheets().add(cssPath);
             dialogScene.getStylesheets().add(cssPath2);
+            dialogScene.getStylesheets().add(cssPath3);
 
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle(lsfxml);
+            // Set up the stage
+            Stage dialogStage = new Stage(StageStyle.UNDECORATED); // Headless dialog
+            dialogStage.setTitle("GClients Window");
             dialogStage.setScene(dialogScene);
+
+            // Set custom dimensions
+            dialogStage.setWidth(1400);  // Set desired width
+            dialogStage.setHeight(900); // Set desired height
 
             dialogStage.initOwner(ownerStage); // Tie dialog to main window
             dialogStage.initModality(Modality.NONE); // Non-blocking
             dialogStage.setAlwaysOnTop(true); // Ensure dialog stays on top
-
             dialogStage.show();
+
         } catch (IOException ex) {
             ex.printStackTrace();
         }
