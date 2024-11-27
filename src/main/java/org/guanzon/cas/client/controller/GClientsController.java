@@ -29,13 +29,10 @@ import org.guanzon.appdriver.base.GRider;
  */
 public class GClientsController implements Initializable {
 
-
     private double xOffset = 0;
     private double yOffset = 0;
-
     private static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-    
     @FXML
     private AnchorPane draggablePane;
     @FXML
@@ -50,7 +47,6 @@ public class GClientsController implements Initializable {
         new ClientMasterTransactionIndividualController(),
         new NewCustomerController()
     };
-
     /**
      * Initializes the controller class.
      */
@@ -58,13 +54,11 @@ public class GClientsController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         draggablePane.setOnMousePressed(this::handleMousePressed);
         draggablePane.setOnMouseDragged(this::handleMouseDragged);
-
-        // Close button functionality
         btnClose.setOnAction(event -> {
             Stage stage = (Stage) btnClose.getScene().getWindow();
             stage.close();
         });
-        // TODO
+        
     }
 
     private void handleMousePressed(MouseEvent event) {
@@ -101,8 +95,7 @@ public class GClientsController implements Initializable {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             loader.setController(classArray[num]);
             Parent childContent = loader.load();
-            ClientMasterParameterController controller = new ClientMasterParameterController();
-            loader.setController(controller);
+            loader.setController(classArray[num]);
 
             placeholder.getChildren().clear();
             placeholder.getChildren().add(childContent);

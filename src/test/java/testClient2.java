@@ -41,7 +41,6 @@ public class testClient2 extends Application {
                 path = "/srv/GGC_Maven_Systems";
             }
             System.setProperty("sys.default.path.config", path);
-
             instance = new GRider("gRider");
 
             if (!instance.logUser("gRider", "M001000001")) {
@@ -52,9 +51,6 @@ public class testClient2 extends Application {
             System.out.println("Connected");
             System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/");
 
-            
-            
-            
             //HARD CODED BUTTONS FOR TESTING
             Button openDialogButton = new Button("ClientMasterParameter");
             openDialogButton.setOnAction(event -> openDialog(primaryStage, "ClientMasterParameter"));
@@ -77,7 +73,7 @@ public class testClient2 extends Application {
             showMessageButton.setTranslateY(0);
             closeAppButton.setTranslateY(50);
 
-            primaryStage.setTitle("Main Window");
+            primaryStage.setTitle("Main Window ( Test )");
             primaryStage.setScene(new Scene(mainPane, 400, 300));
             primaryStage.show();
 
@@ -87,50 +83,47 @@ public class testClient2 extends Application {
     }
 
     private void openDialog(Stage ownerStage, String module_name) {
-
         try {
-            int num = 0;
+            int lnNum = 0;
             String lsfxml = "";
             switch (module_name) {
                 case "ClientMasterParameter":
-                    num = 0;
+                    lnNum = 0;
                     lsfxml = "ClientMasterParameter.fxml";
                     break;
                 case "ClientMasterTransactionCompany":
-                    num = 1;
+                    lnNum = 1;
                     lsfxml = "ClientMasterTransactionCompany.fxml";
                     break;
                 case "ClientMasterTransactionIndividual":
-                    num = 2;
+                    lnNum = 2;
                     lsfxml = "ClientMasterTransactionIndividual.fxml";
                     break;
                 case "NewCustomer":
-                    num = 3;
+                    lnNum = 3;
                     lsfxml = "NewCustomer.fxml";
                     break;
             }
-
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/GClients.fxml"));
             Pane dialogPane = loader.load();
             GClientsController mainController = loader.getController();
-            mainController.loadContent("/org/guanzon/cas/views/" + lsfxml, num, instance);
+            mainController.loadContent("/org/guanzon/cas/client/views/" + lsfxml, lnNum, instance);
 
-            // Set up the scene
             Scene dialogScene = new Scene(dialogPane);
-
+            
             // Apply stylesheets
-            String cssPath = getClass().getResource("/org/guanzon/cas/css/MainPanelStyle.css").toExternalForm();
-            String cssPath2 = getClass().getResource("/org/guanzon/cas/css/Tables.css").toExternalForm();
-            String cssPath3 = getClass().getResource("/org/guanzon/cas/css/StyleSheet.css").toExternalForm();
-            dialogScene.getStylesheets().add(cssPath);
-            dialogScene.getStylesheets().add(cssPath2);
-            dialogScene.getStylesheets().add(cssPath3);
+            String[] cssFiles = {"/org/guanzon/cas/css/MainPanelStyle.css", "/org/guanzon/cas/css/Tables.css", "/org/guanzon/cas/css/StyleSheet.css"};
+            for (String cssFile : cssFiles) {
+                String cssPath = getClass().getResource(cssFile).toExternalForm();
+                dialogScene.getStylesheets().add(cssPath);
+            }
 
             // Set up the stage
             Stage dialogStage = new Stage(StageStyle.UNDECORATED); // Headless dialog
             dialogStage.setTitle("GClients Window");
             dialogStage.setScene(dialogScene);
-
+            
             // Set custom dimensions
             dialogStage.setWidth(1400);  // Set desired width
             dialogStage.setHeight(900); // Set desired height
