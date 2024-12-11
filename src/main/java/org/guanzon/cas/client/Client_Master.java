@@ -1,142 +1,39 @@
 package org.guanzon.cas.client;
 
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
-import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
-import org.guanzon.appdriver.iface.GRecord;
 import org.guanzon.cas.client.model.Model_Client_Master;
 import org.json.simple.JSONObject;
 
-public class Client_Master implements GRecord{
-    GRider poGRider;
-    boolean pbWthParent;
-    String psRecdStat;
+public class Client_Master  extends Parameter{
+    Model_Client_Master poModel;
     String psClientTp;
 
-    Model_Client_Master poModel;
-    JSONObject poJSON;
-
-    public Client_Master(GRider appDriver, boolean withParent) {
-        poGRider = appDriver;
-        pbWthParent = withParent;
-
-        psClientTp = "10";
-        psRecdStat = Logical.YES;
-        poModel = new Model_Client_Master(appDriver);
-    }
-    
-    public void setClientType(String clientType){
+    public void setClientType(String clientType) {
         psClientTp = clientType;
     }
-
+    
     @Override
-    public void setRecordStatus(String recordStatus) {
-        psRecdStat = recordStatus;
-    }
-
-    @Override
-    public int getEditMode() {
-        return poModel.getEditMode();
-    }
-
-    @Override
-    public JSONObject newRecord() {        
-        return poModel.newRecord();
-    }
-
-    @Override
-    public JSONObject openRecord(String barangayId) {
-        return poModel.openRecord(barangayId);
-    }
-
-    @Override
-    public JSONObject updateRecord() {
-        return poModel.updateRecord();
-    }
-
-    @Override
-    public JSONObject saveRecord() {
-        if (!pbWthParent) {
-            poGRider.beginTrans();
-        }
-
-        poJSON = poModel.saveRecord();
-
-        if ("success".equals((String) poJSON.get("result"))) {
-            if (!pbWthParent) {
-                poGRider.commitTrans();
-            }
-        } else {
-            if (!pbWthParent) {
-                poGRider.rollbackTrans();
-            }
-        }
-
-        return poJSON;
-    }
-
-    @Override
-    public JSONObject deleteRecord() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public JSONObject deactivateRecord() {
-        poJSON = new JSONObject();
+    public void initialize() {
+        psRecdStat = Logical.YES;
         
-        if (poModel.getEditMode() != EditMode.READY ||
-            poModel.getEditMode() != EditMode.UPDATE){
+        poModel = new Model_Client_Master();
+        poModel.setApplicationDriver(poGRider);
+        poModel.setXML("Model_Client_Master");
+        poModel.setTableName("Client_Master");
+        poModel.initialize();
         
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-        }
-        
-        
-        if (poModel.getEditMode() == EditMode.READY) {
-            poJSON = updateRecord();
-            if ("error".equals((String) poJSON.get("result"))) return poJSON;
-        } 
-
-        poJSON = poModel.setRecordStatus("0");
-
-        if ("error".equals((String) poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        return poModel.saveRecord();
+        psClientTp = "10";
     }
-
+        
     @Override
-    public JSONObject activateRecord() {
-        poJSON = new JSONObject();
-        
-        if (poModel.getEditMode() != EditMode.READY ||
-            poModel.getEditMode() != EditMode.UPDATE){
-        
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-        }
-        
-        
-        if (poModel.getEditMode() == EditMode.READY) {
-            poJSON = updateRecord();
-            if ("error".equals((String) poJSON.get("result"))) return poJSON;
-        } 
-
-        poJSON = poModel.setRecordStatus("1");
-
-        if ("error".equals((String) poJSON.get("result"))) {
-            return poJSON;
-        }
-
-        return poModel.saveRecord();
+    public Model_Client_Master getModel() {
+        return poModel;
     }
-
+    
     @Override
     public JSONObject searchRecord(String value, boolean byCode) {
         poJSON = ShowDialogFX.Search(poGRider,
@@ -144,7 +41,26 @@ public class Client_Master implements GRecord{
                 value,
                 "ID»Name»Birthday»Birth Place",
                 "sClientID»sCompnyNm»dBirthDte»xBirthPlc",
-                "a.sBrgyIDxx»a.sCompnyNm»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName))",
+                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sClientID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+    
+    public JSONObject searchRecordWithClientType(String value, boolean byCode) {
+        poJSON = ShowDialogFX.Search(poGRider,
+                getSQ_Browse(),
+                value,
+                "ID»Name»Birthday»Birth Place»Client Type",
+                "sClientID»sCompnyNm»dBirthDte»xBirthPlc»xClientTp",
+                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))»IF(a.cClientTp = 0, 'Individual', 'Corporate')",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -156,14 +72,10 @@ public class Client_Master implements GRecord{
             return poJSON;
         }
     }
-
-    @Override
-    public Model_Client_Master getModel() {
-        return poModel;
-    }   
     
-    private String getSQ_Browse(){
-        String lsSQL = "";
+    @Override
+    public String getSQ_Browse(){
+        String lsSQL;
         String lsRecdStat = "";
         String lsClientTp = "";
 
@@ -212,7 +124,9 @@ public class Client_Master implements GRecord{
                     ", a.cSPClient" +
                     ", a.cCPClient" +
                     ", a.cRecdStat" + 
-                    ", CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName))) xBirthPlc" +
+                    ", TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm)) xFullName" +
+                    ", CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode))) xBirthPlc" +
+                    ", IF(a.cClientTp = '0', 'Individual', 'Corporate') xClientTp" +
                 " FROM Client_Master a" +
                     " LEFT JOIN TownCity b ON a.sBirthPlc = b.sTownIDxx" +
                     " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx";

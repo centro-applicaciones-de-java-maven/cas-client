@@ -1,298 +1,65 @@
 package org.guanzon.cas.client.model;
 
-import java.lang.reflect.Method;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
-import javax.sql.rowset.CachedRowSet;
-import org.guanzon.appdriver.base.GRider;
-import org.guanzon.appdriver.base.LogWrapper;
+import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.appdriver.iface.GEntity;
 import org.guanzon.cas.parameter.model.Model_Country;
 import org.guanzon.cas.parameter.model.Model_TownCity;
 import org.json.simple.JSONObject;
 
-public class Model_Client_Master implements GEntity{
-    LogWrapper logwrapr = new LogWrapper("Model_Client_Master", "cas-error.log");
-    
-    private final String XML = "Model_Client_Master.xml";
-    
-    GRider poGRider;                //application driver
-    CachedRowSet poEntity;          //rowset
-    JSONObject poJSON;              //json container
-    int pnEditMode;                 //edit mode
-    
+public class Model_Client_Master extends Model{
     Model_TownCity poTownCity;
     Model_Country poCountry;
     
-    public Model_Client_Master(GRider value) {
-        if (value == null) {
-            System.err.println("Application Driver is not set.");
+    @Override
+    public void initialize() {
+        try {
+            poEntity = MiscUtil.xml2ResultSet(System.getProperty("sys.default.path.metadata") + XML, getTable());
+            
+            poEntity.last();
+            poEntity.moveToInsertRow();
+
+            MiscUtil.initRowSet(poEntity);
+            
+            //assign default values
+            poEntity.updateString("cLRClient", Logical.NO);
+            poEntity.updateString("cMCClient", Logical.NO);
+            poEntity.updateString("cSCClient", Logical.NO);
+            poEntity.updateString("cSPClient", Logical.NO);
+            poEntity.updateString("cCPClient", Logical.NO);
+            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
+            //end - assign default values
+
+            poEntity.insertRow();
+            poEntity.moveToCurrentRow();
+
+            poEntity.absolute(1);
+
+            ID = poEntity.getMetaData().getColumnLabel(1);
+            
+            //initialize other connections
+            poTownCity = new Model_TownCity();
+            poTownCity.setApplicationDriver(poGRider);
+            poTownCity.setXML("Model_TownCity");
+            poTownCity.setTableName("TownCity");
+            poTownCity.initialize();
+            
+            poCountry = new Model_Country();
+            poCountry.setApplicationDriver(poGRider);
+            poCountry.setXML("Model_Country");
+            poCountry.setTableName("Country");
+            poCountry.initialize();
+            //end - initialize other connections
+            
+            pnEditMode = EditMode.UNKNOWN;
+        } catch (SQLException e) {
+            logwrapr.severe(e.getMessage());
             System.exit(1);
         }
-
-        poGRider = value;
-        
-        poTownCity = new Model_TownCity(poGRider);
-        poCountry = new Model_Country(poGRider);
-        
-        initialize();
-    }
-
-    @Override
-    public String getColumn(int columnIndex) {
-        try {
-            return poEntity.getMetaData().getColumnLabel(columnIndex);
-        } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
-        }
-        return "";
-    }
-
-    @Override
-    public int getColumn(String columnName) {
-        try {
-            return MiscUtil.getColumnIndex(poEntity, columnName);
-        } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
-        }
-        return -1;
-    }
-
-    @Override
-    public int getColumnCount() {
-        try {
-            return poEntity.getMetaData().getColumnCount();
-        } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
-        }
-
-        return -1;
-    }
-
-    @Override
-    public int getEditMode() {
-        return pnEditMode;
-    }
-
-    @Override
-    public String getTable() {
-        return "Client_Master";
-    }
-
-    @Override
-    public Object getValue(int columnIndex) {
-        try {
-            return poEntity.getObject(columnIndex);
-        } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public Object getValue(String columnName) {
-        try {
-            return poEntity.getObject(MiscUtil.getColumnIndex(poEntity, columnName));
-        } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
-        }
-        return null;
-    }
-
-    @Override
-    public JSONObject setValue(int columnIndex, Object value) {
-        try {
-            poJSON = MiscUtil.validateColumnValue(System.getProperty("sys.default.path.metadata") + XML, MiscUtil.getColumnLabel(poEntity, columnIndex), value);
-            if ("error".equals((String) poJSON.get("result"))) {
-                return poJSON;
-            }
-
-            poEntity.updateObject(columnIndex, value);
-            poEntity.updateRow();
-
-            poJSON = new JSONObject();
-            poJSON.put("result", "success");
-            poJSON.put("value", getValue(columnIndex));
-        } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", e.getMessage());
-        }
-
-        return poJSON;
-    }
-
-    @Override
-    public JSONObject setValue(String colunmName, Object value) {
-        poJSON = new JSONObject();
-
-        try {
-            return setValue(MiscUtil.getColumnIndex(poEntity, colunmName), value);
-        } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", e.getMessage());
-        }
-        return poJSON;
-    }
-
-    @Override
-    public JSONObject newRecord() {
-        pnEditMode = EditMode.ADDNEW;
-
-        //replace with the primary key column info
-        setClientId(MiscUtil.getNextCode(getTable(), "sClientID", true, poGRider.getConnection(), ""));
-
-        poJSON = new JSONObject();
-        poJSON.put("result", "success");
-        return poJSON;
-    }
-
-    @Override
-    public JSONObject openRecord(String barangayId) {
-        poJSON = new JSONObject();
-
-        String lsSQL = MiscUtil.makeSelect(this);
-
-        //replace the condition based on the primary key column of the record
-        lsSQL = MiscUtil.addCondition(lsSQL, "sClientID = " + SQLUtil.toSQL(barangayId));
-
-        ResultSet loRS = poGRider.executeQuery(lsSQL);
-
-        try {
-            if (loRS.next()) {
-                for (int lnCtr = 1; lnCtr <= loRS.getMetaData().getColumnCount(); lnCtr++) {
-                    setValue(lnCtr, loRS.getObject(lnCtr));
-                }
-                
-                MiscUtil.close(loRS);
-                
-                //connect to other table
-                poJSON = poTownCity.openRecord((String) getValue("sBirthPlc"));
-                if (!((String)poJSON.get("result")).equals("success")) 
-                    System.err.println("TownCity.openRecord: " + poJSON.toJSONString());
-                
-                poJSON = poCountry.openRecord((String) getValue("sCitizenx"));
-                if (!((String)poJSON.get("result")).equals("success")) 
-                    System.err.println("Country.openRecord: " + poJSON.toJSONString());
-                
-                pnEditMode = EditMode.READY;
-
-                poJSON = new JSONObject();
-                poJSON.put("result", "success");
-                poJSON.put("message", "Record loaded successfully.");
-            } else {
-                poJSON = new JSONObject();
-                poJSON.put("result", "error");
-                poJSON.put("message", "No record to load.");
-            }
-        } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", e.getMessage());
-        }
-        
-        if (((String) poJSON.get("result")).equals("success")) pnEditMode = EditMode.READY;
-
-        return poJSON;
-    }
-
-    @Override
-    public JSONObject updateRecord() {
-        poJSON = new JSONObject();
-        
-        if (pnEditMode != EditMode.READY){
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record was loaded.");
-        } else {
-            pnEditMode = EditMode.UPDATE;
-            poJSON.put("result", "success");
-        }
-        
-        return poJSON;
-    }
-    
-    @Override
-    public JSONObject saveRecord() {
-        poJSON = new JSONObject();
-
-        if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
-            String lsSQL;
-            
-            setModifyingId(poGRider.getUserID());
-            setModifiedDate(poGRider.getServerDate());
-            
-            if (pnEditMode == EditMode.ADDNEW) {
-                //replace with the primary key column info
-                setClientId(MiscUtil.getNextCode(getTable(), "sClientID", true, poGRider.getConnection(), ""));
-
-                lsSQL = MiscUtil.makeSQL(this);
-
-                if (!lsSQL.isEmpty()) {
-                    if (poGRider.executeQuery(lsSQL, getTable(), poGRider.getBranchCode(), "") > 0) {
-                        poJSON = new JSONObject();
-                        poJSON.put("result", "success");
-                        poJSON.put("message", "Record saved successfully.");
-                    } else {
-                        poJSON = new JSONObject();
-                        poJSON.put("result", "error");
-                        poJSON.put("message", poGRider.getErrMsg());
-                    }
-                } else {
-                    poJSON = new JSONObject();
-                    poJSON.put("result", "error");
-                    poJSON.put("message", "No record to save.");
-                }
-            } else {
-                Model_Client_Master loOldEntity = new Model_Client_Master(poGRider);
-
-                //replace with the primary key column info
-                poJSON = loOldEntity.openRecord(this.getClientId());
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    //replace the condition based on the primary key column of the record
-                    lsSQL = MiscUtil.makeSQL(this, loOldEntity, "sClientID = " + SQLUtil.toSQL(this.getClientId()));
-
-                    if (!lsSQL.isEmpty()) {
-                        if (poGRider.executeQuery(lsSQL, getTable(), poGRider.getBranchCode(), "") > 0) {
-                            poJSON = new JSONObject();
-                            poJSON.put("result", "success");
-                            poJSON.put("message", "Record saved successfully.");
-                        } else {
-                            poJSON = new JSONObject();
-                            poJSON.put("result", "error");
-                            poJSON.put("message", poGRider.getErrMsg());
-                        }
-                    } else {
-                        poJSON = new JSONObject();
-                        poJSON.put("result", "success");
-                        poJSON.put("message", "No updates has been made.");
-                    }
-                } else {
-                    poJSON = new JSONObject();
-                    poJSON.put("result", "error");
-                    poJSON.put("message", "Record discrepancy. Unable to save record.");
-                }
-            }
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "Invalid update mode. Unable to save record.");
-            return poJSON;
-        }
-        
-        if (((String) poJSON.get("result")).equals("success")) openRecord((String) getValue(0));
-
-        return poJSON;
     }
     
     public JSONObject setClientId(String clientId){
@@ -351,12 +118,26 @@ public class Model_Client_Master implements GEntity{
         return (String) getValue("sMaidenNm");
     }
     
-    public JSONObject setFullName(String fullName){
+    public JSONObject setCompanyName(String fullName){
+        if ("0".equals((String) getValue("cClientTp"))){
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "Unable to assign company name on individual accounts.");
+            return poJSON;
+        }
+
         return setValue("sCompnyNm", fullName);
     }
 
-    public String getFullName(){
-        return (String) getValue("sCompnyNm");
+    public String getCompanyName(){
+        if ("1".equals((String) getValue("cClientTp"))){
+            return (String) getValue("sCompnyNm");
+        } else {
+            return ((String) getValue("sLastName") + ", " + 
+                    (String) getValue("sFrstName") + 
+                    ("".equals((String) getValue("sSuffixNm")) ? "" : " " + (String) getValue("sSuffixNm")) + 
+                    (String) getValue("sMiddName")).trim();
+        }        
     }
     
     public JSONObject setGender(String genderCode){
@@ -367,11 +148,8 @@ public class Model_Client_Master implements GEntity{
         return (String) getValue("cGenderCd");
     }
     
-    public JSONObject setCitizenshipId(String citizenshipId){
-        setValue("sCitizenx", citizenshipId);
-        poCountry.openRecord((String) getValue("sCitizenx"));
-        
-        return poJSON;
+    public JSONObject setCitizenshipId(String citizenshipId){        
+        return setValue("sCitizenx", citizenshipId);
     }
 
     public String getCitizenshipId(){
@@ -379,10 +157,18 @@ public class Model_Client_Master implements GEntity{
     }
     
     public String getCitizenshipName(){
-        if (poCountry.getEditMode() == EditMode.UPDATE)
-            return poCountry.getCountryName();
-        else
-            return "";
+        if (!"".equals((String) getValue("sCitizenx"))){
+            if (poCountry.getEditMode() == EditMode.READY &&
+                poCountry.getCountryId().equals((String) getValue("sCitizenx")))
+                return poCountry.getCountryName();
+            else{
+                poJSON = poCountry.openRecord((String) getValue("sCitizenx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poCountry.getCountryName();
+                else return "";
+            }
+        } else return "";
     }
     
     public JSONObject setBirthDate(Date birthDate){
@@ -393,11 +179,8 @@ public class Model_Client_Master implements GEntity{
         return (Date) getValue("dBirthDte");
     }
     
-    public JSONObject setBirthPlaceId(String birthPlaceId){
-        setValue("sBirthPlc", birthPlaceId);
-        poTownCity.openRecord((String) getValue("sBirthPlc"));
-        
-        return poJSON;
+    public JSONObject setBirthPlaceId(String birthPlaceId){        
+        return setValue("sBirthPlc", birthPlaceId);
     }
 
     public String getBirthPlaceId(){
@@ -405,24 +188,48 @@ public class Model_Client_Master implements GEntity{
     }
     
     public String getBirthPlaceTownName(){
-        if (poTownCity.getEditMode() == EditMode.UPDATE)
-            return poTownCity.getTownName();
-        else
-            return "";
+        if (!"".equals((String) getValue("sBirthPlc"))){
+            if (poTownCity.getEditMode() == EditMode.READY &&
+                poTownCity.getTownId().equals((String) getValue("sBirthPlc")))
+                return poTownCity.getTownName();
+            else{
+                poJSON = poTownCity.openRecord((String) getValue("sBirthPlc"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poTownCity.getTownName();
+                else return "";
+            }
+        } else return "";
     }
     
     public String getBirthPlaceProvinceId(){
-        if (poTownCity.getEditMode() == EditMode.UPDATE)
-            return poTownCity.getProvinceId();
-        else
-            return "";
+        if (!"".equals((String) getValue("sBirthPlc"))){
+            if (poTownCity.getEditMode() == EditMode.READY &&
+                poTownCity.getTownId().equals((String) getValue("sBirthPlc")))
+                return poTownCity.getProvinceId();
+            else{
+                poJSON = poTownCity.openRecord((String) getValue("sBirthPlc"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poTownCity.getProvinceId();
+                else return "";
+            }
+        } else return "";
     }
     
     public String getBirthPlaceProvinceName(){
-        if (poTownCity.getEditMode() == EditMode.UPDATE)
-            return poTownCity.getProvinceName();
-        else
-            return "";
+        if (!"".equals((String) getValue("sBirthPlc"))){
+            if (poTownCity.getEditMode() == EditMode.READY &&
+                poTownCity.getTownId().equals((String) getValue("sBirthPlc")))
+                return poTownCity.getProvinceName();
+            else{
+                poJSON = poTownCity.openRecord((String) getValue("sBirthPlc"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poTownCity.getProvinceName();
+                else return "";
+            }
+        } else return "";
     }
     
     public JSONObject setAdditionalInfo(String additionalInfo){
@@ -527,45 +334,5 @@ public class Model_Client_Master implements GEntity{
     
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
-    }
-
-    @Override
-    public void list() {
-        Method[] methods = this.getClass().getMethods();
-
-        System.out.println("--------------------------------------------------------------------");
-        System.out.println("LIST OF PUBLIC METHODS FOR " + this.getClass().getName() + ":");
-        System.out.println("--------------------------------------------------------------------");
-        for (Method method : methods) {
-            System.out.println(method.getName());
-        }
-    }
-
-    private void initialize() {
-        try {
-            poEntity = MiscUtil.xml2ResultSet(System.getProperty("sys.default.path.metadata") + XML, getTable());
-
-            poEntity.last();
-            poEntity.moveToInsertRow();
-
-            MiscUtil.initRowSet(poEntity);
-            
-            poEntity.updateString("cLRClient", Logical.NO);
-            poEntity.updateString("cMCClient", Logical.NO);
-            poEntity.updateString("cSCClient", Logical.NO);
-            poEntity.updateString("cSPClient", Logical.NO);
-            poEntity.updateString("cCPClient", Logical.NO);
-            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
-
-            poEntity.insertRow();
-            poEntity.moveToCurrentRow();
-
-            poEntity.absolute(1);
-
-            pnEditMode = EditMode.UNKNOWN;
-        } catch (SQLException e) {
-            logwrapr.severe(e.getMessage());
-            System.exit(1);
-        }
     }
 }

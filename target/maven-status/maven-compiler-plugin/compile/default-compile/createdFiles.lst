@@ -1,11 +1,15 @@
+org\guanzon\cas\client\InstitutionClientType.class
+org\guanzon\cas\client\Client_Mail.class
+org\guanzon\cas\client\Client_Address.class
 org\guanzon\cas\client\model\Model_Client_Institution_Contact.class
 org\guanzon\cas\client\model\Model_Client_Mail.class
 org\guanzon\cas\client\account\GlobalVariables.class
-org\guanzon\cas\client\LMasDetTrans.class
+org\guanzon\cas\client\Client_Institution_Contact.class
+org\guanzon\cas\client\Client_Social_Media.class
 org\guanzon\cas\client\model\Model_Client_Address.class
 org\guanzon\cas\client\model\Model_Client_Master.class
+org\guanzon\cas\client\Client_Mobile.class
 org\guanzon\cas\client\model\Model_Client_Mobile.class
-org\guanzon\cas\client\Clients.class
 org\guanzon\cas\client\ClientTypes.class
 org\guanzon\cas\client\Client_Master.class
 org\guanzon\cas\client\model\Model_Client_Social_Media.class
