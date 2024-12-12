@@ -66,6 +66,27 @@ public class Client_Mobile  extends Parameter{
         }
     }
     
+    public JSONObject searchRecord(String value, boolean byCode, String clientId) {
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sClientID = " + SQLUtil.toSQL(clientId));
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "Type»Client Name»Mobile No»Ownership»Primary»ID",
+                "xMobileTp»xFullName»sMobileNo»xOwnerxxx»xPrimaryx»sMobileID",
+                "CASE a.cMobileTp WHEN '0' THEN 'Mobile No' WHEN '1' THEN 'Landline' WHEN '2' THEN 'Fax No' ELSE '' END»TRIM(IF(b.cClientTp = '0', CONCAT(b.sLastName, ', ', b.sFrstName, IF(TRIM(IFNull(b.sSuffixNm, '')) = '', ' ', CONCAT(' ', b.sSuffixNm, ' ')), b.sMiddName), b.sCompnyNm))»a.sMobileNo»CASE a.cOwnerxxx WHEN '0' THEN 'Personal' WHEN '1' THEN 'Company' WHEN '2' THEN 'Others' ELSE '' END»IF(a.cPrimaryx = '1', 'Yes', 'No')»a.sMobileID",
+                byCode ? 5 : 2);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sMobileID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+    
     @Override
     public String getSQ_Browse(){
         String lsSQL;

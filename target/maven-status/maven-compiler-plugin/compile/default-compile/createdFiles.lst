@@ -1,4 +1,5 @@
 org\guanzon\cas\client\InstitutionClientType.class
+org\guanzon\cas\client\Client.class
 org\guanzon\cas\client\Client_Mail.class
 org\guanzon\cas\client\Client_Address.class
 org\guanzon\cas\client\model\Model_Client_Institution_Contact.class

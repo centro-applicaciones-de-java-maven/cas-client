@@ -84,6 +84,27 @@ public class Client_Institution_Contact  extends Parameter{
         }
     }
     
+    public JSONObject searchRecord(String value, boolean byCode, String clientId) {
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sClientID = " + SQLUtil.toSQL(clientId));
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "Company Name»Contact Person»Mobile Phone»Mail Address»Primary»ID",
+                "xFullName»sCPerson1»sMobileNo»sEMailAdd»xPrimaryx»sContctID",
+                "TRIM(IF(b.cClientTp = '0', CONCAT(b.sLastName, ', ', b.sFrstName, IF(TRIM(IFNull(b.sSuffixNm, '')) = '', ' ', CONCAT(' ', b.sSuffixNm, ' ')), b.sMiddName), b.sCompnyNm))»a.sCPerson1»a.sMobileNo»a.sEMailAdd»IF(a.cPrimaryx = '1', 'Yes', 'No')»a.sContctID",
+                byCode ? 5 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sContctID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+    
     @Override
     public String getSQ_Browse(){
         String lsSQL;

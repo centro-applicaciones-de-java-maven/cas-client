@@ -44,6 +44,12 @@ public class Client_Address  extends Parameter{
             return poJSON;
         }
         
+        if (!poModel.getTownId().equals(poModel.Barangay().getTownId())){
+            poJSON.put("result", "error");
+            poJSON.put("message", "Barangay is not within the selected town.");
+            return poJSON;
+        }
+        
         return poJSON;
     }
     
@@ -56,6 +62,27 @@ public class Client_Address  extends Parameter{
     public JSONObject searchRecord(String value, boolean byCode) {
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
+                value,
+                "ID»Client Name»Address»Birthday»Primary",
+                "sAddrssID»xFullName»xAddressx»dBirthDte»xPrimaryx",
+                "a.sAddrssID»TRIM(IF(b.cClientTp = '0', CONCAT(b.sLastName, ', ', b.sFrstName, IF(TRIM(IFNull(b.sSuffixNm, '')) = '', ' ', CONCAT(' ', b.sSuffixNm, ' ')), b.sMiddName), b.sCompnyNm))»CONCAT(IF(IFNull(a.sHouseNox, '') = '', '', CONCAT(a.sHouseNox, ' ')), a.sAddressx, IF(IFNull(e.sBrgyName, '') = '', '', CONCAT(' ', e.sBrgyName)), ', ', c.sTownName, ', ', d.sProvName, ' ', c.sZippCode)»b.dBirthDte»IF(a.cPrimaryx = '1', 'Yes', 'No')",
+                byCode ? 0 : 2);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sAddrssID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+    
+    public JSONObject searchRecord(String value, boolean byCode, String clientId) {
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sClientID = " + SQLUtil.toSQL(clientId));
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
                 value,
                 "ID»Client Name»Address»Birthday»Primary",
                 "sAddrssID»xFullName»xAddressx»dBirthDte»xPrimaryx",

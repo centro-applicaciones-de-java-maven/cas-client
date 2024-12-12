@@ -1,6 +1,6 @@
 package org.guanzon.cas.client;
 
-public enum ClientTypes {
+enum ClientTypes {
     INDIVIDUAL,
     INSTITUTION
 }

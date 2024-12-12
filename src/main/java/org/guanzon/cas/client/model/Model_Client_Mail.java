@@ -50,6 +50,27 @@ public class Model_Client_Mail extends Model{
         }
     }
     
+    public Model_Client_Master Client(){
+        if (!"".equals((String) getValue("sClientID"))){
+            if (poClient.getEditMode() == EditMode.READY && 
+                poClient.getClientId().equals((String) getValue("sClientID")))
+                return poClient;
+            else{
+                poJSON = poClient.openRecord((String) getValue("sClientID"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poClient;
+                else {
+                    poClient.initialize();
+                    return poClient;
+                }
+            }
+        } else {
+            poClient.initialize();
+            return poClient;
+        }
+    }
+    
     public JSONObject setEmailId(String mobileId){
         return setValue("sEmailIDx", mobileId);
     }
@@ -64,21 +85,6 @@ public class Model_Client_Mail extends Model{
 
     public String getClientId(){
         return (String) getValue("sClientID");
-    }
-    
-    public String getClientName(){
-        if (!"".equals((String) getValue("sClientID"))){
-            if (poClient.getEditMode() == EditMode.READY &&
-                poClient.getClientId().equals((String) getValue("sClientID")))
-                return poClient.getCompanyName();
-            else{
-                poJSON = poClient.openRecord((String) getValue("sClientID"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poClient.getCompanyName();
-                else return "";
-            }
-        } else return "";
     }
     
     public JSONObject setMailAddress(String emailAddress){

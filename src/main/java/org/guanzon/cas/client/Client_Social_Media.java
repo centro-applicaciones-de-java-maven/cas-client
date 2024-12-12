@@ -72,6 +72,27 @@ public class Client_Social_Media  extends Parameter{
         }
     }
     
+    public JSONObject searchRecord(String value, boolean byCode, String clientId) {
+        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sClientID = " + SQLUtil.toSQL(clientId));
+        
+        poJSON = ShowDialogFX.Search(poGRider,
+                lsSQL,
+                value,
+                "ID»Client Name»Account»Platform»Birthday",
+                "sSocialID»xFullName»sAccountx»xSocialTp»dBirthDte",
+                "a.sSocialID»TRIM(IF(b.cClientTp = '0', CONCAT(b.sLastName, ', ', b.sFrstName, IF(TRIM(IFNull(b.sSuffixNm, '')) = '', ' ', CONCAT(' ', b.sSuffixNm, ' ')), b.sMiddName), b.sCompnyNm))»a.sAccountx»CASE a.cSocialTp WHEN '0' THEN 'Meta' WHEN '1' THEN 'Instagram' WHEN '2' THEN 'X' ELSE '' END»b.dBirthDte",
+                byCode ? 0 : 2);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sSocialID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+        
     @Override
     public String getSQ_Browse(){
         String lsSQL;

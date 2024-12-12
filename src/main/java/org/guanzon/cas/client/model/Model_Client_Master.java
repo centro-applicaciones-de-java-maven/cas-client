@@ -62,6 +62,48 @@ public class Model_Client_Master extends Model{
         }
     }
     
+    public Model_TownCity BirthTown(){
+        if (!"".equals((String) getValue("sBirthPlc"))){
+            if (poTownCity.getEditMode() == EditMode.READY && 
+                poTownCity.getTownId().equals((String) getValue("sBirthPlc")))
+                return poTownCity;
+            else{
+                poJSON = poTownCity.openRecord((String) getValue("sBirthPlc"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poTownCity;
+                else {
+                    poTownCity.initialize();
+                    return poTownCity;
+                }
+            }
+        } else {
+            poTownCity.initialize();
+            return poTownCity;
+        }
+    }
+    
+    public Model_Country Citizenship(){
+        if (!"".equals((String) getValue("sCitizenx"))){
+            if (poCountry.getEditMode() == EditMode.READY && 
+                poCountry.getCountryId().equals((String) getValue("sCitizenx")))
+                return poCountry;
+            else{
+                poJSON = poCountry.openRecord((String) getValue("sCitizenx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poCountry;
+                else {
+                    poTownCity.initialize();
+                    return poCountry;
+                }
+            }
+        } else {
+            poCountry.initialize();
+            return poCountry;
+        }
+    }
+    
     public JSONObject setClientId(String clientId){
         return setValue("sClientID", clientId);
     }
@@ -156,21 +198,6 @@ public class Model_Client_Master extends Model{
         return (String) getValue("sCitizenx");
     }
     
-    public String getCitizenshipName(){
-        if (!"".equals((String) getValue("sCitizenx"))){
-            if (poCountry.getEditMode() == EditMode.READY &&
-                poCountry.getCountryId().equals((String) getValue("sCitizenx")))
-                return poCountry.getCountryName();
-            else{
-                poJSON = poCountry.openRecord((String) getValue("sCitizenx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poCountry.getCountryName();
-                else return "";
-            }
-        } else return "";
-    }
-    
     public JSONObject setBirthDate(Date birthDate){
         return setValue("dBirthDte", birthDate);
     }
@@ -185,51 +212,6 @@ public class Model_Client_Master extends Model{
 
     public String getBirthPlaceId(){
         return (String) getValue("sBirthPlc");
-    }
-    
-    public String getBirthPlaceTownName(){
-        if (!"".equals((String) getValue("sBirthPlc"))){
-            if (poTownCity.getEditMode() == EditMode.READY &&
-                poTownCity.getTownId().equals((String) getValue("sBirthPlc")))
-                return poTownCity.getTownName();
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sBirthPlc"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity.getTownName();
-                else return "";
-            }
-        } else return "";
-    }
-    
-    public String getBirthPlaceProvinceId(){
-        if (!"".equals((String) getValue("sBirthPlc"))){
-            if (poTownCity.getEditMode() == EditMode.READY &&
-                poTownCity.getTownId().equals((String) getValue("sBirthPlc")))
-                return poTownCity.getProvinceId();
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sBirthPlc"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity.getProvinceId();
-                else return "";
-            }
-        } else return "";
-    }
-    
-    public String getBirthPlaceProvinceName(){
-        if (!"".equals((String) getValue("sBirthPlc"))){
-            if (poTownCity.getEditMode() == EditMode.READY &&
-                poTownCity.getTownId().equals((String) getValue("sBirthPlc")))
-                return poTownCity.getProvinceName();
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sBirthPlc"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity.getProvinceName();
-                else return "";
-            }
-        } else return "";
     }
     
     public JSONObject setAdditionalInfo(String additionalInfo){

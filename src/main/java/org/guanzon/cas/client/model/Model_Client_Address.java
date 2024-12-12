@@ -12,9 +12,9 @@ import org.guanzon.cas.parameter.model.Model_TownCity;
 import org.json.simple.JSONObject;
 
 public class Model_Client_Address extends Model{
+    Model_Barangay poBarangay;
     Model_TownCity poTownCity;
     Model_Client_Master poClient;
-    Model_Barangay poBarangay;
     
     @Override
     public void initialize() {
@@ -71,6 +71,69 @@ public class Model_Client_Address extends Model{
         }
     }
     
+    public Model_Barangay Barangay(){
+        if (!"".equals((String) getValue("sBrgyIDxx"))){
+            if (poBarangay.getEditMode() == EditMode.READY && 
+                poBarangay.getBarangayId().equals((String) getValue("sBrgyIDxx")))
+                return poBarangay;
+            else{
+                poJSON = poBarangay.openRecord((String) getValue("sBrgyIDxx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poBarangay;
+                else {
+                    poBarangay.initialize();
+                    return poBarangay;
+                }
+            }
+        } else {
+            poBarangay.initialize();
+            return poBarangay;
+        }
+    }
+    
+    public Model_TownCity Town(){
+        if (!"".equals((String) getValue("sTownIDxx"))){
+            if (poTownCity.getEditMode() == EditMode.READY && 
+                poTownCity.getTownId().equals((String) getValue("sTownIDxx")))
+                return poTownCity;
+            else{
+                poJSON = poTownCity.openRecord((String) getValue("sTownIDxx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poTownCity;
+                else {
+                    poBarangay.initialize();
+                    return poTownCity;
+                }
+            }
+        } else {
+            poTownCity.initialize();
+            return poTownCity;
+        }
+    }
+    
+    public Model_Client_Master Client(){
+        if (!"".equals((String) getValue("sClientID"))){
+            if (poClient.getEditMode() == EditMode.READY && 
+                poClient.getClientId().equals((String) getValue("sClientID")))
+                return poClient;
+            else{
+                poJSON = poClient.openRecord((String) getValue("sClientID"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poClient;
+                else {
+                    poClient.initialize();
+                    return poClient;
+                }
+            }
+        } else {
+            poClient.initialize();
+            return poClient;
+        }
+    }
+    
     public JSONObject setAddressId(String addressId){
         return setValue("sAddrssID", addressId);
     }
@@ -81,21 +144,6 @@ public class Model_Client_Address extends Model{
     
     public JSONObject setClientId(String clientId){
         return setValue("sClientID", clientId);
-    }
-    
-    public String getClientName(){
-        if (!"".equals((String) getValue("sClientID"))){
-            if (poClient.getEditMode() == EditMode.READY &&
-                poClient.getClientId().equals((String) getValue("sClientID")))
-                return poClient.getCompanyName();
-            else{
-                poJSON = poClient.openRecord((String) getValue("sClientID"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poClient.getCompanyName();
-                else return "";
-            }
-        } else return "";
     }
 
     public String getClientId(){
@@ -126,72 +174,12 @@ public class Model_Client_Address extends Model{
         return (String) getValue("sBrgyIDxx");
     }
     
-    public String getBarangayName(){
-        if (!"".equals((String) getValue("sBrgyIDxx"))){
-            if (poBarangay.getEditMode() == EditMode.READY &&
-                poBarangay.getBarangayId().equals((String) getValue("sBrgyIDxx")))
-                return poBarangay.getBarangayName();
-            else{
-                poJSON = poBarangay.openRecord((String) getValue("sBrgyIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poBarangay.getTownName();
-                else return "";
-            }
-        } else return "";
-    }
-    
     public JSONObject setTownId(String townId){
         return setValue("sTownIDxx", townId);
     }    
     
     public String getTownId(){
         return (String) getValue("sTownIDxx");
-    }
-    
-    public String getTownName(){
-        if (!"".equals((String) getValue("sTownIDxx"))){
-            if (poTownCity.getEditMode() == EditMode.READY &&
-                poTownCity.getTownId().equals((String) getValue("sTownIDxx")))
-                return poTownCity.getTownName();
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sTownIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity.getTownName();
-                else return "";
-            }
-        } else return "";
-    }
-    
-    public String getProvinceId(){
-        if (!"".equals((String) getValue("sTownIDxx"))){
-            if (poTownCity.getEditMode() == EditMode.READY &&
-                poTownCity.getTownId().equals((String) getValue("sTownIDxx")))
-                return poTownCity.getProvinceId();
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sTownIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity.getProvinceId();
-                else return "";
-            }
-        } else return "";
-    }
-    
-    public String getProvinceName(){
-        if (!"".equals((String) getValue("sTownIDxx"))){
-            if (poTownCity.getEditMode() == EditMode.READY &&
-                poTownCity.getTownId().equals((String) getValue("sTownIDxx")))
-                return poTownCity.getProvinceName();
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sTownIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity.getProvinceName();
-                else return "";
-            }
-        } else return "";
     }
     
     public JSONObject setLatitude(String latitude){
