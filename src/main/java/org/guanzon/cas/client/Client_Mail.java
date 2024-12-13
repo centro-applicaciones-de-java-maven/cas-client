@@ -38,6 +38,7 @@ public class Client_Mail  extends Parameter{
             return poJSON;
         }
         
+        poJSON.put("result", "success");
         return poJSON;
     }
     

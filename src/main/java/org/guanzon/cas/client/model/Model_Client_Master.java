@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
+import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -26,6 +27,7 @@ public class Model_Client_Master extends Model{
             MiscUtil.initRowSet(poEntity);
             
             //assign default values
+            poEntity.updateObject("dBirthDte", SQLUtil.toDate("1900-01-01", SQLUtil.FORMAT_SHORT_DATE));
             poEntity.updateString("cLRClient", Logical.NO);
             poEntity.updateString("cMCClient", Logical.NO);
             poEntity.updateString("cSCClient", Logical.NO);
@@ -316,5 +318,10 @@ public class Model_Client_Master extends Model{
     
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
+    }
+    
+    @Override
+    public String getNextCode(){
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode()); 
     }
 }

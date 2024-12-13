@@ -94,7 +94,7 @@ public class Model_Client_Social_Media extends Model{
     }
     
     public JSONObject setRemarks(String socialMediaType){
-        return setValue("cSocialTp", socialMediaType);
+        return setValue("sRemarksx", socialMediaType);
     }
 
     public String getRemarks(){
@@ -102,7 +102,7 @@ public class Model_Client_Social_Media extends Model{
     }
     
     public JSONObject setSocMedType(String remarks){
-        return setValue("sRemarksx", remarks);
+        return setValue("cSocialTp", remarks);
     }
 
     public String getSocMedType(){
@@ -123,5 +123,10 @@ public class Model_Client_Social_Media extends Model{
     
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
+    }
+    
+    @Override
+    public String getNextCode(){
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode()); 
     }
 }

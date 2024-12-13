@@ -44,6 +44,7 @@ public class Client_Social_Media  extends Parameter{
             return poJSON;
         }
         
+        poJSON.put("result", "success");
         return poJSON;
     }
     

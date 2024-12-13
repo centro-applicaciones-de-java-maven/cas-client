@@ -38,6 +38,7 @@ public class Client_Mobile  extends Parameter{
             return poJSON;
         }
         
+        poJSON.put("result", "success");
         return poJSON;
     }
     

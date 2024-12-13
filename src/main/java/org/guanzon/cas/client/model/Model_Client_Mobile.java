@@ -4,8 +4,11 @@ import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
+import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
+import org.guanzon.appdriver.constant.MobileType;
+import org.guanzon.appdriver.constant.OwnershipType;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
@@ -23,9 +26,21 @@ public class Model_Client_Mobile extends Model{
             MiscUtil.initRowSet(poEntity);
             
             //assign default values
-            poEntity.updateString("cMobileTp", "0");
-            poEntity.updateString("cOwnerxxx", "0");
+            poEntity.updateObject("nUnreachx", 0);
+            poEntity.updateObject("dLastVeri", SQLUtil.toDate("1900-01-01", SQLUtil.FORMAT_SHORT_DATE));
+            poEntity.updateObject("dInactive", SQLUtil.toDate("1900-01-01", SQLUtil.FORMAT_SHORT_DATE));
+            poEntity.updateObject("nNoRetryx", 0);
+            poEntity.updateObject("cInvalidx", Logical.NO);
+            poEntity.updateObject("cConfirmd", Logical.NO);
+            poEntity.updateObject("dConfirmd", SQLUtil.toDate("1900-01-01 00:00:00", SQLUtil.FORMAT_TIMESTAMP));
+            poEntity.updateObject("dHoldMktg", SQLUtil.toDate("1900-01-01 00:00:00", SQLUtil.FORMAT_TIMESTAMP));
+            poEntity.updateObject("dMktgMsg1", SQLUtil.toDate("1900-01-01 00:00:00", SQLUtil.FORMAT_TIMESTAMP));
+            poEntity.updateObject("dMktgMsg2", SQLUtil.toDate("1900-01-01 00:00:00", SQLUtil.FORMAT_TIMESTAMP));
+            poEntity.updateObject("dMktgMsg3", SQLUtil.toDate("1900-01-01 00:00:00", SQLUtil.FORMAT_TIMESTAMP));
+            poEntity.updateString("cMobileTp", MobileType.MOBILE);
+            poEntity.updateString("cOwnerxxx", OwnershipType.PERSONAL);
             poEntity.updateString("cPrimaryx", Logical.NO);
+            poEntity.updateString("cIncdMktg", Logical.NO);
             poEntity.updateString("cNewMobil", Logical.YES);
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
@@ -129,11 +144,11 @@ public class Model_Client_Mobile extends Model{
         return ((String) getValue("cIncdMktg")).equals("1");
     }
     
-    public JSONObject setNetworkType(String networkType){
+    public JSONObject setMobileNetwork(String networkType){
         return setValue("cSubscrbr", networkType);
     }
 
-    public String getNetworkType(){
+    public String getMobileNetwork(){
         return (String) getValue("cSubscrbr");
     }
     
@@ -175,5 +190,10 @@ public class Model_Client_Mobile extends Model{
     
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
+    }
+    
+    @Override
+    public String getNextCode(){
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode()); 
     }
 }

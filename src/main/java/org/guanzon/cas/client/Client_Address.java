@@ -50,6 +50,7 @@ public class Client_Address  extends Parameter{
             return poJSON;
         }
         
+        poJSON.put("result", "success");
         return poJSON;
     }
     

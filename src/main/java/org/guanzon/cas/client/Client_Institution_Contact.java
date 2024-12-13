@@ -56,6 +56,7 @@ public class Client_Institution_Contact  extends Parameter{
             return poJSON;
         }
         
+        poJSON.put("result", "success");
         return poJSON;
     }
     

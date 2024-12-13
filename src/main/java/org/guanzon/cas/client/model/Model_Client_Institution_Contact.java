@@ -189,4 +189,9 @@ public class Model_Client_Institution_Contact extends Model{
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
     }
+    
+    @Override
+    public String getNextCode(){
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode()); 
+    }
 }

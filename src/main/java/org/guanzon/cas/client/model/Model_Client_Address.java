@@ -27,6 +27,8 @@ public class Model_Client_Address extends Model{
             MiscUtil.initRowSet(poEntity);
             
             //assign default values
+            poEntity.updateObject("nLatitude", 0.00);
+            poEntity.updateObject("nLongitud", 0.00);
             poEntity.updateString("cPrimaryx", Logical.NO);
             poEntity.updateString("cOfficexx", Logical.NO);
             poEntity.updateString("cProvince", Logical.NO);
@@ -198,11 +200,11 @@ public class Model_Client_Address extends Model{
         return (double) getValue("nLongitud");
     }
     
-    public JSONObject isPrimaryMobile(boolean isPrimaryMobile){
-        return setValue("cPrimaryx", isPrimaryMobile ? "1" : "0");
+    public JSONObject isPrimaryAddress(boolean isPrimaryAddress){
+        return setValue("cPrimaryx", isPrimaryAddress ? "1" : "0");
     }
 
-    public boolean isPrimaryMobile(){
+    public boolean isPrimaryAddress(){
         return ((String) getValue("cPrimaryx")).equals("1");
     }
     
@@ -284,5 +286,10 @@ public class Model_Client_Address extends Model{
     
     public Date getModifiedDate(){
         return (Date) getValue("dModified");
+    }
+    
+    @Override
+    public String getNextCode(){
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode()); 
     }
 }

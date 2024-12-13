@@ -28,6 +28,38 @@ public class Client_Master  extends Parameter{
         
         psClientTp = "10";
     }
+    
+    @Override
+    public JSONObject isEntryOkay() {
+        poJSON = new JSONObject();
+
+        if (poModel.getClientId().isEmpty()){
+            poJSON.put("result", "error");
+            poJSON.put("message", "Client must not be empty.");
+            return poJSON;
+        }
+        
+        if (poModel.getClientType().isEmpty()){
+            poJSON.put("result", "error");
+            poJSON.put("message", "Client type not be empty.");
+            return poJSON;
+        }
+        
+        if (poModel.getLastName().isEmpty()){
+            poJSON.put("result", "error");
+            poJSON.put("message", "Last name must not be empty.");
+            return poJSON;
+        }
+        
+        if (poModel.getFirstName().isEmpty()){
+            poJSON.put("result", "error");
+            poJSON.put("message", "Last name must not be empty.");
+            return poJSON;
+        }
+        
+        poJSON.put("result", "success");
+        return poJSON;
+    }
         
     @Override
     public Model_Client_Master getModel() {
