@@ -3,14 +3,16 @@ package org.guanzon.cas.client;
 import java.util.ArrayList;
 import java.util.List;
 import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.constant.EditMode;
 import org.json.simple.JSONObject;
 
-public class Client {
+public class Client {    
     GRider poGRider;
     String psParent;
     
     JSONObject poJSON;
+    LogWrapper poLogWrapper;
     
     Client_Master poClient;
     List<Client_Mobile> poMobile;
@@ -20,13 +22,17 @@ public class Client {
     List<Client_Institution_Contact> poInsContact;
     
     public Client(GRider applicationDriver,
-                    String parentClass){
+                    String parentClass,
+                    LogWrapper logWrapper){
+        
         poGRider = applicationDriver;
         psParent = parentClass;
+        poLogWrapper = logWrapper;
         
         poClient = new Client_Master();
         poClient.setApplicationDriver(poGRider);
         poClient.setWithParentClass(true);
+        poClient.setLogWrapper(poLogWrapper);
         poClient.initialize();
         
         poMobile = new ArrayList<>();
@@ -324,6 +330,7 @@ public class Client {
         Client_Mobile object = new Client_Mobile();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
+        object.setLogWrapper(poLogWrapper);
         object.initialize();
         object.newRecord();
         return object;
@@ -333,6 +340,7 @@ public class Client {
         Client_Address object = new Client_Address();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
+        object.setLogWrapper(poLogWrapper);
         object.initialize();
         object.newRecord();
         return object;
@@ -342,6 +350,7 @@ public class Client {
         Client_Mail object = new Client_Mail();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
+        object.setLogWrapper(poLogWrapper);
         object.initialize();
         object.newRecord();
         return object;
@@ -351,6 +360,7 @@ public class Client {
         Client_Social_Media object = new Client_Social_Media();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
+        object.setLogWrapper(poLogWrapper);
         object.initialize();
         object.newRecord();
         return object;
@@ -360,6 +370,7 @@ public class Client {
         Client_Institution_Contact object = new Client_Institution_Contact();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
+        object.setLogWrapper(poLogWrapper);
         object.initialize();
         object.newRecord();
         return object;

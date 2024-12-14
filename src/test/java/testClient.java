@@ -1,4 +1,5 @@
 import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.MobileNetwork;
@@ -16,6 +17,7 @@ import org.junit.runners.MethodSorters;
 public class testClient {
     static GRider instance;
     static Client record;
+    static LogWrapper logWrapper;
 
     @BeforeClass
     public static void setUpClass() {
@@ -23,8 +25,9 @@ public class testClient {
         System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
 
         instance = MiscUtil.Connect();
+        logWrapper = new LogWrapper("CAS", System.getProperty("sys.default.path.temp") + "cas-error.log");
         
-        record = new Client(instance, "");
+        record = new Client(instance, "", logWrapper);
     }
 
     @Test
