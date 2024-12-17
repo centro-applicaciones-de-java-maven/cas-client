@@ -87,19 +87,19 @@ public class Model_Client_Institution_Contact extends Model{
     }
     
     public JSONObject setContactPersonName(String contactPersonName){
-        return setValue("sHouseNox", contactPersonName);
+        return setValue("sCPerson1", contactPersonName);
     }
 
     public String getContactPersonName(){
-        return (String) getValue("sHouseNox");
+        return (String) getValue("sCPerson1");
     }
     
     public JSONObject setContactPersonPosition(String contactPersonPosition){
-        return setValue("sAddressx", contactPersonPosition);
+        return setValue("sCPPosit1", contactPersonPosition);
     }
 
     public String getContactPersonPosition(){
-        return (String) getValue("sAddressx");
+        return (String) getValue("sCPPosit1");
     }
     
     public JSONObject setMobileNo(String mobileNo){

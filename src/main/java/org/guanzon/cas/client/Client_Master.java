@@ -45,16 +45,24 @@ public class Client_Master  extends Parameter{
             return poJSON;
         }
         
-        if (poModel.getLastName().isEmpty()){
-            poJSON.put("result", "error");
-            poJSON.put("message", "Last name must not be empty.");
-            return poJSON;
-        }
-        
-        if (poModel.getFirstName().isEmpty()){
-            poJSON.put("result", "error");
-            poJSON.put("message", "Last name must not be empty.");
-            return poJSON;
+        if (poModel.getClientType().equals(ClientTypes.INDIVIDUAL)){
+            if (poModel.getLastName().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Last name must not be empty.");
+                return poJSON;
+            }
+
+            if (poModel.getFirstName().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Last name must not be empty.");
+                return poJSON;
+            }
+        } else {
+            if (poModel.getCompanyName().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Company name must not be empty.");
+                return poJSON;
+            }
         }
         
         poJSON.put("result", "success");

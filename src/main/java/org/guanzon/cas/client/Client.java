@@ -62,7 +62,7 @@ public class Client {
         return poSocMed.get(row);
     }
     
-    public Client_Institution_Contact InstitutionContactP(int row){
+    public Client_Institution_Contact InstitutionContactPerson(int row){
         return poInsContact.get(row);
     }
     
@@ -76,6 +76,14 @@ public class Client {
     
     public int getMailCount(){
         return poMail.size();
+    }
+    
+    public int getSocMedCount(){
+        return poSocMed.size();
+    }
+    
+    public int getInstitutionContactPCount(){
+        return poSocMed.size();
     }
     
     public JSONObject addMobile(){
@@ -145,7 +153,26 @@ public class Client {
                 poSocMed.add(socmed());
             } else {
                 poJSON.put("result", "error");
-                poJSON.put("message", "Unable to add mobile. Last row email address is still empty.");
+                poJSON.put("message", "Unable to add mobile. Last row social media account is still empty.");
+                return poJSON;
+            }
+        }
+        
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
+    public JSONObject addInsContactPerson(){
+        poJSON = new JSONObject();
+        
+        if (poInsContact.isEmpty()){
+            poInsContact.add(insCPerson());            
+        } else {
+            if (!poInsContact.get(poInsContact.size()-1).getModel().getContactPersonName().isEmpty()){
+                poInsContact.add(insCPerson());
+            } else {
+                poJSON.put("result", "error");
+                poJSON.put("message", "Unable to add mobile. Last row social media account is still empty.");
                 return poJSON;
             }
         }
@@ -200,6 +227,10 @@ public class Client {
         poJSON = addSocialMedia();
         if (!"success".equals((String) poJSON.get("result"))) return poJSON;
         
+        poInsContact.clear();
+        poJSON = addInsContactPerson();
+        if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+        
         poJSON = new JSONObject();
         poJSON.put("result", "success");
         return poJSON;
@@ -208,7 +239,8 @@ public class Client {
     public JSONObject Save(){
         int lnCtr;
         
-        if (psParent.isEmpty()) poGRider.beginTrans();
+        if (psParent.isEmpty()) 
+            poGRider.beginTrans();
         
         //assign modified info
         poClient.getModel().setModifyingId(poGRider.getUserID());
@@ -295,7 +327,7 @@ public class Client {
             }
         }
         
-        //save email
+        //save socmed
         if (!poSocMed.isEmpty()){            
             for(lnCtr = 0; lnCtr <= poSocMed.size()-1; lnCtr++){
                 if ((poSocMed.get(lnCtr).getEditMode() == EditMode.ADDNEW ||
@@ -319,7 +351,32 @@ public class Client {
             }
         }
         
-        if (psParent.isEmpty()) poGRider.commitTrans();
+        //save contact person
+        if (!poInsContact.isEmpty()){            
+            for(lnCtr = 0; lnCtr <= poInsContact.size()-1; lnCtr++){
+                if ((poInsContact.get(lnCtr).getEditMode() == EditMode.ADDNEW ||
+                        poInsContact.get(lnCtr).getEditMode() == EditMode.UPDATE) &&
+                        !poInsContact.get(lnCtr).getModel().getContactPersonName().isEmpty()){
+
+                    if (poInsContact.get(lnCtr).getEditMode() == EditMode.ADDNEW){
+                        poInsContact.get(lnCtr).getModel().setClientId(poClient.getModel().getClientId());
+                    }
+                    
+                    poInsContact.get(lnCtr).getModel().setModifiedDate(poClient.getModel().getModifiedDate());
+                    
+                    //save
+                    poJSON = poInsContact.get(lnCtr).saveRecord();
+
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        if (psParent.isEmpty()) poGRider.rollbackTrans();
+                        return poJSON;
+                    }
+                }
+            }
+        }
+        
+        if (psParent.isEmpty()) 
+            poGRider.commitTrans();
         
         poJSON = new JSONObject();
         poJSON.put("result", "success");
