@@ -27,7 +27,7 @@ public class testClient {
         instance = MiscUtil.Connect();
         logWrapper = new LogWrapper("CAS", System.getProperty("sys.default.path.temp") + "cas-error.log");
         
-        record = new Client(instance, "", logWrapper);
+        record = new Client(instance, "", null);
     }
 
     @Test
@@ -194,7 +194,7 @@ public class testClient {
             Assert.fail((String) loJSON.get("message"));
         }  
     }  
-    
+//    
 //    @Test
 //    public void testNewRecordIns() {
 //        JSONObject loJSON;

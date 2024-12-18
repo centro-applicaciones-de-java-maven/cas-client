@@ -1,5 +1,4 @@
 package org.guanzon.cas.client;
-
 import java.util.ArrayList;
 import java.util.List;
 import org.guanzon.appdriver.base.GRider;
@@ -32,7 +31,7 @@ public class Client {
         poClient = new Client_Master();
         poClient.setApplicationDriver(poGRider);
         poClient.setWithParentClass(true);
-        poClient.setLogWrapper(poLogWrapper);
+//        poClient.setLogWrapper(poLogWrapper);
         poClient.initialize();
         
         poMobile = new ArrayList<>();
@@ -387,7 +386,7 @@ public class Client {
         Client_Mobile object = new Client_Mobile();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
-        object.setLogWrapper(poLogWrapper);
+//        object.setLogWrapper(poLogWrapper);
         object.initialize();
         object.newRecord();
         return object;
@@ -397,7 +396,7 @@ public class Client {
         Client_Address object = new Client_Address();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
-        object.setLogWrapper(poLogWrapper);
+//        object.setLogWrapper(poLogWrapper);
         object.initialize();
         object.newRecord();
         return object;
@@ -407,7 +406,7 @@ public class Client {
         Client_Mail object = new Client_Mail();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
-        object.setLogWrapper(poLogWrapper);
+//        object.setLogWrapper(poLogWrapper);
         object.initialize();
         object.newRecord();
         return object;
@@ -417,7 +416,7 @@ public class Client {
         Client_Social_Media object = new Client_Social_Media();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
-        object.setLogWrapper(poLogWrapper);
+//        object.setLogWrapper(poLogWrapper);
         object.initialize();
         object.newRecord();
         return object;
@@ -427,7 +426,7 @@ public class Client {
         Client_Institution_Contact object = new Client_Institution_Contact();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
-        object.setLogWrapper(poLogWrapper);
+//        object.setLogWrapper(poLogWrapper);
         object.initialize();
         object.newRecord();
         return object;
