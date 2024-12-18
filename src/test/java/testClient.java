@@ -1,137 +1,379 @@
-
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-
-import java.io.IOException;
-import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import org.guanzon.appdriver.base.GRider;
-import org.guanzon.cas.client.controller.ClientMasterTransactionCompanyController;
-import org.guanzon.cas.client.controller.ClientMasterParameterController;
-import org.guanzon.cas.client.controller.ClientMasterTransactionIndividualController;
-import org.guanzon.cas.client.controller.NewCustomerController;
+import org.guanzon.appdriver.base.LogWrapper;
+import org.guanzon.appdriver.base.MiscUtil;
+import org.guanzon.appdriver.constant.ClientType;
+import org.guanzon.appdriver.constant.MobileNetwork;
+import org.guanzon.appdriver.constant.SocMedAccountType;
+import org.guanzon.cas.client.Client;
+import org.json.simple.JSONObject;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-public class testClient extends Application {
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class testClient {
+    static GRider instance;
+    static Client record;
+    static LogWrapper logWrapper;
 
-    GRider instance;
+    @BeforeClass
+    public static void setUpClass() {
+        System.setProperty("sys.default.path.temp", "D:/GGC_Maven_Systems/temp/");
+        System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
 
-    Object[] classArray = new Object[]{
-        new ClientMasterParameterController(),
-        new ClientMasterTransactionCompanyController(),
-        new ClientMasterTransactionIndividualController(),
-        new NewCustomerController()
-    };
-
-    @Override
-    public void start(Stage primaryStage) {
-        try {
-            String path;
-            if (System.getProperty("os.name").toLowerCase().contains("win")) {
-                path = "D:/GGC_Maven_Systems";
-            } else {
-                path = "/srv/GGC_Maven_Systems";
-            }
-            System.setProperty("sys.default.path.config", path);
-
-            instance = new GRider("gRider");
-
-            if (!instance.logUser("gRider", "M001000001")) {
-                System.err.println(instance.getErrMsg());
-                System.exit(1);
-            }
-            System.out.println("sBranch code = " + instance.getBranchCode());
-            System.out.println("Connected");
-            System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/");
-            
-            //Buttons for different actions
-            Button openDialogButton = new Button("ClientMasterParameter");
-            openDialogButton.setOnAction(event -> openDialog(primaryStage, "ClientMasterParameter"));
-
-            Button openAnotherDialogButton = new Button("ClientMasterTransactionCompany");
-            openAnotherDialogButton.setOnAction(event -> openDialog(primaryStage, "ClientMasterTransactionCompany"));
-
-            Button showMessageButton = new Button("ClientMasterTransactionIndividual");
-            showMessageButton.setOnAction(event -> openDialog(primaryStage, "ClientMasterTransactionIndividual"));
-
-            Button closeAppButton = new Button("NewCustomer");
-            closeAppButton.setOnAction(event -> openDialog(primaryStage, "NewCustomer"));
-
-            StackPane mainPane = new StackPane();
-            mainPane.getChildren().addAll(openDialogButton, openAnotherDialogButton, showMessageButton, closeAppButton);
-
-            // StackPane allows multiple nodes; adjusting button positions manually
-            openDialogButton.setTranslateY(-100);
-            openAnotherDialogButton.setTranslateY(-50);
-            showMessageButton.setTranslateY(0);
-            closeAppButton.setTranslateY(50);
-
-            primaryStage.setTitle("Main Window");
-            primaryStage.setScene(new Scene(mainPane, 400, 300));
-            primaryStage.show();
-
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        instance = MiscUtil.Connect();
+        logWrapper = new LogWrapper("CAS", System.getProperty("sys.default.path.temp") + "cas-error.log");
+        
+        record = new Client(instance, "", logWrapper);
     }
 
-    private void openDialog(Stage ownerStage, String module_name) {
+    @Test
+    public void testNewRecord() {
+        JSONObject loJSON;
 
-        try {
-            int num = 0;
-            String lsfxml = "";
-            switch (module_name) {
-                case "ClientMasterParameter":
-                    num = 0;
-                    lsfxml = "ClientMasterParameter.fxml";
-                    ((ClientMasterParameterController) classArray[num]).setGRider(instance);
-                    break;
-                case "ClientMasterTransactionCompany":
-                    num = 1;
-                    lsfxml = "ClientMasterTransactionCompany.fxml";
-                    ((ClientMasterTransactionCompanyController) classArray[num]).setGRider(instance);
-                    break;
-                case "ClientMasterTransactionIndividual":
-                    num = 2;
-                    lsfxml = "ClientMasterTransactionIndividual.fxml";
-                    ((ClientMasterTransactionIndividualController) classArray[num]).setGRider(instance);
-                    break;
-                case "NewCustomer":
-                    num = 3;
-                    lsfxml = "NewCustomer.fxml";
-                    ((NewCustomerController) classArray[num]).setGRider(instance);
-                    break;
-            }
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/views/" + lsfxml));
-            loader.setController(classArray[num]);
-            Pane dialogPane = loader.load();
-            Scene dialogScene = new Scene(dialogPane);
-
-            String cssPath = getClass().getResource("/org/guanzon/cas/css/MainPanelStyle.css").toExternalForm();
-            String cssPath2 = getClass().getResource("/org/guanzon/cas/css/StyleSheet.css").toExternalForm();
-            dialogScene.getStylesheets().add(cssPath);
-            dialogScene.getStylesheets().add(cssPath2);
-
-            Stage dialogStage = new Stage();
-            dialogStage.setTitle(lsfxml);
-            dialogStage.setScene(dialogScene);
-
-            dialogStage.initOwner(ownerStage); // Tie dialog to main window
-            dialogStage.initModality(Modality.NONE); // Non-blocking
-            dialogStage.setAlwaysOnTop(true); // Ensure dialog stays on top
-
-            dialogStage.show();
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        loJSON = record.New();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }              
+        
+        //master
+        loJSON = record.Master().getModel().setClientType(ClientType.INDIVIDUAL);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }              
+        
+        loJSON = record.Master().getModel().setLastName("Cuison");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }              
+        
+        loJSON = record.Master().getModel().setMiddleName("Torres");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }              
+        
+        loJSON = record.Master().getModel().setFirstName("Michael");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        //mobile
+        loJSON = record.Mobile(0).getModel().setMobileNo("09260375777");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
         }
-    }
-
-    public static void main(String[] args) {
-        launch(args);
+        
+        loJSON = record.Mobile(0).getModel().isPrimaryMobile(true);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.Mobile(0).getModel().setMobileNetwork(MobileNetwork.GLOBE);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.Mobile(0).getModel().isPrimaryMobile(true);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.addMobile();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        loJSON = record.Mobile(1).getModel().setMobileNo("09176340516");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        loJSON = record.Mobile(1).getModel().setMobileNetwork(MobileNetwork.GLOBE);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.addMobile();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        //address
+        loJSON = record.Address(0).getModel().setHouseNo("027");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.Address(0).getModel().setAddress("Purok Centro");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.Address(0).getModel().setBarangayId("1100134");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.Address(0).getModel().setTownId("0314");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.Address(0).getModel().isPrimaryAddress(true);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        //email
+        loJSON = record.Mail(0).getModel().setMailAddress("michael_cuison07@yahoo.com");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.Mail(0).getModel().isPrimaryEmail(true);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.Mail(0).getModel().isPrimaryEmail(true);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.addMail();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        loJSON = record.Mail(1).getModel().setMailAddress("xurpas7@gmail.com");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        loJSON = record.addMail();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        //social media
+        loJSON = record.SocialMedia(0).getModel().setAccount("michael_cuison07@yahoo.com");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.SocialMedia(0).getModel().setSocMedType(SocMedAccountType.FACEBOOK);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.addSocialMedia();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        loJSON = record.SocialMedia(1).getModel().setAccount("xurpas7@gmail.com");
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        loJSON = record.SocialMedia(1).getModel().setSocMedType(SocMedAccountType.X);
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }
+        
+        loJSON = record.addSocialMedia();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }   
+        
+        loJSON = record.Save();
+        if ("error".equals((String) loJSON.get("result"))) {
+            Assert.fail((String) loJSON.get("message"));
+        }  
+    }  
+    
+//    @Test
+//    public void testNewRecordIns() {
+//        JSONObject loJSON;
+//
+//        loJSON = record.New();
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }              
+//        
+//        //master
+//        loJSON = record.Master().getModel().setClientType(ClientType.INSTITUTION);
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }              
+//        
+//        loJSON = record.Master().getModel().setCompanyName("Michael Cuison Corporation");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }              
+//        
+//        //mobile
+//        loJSON = record.Mobile(0).getModel().setMobileNo("09260375777");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.Mobile(0).getModel().isPrimaryMobile(true);
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.Mobile(0).getModel().setMobileNetwork(MobileNetwork.GLOBE);
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.Mobile(0).getModel().isPrimaryMobile(true);
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.addMobile();
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }   
+//        
+//        loJSON = record.Mobile(1).getModel().setMobileNo("09176340516");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }   
+//        
+//        loJSON = record.Mobile(1).getModel().setMobileNetwork(MobileNetwork.GLOBE);
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.addMobile();
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }   
+//        
+//        //address
+//        loJSON = record.Address(0).getModel().setHouseNo("027");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.Address(0).getModel().setAddress("Purok Centro");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.Address(0).getModel().setBarangayId("1100134");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.Address(0).getModel().setTownId("0314");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.Address(0).getModel().isPrimaryAddress(true);
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        //email
+//        loJSON = record.Mail(0).getModel().setMailAddress("michael_cuison07@yahoo.com");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.Mail(0).getModel().isPrimaryEmail(true);
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.Mail(0).getModel().isPrimaryEmail(true);
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.addMail();
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }   
+//        
+//        loJSON = record.Mail(1).getModel().setMailAddress("xurpas7@gmail.com");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }   
+//        
+//        loJSON = record.addMail();
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }   
+//        
+//        //social media
+//        loJSON = record.SocialMedia(0).getModel().setAccount("michael_cuison07@yahoo.com");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.SocialMedia(0).getModel().setSocMedType(SocMedAccountType.FACEBOOK);
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.addSocialMedia();
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }   
+//        
+//        loJSON = record.SocialMedia(1).getModel().setAccount("xurpas7@gmail.com");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }   
+//        
+//        loJSON = record.SocialMedia(1).getModel().setSocMedType(SocMedAccountType.X);
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.addSocialMedia();
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }   
+//        
+//        //institution contact person
+//        loJSON = record.InstitutionContactPerson(0).getModel().setContactPersonName("Michael Cuison");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.InstitutionContactPerson(0).getModel().setContactPersonPosition("CEO");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.InstitutionContactPerson(0).getModel().setMobileNo("09176340516");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.InstitutionContactPerson(0).getModel().setMailAddress("michael_cuison07@yahoo.com");
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }
+//        
+//        loJSON = record.Save();
+//        if ("error".equals((String) loJSON.get("result"))) {
+//            Assert.fail((String) loJSON.get("message"));
+//        }  
+//    }  
+    
+    @AfterClass
+    public static void tearDownClass() {
+        record = null;
+        instance = null;
     }
 }
