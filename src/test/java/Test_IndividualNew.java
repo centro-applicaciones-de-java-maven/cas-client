@@ -26,7 +26,6 @@ public class Test_IndividualNew extends Application {
 
         // Load the FXML content
         Parent root = loader.load();
-
         // Set up the scene and stage
         Scene scene = new Scene(root);
         primaryStage.setTitle("JavaFX Application");
