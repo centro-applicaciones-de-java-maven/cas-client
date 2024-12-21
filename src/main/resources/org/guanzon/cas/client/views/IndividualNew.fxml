@@ -29,7 +29,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="AnchorMain" maxWidth="2500.0" minWidth="1100.0" stylesheets="@Client.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane fx:id="AnchorMain" maxWidth="2500.0" minWidth="1100.0" stylesheets="@Client.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
 
     <children>
       <StackPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -118,9 +118,9 @@
                                        <children>
                                                       <AnchorPane layoutX="15.0" layoutY="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                           <children>
-                                                              <TabPane prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                              <TabPane fx:id="TabPane" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                   <tabs>
-                                                                      <Tab text="Personal Info">
+                                                                      <Tab fx:id="PersonalInfo" text="Personal Info">
                                                          <content>
                                                             <AnchorPane>
                                                                <padding>
@@ -333,7 +333,7 @@
                                                             </AnchorPane>
                                                          </content>
                                                                       </Tab>
-                                                                      <Tab text="Address">
+                                                                      <Tab fx:id="Address" text="Address">
                                                    <content>
                                                       <AnchorPane fx:id="anchorAddress">
                                                          <children>
@@ -540,7 +540,7 @@
                                                       </AnchorPane>
                                                    </content>
                                                 </Tab>
-                                                                      <Tab text="Mobile">
+                                                                      <Tab fx:id="Mobile" text="Mobile">
                                                          <content>
                                                             <AnchorPane>
                                                                <children>
@@ -668,7 +668,7 @@
                                                             </AnchorPane>
                                                          </content>
                                                                       </Tab>
-                                                                      <Tab text="Email">
+                                                                      <Tab fx:id="Email" text="Email">
                                                          <content>
                                                             <AnchorPane>
                                                                <children>
@@ -793,7 +793,7 @@
                                                             </AnchorPane>
                                                          </content>
                                                                       </Tab>
-                                                                      <Tab text="Social Media">
+                                                                      <Tab fx:id="SocialMedia" text="Social Media">
                                                          <content>
                                                             <AnchorPane>
                                                                <children>
@@ -972,7 +972,7 @@
                   </AnchorPane>
                </bottom>
                <top>
-                  <AnchorPane id="anchorHeader" prefHeight="30.0" BorderPane.alignment="CENTER">
+                  <AnchorPane id="anchorHeader" fx:id="draggablePane" prefHeight="30.0" BorderPane.alignment="CENTER">
                      <children>
                         <FontAwesomeIconView fill="WHITE" glyphName="USERS" size="20" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                         <Label styleClass="label-header" text="Client Information" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="5.0" />
