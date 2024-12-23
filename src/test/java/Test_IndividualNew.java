@@ -38,7 +38,7 @@ public class Test_IndividualNew extends Application {
         scene.getStylesheets().add(getClass().getResource("/org/guanzon/cas/client/css/StyleSheet.css").toExternalForm());
 
        // primaryStage.initStyle(StageStyle.UNDECORATED); // Or StageStyle.UNDECORATED for complete removal of window borders
-        primaryStage.setTitle("JavaFX Application");
+        primaryStage.setTitle("");
         primaryStage.setScene(scene);
         primaryStage.show();
     }

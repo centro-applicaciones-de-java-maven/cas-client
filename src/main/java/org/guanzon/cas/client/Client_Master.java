@@ -1,11 +1,13 @@
 package org.guanzon.cas.client;
 
+import java.util.ArrayList;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
+import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.model.Model_Client_Master;
 import org.json.simple.JSONObject;
 
@@ -14,7 +16,7 @@ public class Client_Master extends Parameter {
     Model_Client_Master poModel;
     String psClientTp;
     int pnEditMode;
-
+    ArrayList<Model_Client_Address> paAddress;
     public void setClientType(String clientType) {
         psClientTp = clientType;
     }
@@ -116,18 +118,18 @@ public class Client_Master extends Parameter {
         }
     }
 
-        public JSONObject searchBirthPlace(String fsValue, boolean fbByCode) {
+    public JSONObject searchBirthPlace(String fsValue, boolean fbByCode) {
         JSONObject loJSON;
-        if (fbByCode){
+        if (fbByCode) {
             if (fsValue.equals(getMaster(27))) {
                 loJSON = new JSONObject();
                 loJSON.put("result", "success");
                 loJSON.put("message", "Search birth place success.");
                 return loJSON;
             }
-        }else{
-            if(getMaster(27)!= null && !getMaster(27).toString().trim().isEmpty()){
-                if (fsValue.equals(getMaster(27))){
+        } else {
+            if (getMaster(27) != null && !getMaster(27).toString().trim().isEmpty()) {
+                if (fsValue.equals(getMaster(27))) {
                     loJSON = new JSONObject();
                     loJSON.put("result", "success");
                     loJSON.put("message", "Search birth place success.");
@@ -135,43 +137,56 @@ public class Client_Master extends Parameter {
                 }
             }
         }
-        
-        String lsSQL = "SELECT" + 
-                    "  a.sTownIDxx" +
-                    ", CONCAT(a.sTownName, ', ', b.sProvName) AS xBrthPlce" +
-                " FROM TownCity a " +
-                " INNER JOIN Province b "+
-                "   ON a.sProvIDxx = b.sProvIDxx " +
-                " WHERE a.cRecdStat = 1 ";
-        if (fbByCode)
+
+        String lsSQL = "SELECT"
+                + "  a.sTownIDxx"
+                + ", CONCAT(a.sTownName, ', ', b.sProvName) AS xBrthPlce"
+                + " FROM TownCity a "
+                + " INNER JOIN Province b "
+                + "   ON a.sProvIDxx = b.sProvIDxx "
+                + " WHERE a.cRecdStat = 1 ";
+        if (fbByCode) {
             lsSQL = MiscUtil.addCondition(lsSQL, "a.sTownIDxx = " + SQLUtil.toSQL(fsValue));
-        else
+        } else {
             lsSQL = MiscUtil.addCondition(lsSQL, "a.sTownName LIKE " + SQLUtil.toSQL(fsValue + "%"));
-        
-      
-        
+        }
+
         loJSON = ShowDialogFX.Search(
-                        poGRider, 
-                        lsSQL, 
-                        fsValue, 
-                        "Code»Birth Place", 
-                        "a.sTownIDxx»xBrthPlce", 
-                        "a.sTownIDxx»CONCAT(a.sTownName, ', ', b.sProvName)", 
-                        fbByCode ? 0 : 1);
-            
-            if (loJSON != null) {
-              //  setMaster(13,(String) loJSON.get("sTownIDxx"));
-                setMaster(13,(String) loJSON.get("xBrthPlce"));
-                loJSON.put("result", "success");
-                loJSON.put("message", "Search birth place success.");
-                return loJSON;
-            }else {
-                loJSON.put("result", "success");
-                loJSON.put("message", "No record selected.");
-                return loJSON;
-            }
+                poGRider,
+                lsSQL,
+                fsValue,
+                "Code»Birth Place",
+                "a.sTownIDxx»xBrthPlce",
+                "a.sTownIDxx»CONCAT(a.sTownName, ', ', b.sProvName)",
+                fbByCode ? 0 : 1);
+
+        if (loJSON != null) {
+            setMaster(11, (String) loJSON.get("sTownIDxx"));
+            setMaster(13, (String) loJSON.get("xBrthPlce"));
+            loJSON.put("result", "success");
+            loJSON.put("message", "Search birth place success.");
+            return loJSON;
+        } else {
+            loJSON.put("result", "success");
+            loJSON.put("message", "No record selected.");
+            return loJSON;
+        }
     }
     
+    
+    public JSONObject SearchBarangayAddress(int lnRow, String fsValue, boolean fbByCode) {
+//        if (paAddress.get(lnRow).getTownID().isEmpty()) {
+//            JSONObject loJSON = new JSONObject();
+//            loJSON.put("result", "error");
+//            loJSON.put("message", "Kindly choose the town or city first.");
+//            return loJSON;
+//        }
+        return paAddress.get(lnRow).SearchBarangay(fsValue, fbByCode);
+    }
+
+    public JSONObject SearchTownAddress(int lnRow, String fsValue, boolean fbByCode) {
+        return paAddress.get(lnRow).SearchTown(fsValue, fbByCode);
+    }
     public JSONObject searchCitizenship(String fsValue, boolean fbByCode) {
 
         JSONObject loJSON;
@@ -228,12 +243,10 @@ public class Client_Master extends Parameter {
         }
     }
 
-    @Override
     public JSONObject setMaster(String fsCol, Object foData) {
         return setMaster(poModel.getColumn(fsCol), foData);
     }
     
-    @Override
     public JSONObject setMaster(int fnCol, Object foData) {
         
         JSONObject obj = new JSONObject();
@@ -252,7 +265,6 @@ public class Client_Master extends Parameter {
         return obj;
     }
 
-    @Override
     public Object getMaster(int fnCol) {
         if (pnEditMode == EditMode.UNKNOWN) {
             return null;
@@ -261,7 +273,6 @@ public class Client_Master extends Parameter {
         }
     }
 
-    @Override
     public Object getMaster(String fsCol) {
         return getMaster(poModel.getColumn(fsCol));
     }
