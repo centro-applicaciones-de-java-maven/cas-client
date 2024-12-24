@@ -47,12 +47,19 @@ import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
+import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.client.Client;
 import org.guanzon.cas.client.Client_Master;
+import org.guanzon.cas.client.Client_Mobile;
 import org.guanzon.cas.client.models.ModelAddress;
 import org.guanzon.cas.client.models.ModelEmail;
 import org.guanzon.cas.client.models.ModelMobile;
 import org.guanzon.cas.client.models.ModelSocialMedia;
+import org.guanzon.cas.controller.ScreenInterface;
+import org.guanzon.cas.parameter.TownCity;
+import org.guanzon.cas.parameters.Barangay;
+import org.guanzon.cas.parameters.Country;
+import org.guanzon.cas.parameters.Province;
 import org.json.simple.JSONObject;
 
 /**
@@ -270,6 +277,11 @@ public class IndividualNewController implements Initializable {
     @FXML
     private TabPane TabPane;
 
+//     @Override
+//    public void setGRider(GRider foValue
+//    ) {
+//        oApp = foValue;
+//    }
     private void closeForm(javafx.event.ActionEvent event) {
         Stage stage = (Stage) btnExit.getScene().getWindow();
         stage.close();
@@ -288,6 +300,12 @@ public class IndividualNewController implements Initializable {
                 field.clear();
             }
         }
+    }
+
+    private void clearFields() {
+        txtField01.clear();
+        txtField02.clear();
+        txtField03.clear();
     }
 
     private void clearMobile() {
@@ -347,50 +365,52 @@ public class IndividualNewController implements Initializable {
             switch (clickedButton.getId()) {
 
                 case "btnSave":
-                    switch (tabText) {
-                        case "PersonalInfo":
-                            ShowMessageFX.OkayCancel(null, "", "Successfully saved!");
-                            JSONObject loJSON;
-                            System.out.println("data files " + oTrans.Master().getModel().getLastName() + " ||"
-                                    + oTrans.Master().getModel().getFirstName() + " ||"
-                                    + oTrans.Master().getModel().getMiddleName() + " ||"
-                                    + oTrans.Master().getModel().getSuffixName() + " ||"
-                                    + oTrans.Master().getModel().getCitizenshipId() + " ||"
-                                    + oTrans.Master().getModel().getBirthDate() + " ||"
-                                    + oTrans.Master().getModel().getBirthPlaceId() + " ||"
-                                    + "gender: " + oTrans.Master().getModel().getGender() + " ||"
-                                    + oTrans.Master().getModel().getCivilStatus() + " ||"
-                                    + oTrans.Master().getModel().getSpouseId() + " ||"
-                                    + oTrans.Master().getModel().getMothersMaidenName() + " ||"
-                                    + oTrans.Master().getModel().getTaxIdNumber() + " ||"
-                                    + oTrans.Master().getModel().getLTOClientId() + " ||"
-                                    + oTrans.Master().getModel().getPhNationalId() + " ||"
-                            );
-//                            loJSON = oTrans.Save();
-//                            if ("error".equals((String) loJSON.get("result"))) {
-//                                Assert.fail((String) loJSON.get("message"));
-//                            }
-                            break;
-                        case "Address":
-                            break;
-                        case "Mobile":
-                            break;
-                        case "Email":
-                            break;
-                    }
 
-                    break;
-                case "btnClose":
-                    switch (tabText) {
-                        case "PersonalInfo":
-                            break;
-                        case "Address":
-                            break;
-                        case "Mobile":
-                            break;
-                        case "Email":
-                            break;
+                    ShowMessageFX.OkayCancel(null, "", "Successfully saved!");
+                    JSONObject loJSON;
+                    System.out.println("data files " + oTrans.Master().getModel().getLastName() + " ||"
+                            + oTrans.Master().getModel().getFirstName() + " ||"
+                            + oTrans.Master().getModel().getMiddleName() + " ||"
+                            + oTrans.Master().getModel().getSuffixName() + " ||"
+                            + oTrans.Master().getModel().getCitizenshipId() + " ||"
+                            + oTrans.Master().getModel().getBirthDate() + " ||"
+                            + oTrans.Master().getModel().getBirthPlaceId() + " ||"
+                            + "gender: " + oTrans.Master().getModel().getGender() + " ||"
+                            + oTrans.Master().getModel().getCivilStatus() + " ||"
+                            + oTrans.Master().getModel().getSpouseId() + " ||"
+                            + oTrans.Master().getModel().getMothersMaidenName() + " ||"
+                            + oTrans.Master().getModel().getTaxIdNumber() + " ||"
+                            + oTrans.Master().getModel().getLTOClientId() + " ||"
+                            + oTrans.Master().getModel().getPhNationalId() + " ||"
+                    );
+                    loJSON = oTrans.Save();
+                    if ("error".equals((String) loJSON.get("result"))) {
+                        Assert.fail((String) loJSON.get("message"));
                     }
+//                    switch (tabText) {
+//                        
+//                        case "PersonalInfo":
+//
+//                            break;
+//                        case "Address":
+//                            break;
+//                        case "Mobile":
+//                            break;
+//                        case "Email":
+//                            break;
+//                    }
+//                    break;
+//                case "btnClose":
+//                    switch (tabText) {
+//                        case "PersonalInfo":
+//                            break;
+//                        case "Address":
+//                            break;
+//                        case "Mobile":
+//                            break;
+//                        case "Email":
+//                            break;
+//                    }
 
                     break;
                 case "btnAddAddress":
@@ -531,13 +551,17 @@ public class IndividualNewController implements Initializable {
                     case 6:
                         /*search town for citizenship*/
                         poJson = new JSONObject();
-                        poJson = oTrans.Master().searchCitizenship(lsValue, false);
+//                        poJson = oTrans.Master().searchCitizenship(lsValue, false);
+
+                        Country loCountry = new Country(oApp, true);
+                        loCountry.setRecordStatus("1");
+                        poJson = loCountry.searchRecord(lsValue, false);
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             personalinfo06.clear();
                         }
-                        personalinfo06.setText((String) poJson.get("sNational"));
-                        oTrans.Master().getModel().setCitizenshipId((String) poJson.get("sCntryCde"));
+                        personalinfo06.setText((String) loCountry.getModel().getNational());
+                        oTrans.Master().getModel().setCitizenshipId((String) loCountry.getModel().getCountryCode());
 
                         break;
                     case 8:
@@ -661,42 +685,45 @@ public class IndividualNewController implements Initializable {
                     case 3:
                         /*search province*/
                         poJson = new JSONObject();
-                        poJson = oTrans.Master().searchBirthPlace(lsValue, false);
+                        Province loProvince = new Province(oApp, true);
+                        loProvince.setRecordStatus("1");
+                        poJson = loProvince.searchRecord(lsValue, false);
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             AddressField03.clear();
                         }
-                        AddressField03.setText((String) poJson.get("sNational"));
-                        oTrans.Master().getModel().setCitizenshipId((String) poJson.get("sCntryCde"));
-
+                        AddressField03.setText((String)loProvince.getModel().getProvinceName());
+//                        oTrans.Address(pnAddress).getModel().set NO PROVINCE ID
+                        
                         break;
                     case 4:
                         /*search city*/
                         poJson = new JSONObject();
-                        poJson = oTrans.Master().SearchTownAddress(pnAddress, lsValue, false);
-                        System.out.println("poJson = " + poJson.toJSONString());
-                        if("error".equalsIgnoreCase(poJson.get("result").toString())){
-                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                             AddressField03.clear();
+//                        poJson = oTrans.Master().SearchTownAddress(pnAddress, lsValue, false);
+                        TownCity loTownCity = new TownCity();
+                        loTownCity.setRecordStatus("1");
+                        poJson = loTownCity.searchRecord(lsValue, false);
+                        if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
+                            ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                            AddressField03.clear();
                         }
-                        //                setTownID((String) loJSON.get("sTownIDxx"));
-//                setTownName((String) loJSON.get("sTownName"));
-//                setProvinceName((String) loJSON.get("sProvName"));
-//                        AddressField03.setText((String)oTrans.getAddress(pnAddress, 20) + ", " + (String) oTrans.getAddress(pnAddress, 22));
-//                        AddressField04.setText((String)oTrans.getAddress(pnAddress, 21));
-                        oTrans.Address(pnAddress).getModel().setTownId(lsValue);
-//                        oTrans.Address(pnAddress).getModel()
+
+                        oTrans.Address(pnAddress).getModel().setTownId(loTownCity.getModel().getTownId());
+                        AddressField04.setText(loTownCity.getModel().getTownName());
                         break;
                     case 5:
                         /*search barangay*/
                         poJson = new JSONObject();
-                        poJson = oTrans.Master().SearchBarangayAddress(1, "", false);
+                        Barangay loBarangay = new Barangay(oApp, true);
+                        loBarangay.setRecordStatus("1");
+                        poJson = loBarangay.searchRecord(lsValue, false);
+
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             AddressField05.clear();
                         }
-                        AddressField05.setText((String) poJson.get("xBrthPlce"));
-                        oTrans.Master().getModel().setBirthPlaceId((String) poJson.get("sTownIDxx"));
+                        AddressField05.setText(loBarangay.getModel().getBarangayName());
+                        oTrans.Address(pnAddress).getModel().setBarangayId(loBarangay.getModel().getBarangayID());
                         break;
                 }
         }
@@ -786,7 +813,7 @@ public class IndividualNewController implements Initializable {
 
     private void mobile_KeyPressed(KeyEvent event) {
         TextField address = (TextField) event.getSource();
-        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(12, 14));
+        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(9, 11));
         String lsValue = (address.getText() == null ? "" : address.getText());
         JSONObject poJson;
         switch (event.getCode()) {
@@ -795,13 +822,17 @@ public class IndividualNewController implements Initializable {
                     case 1:
                         /*search mobileNo*/
                         poJson = new JSONObject();
-//                        poJson = oTrans.Master().searchBirthPlace(lsValue, false);
-//                        if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
-//                            ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-//                            AddressField03.clear();
-//                        }
-//                        AddressField03.setText((String) poJson.get("sNational"));
-//                        oTrans.Master().getModel().setCitizenshipId((String) poJson.get("sCntryCde"));
+                        Client_Mobile loclient_mobile = new Client_Mobile();
+                        loclient_mobile.setRecordStatus("1");
+                        poJson = loclient_mobile.searchRecord(lsValue, false);
+                        if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
+                            ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                            txtMobile01.clear();
+                        }
+                        txtMobile01.setText((String) loclient_mobile.getModel().getMobileNo());
+                        oTrans.Mobile(pnMobile).getModel().setMobileNo((String) loclient_mobile.getModel().getMobileNo());
+                        oTrans.Mobile(pnMobile).getModel().setMobileType((String) loclient_mobile.getModel().getMobileType());
+                        oTrans.Mobile(pnMobile).getModel().setMobileNetwork((String) loclient_mobile.getModel().getMobileNetwork());
 
                         break;
                 }
@@ -1405,6 +1436,12 @@ public class IndividualNewController implements Initializable {
 //        }  
 
         oApp = MiscUtil.Connect();
+
+        if (oTransnox == null || oTransnox.isEmpty()) { // Check if oTransnox is null or empty
+            pnEditMode = EditMode.ADDNEW;
+//            initButton(pnEditMode);
+        }
+
         oTrans = new Client(oApp, "", null);
 
         oTrans.Master().getModel().setClientType(ClientType.INDIVIDUAL);
@@ -1497,6 +1534,22 @@ public class IndividualNewController implements Initializable {
         initSocialMediaGrid();
         initEmailGrid();
         initMobileGrid();
+
+        clearFields();
+        clearAddress();
+        clearEmail();
+        clearSocMed();
+        clearMobile();
+
+        oTrans.New();
+        String lsClientID = (String) oTrans.Master().getModel().getClientId();
+        if (txtField01 != null) { // Check if txtField01 is not null before setting its text
+            oTrans.Master().getModel().setClientId(lsClientID);
+            txtField01.setText((String) oTrans.Master().getModel().getClientId());
+        } else {
+            // Handle the case where txtField01 is null
+            ShowMessageFX.OkayCancel(oTransnox, lsClientID, "No Client ID");
+        }
 
     }
 

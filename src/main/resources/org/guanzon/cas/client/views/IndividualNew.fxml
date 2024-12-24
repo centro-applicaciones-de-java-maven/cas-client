@@ -86,7 +86,7 @@
                                                                             <Font size="14.0" />
                                                                         </font>
                                                                     </Text>
-                                                                    <TextField fx:id="txtField01" editable="false" styleClass="text-field-Id" text="M00000000001" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                                                                    <TextField fx:id="txtField01" editable="false" styleClass="text-field-Id" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" />
                                                    </GridPane.margin>

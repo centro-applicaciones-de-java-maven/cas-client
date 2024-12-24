@@ -86,7 +86,7 @@
                                                                             <Font size="14.0" />
                                                                         </font>
                                                                     </Text>
-                                                                    <TextField fx:id="txtField01" editable="false" styleClass="text-field-Id" text="M00000000001" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                                                                    <TextField fx:id="txtField01" editable="false" styleClass="text-field-Id" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" />
                                                    </GridPane.margin>
@@ -118,9 +118,9 @@
                                        <children>
                                                       <AnchorPane layoutX="15.0" layoutY="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                           <children>
-                                                              <TabPane prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                              <TabPane fx:id="TabPane" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                   <tabs>
-                                                                      <Tab text="Personal Info">
+                                                                      <Tab fx:id="PersonalInfo" text="Personal Info">
                                                          <content>
                                                             <AnchorPane>
                                                                <padding>
@@ -144,8 +144,8 @@
                                                                         <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
@@ -233,12 +233,12 @@
                                                                               <Insets left="15.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <ComboBox fx:id="personalinfo09" maxWidth="182.0" minWidth="95.0" prefHeight="27.0" prefWidth="95.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                        <ComboBox fx:id="personalinfo09" maxWidth="182.0" minHeight="26.0" minWidth="95.0" prefHeight="27.0" prefWidth="95.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </ComboBox>
-                                                                        <ComboBox fx:id="personalinfo10" maxWidth="184.0" minWidth="130.0" prefHeight="27.0" prefWidth="156.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                                        <ComboBox fx:id="personalinfo10" maxWidth="184.0" minHeight="26.0" minWidth="130.0" prefHeight="27.0" prefWidth="156.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -333,11 +333,11 @@
                                                             </AnchorPane>
                                                          </content>
                                                                       </Tab>
-                                                                      <Tab text="Address">
+                                                                      <Tab fx:id="Address" text="Address">
                                                    <content>
                                                       <AnchorPane fx:id="anchorAddress">
                                                          <children>
-                                                            <TableView fx:id="tblAddress" layoutX="20.0" layoutY="230.0" onMouseClicked="#tblAddress_Clicked" prefHeight="150.0" prefWidth="615.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="190.0">
+                                                            <TableView fx:id="tblAddress" layoutX="20.0" layoutY="230.0" prefHeight="150.0" prefWidth="615.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="190.0">
                                                                <columns>
                                                                   <TableColumn fx:id="indexAddress01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                   <TableColumn fx:id="indexAddress02" prefWidth="75.0" text="House No." />
@@ -379,27 +379,27 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField03" maxWidth="200.0" minWidth="150.0" prefHeight="10.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                                  <TextField fx:id="AddressField04" maxWidth="200.0" minWidth="150.0" prefHeight="10.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField04" maxWidth="200.0" minWidth="150.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                                  <TextField fx:id="AddressField05" maxWidth="200.0" minWidth="150.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField05" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                                  <TextField fx:id="AddressField06" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField06" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                                                                  <TextField fx:id="AddressField07" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="3">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <CheckBox fx:id="cbAddress03" mnemonicParsing="false" onMouseClicked="#cbAddress03_Clicked" text="Office" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+                                                                  <CheckBox fx:id="cbAddress03" mnemonicParsing="false" text="Office" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -407,7 +407,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress04" mnemonicParsing="false" text="Billing" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+                                                                  <CheckBox fx:id="cbAddress05" mnemonicParsing="false" text="Billing" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="6">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -415,7 +415,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress05" mnemonicParsing="false" onMouseClicked="#cbAddress05_Clicked" text="Shipping" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                                                                  <CheckBox fx:id="cbAddress06" mnemonicParsing="false" text="Shipping" GridPane.columnIndex="2" GridPane.rowIndex="6">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -423,7 +423,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress06" mnemonicParsing="false" onMouseClicked="#cbAddress06_Clicked" text="Province" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                  <CheckBox fx:id="cbAddress04" mnemonicParsing="false" text="Province" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -431,7 +431,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress07" mnemonicParsing="false" onMouseClicked="#cbAddress07_Clicked" prefWidth="81.0" text="Current" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                                                  <CheckBox fx:id="cbAddress07" mnemonicParsing="false" prefWidth="81.0" text="Current" GridPane.columnIndex="3" GridPane.rowIndex="6">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -439,7 +439,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress08" mnemonicParsing="false" onMouseClicked="#cbAddress08_Clicked" text="LTMS" GridPane.columnIndex="4" GridPane.rowIndex="6">
+                                                                  <CheckBox fx:id="cbAddress08" mnemonicParsing="false" text="LTMS" GridPane.columnIndex="4" GridPane.rowIndex="6">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -447,7 +447,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress01" mnemonicParsing="false" onMouseClicked="#cbAddress01_Clicked" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                  <CheckBox fx:id="cbAddress01" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -455,7 +455,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress02" mnemonicParsing="false" onMouseClicked="#cbAddress02_Clicked" text="Primary" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                  <CheckBox fx:id="cbAddress02" mnemonicParsing="false" text="Primary" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -521,7 +521,7 @@
                                                                         <Insets />
                                                                      </GridPane.margin>
                                                                   </Button>
-                                                                        <TextField fx:id="AddressField031" maxWidth="200.0" minWidth="150.0" prefHeight="15.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                        <TextField fx:id="AddressField03" maxWidth="200.0" minWidth="150.0" prefHeight="15.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -540,7 +540,7 @@
                                                       </AnchorPane>
                                                    </content>
                                                 </Tab>
-                                                                      <Tab text="Mobile">
+                                                                      <Tab fx:id="Mobile" text="Mobile">
                                                          <content>
                                                             <AnchorPane>
                                                                <children>
@@ -551,7 +551,7 @@
                                                                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                                            </padding>
                                                                            <children>
-                                                                              <GridPane hgap="2.0" layoutX="-7.0" vgap="1.0" AnchorPane.leftAnchor="0.0">
+                                                                              <GridPane hgap="2.0" layoutX="-7.0" vgap="2.0" AnchorPane.leftAnchor="0.0">
                                                                                  <columnConstraints>
                                                                                     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
@@ -573,11 +573,11 @@
                                                                                     <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                  </rowConstraints>
                                                                                  <children>
-                                                                                    <ComboBox fx:id="cmbMobile01" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                                                                                    <ComboBox fx:id="cmbMobile01" prefWidth="150.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin></ComboBox>
-                                                                                    <ComboBox fx:id="cmbMobile02" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                                    <ComboBox fx:id="cmbMobile02" prefWidth="150.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin></ComboBox>
@@ -585,7 +585,7 @@
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin></TextField>
-                                                                                    <CheckBox fx:id="cbMobileNo02" mnemonicParsing="false" onMouseClicked="#CheckStatus_Clicked" selected="true" text="Active" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                                                    <CheckBox fx:id="cbMobileNo01" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
@@ -593,7 +593,7 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </CheckBox>
-                                                                                    <CheckBox fx:id="cbMobileNo01" mnemonicParsing="false" onMouseClicked="#CheckPrimary_Clicked" text="Primary Number" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                                                    <CheckBox fx:id="cbMobileNo02" mnemonicParsing="false" text="Primary Number" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
@@ -603,25 +603,28 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </Text>
-                                                                                    <Button fx:id="btnAddMobile" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" prefWidth="30.0" styleClass="button_process" wrapText="true" GridPane.columnIndex="9">
-                                                                                       <graphic>
-                                                                                          <FontAwesomeIconView glyphName="PLUS" size="20" textAlignment="CENTER" />
-                                                                                       </graphic>
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="ADD ADDRESS" />
-                                                                                       </tooltip>
-                                                                                    </Button>
-                                                                                    <Button fx:id="btnDelMobile" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1">
-                                                                                       <graphic>
-                                                                                          <FontAwesomeIconView glyphName="TRASH" size="20" textAlignment="CENTER" />
-                                                                                       </graphic>
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="CLEAR" />
-                                                                                       </tooltip>
-                                                                                       <GridPane.margin>
-                                                                                          <Insets />
-                                                                                       </GridPane.margin>
-                                                                                    </Button>
+                                                              <Button fx:id="btnAddMobile" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9">
+                                                                     <graphic>
+                                                                        <FontAwesomeIconView glyphName="PLUS" size="15" textAlignment="CENTER" />
+                                                                     </graphic>
+                                                                     <tooltip>
+                                                                        <Tooltip text="ADD ADDRESS" />
+                                                                     </tooltip>
+                                                                           <GridPane.margin>
+                                                                              <Insets />
+                                                                           </GridPane.margin>
+                                                                  </Button>
+                                                                  <Button fx:id="btnDelMobile" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <FontAwesomeIconView glyphName="TRASH" size="15" text="" textAlignment="CENTER" />
+                                                                     </graphic>
+                                                                     <tooltip>
+                                                                        <Tooltip text="CLEAR" />
+                                                                     </tooltip>
+                                                                     <GridPane.margin>
+                                                                        <Insets />
+                                                                     </GridPane.margin>
+                                                                  </Button>
                                                                                     <Label fx:id="lblMobileStat" alignment="CENTER" contentDisplay="CENTER" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: FF8201;" text="ACTIVE" textAlignment="CENTER" textFill="#111111" GridPane.columnIndex="5" GridPane.columnSpan="2">
                                                                                        <font>
                                                                                           <Font name="System Bold" size="18.0" />
@@ -646,16 +649,13 @@
                                                                         </AnchorPane>
                                                                         <AnchorPane prefWidth="615.0">
                                                                            <children>
-                                                                              <TableView fx:id="tblMobile" layoutX="14.0" layoutY="53.0" onMouseClicked="#tblMobile_Clicked" prefHeight="173.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <TableView fx:id="tblMobile" layoutX="14.0" layoutY="53.0" prefHeight="173.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexMobileNo01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexMobileNo02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" text="Mobile No." />
                                                                                     <TableColumn fx:id="indexMobileNo03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="157.0" text="Owner" />
                                                                                     <TableColumn fx:id="indexMobileNo04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="156.0" text="Mobile Type" />
                                                                                  </columns>
-                                                                                 <padding>
-                                                                                    <Insets left="10.0" />
-                                                                                 </padding>
                                                                               </TableView>
                                                                            </children>
                                                                         </AnchorPane>
@@ -668,7 +668,7 @@
                                                             </AnchorPane>
                                                          </content>
                                                                       </Tab>
-                                                                      <Tab text="Email">
+                                                                      <Tab fx:id="Email" text="Email">
                                                          <content>
                                                             <AnchorPane>
                                                                <children>
@@ -679,7 +679,7 @@
                                                                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                                            </padding>
                                                                            <children>
-                                                                              <GridPane hgap="2.0" layoutX="14.0" layoutY="233.0" vgap="1.0" AnchorPane.leftAnchor="-10.0" AnchorPane.topAnchor="-12.0">
+                                                                              <GridPane hgap="2.0" layoutX="14.0" layoutY="233.0" vgap="2.0" AnchorPane.leftAnchor="-10.0" AnchorPane.topAnchor="-10.0">
                                                                                  <columnConstraints>
                                                                                     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
@@ -695,22 +695,21 @@
                                                                                  <rowConstraints>
                                                                                     <RowConstraints />
                                                                                     <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="5.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                  </rowConstraints>
                                                                                  <children>
-                                                                                    <ComboBox fx:id="cmbEmail01" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                                    <ComboBox fx:id="cmbEmail01" prefWidth="150.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </ComboBox>
-                                                                                    <TextField fx:id="mailFields01" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                                    <TextField fx:id="mailFields01" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <CheckBox fx:id="cbEmail02" mnemonicParsing="false" onMouseClicked="#CheckMailStatus_Clicked" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                                                                    <CheckBox fx:id="cbEmail02" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -718,7 +717,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </CheckBox>
-                                                                                    <CheckBox fx:id="cbEmail01" mnemonicParsing="false" onMouseClicked="#CheckPrimaryEmail_Clicked" text="Primary Address" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                                                    <CheckBox fx:id="cbEmail01" mnemonicParsing="false" text="Primary Email" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -726,7 +725,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </CheckBox>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Email " GridPane.rowIndex="2">
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Email " GridPane.rowIndex="1">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -734,7 +733,7 @@
                                                                                           <Insets left="10.0" />
                                                                                        </GridPane.margin>
                                                                                     </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Owner " GridPane.rowIndex="1">
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Owner ">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -742,26 +741,29 @@
                                                                                           <Insets left="10.0" />
                                                                                        </GridPane.margin>
                                                                                     </Text>
-                                                                                    <Button fx:id="btnAddEmail" contentDisplay="CENTER" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1">
-                                                                                       <graphic>
-                                                                                          <FontAwesomeIconView glyphName="PLUS" size="20" textAlignment="CENTER" />
-                                                                                       </graphic>
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="ADD ADDRESS" />
-                                                                                       </tooltip>
-                                                                                    </Button>
-                                                                                    <Button fx:id="btnDelEmail" contentDisplay="CENTER" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="2">
-                                                                                       <graphic>
-                                                                                          <FontAwesomeIconView glyphName="TRASH" size="20" textAlignment="CENTER" />
-                                                                                       </graphic>
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="CLEAR" />
-                                                                                       </tooltip>
-                                                                                       <GridPane.margin>
-                                                                                          <Insets />
-                                                                                       </GridPane.margin>
-                                                                                    </Button>
-                                                                                    <Label fx:id="lblEmailStat" alignment="CENTER" contentDisplay="CENTER" maxWidth="150.0" minWidth="100.0" prefHeight="25.0" prefWidth="144.0" style="-fx-background-color: FF8201;" text="ACTIVE" textAlignment="CENTER" textFill="#111111" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                              <Button fx:id="btnAddEmail" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9">
+                                                                     <graphic>
+                                                                        <FontAwesomeIconView glyphName="PLUS" size="15" text="" textAlignment="CENTER" />
+                                                                     </graphic>
+                                                                     <tooltip>
+                                                                        <Tooltip text="ADD ADDRESS" />
+                                                                     </tooltip>
+                                                                           <GridPane.margin>
+                                                                              <Insets />
+                                                                           </GridPane.margin>
+                                                                  </Button>
+                                                                  <Button fx:id="btnDelEmail" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <FontAwesomeIconView glyphName="TRASH" size="15" textAlignment="CENTER" />
+                                                                     </graphic>
+                                                                     <tooltip>
+                                                                        <Tooltip text="CLEAR" />
+                                                                     </tooltip>
+                                                                     <GridPane.margin>
+                                                                        <Insets />
+                                                                     </GridPane.margin>
+                                                                  </Button>
+                                                                                    <Label fx:id="lblEmailStat" alignment="CENTER" contentDisplay="CENTER" maxWidth="150.0" minWidth="100.0" prefHeight="25.0" prefWidth="144.0" style="-fx-background-color: FF8201;" text="ACTIVE" textAlignment="CENTER" textFill="#111111" GridPane.columnIndex="5" GridPane.columnSpan="2">
                                                                                        <font>
                                                                                           <Font name="System Bold" size="18.0" />
                                                                                        </font>
@@ -793,7 +795,7 @@
                                                             </AnchorPane>
                                                          </content>
                                                                       </Tab>
-                                                                      <Tab text="Social Media">
+                                                                      <Tab fx:id="SocialMedia" text="Social Media">
                                                          <content>
                                                             <AnchorPane>
                                                                <children>
@@ -804,7 +806,7 @@
                                                                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                                                            </padding>
                                                                            <children>
-                                                                              <GridPane hgap="2.0" vgap="1.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-11.0">
+                                                                              <GridPane hgap="2.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-10.0">
                                                                                  <columnConstraints>
                                                                                     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
@@ -826,7 +828,7 @@
                                                                                     <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
                                                                                  </rowConstraints>
                                                                                  <children>
-                                                                                    <ComboBox fx:id="cmbSocMed01" layoutX="-7.0" prefWidth="150.0" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                                                                                    <ComboBox fx:id="cmbSocMed01" layoutX="-7.0" prefWidth="150.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                                                        <opaqueInsets>
                                                                                           <Insets left="5.0" />
                                                                                        </opaqueInsets>
@@ -865,7 +867,7 @@
                                                                                           <Insets left="15.0" />
                                                                                        </GridPane.margin>
                                                                                     </Text>
-                                                                                    <CheckBox fx:id="cbSocMed01" mnemonicParsing="false" onMouseClicked="#CheckSocMedtatus_Clicked" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                                    <CheckBox fx:id="cbSocMed01" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="5">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -873,25 +875,28 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </CheckBox>
-                                                                                    <Button fx:id="btnAddSocMed" contentDisplay="CENTER" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9">
-                                                                                       <graphic>
-                                                                                          <FontAwesomeIconView glyphName="PLUS" size="20" textAlignment="CENTER" />
-                                                                                       </graphic>
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="ADD ADDRESS" />
-                                                                                       </tooltip>
-                                                                                    </Button>
-                                                                                    <Button fx:id="btnDelSocMed" contentDisplay="CENTER" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1">
-                                                                                       <graphic>
-                                                                                          <FontAwesomeIconView glyphName="TRASH" size="20" textAlignment="CENTER" />
-                                                                                       </graphic>
-                                                                                       <tooltip>
-                                                                                          <Tooltip text="CLEAR" />
-                                                                                       </tooltip>
-                                                                                       <GridPane.margin>
-                                                                                          <Insets />
-                                                                                       </GridPane.margin>
-                                                                                    </Button>
+                                                              <Button fx:id="btnAddSocMed" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9">
+                                                                     <graphic>
+                                                                        <FontAwesomeIconView glyphName="PLUS" size="15" textAlignment="CENTER" />
+                                                                     </graphic>
+                                                                     <tooltip>
+                                                                        <Tooltip text="ADD ADDRESS" />
+                                                                     </tooltip>
+                                                                           <GridPane.margin>
+                                                                              <Insets />
+                                                                           </GridPane.margin>
+                                                                  </Button>
+                                                                  <Button fx:id="btnDelSocMed" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                                                                     <graphic>
+                                                                        <FontAwesomeIconView glyphName="TRASH" size="15" textAlignment="CENTER" />
+                                                                     </graphic>
+                                                                     <tooltip>
+                                                                        <Tooltip text="CLEAR" />
+                                                                     </tooltip>
+                                                                     <GridPane.margin>
+                                                                        <Insets />
+                                                                     </GridPane.margin>
+                                                                  </Button>
                                                                                     <Label fx:id="lblSocMedStat" alignment="CENTER" contentDisplay="CENTER" maxWidth="150.0" minWidth="100.0" prefHeight="25.0" prefWidth="120.0" style="-fx-background-color: FF8201;" text="ACTIVE" textAlignment="CENTER" textFill="#111111" GridPane.columnIndex="5" GridPane.columnSpan="2">
                                                                                        <font>
                                                                                           <Font name="System Bold" size="18.0" />
@@ -906,16 +911,13 @@
                                                                         </AnchorPane>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <TableView fx:id="tblSocMed" onMouseClicked="#tblSocMed_Clicked" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <TableView fx:id="tblSocMed" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexSocMed01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexSocMed02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="160.0" text="Account" />
                                                                                     <TableColumn fx:id="indexSocMed03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="140.0" text="Social Media" />
                                                                                     <TableColumn fx:id="indexSocMed04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="240.0" text="Remarks" />
                                                                                  </columns>
-                                                                                 <padding>
-                                                                                    <Insets left="10.0" />
-                                                                                 </padding>
                                                                               </TableView>
                                                                            </children>
                                                                         </AnchorPane>
@@ -972,11 +974,11 @@
                   </AnchorPane>
                </bottom>
                <top>
-                  <AnchorPane id="anchorHeader" prefHeight="30.0" BorderPane.alignment="CENTER">
+                  <AnchorPane id="anchorHeader" fx:id="draggablePane" prefHeight="30.0" BorderPane.alignment="CENTER">
                      <children>
                         <FontAwesomeIconView fill="WHITE" glyphName="USERS" size="20" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
                         <Label styleClass="label-header" text="Client Information" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="5.0" />
-                        <Button fx:id="btnExit" mnemonicParsing="false" onAction="#closeForm" prefHeight="17.0" prefWidth="21.0" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+                        <Button fx:id="btnExit" mnemonicParsing="false" prefHeight="17.0" prefWidth="21.0" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="System Bold" size="8.0" />
                            </font>
