@@ -1,5 +1,7 @@
 package org.guanzon.cas.client;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
@@ -17,6 +19,7 @@ public class Client_Master extends Parameter {
     String psClientTp;
     int pnEditMode;
     ArrayList<Model_Client_Address> paAddress;
+
     public void setClientType(String clientType) {
         psClientTp = clientType;
     }
@@ -30,6 +33,8 @@ public class Client_Master extends Parameter {
         poModel.setXML("Model_Client_Master");
         poModel.setTableName("Client_Master");
         poModel.initialize();
+
+        paAddress = new ArrayList<>();
 
         psClientTp = "10";
     }
@@ -172,8 +177,7 @@ public class Client_Master extends Parameter {
             return loJSON;
         }
     }
-    
-    
+
     public JSONObject SearchBarangayAddress(int lnRow, String fsValue, boolean fbByCode) {
 //        if (paAddress.get(lnRow).getTownID().isEmpty()) {
 //            JSONObject loJSON = new JSONObject();
@@ -187,6 +191,7 @@ public class Client_Master extends Parameter {
     public JSONObject SearchTownAddress(int lnRow, String fsValue, boolean fbByCode) {
         return paAddress.get(lnRow).SearchTown(fsValue, fbByCode);
     }
+
     public JSONObject searchCitizenship(String fsValue, boolean fbByCode) {
 
         JSONObject loJSON;
@@ -231,7 +236,7 @@ public class Client_Master extends Parameter {
                 fbByCode ? 0 : 1);
 
         if (loJSON != null) {
-          //  setMaster(11, (String) loJSON.get("sCntryCde"));
+            //  setMaster(11, (String) loJSON.get("sCntryCde"));
             setMaster(11, (String) loJSON.get("sNational"));
             loJSON.put("result", "success");
             loJSON.put("message", "Search citizenship success.");
@@ -243,20 +248,111 @@ public class Client_Master extends Parameter {
         }
     }
 
+    
+    
+    public JSONObject OpenClientAddress(String fsValue){
+        String lsSQL = "SELECT " +
+                        " a.sAddrssID" +
+                        ", a.sClientID" +
+                        ", a.sHouseNox" +
+                        ", a.sAddressx" +
+                        ", a.sBrgyIDxx" +
+                        ", a.sTownIDxx" +
+                        ", a.nLatitude" +
+                        ", a.nLongitud" +
+                        ", a.cPrimaryx" +
+                        ", a.cRecdStat" +
+                        ", a.dModified" +
+                        ", b.sTownName xTownName" +
+                        ", d.sBrgyName xBrgyName" +
+                        ", c.sProvName xProvName" +
+                " FROM Client_Address a" + 
+                 " LEFT JOIN TownCity b ON a.sTownIDxx = b.sTownIDxx" +
+                            " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx" +
+                            " LEFT JOIN Barangay d ON a.sBrgyIDxx = d.sBrgyIDxx";
+        lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID = " + SQLUtil.toSQL(fsValue) + " GROUP BY sAddrssID");
+        System.out.println(lsSQL);
+        ResultSet loRS = poGRider.executeQuery(lsSQL);
+
+        try {
+            int lnctr = 0;
+            if (MiscUtil.RecordCount(loRS) > 0) {
+                paAddress = new ArrayList<>();
+                while(loRS.next()){
+                        paAddress.add(new Model_Client_Address());
+                        paAddress.get(paAddress.size() - 1).openRecord(loRS.getString("sAddrssID"));
+                        pnEditMode = EditMode.UPDATE;
+                        lnctr++;
+                        poJSON.put("result", "success");
+                        poJSON.put("message", "Record loaded successfully.");
+                    } 
+                
+                System.out.println("lnctr = " + lnctr);
+                
+            }else{
+                paAddress = new ArrayList<>();
+                addAddress();
+                poJSON.put("result", "error");
+                poJSON.put("continue", true);
+                poJSON.put("message", "No record selected.");
+            }
+            
+            MiscUtil.close(loRS);
+        } catch (SQLException e) {
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+        }
+        return poJSON;
+    }
+        public JSONObject addAddress(){
+        poJSON = new JSONObject();
+        if (paAddress.isEmpty()){
+            paAddress.add(new Model_Client_Address());
+            paAddress.get(0).newRecord();
+//            paAddress.get(0).setPrimary("1");
+            paAddress.get(0).setClientId(poModel.getClientId());
+            poJSON.put("result", "success");
+            poJSON.put("message", "Address add record.");
+
+        } else {
+            
+//            ValidatorInterface validator = ValidatorFactory.make(types,  ValidatorFactory.TYPE.Client_Address, paAddress.get(paAddress.size()-1));
+////            Validator_Client_Address  validator = new Validator_Client_Address(paAddress.get(paAddress.size()-1));
+//            if(!validator.isEntryOkay()){
+//                poJSON.put("result", "error");
+//                poJSON.put("message", validator.getMessage());
+//                return poJSON;
+//            }
+            paAddress.add(new Model_Client_Address());
+            paAddress.get(paAddress.size()-1).newRecord();
+            paAddress.get(0).setClientId(poModel.getClientId());
+//            if (!paAddress.get(paAddress.size()-1).getAddress().isEmpty()){
+//                paAddress.add(new Model_Client_Address(poGRider.getConnection(), poGRider));
+//                poJSON.put("result", "success");
+//                poJSON.put("message", "Address add record.");
+//            } else {
+//                poJSON.put("result", "error");
+//                poJSON.put("message", "Last contact information has no address.");
+//                return poJSON;
+//            }
+        }
+        return poJSON;
+    }
+    
     public JSONObject setMaster(String fsCol, Object foData) {
         return setMaster(poModel.getColumn(fsCol), foData);
     }
-    
+
     public JSONObject setMaster(int fnCol, Object foData) {
-        
+
         JSONObject obj = new JSONObject();
         obj.put("pnEditMode", pnEditMode);
-        if (pnEditMode != EditMode.UNKNOWN){
+        if (pnEditMode != EditMode.UNKNOWN) {
             // Don't allow specific fields to assign values
-            if(!(fnCol == poModel.getColumn("sClientID") ||
-                fnCol == poModel.getColumn("cRecdStat") ||
-                fnCol == poModel.getColumn("sModified") ||
-                fnCol == poModel.getColumn("dModified"))){
+            if (!(fnCol == poModel.getColumn("sClientID")
+                    || fnCol == poModel.getColumn("cRecdStat")
+                    || fnCol == poModel.getColumn("sModified")
+                    || fnCol == poModel.getColumn("dModified"))) {
                 poModel.setValue(fnCol, foData);
                 poModel.getColumn(fnCol);
                 obj.put(fnCol, pnEditMode);

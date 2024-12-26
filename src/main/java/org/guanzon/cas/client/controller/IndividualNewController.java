@@ -99,189 +99,280 @@ public class IndividualNewController implements Initializable {
 
     @FXML
     private AnchorPane AnchorMain;
+
+    @FXML
+    private TextField txtField02;
+
+    @FXML
+    private TextField txtField01;
+
+    @FXML
+    private TextArea txtField03;
+
+    @FXML
+    private TabPane TabPane;
+
+    @FXML
+    private Tab PersonalInfo;
+
+    @FXML
+    private TextField personalinfo02;
+
+    @FXML
+    private TextField personalinfo03;
+
+    @FXML
+    private TextField personalinfo04;
+
+    @FXML
+    private TextField personalinfo05;
+
+    @FXML
+    private TextField personalinfo12;
+
+    @FXML
+    private ComboBox personalinfo09;
+
+    @FXML
+    private ComboBox personalinfo10;
+
+    @FXML
+    private TextField personalinfo06;
+
+    @FXML
+    private DatePicker personalinfo07;
+
+    @FXML
+    private TextField personalinfo08;
+
+    @FXML
+    private TextField personalinfo11;
+
+    @FXML
+    private TextField personalinfo13;
+
+    @FXML
+    private TextField personalinfo14;
+
+    @FXML
+    private TextField personalinfo15;
+
+    @FXML
+    private Tab Address;
+
+    @FXML
+    private AnchorPane anchorAddress;
+
+    @FXML
+    private TableView tblAddress;
+
+    @FXML
+    private TableColumn indexAddress01;
+
+    @FXML
+    private TableColumn indexAddress02;
+
+    @FXML
+    private TableColumn indexAddress03;
+
+    @FXML
+    private TableColumn indexAddress04;
+
+    @FXML
+    private TableColumn indexAddress05;
+
+    @FXML
+    private TextField AddressField01;
+
+    @FXML
+    private TextField AddressField02;
+
+    @FXML
+    private TextField AddressField04;
+
+    @FXML
+    private TextField AddressField05;
+
+    @FXML
+    private TextField AddressField06;
+
+    @FXML
+    private TextField AddressField07;
+
+    @FXML
+    private CheckBox cbAddress03;
+
+    @FXML
+    private CheckBox cbAddress05;
+
+    @FXML
+    private CheckBox cbAddress06;
+
+    @FXML
+    private CheckBox cbAddress04;
+
+    @FXML
+    private CheckBox cbAddress07;
+
+    @FXML
+    private CheckBox cbAddress08;
+
+    @FXML
+    private CheckBox cbAddress01;
+
+    @FXML
+    private CheckBox cbAddress02;
+
+    @FXML
+    private Button btnAddAddress;
+
+    @FXML
+    private Button btnDelAddress;
+
+    @FXML
+    private TextField AddressField03;
+
+    @FXML
+    private Tab Mobile;
+
+    @FXML
+    private ComboBox cmbMobile01;
+
+    @FXML
+    private ComboBox cmbMobile02;
+
+    @FXML
+    private TextField txtMobile01;
+
+    @FXML
+    private CheckBox cbMobileNo01;
+
+    @FXML
+    private CheckBox cbMobileNo02;
+
+    @FXML
+    private Button btnAddMobile;
+
+    @FXML
+    private Button btnDelMobile;
+
+    @FXML
+    private Label lblMobileStat;
+
+    @FXML
+    private TableView tblMobile;
+
+    @FXML
+    private TableColumn indexMobileNo01;
+
+    @FXML
+    private TableColumn indexMobileNo02;
+
+    @FXML
+    private TableColumn indexMobileNo03;
+
+    @FXML
+    private TableColumn indexMobileNo04;
+
+    @FXML
+    private Tab Email;
+
+    @FXML
+    private ComboBox cmbEmail01;
+
+    @FXML
+    private TextField mailFields01;
+
+    @FXML
+    private CheckBox cbEmail02;
+
+    @FXML
+    private CheckBox cbEmail01;
+
+    @FXML
+    private Button btnAddEmail;
+
+    @FXML
+    private Button btnDelEmail;
+
+    @FXML
+    private Label lblEmailStat;
+
+    @FXML
+    private TableView tblEmail;
+
+    @FXML
+    private TableColumn indexEmail01;
+
+    @FXML
+    private TableColumn indexEmail02;
+
+    @FXML
+    private TableColumn indexEmail03;
+
+    @FXML
+    private Tab SocialMedia;
+
+    @FXML
+    private ComboBox cmbSocMed01;
+
+    @FXML
+    private TextField txtSocial01;
+
+    @FXML
+    private TextArea txtSocial02;
+
+    @FXML
+    private CheckBox cbSocMed01;
+
+    @FXML
+    private Button btnAddSocMed;
+
+    @FXML
+    private Button btnDelSocMed;
+
+    @FXML
+    private Label lblSocMedStat;
+
+    @FXML
+    private TableView tblSocMed;
+
+    @FXML
+    private TableColumn indexSocMed01;
+
+    @FXML
+    private TableColumn indexSocMed02;
+
+    @FXML
+    private TableColumn indexSocMed03;
+
+    @FXML
+    private TableColumn indexSocMed04;
+
+    @FXML
+    private HBox hbButtons;
+
+    @FXML
+    private Button btnSave;
+
+    @FXML
+    private Button btnCancel;
+
     @FXML
     private AnchorPane draggablePane;
 
     @FXML
     private Button btnExit;
+
     @FXML
     private FontAwesomeIconView glyphExit;
-    @FXML
-    private HBox hbButtons;
-    @FXML
-    private Button btnSave;
-    @FXML
-    private Button btnCancel;
-    @FXML
-    private TextField txtField02;
-    @FXML
-    private TextField txtField01;
-    @FXML
-    private TextArea txtField03;
-    @FXML
-    private TextField personalinfo02;
-    @FXML
-    private TextField personalinfo03;
-    @FXML
-    private TextField personalinfo04;
-    @FXML
-    private TextField personalinfo05;
-    @FXML
-    private TextField personalinfo12;
-    @FXML
-    private ComboBox personalinfo09;
-    @FXML
-    private ComboBox personalinfo10;
-    @FXML
-    private TextField personalinfo06;
-    @FXML
-    private DatePicker personalinfo07;
-    @FXML
-    private TextField personalinfo08;
-    @FXML
-    private TextField personalinfo11;
-    @FXML
-    private TextField personalinfo13;
-    @FXML
-    private TextField personalinfo14;
-    @FXML
-    private TextField personalinfo15;
-    @FXML
-    private AnchorPane anchorAddress;
-    @FXML
-    private TableView tblAddress;
-    @FXML
-    private TableColumn indexAddress01;
-    @FXML
-    private TableColumn indexAddress02;
-    @FXML
-    private TableColumn indexAddress03;
-    @FXML
-    private TableColumn indexAddress04;
-    @FXML
-    private TableColumn indexAddress05;
-    @FXML
-    private TextField AddressField01;
-    @FXML
-    private TextField AddressField02;
-    @FXML
-    private TextField AddressField03;
-    @FXML
-    private TextField AddressField04;
-    @FXML
-    private TextField AddressField05;
-    @FXML
-    private TextField AddressField06;
-    @FXML
-    private TextField AddressField07;
-    @FXML
-    private CheckBox cbAddress03;
-    @FXML
-    private CheckBox cbAddress04;
-    @FXML
-    private CheckBox cbAddress05;
-    @FXML
-    private CheckBox cbAddress06;
-    @FXML
-    private CheckBox cbAddress07;
-    @FXML
-    private CheckBox cbAddress08;
-    @FXML
-    private CheckBox cbAddress01;
-    @FXML
-    private CheckBox cbAddress02;
-    @FXML
-    private Button btnAddAddress;
-    @FXML
-    private Button btnDelAddress;
-    @FXML
-    private ComboBox cmbMobile01;
-    @FXML
-    private ComboBox cmbMobile02;
-    @FXML
-    private TextField txtMobile01;
-    @FXML
-    private CheckBox cbMobileNo02;
-    @FXML
-    private CheckBox cbMobileNo01;
-    @FXML
-    private Button btnAddMobile;
-    @FXML
-    private Button btnDelMobile;
-    @FXML
-    private Label lblMobileStat;
-    @FXML
-    private TableView tblMobile;
-    @FXML
-    private TableColumn indexMobileNo01;
-    @FXML
-    private TableColumn indexMobileNo02;
-    @FXML
-    private TableColumn indexMobileNo03;
-    @FXML
-    private TableColumn indexMobileNo04;
-    @FXML
-    private ComboBox cmbEmail01;
-    @FXML
-    private TextField mailFields01;
-    @FXML
-    private CheckBox cbEmail02;
-    @FXML
-    private CheckBox cbEmail01;
-    @FXML
-    private Button btnAddEmail;
-    @FXML
-    private Button btnDelEmail;
-    @FXML
-    private Label lblEmailStat;
-    @FXML
-    private TableView tblEmail;
-    @FXML
-    private TableColumn indexEmail01;
-    @FXML
-    private TableColumn indexEmail02;
-    @FXML
-    private TableColumn indexEmail03;
-    @FXML
-    private ComboBox cmbSocMed01;
-    @FXML
-    private TextField txtSocial01;
-    @FXML
-    private TextArea txtSocial02;
-    @FXML
-    private CheckBox cbSocMed01;
-    @FXML
-    private Button btnAddSocMed;
-    @FXML
-    private Button btnDelSocMed;
-    @FXML
-    private Label lblSocMedStat;
-    @FXML
-    private TableView tblSocMed;
-    @FXML
-    private TableColumn indexSocMed01;
-    @FXML
-    private TableColumn indexSocMed02;
-    @FXML
-    private TableColumn indexSocMed03;
-    @FXML
-    private TableColumn indexSocMed04;
-    @FXML
-    private Tab SocialMedia;
-    @FXML
-    private Tab PersonalInfo;
-    @FXML
-    private Tab Mobile;
-    @FXML
-    private Tab Email;
-    @FXML
-    private TabPane TabPane;
-
+//
+//
 //     @Override
-//    public void setGRider(GRider foValue
-//    ) {
+//    public void setGRider(GRider foValue) {
 //        oApp = foValue;
 //    }
+
     private void closeForm(javafx.event.ActionEvent event) {
         Stage stage = (Stage) btnExit.getScene().getWindow();
         stage.close();
@@ -289,17 +380,32 @@ public class IndividualNewController implements Initializable {
 
     private void clearAddress() {
         // Arrays of TextFields grouped by sections
-        TextField[][] allFields = {
-            {AddressField01, AddressField02, AddressField03, AddressField04,
-                AddressField05, AddressField06}
-        };
+//        TextField[][] allFields = {
+//            {AddressField01, AddressField02, AddressField03, AddressField04,
+//                AddressField05, AddressField06}
+//        };
+//
+//        // Loop through each array of TextFields and clear them
+//        for (TextField[] fields : allFields) {
+//            for (TextField field : fields) {
+//                field.clear();
+//            }
+//        }
+        AddressField01.clear();
+        AddressField02.clear();
+        AddressField03.clear();
+        AddressField04.clear();
+        AddressField05.clear();
+        AddressField06.clear();
+        cbAddress01.setSelected(false);
+        cbAddress02.setSelected(false);
+        cbAddress03.setSelected(false);
+        cbAddress04.setSelected(false);
+        cbAddress05.setSelected(false);
+        cbAddress06.setSelected(false);
+        cbAddress07.setSelected(false);
+        cbAddress08.setSelected(false);
 
-        // Loop through each array of TextFields and clear them
-        for (TextField[] fields : allFields) {
-            for (TextField field : fields) {
-                field.clear();
-            }
-        }
     }
 
     private void clearFields() {
@@ -315,6 +421,7 @@ public class IndividualNewController implements Initializable {
 
         cmbMobile02.setItems(mobileType);
         cmbMobile02.getSelectionModel().select(0);
+
     }
 
     private void clearEmail() {
@@ -414,30 +521,16 @@ public class IndividualNewController implements Initializable {
 
                     break;
                 case "btnAddAddress":
+                    clearAddress();
                     JSONObject addObjAddress = oTrans.addAddress();
-                    System.out.println((String) addObjAddress.get("message"));
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
-                    AddressField01.clear();
-                    AddressField02.clear();
-                    AddressField03.clear();
-                    AddressField04.clear();
-                    AddressField05.clear();
-                    AddressField06.clear();
-                    cbAddress01.setSelected(false);
-                    cbAddress02.setSelected(false);
-                    cbAddress03.setSelected(false);
-                    cbAddress04.setSelected(false);
-                    cbAddress05.setSelected(false);
-                    cbAddress06.setSelected(false);
-                    cbAddress07.setSelected(false);
-                    cbAddress08.setSelected(false);
-                    loadRecordAddress();
 
                     pnAddress = oTrans.getAddressCount() - 1;
                     tblAddress.getSelectionModel().select(pnAddress + 1);
+                    loadRecordAddress();
 //                       initAddressGrid();
                     break;
 
@@ -455,8 +548,9 @@ public class IndividualNewController implements Initializable {
                     tblEmail.getSelectionModel().select(pnEmail + 1);
                     break;
                 case "btnAddMobile":
-                    JSONObject addObj = oTrans.addMobile();
 
+                    System.out.println(oTrans.getMobileCount());
+                    JSONObject addObj = oTrans.addMobile();
                     System.out.println((String) addObj.get("message"));
                     if ("error".equals((String) addObj.get("result"))) {
                         ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
@@ -465,7 +559,6 @@ public class IndividualNewController implements Initializable {
                     txtMobile01.clear();
                     loadRecordMobile();
                     pnMobile = oTrans.getMobileCount() - 1;
-
                     tblMobile.getSelectionModel().select(pnMobile + 1);
                     break;
                 case "btnAddSocMed":
@@ -549,7 +642,7 @@ public class IndividualNewController implements Initializable {
             case F3:
                 switch (lnIndex) {
                     case 6:
-                        /*search town for citizenship*/
+                        /*search country for citizenship*/
                         poJson = new JSONObject();
 //                        poJson = oTrans.Master().searchCitizenship(lsValue, false);
 
@@ -559,9 +652,10 @@ public class IndividualNewController implements Initializable {
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             personalinfo06.clear();
+                        } else {
+                            personalinfo06.setText((String) loCountry.getModel().getNational());
+                            oTrans.Master().getModel().setCitizenshipId((String) loCountry.getModel().getCountryCode());
                         }
-                        personalinfo06.setText((String) loCountry.getModel().getNational());
-                        oTrans.Master().getModel().setCitizenshipId((String) loCountry.getModel().getCountryCode());
 
                         break;
                     case 8:
@@ -571,9 +665,10 @@ public class IndividualNewController implements Initializable {
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             personalinfo08.clear();
+                        } else {
+                            personalinfo08.setText((String) poJson.get("xBrthPlce"));
+                            oTrans.Master().getModel().setBirthPlaceId((String) poJson.get("sTownIDxx"));
                         }
-                        personalinfo08.setText((String) poJson.get("xBrthPlce"));
-                        oTrans.Master().getModel().setBirthPlaceId((String) poJson.get("sTownIDxx"));
                         break;
                 }
         }
@@ -691,25 +786,32 @@ public class IndividualNewController implements Initializable {
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             AddressField03.clear();
+                        } else {
+                            AddressField03.setText((String) loProvince.getModel().getProvinceName());
+//                            oTrans.Address(pnAddress).getModel().set // No province ID in xml
                         }
-                        AddressField03.setText((String)loProvince.getModel().getProvinceName());
-//                        oTrans.Address(pnAddress).getModel().set NO PROVINCE ID
-                        
+
                         break;
                     case 4:
                         /*search city*/
                         poJson = new JSONObject();
 //                        poJson = oTrans.Master().SearchTownAddress(pnAddress, lsValue, false);
+
                         TownCity loTownCity = new TownCity();
+                        loTownCity.setApplicationDriver(oApp);
                         loTownCity.setRecordStatus("1");
+                        loTownCity.initialize();
                         poJson = loTownCity.searchRecord(lsValue, false);
+
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             AddressField03.clear();
+                        } else {
+//                            loadRecordAddress();
+                            getSelectedAddress();
+                            oTrans.Address(pnAddress).getModel().setTownId(loTownCity.getModel().getTownId());
+                            AddressField04.setText(loTownCity.getModel().getTownName());
                         }
-
-                        oTrans.Address(pnAddress).getModel().setTownId(loTownCity.getModel().getTownId());
-                        AddressField04.setText(loTownCity.getModel().getTownName());
                         break;
                     case 5:
                         /*search barangay*/
@@ -755,14 +857,14 @@ public class IndividualNewController implements Initializable {
             switch (lnIndex) {
                 case 1:
                     /*House No.*/
-                    loJSON = oTrans.Address(0).getModel().setHouseNo(lsValue);
+                    loJSON = oTrans.Address(pnAddress).getModel().setHouseNo(lsValue);
                     if ("error".equals((String) loJSON.get("result"))) {
                         Assert.fail((String) loJSON.get("message"));
                     }
                     break;
                 case 2:
                     /*Address*/
-                    loJSON = oTrans.Address(0).getModel().setAddress(lsValue);
+                    loJSON = oTrans.Address(pnAddress).getModel().setAddress(lsValue);
                     if ("error".equals((String) loJSON.get("result"))) {
                         Assert.fail((String) loJSON.get("message"));
                     }
@@ -776,28 +878,28 @@ public class IndividualNewController implements Initializable {
                     break;
                 case 4:
                     /*City*/
-                    loJSON = oTrans.Address(0).getModel().setTownId(lsValue);
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        Assert.fail((String) loJSON.get("message"));
-                    }
+//                    loJSON = oTrans.Address(pnAddress).getModel().setTownId(lsValue);
+//                    if ("error".equals((String) loJSON.get("result"))) {
+//                        Assert.fail((String) loJSON.get("message"));
+//                    }
                     break;
                 case 5:
                     /*Barangay*/
-                    loJSON = oTrans.Address(0).getModel().setBarangayId(lsValue);
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        Assert.fail((String) loJSON.get("message"));
-                    }
+//                    loJSON = oTrans.Address(pnAddress).getModel().setBarangayId(lsValue);
+//                    if ("error".equals((String) loJSON.get("result"))) {
+//                        Assert.fail((String) loJSON.get("message"));
+//                    }
                     break;
                 case 6:
                     /*Latitude*/
-                    loJSON = oTrans.Address(0).getModel().setLatitude(lsValue);
+                    loJSON = oTrans.Address(pnAddress).getModel().setLatitude(lsValue);
                     if ("error".equals((String) loJSON.get("result"))) {
                         Assert.fail((String) loJSON.get("message"));
                     }
                     break;
                 case 7:
                     /*Longitud*/
-                    loJSON = oTrans.Address(0).getModel().setLongitude(lsValue);
+                    loJSON = oTrans.Address(pnAddress).getModel().setLongitude(lsValue);
                     if ("error".equals((String) loJSON.get("result"))) {
                         Assert.fail((String) loJSON.get("message"));
                     }
@@ -823,7 +925,9 @@ public class IndividualNewController implements Initializable {
                         /*search mobileNo*/
                         poJson = new JSONObject();
                         Client_Mobile loclient_mobile = new Client_Mobile();
+                        loclient_mobile.setApplicationDriver(oApp);
                         loclient_mobile.setRecordStatus("1");
+                        loclient_mobile.initialize();
                         poJson = loclient_mobile.searchRecord(lsValue, false);
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
@@ -865,13 +969,43 @@ public class IndividualNewController implements Initializable {
             switch (lnIndex) {
                 case 1:
                     /*House No.*/
-                    loJSON = oTrans.Mobile(0).getModel().setMobileNo(lsValue);
+                    loJSON = oTrans.Mobile(pnMobile).getModel().setMobileNo(lsValue);
                     if ("error".equals((String) loJSON.get("result"))) {
                         Assert.fail((String) loJSON.get("message"));
                     }
                     break;
             }
             loadRecordEmail();
+
+        } else {
+            // txtContact.selectAll();
+        }
+    };
+
+    final ChangeListener<? super Boolean> socialmedia_Focus = (o, ov, nv) -> {
+        JSONObject loJSON;
+        if (!pbLoaded) {
+            return;
+        }
+        TextField txtEmail = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+        int lnIndex = Integer.parseInt(txtEmail.getId().substring(12, 14));
+        String lsValue = (txtEmail.getText() == null ? "" : txtEmail.getText());
+        JSONObject jsonObject = new JSONObject();
+        if (lsValue == null) {
+            return;
+        }
+        if (!nv) {
+            /*Lost Focus*/
+            switch (lnIndex) {
+                case 1:
+                    /*House No.*/
+                    loJSON = oTrans.SocialMedia(pnSocialMedia).getModel().setAccount(lsValue);
+                    if ("error".equals((String) loJSON.get("result"))) {
+                        Assert.fail((String) loJSON.get("message"));
+                    }
+                    break;
+            }
+            loadRecordSocialMedia();
 
         } else {
             // txtContact.selectAll();
@@ -896,7 +1030,7 @@ public class IndividualNewController implements Initializable {
             switch (lnIndex) {
 
                 case 2://Remarks
-                    loJSON = oTrans.SocialMedia(0).getModel().setRemarks(lsValue);
+                    loJSON = oTrans.SocialMedia(pnSocialMedia).getModel().setRemarks(lsValue);
                     if ("error".equals((String) loJSON.get("result"))) {
                         System.err.println((String) loJSON.get("message"));
                         ShowMessageFX.Information(null, pxeModuleName, (String) loJSON.get("message"));
@@ -926,7 +1060,7 @@ public class IndividualNewController implements Initializable {
             switch (lnIndex) {
                 case 1:
                     /*House No.*/
-                    loJSON = oTrans.Mobile(0).getModel().setMobileNo(lsValue);
+                    loJSON = oTrans.Mobile(pnMobile).getModel().setMobileNo(lsValue);
                     if ("error".equals((String) loJSON.get("result"))) {
                         Assert.fail((String) loJSON.get("message"));
                     }
@@ -941,13 +1075,13 @@ public class IndividualNewController implements Initializable {
 
     private void InitSocialMediaTextFields() {
         /*MOBILE INFO FOCUSED PROPERTY*/
-        txtSocial01.focusedProperty().addListener(mobile_Focus);
+        txtSocial01.focusedProperty().addListener(socialmedia_Focus);
         txtSocial02.focusedProperty().addListener(txtAreaSocialMedia_Focus);
     }
 
     private void InitEmailTextFields() {
         /*MOBILE INFO FOCUSED PROPERTY*/
-        mailFields01.focusedProperty().addListener(mobile_Focus);
+        mailFields01.focusedProperty().addListener(email_Focus);
         mailFields01.setOnKeyPressed(this::mobile_KeyPressed);
     }
 
@@ -1073,49 +1207,94 @@ public class IndividualNewController implements Initializable {
     private void loadRecordAddress() {
         int lnCtr;
         address_data.clear();
+        int lnCtr2 = 0;
 //        oTrans.getAddress(pnAddress).list();
+
+
+        
+
         if (oTrans.getAddressCount() >= 0) {
             for (lnCtr = 0; lnCtr < oTrans.getAddressCount(); lnCtr++) {
+            TownCity loTownCity = new TownCity();
+            loTownCity.setApplicationDriver(oApp);
+            loTownCity.setRecordStatus("1");
+            loTownCity.initialize();
+            loTownCity.openRecord(oTrans.Address(lnCtr2).getModel().getTownId());
+
+            Barangay loBarangay = new Barangay(oApp, true);
+            loBarangay.setRecordStatus("1");
+            loBarangay.openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
+
 //                String lsTown = (String) oTrans.getAddress(lnCtr, 20) + ", " + (String) oTrans.getAddress(lnCtr, 22);
-                address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
-                        (String) oTrans.Address(pnAddress).getModel().getValue("sHouseNox"),
-                        (String) oTrans.Address(pnAddress).getModel().getValue("sAddressx"),
-                        (String) oTrans.Address(pnAddress).getModel().getTownId(),
-                        (String) oTrans.Address(pnAddress).getModel().getBarangayId()
-                ));
+            address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
+                    (String) oTrans.Address(lnCtr2).getModel().getValue("sHouseNox"),
+                    (String) oTrans.Address(lnCtr2).getModel().getValue("sAddressx"),
+                    (String) loTownCity.getModel().getTownName(),
+                    (String) loBarangay.getModel().getBarangayName()
+            ));
+            lnCtr2 += 1;
 
-            }
         }
-
     }
 
-    private void getSelectedSocialMedia() {
+    if (pnAddress< 0 || pnAddress
+
+    >= address_data.size () 
+        ) {
+            if (!address_data.isEmpty()) {
+            /* FOCUS ON FIRST ROW */
+            tblAddress.getSelectionModel().select(0);
+            tblAddress.getFocusModel().focus(0);
+            pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+        }
+    }
+
+    
+        else {
+            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+            tblAddress.getSelectionModel().select(pnAddress);
+        tblAddress.getFocusModel().focus(pnAddress);
+    }
+
+}
+
+private void getSelectedSocialMedia() {
         txtSocial01.setText(oTrans.SocialMedia(pnSocialMedia).getModel().getAccount());
         txtSocial02.setText(oTrans.SocialMedia(pnSocialMedia).getModel().getRemarks());
     }
 
     private void getSelectedAddress() {
-        TextField[] fields = {AddressField01, AddressField02, AddressField03, AddressField04,
-            AddressField05, AddressField06, AddressField07};
-        for (TextField field : fields) {
-            field.clear();
-        }
-
-        CheckBox[] checkboxs = {cbAddress01, cbAddress02, cbAddress03,
-            cbAddress04, cbAddress05, cbAddress06, cbAddress07, cbAddress08};
-
-        // Loop through each array of TextFields and clear them
-        for (CheckBox checkbox : checkboxs) {
-            checkbox.setSelected(false);
-        }
+//        TextField[] fields = {AddressField01, AddressField02, AddressField03, AddressField04,
+//            AddressField05, AddressField06, AddressField07};
+//        for (TextField field : fields) {
+//            field.clear();
+//        }
+//
+//        CheckBox[] checkboxs = {cbAddress01, cbAddress02, cbAddress03,
+//            cbAddress04, cbAddress05, cbAddress06, cbAddress07, cbAddress08};
+//
+//        // Loop through each array of TextFields and clear them
+//        for (CheckBox checkbox : checkboxs) {
+//            checkbox.setSelected(false);
+//        }
 
         if (oTrans.getAddressCount() > 0) {
             AddressField01.setText(oTrans.Address(pnAddress).getModel().getHouseNo());
             AddressField02.setText(oTrans.Address(pnAddress).getModel().getAddress());
-//          AddressField03.setText(oTrans.Address(0).getModel().get());
-//            AddressField03.setText((String) oTrans.getAddress(pnAddress, 20) + ", " + (String) oTrans.getAddress(pnAddress, 22));
-            AddressField04.setText(oTrans.Address(pnAddress).getModel().getTownId());
-            AddressField05.setText(oTrans.Address(pnAddress).getModel().getBarangayId());
+//            AddressField03.setText(oTrans.Address(pnAdd).getModel().get());
+
+            TownCity loTownCity = new TownCity();
+            loTownCity.setApplicationDriver(oApp);
+            loTownCity.setRecordStatus("1");
+            loTownCity.initialize();
+            loTownCity.openRecord(oTrans.Address(pnAddress).getModel().getTownId());
+
+            Barangay loBarangay = new Barangay(oApp, true);
+            loBarangay.setRecordStatus("1");
+            loBarangay.openRecord(oTrans.Address(pnAddress).getModel().getBarangayId());
+
+            AddressField04.setText(loTownCity.getModel().getTownName());
+            AddressField05.setText(loBarangay.getModel().getBarangayName());
             AddressField06.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLatitude()));
             AddressField07.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLongitude()));
 
@@ -1425,7 +1604,7 @@ public class IndividualNewController implements Initializable {
      * Initializes the controller class.
      */
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
+public void initialize(URL url, ResourceBundle rb) {
         System.setProperty("sys.default.path.temp", "D:/GGC_Maven_Systems/temp/");
         System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
         // ShowMessageFX.OkayCancel(null, "", "samp");
@@ -1443,12 +1622,11 @@ public class IndividualNewController implements Initializable {
         }
 
         oTrans = new Client(oApp, "", null);
-
+        oTrans.New();
         oTrans.Master().getModel().setClientType(ClientType.INDIVIDUAL);
 
         initButton();
         InitPersonalInfoTextFields();
-        pbLoaded = true;
 
         personalinfo09.setItems(gender);
 
@@ -1499,14 +1677,14 @@ public class IndividualNewController implements Initializable {
         cmbMobile01.setItems(mobileOwn);
         cmbMobile01.setOnAction(event -> {
             String selectedItem = (String) cmbMobile01.getValue();
-            oTrans.Mobile(0).getModel().setClientId(selectedItem);
+            oTrans.Mobile(pnMobile).getModel().setClientId(selectedItem);
             cmbMobile01.setValue(selectedItem);
         });
 
         cmbMobile02.setItems(mobileType);
         cmbMobile02.setOnAction(event -> {
             String selectedItem = (String) cmbMobile02.getValue();
-            oTrans.Mobile(0).getModel().setMobileType(selectedItem);
+            oTrans.Mobile(pnMobile).getModel().setMobileType(selectedItem);
             cmbMobile02.setValue(selectedItem);
         });
 
@@ -1516,7 +1694,7 @@ public class IndividualNewController implements Initializable {
         cmbEmail01.setItems(emailOwn);
         cmbEmail01.setOnAction(event -> {
             String selectedItem = (String) cmbEmail01.getValue();
-            oTrans.Mail(0).getModel().setClientId(selectedItem);
+            oTrans.Mail(pnEmail).getModel().setClientId(selectedItem);
             cmbEmail01.setValue(selectedItem);
         });
 
@@ -1526,7 +1704,7 @@ public class IndividualNewController implements Initializable {
         cmbSocMed01.setItems(socialTyp);
         cmbSocMed01.setOnAction(event -> {
             String selectedItem = (String) cmbSocMed01.getValue();
-            oTrans.SocialMedia(0).getModel().setClientId(selectedItem);
+            oTrans.SocialMedia(pnSocialMedia).getModel().setClientId(selectedItem);
             cmbSocMed01.setValue(selectedItem);
         });
 
@@ -1541,7 +1719,16 @@ public class IndividualNewController implements Initializable {
         clearSocMed();
         clearMobile();
 
-        oTrans.New();
+        loadRecordMobile();
+        loadRecordAddress();
+        loadRecordSocialMedia();
+        loadRecordEmail();
+        
+        initTableOnClick();
+
+        pbLoaded = true;
+
+//        oTrans.New();
         String lsClientID = (String) oTrans.Master().getModel().getClientId();
         if (txtField01 != null) { // Check if txtField01 is not null before setting its text
             oTrans.Master().getModel().setClientId(lsClientID);
