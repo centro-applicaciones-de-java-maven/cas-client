@@ -397,7 +397,7 @@ public class IndividualNewController implements Initializable {
         AddressField04.clear();
         AddressField05.clear();
         AddressField06.clear();
-        cbAddress01.setSelected(false);
+        cbAddress01.setSelected(true);
         cbAddress02.setSelected(false);
         cbAddress03.setSelected(false);
         cbAddress04.setSelected(false);
@@ -421,6 +421,9 @@ public class IndividualNewController implements Initializable {
 
         cmbMobile02.setItems(mobileType);
         cmbMobile02.getSelectionModel().select(0);
+
+        cbMobileNo01.setSelected(false);
+        cbMobileNo02.setSelected(false);
 
     }
 
@@ -521,13 +524,14 @@ public class IndividualNewController implements Initializable {
 
                     break;
                 case "btnAddAddress":
+
                     clearAddress();
                     JSONObject addObjAddress = oTrans.addAddress();
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
-
+                    oTrans.Address(pnAddress).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     pnAddress = oTrans.getAddressCount() - 1;
                     tblAddress.getSelectionModel().select(pnAddress + 1);
                     loadRecordAddress();
@@ -535,35 +539,38 @@ public class IndividualNewController implements Initializable {
                     break;
 
                 case "btnAddEmail":
+                    clearEmail();
                     JSONObject addObjMail = oTrans.addMail();
-
+                    oTrans.Mail(pnEmail).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addObjMail.get("message"));
                     if ("error".equals((String) addObjMail.get("result"))) {
                         ShowMessageFX.Information((String) addObjMail.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
                     mailFields01.clear();
-                    loadRecordEmail();
                     pnEmail = oTrans.getMailCount() - 1;
                     tblEmail.getSelectionModel().select(pnEmail + 1);
+                    loadRecordEmail();
                     break;
                 case "btnAddMobile":
 
                     System.out.println(oTrans.getMobileCount());
                     JSONObject addObj = oTrans.addMobile();
+                    oTrans.Mobile(pnMobile).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addObj.get("message"));
                     if ("error".equals((String) addObj.get("result"))) {
                         ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
                     txtMobile01.clear();
-                    loadRecordMobile();
                     pnMobile = oTrans.getMobileCount() - 1;
                     tblMobile.getSelectionModel().select(pnMobile + 1);
+                    loadRecordMobile();
                     break;
                 case "btnAddSocMed":
+                    clearSocMed();
                     JSONObject addSocMed = oTrans.addSocialMedia();
-
+                    oTrans.SocialMedia(pnSocialMedia).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addSocMed.get("message"));
                     if ("error".equals((String) addSocMed.get("result"))) {
                         ShowMessageFX.Information((String) addSocMed.get("message"), "Computerized Acounting System", pxeModuleName);
@@ -573,57 +580,71 @@ public class IndividualNewController implements Initializable {
                     txtSocial02.clear();
                     pnSocialMedia = oTrans.getSocMedCount() - 1;
 
-                    loadRecordSocialMedia();
                     tblSocMed.getSelectionModel().select(pnSocialMedia + 1);
+                    loadRecordSocialMedia();
                     break;
 
                 case "btnDelAddress":
+                    clearAddress();
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        oTrans.Address(pnAddress).deleteRecord();
+//                        oTrans.Address(pnAddress).deleteRecord();
+                        JSONObject loJson = oTrans.deleteAddress(pnAddress);
+                        if ("error".equals((String) loJson.get("result"))) {
+                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
+                        }
                         if (oTrans.getAddressCount() <= 0) {
                             oTrans.addAddress();
                         }
-
                         pnAddress = oTrans.getAddressCount() - 1;
                         loadRecordAddress();
-                        clearAddress();
                         AddressField01.requestFocus();
                     }
                     break;
                 case "btnDelMobile":
+                    clearMobile();
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        oTrans.Mobile(pnMobile).deleteRecord();
+                        JSONObject loJson = oTrans.deleteMobile(pnMobile);
+                        if ("error".equals((String) loJson.get("result"))) {
+                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
+                        }
                         if (oTrans.getMobileCount() <= 0) {
                             oTrans.addMobile();
                         }
 
                         pnMobile = oTrans.getMobileCount() - 1;
                         loadRecordMobile();
-                        clearMobile();
                     }
                     break;
                 case "btnDelEmail":
+                    clearEmail();
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        oTrans.Mobile(pnEmail).deleteRecord();
-                        if (oTrans.getMailCount() <= 0) {
-                            oTrans.addMail();
+                        JSONObject loJson = oTrans.deleteEmail(pnEmail);
+                        if ("error".equals((String) loJson.get("result"))) {
+                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
                         }
 
                         pnEmail = oTrans.getMailCount() - 1;
                         loadRecordEmail();
-                        clearEmail();
                     }
                     break;
                 case "btnDelSocMed":
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        oTrans.SocialMedia(pnSocialMedia).deleteRecord();
+                        JSONObject loJson = oTrans.deleteSocialMedia(pnSocialMedia);
+                        if ("error".equals((String) loJson.get("result"))) {
+                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
+                        }
                         if (oTrans.getSocMedCount() <= 0) {
                             oTrans.addSocialMedia();
                         }
 
                         pnSocialMedia = oTrans.getSocMedCount() - 1;
+                        tblSocMed.getSelectionModel().select(pnSocialMedia);
+
                         loadRecordSocialMedia();
-                        clearSocMed();
                     }
                     break;
 
@@ -788,7 +809,7 @@ public class IndividualNewController implements Initializable {
                             AddressField03.clear();
                         } else {
                             AddressField03.setText((String) loProvince.getModel().getProvinceName());
-//                            oTrans.Address(pnAddress).getModel().set // No province ID in xml
+                            oTrans.Address(pnAddress).getModel().Town().Province().setProvinceId(loProvince.getModel().getProvinceID());
                         }
 
                         break;
@@ -807,10 +828,11 @@ public class IndividualNewController implements Initializable {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             AddressField03.clear();
                         } else {
-//                            loadRecordAddress();
-                            getSelectedAddress();
+//                            loadRecordAddress
+                            AddressField04.setText((String) loTownCity.getModel().getTownName());
                             oTrans.Address(pnAddress).getModel().setTownId(loTownCity.getModel().getTownId());
-                            AddressField04.setText(loTownCity.getModel().getTownName());
+                            loadRecordAddress();
+
                         }
                         break;
                     case 5:
@@ -826,6 +848,7 @@ public class IndividualNewController implements Initializable {
                         }
                         AddressField05.setText(loBarangay.getModel().getBarangayName());
                         oTrans.Address(pnAddress).getModel().setBarangayId(loBarangay.getModel().getBarangayID());
+                        loadRecordAddress();
                         break;
                 }
         }
@@ -839,6 +862,43 @@ public class IndividualNewController implements Initializable {
                 CommonUtils.SetPreviousFocus(address);
         }
     }
+
+    final ChangeListener<? super Boolean> master_Focus = (o, ov, nv) -> {
+        JSONObject loJSON;
+        if (!pbLoaded) {
+            return;
+        }
+        TextField txtMaster = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+        int lnIndex = Integer.parseInt(txtMaster.getId().substring(txtMaster.getId().length() - 2));
+        String lsValue = (txtMaster.getText() == null ? "" : txtMaster.getText());
+        JSONObject jsonObject = new JSONObject();
+        if (lsValue == null) {
+            return;
+        }
+        if (!nv) {
+            /*Lost Focus*/
+            switch (lnIndex) {
+                case 2:
+                    /*Client Name should be company name*/
+                    loJSON = oTrans.Master().getModel().setCompanyName(lsValue);
+                    if ("error".equals((String) loJSON.get("result"))) {
+                        Assert.fail((String) loJSON.get("message"));
+                    }
+                    break;
+                case 3:
+                    /*Client Name should be company name*/
+//                    loJSON = oTrans.Master().getModel().BirthTown().
+//                    if ("error".equals((String) loJSON.get("result"))) {
+//                        Assert.fail((String) loJSON.get("message"));
+//                    }
+                    break;
+            }
+            loadRecordMaster();
+
+        } else {
+            // txtContact.selectAll();
+        }
+    };
 
     final ChangeListener<? super Boolean> address_Focus = (o, ov, nv) -> {
         JSONObject loJSON;
@@ -871,7 +931,8 @@ public class IndividualNewController implements Initializable {
                     break;
                 case 3:
                     /*Province*/
-//                   loJSON = oTrans.Address(0).getModel().setHouseNo(lsValue);
+                    //leave blank as it is searchable 
+//                    loJSON =  oTrans.Address(pnAddress).getModel().Town().setProvinceId(lsValue);
 //                    if ("error".equals((String) loJSON.get("result"))) {
 //                        Assert.fail((String) loJSON.get("message"));
 //                    }
@@ -937,9 +998,10 @@ public class IndividualNewController implements Initializable {
                         oTrans.Mobile(pnMobile).getModel().setMobileNo((String) loclient_mobile.getModel().getMobileNo());
                         oTrans.Mobile(pnMobile).getModel().setMobileType((String) loclient_mobile.getModel().getMobileType());
                         oTrans.Mobile(pnMobile).getModel().setMobileNetwork((String) loclient_mobile.getModel().getMobileNetwork());
-
                         break;
                 }
+                loadRecordMobile();
+
         }
         switch (event.getCode()) {
             case ENTER:
@@ -958,7 +1020,7 @@ public class IndividualNewController implements Initializable {
             return;
         }
         TextField txtEmail = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(txtEmail.getId().substring(12, 14));
+        int lnIndex = Integer.parseInt(txtEmail.getId().substring(txtEmail.getId().length() - 2));
         String lsValue = (txtEmail.getText() == null ? "" : txtEmail.getText());
         JSONObject jsonObject = new JSONObject();
         if (lsValue == null) {
@@ -968,8 +1030,8 @@ public class IndividualNewController implements Initializable {
             /*Lost Focus*/
             switch (lnIndex) {
                 case 1:
-                    /*House No.*/
-                    loJSON = oTrans.Mobile(pnMobile).getModel().setMobileNo(lsValue);
+                    /*Email.*/
+                    loJSON = oTrans.Mail(pnEmail).getModel().setMailAddress(lsValue);
                     if ("error".equals((String) loJSON.get("result"))) {
                         Assert.fail((String) loJSON.get("message"));
                     }
@@ -988,7 +1050,7 @@ public class IndividualNewController implements Initializable {
             return;
         }
         TextField txtEmail = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(txtEmail.getId().substring(12, 14));
+        int lnIndex = Integer.parseInt(txtEmail.getId().substring(txtEmail.getId().length() - 2));
         String lsValue = (txtEmail.getText() == null ? "" : txtEmail.getText());
         JSONObject jsonObject = new JSONObject();
         if (lsValue == null) {
@@ -998,7 +1060,7 @@ public class IndividualNewController implements Initializable {
             /*Lost Focus*/
             switch (lnIndex) {
                 case 1:
-                    /*House No.*/
+                    /*Account.*/
                     loJSON = oTrans.SocialMedia(pnSocialMedia).getModel().setAccount(lsValue);
                     if ("error".equals((String) loJSON.get("result"))) {
                         Assert.fail((String) loJSON.get("message"));
@@ -1009,6 +1071,37 @@ public class IndividualNewController implements Initializable {
 
         } else {
             // txtContact.selectAll();
+        }
+    };
+
+    final ChangeListener<? super Boolean> txtAreaMaster_Focus = (o, ov, nv) -> {
+        if (!pbLoaded) {
+            return;
+        }
+
+        TextArea txtField = (TextArea) ((ReadOnlyBooleanPropertyBase) o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(txtField.getId().length() - 2));
+        String lsValue = txtField.getText();
+
+        if (lsValue == null) {
+            return;
+        }
+        JSONObject loJSON;
+        if (!nv) {
+            /*Lost Focus*/
+            switch (lnIndex) {
+
+                case 3://Address
+//                    loJSON = oTrans.SocialMedia(pnSocialMedia).getModel().setRemarks(lsValue);
+//                    if ("error".equals((String) loJSON.get("result"))) {
+//                        System.err.println((String) loJSON.get("message"));
+//                        ShowMessageFX.Information(null, pxeModuleName, (String) loJSON.get("message"));
+//                        return;
+//                    }
+                    break;
+            }
+        } else {
+            txtField.selectAll();
         }
     };
 
@@ -1038,6 +1131,7 @@ public class IndividualNewController implements Initializable {
                     }
                     break;
             }
+            loadRecordSocialMedia();
         } else {
             txtField.selectAll();
         }
@@ -1049,7 +1143,7 @@ public class IndividualNewController implements Initializable {
             return;
         }
         TextField txtMobile = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(txtMobile.getId().substring(12, 14));
+        int lnIndex = Integer.parseInt(txtMobile.getId().substring(txtMobile.getId().length() - 2));
         String lsValue = (txtMobile.getText() == null ? "" : txtMobile.getText());
         JSONObject jsonObject = new JSONObject();
         if (lsValue == null) {
@@ -1059,14 +1153,14 @@ public class IndividualNewController implements Initializable {
             /*Lost Focus*/
             switch (lnIndex) {
                 case 1:
-                    /*House No.*/
-                    loJSON = oTrans.Mobile(pnMobile).getModel().setMobileNo(lsValue);
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        Assert.fail((String) loJSON.get("message"));
-                    }
+                    /*Mobile No.*/ // searchable MobileNo
+//                    loJSON = oTrans.Mobile(pnMobile).getModel().setMobileNo(lsValue);
+//                    if ("error".equals((String) loJSON.get("result"))) {
+//                        Assert.fail((String) loJSON.get("message"));
+//                    }
                     break;
             }
-            loadRecordMobile();
+            // loadRecordMobile();
 
         } else {
             // txtContact.selectAll();
@@ -1079,10 +1173,16 @@ public class IndividualNewController implements Initializable {
         txtSocial02.focusedProperty().addListener(txtAreaSocialMedia_Focus);
     }
 
+    private void InitMasterTextFields() {
+        /*MOBILE INFO FOCUSED PROPERTY*/
+        txtField02.focusedProperty().addListener(master_Focus);
+        txtField03.focusedProperty().addListener(txtAreaMaster_Focus);
+    }
+
     private void InitEmailTextFields() {
         /*MOBILE INFO FOCUSED PROPERTY*/
         mailFields01.focusedProperty().addListener(email_Focus);
-        mailFields01.setOnKeyPressed(this::mobile_KeyPressed);
+        //mailFields01.setOnKeyPressed(this::mobile_KeyPressed);
     }
 
     private void InitMobileTextFields() {
@@ -1154,6 +1254,11 @@ public class IndividualNewController implements Initializable {
 
     }
 
+    private void loadRecordMaster() {
+        txtField02.setText(oTrans.Master().getModel().getCompanyName());
+//        txtField03.setText(oTrans.Master().getModel().getFirstName());
+    }
+
     private void loadRecordPersonalInfo() {
         personalinfo02.setText(oTrans.Master().getModel().getLastName());
         personalinfo03.setText(oTrans.Master().getModel().getFirstName());
@@ -1172,98 +1277,164 @@ public class IndividualNewController implements Initializable {
 
     }
 
+    private void loadRecordAddress() {
+        int lnCtr;
+        int lnCtr2 = 0;
+        address_data.clear();
+//        oTrans.getAddress(pnAddress).list();
+
+        if (oTrans.getAddressCount() >= 0) {
+            for (lnCtr = 0; lnCtr < oTrans.getAddressCount(); lnCtr++) {
+                TownCity loTownCity = new TownCity();
+                loTownCity.setApplicationDriver(oApp);
+                loTownCity.setRecordStatus("1");
+                loTownCity.initialize();
+                loTownCity.openRecord(oTrans.Address(lnCtr2).getModel().getTownId());
+
+                Barangay loBarangay = new Barangay(oApp, true);
+                loBarangay.setRecordStatus("1");
+                loBarangay.openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
+
+//                String lsTown = (String) oTrans.getAddress(lnCtr, 20) + ", " + (String) oTrans.getAddress(lnCtr, 22);
+                address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
+                        (String) oTrans.Address(lnCtr2).getModel().getValue("sHouseNox"),
+                        (String) oTrans.Address(lnCtr2).getModel().getValue("sAddressx"),
+                        (String) loTownCity.getModel().getTownName(),
+                        (String) loBarangay.getModel().getBarangayName()
+                ));
+                lnCtr2 += 1;
+
+            }
+        }
+
+        if (pnAddress < 0 || pnAddress
+                >= address_data.size()) {
+            if (!address_data.isEmpty()) {
+                /* FOCUS ON FIRST ROW */
+                tblAddress.getSelectionModel().select(0);
+                tblAddress.getFocusModel().focus(0);
+                pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+                getSelectedAddress();
+            }
+        } else {
+            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+            tblAddress.getSelectionModel().select(pnAddress);
+            tblAddress.getFocusModel().focus(pnAddress);
+            getSelectedAddress();
+        }
+
+    }
+
     private void loadRecordMobile() {
+        int lnCtr2 = 0;
         mobile_data.clear();
-        for (int lnCtr = 0; lnCtr < oTrans.getMobileCount(); lnCtr++) {
-            mobile_data.add(new ModelMobile(String.valueOf(lnCtr + 1),
-                    oTrans.Mobile(pnMobile).getModel().getValue("sMobileNo").toString(),
-                    oTrans.Mobile(pnMobile).getModel().getValue("cOwnerxxx").toString(),
-                    oTrans.Mobile(pnMobile).getModel().getValue("cMobileTp").toString()
-            ));
+
+        if (oTrans.getAddressCount() >= 0) {
+
+            for (int lnCtr = 0; lnCtr < oTrans.getMobileCount(); lnCtr++) {
+                mobile_data.add(new ModelMobile(String.valueOf(lnCtr + 1),
+                        oTrans.Mobile(lnCtr2).getModel().getValue("sMobileNo").toString(),
+                        oTrans.Mobile(lnCtr2).getModel().getValue("cOwnerxxx").toString(),
+                        oTrans.Mobile(lnCtr2).getModel().getValue("cMobileTp").toString()
+                ));
+                lnCtr2 += 1;
+            }
+        }
+
+        if (pnMobile < 0 || pnMobile
+                >= mobile_data.size()) {
+            if (!mobile_data.isEmpty()) {
+                /* FOCUS ON FIRST ROW */
+                tblMobile.getSelectionModel().select(0);
+                tblMobile.getFocusModel().focus(0);
+                pnMobile = tblMobile.getSelectionModel().getSelectedIndex();
+            }
+            getSelectedMobile();
+        } else {
+            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+            tblMobile.getSelectionModel().select(pnMobile);
+            tblMobile.getFocusModel().focus(pnMobile);
+            getSelectedMobile();
         }
     }
 
     private void loadRecordEmail() {
+        int lnCtr2 = 0;
         email_data.clear();
-        for (int lnCtr = 0; lnCtr < oTrans.getMailCount(); lnCtr++) {
-            email_data.add(new ModelEmail(String.valueOf(lnCtr + 1),
-                    oTrans.Mail(pnEmail).getModel().getValue("cOwnerxxx").toString(),
-                    oTrans.Mail(pnEmail).getModel().getValue("sEMailAdd").toString()
-            ));
+        if (oTrans.getMailCount() >= 0) {
+            for (int lnCtr = 0; lnCtr < oTrans.getMailCount(); lnCtr++) {
+                email_data.add(new ModelEmail(String.valueOf(lnCtr + 1),
+                        oTrans.Mail(lnCtr2).getModel().getValue("cOwnerxxx").toString(),
+                        oTrans.Mail(lnCtr2).getModel().getValue("sEMailAdd").toString()
+                ));
+                lnCtr2 += 1;
+            }
+        }
+        if (pnEmail < 0 || pnEmail
+                >= email_data.size()) {
+            if (!email_data.isEmpty()) {
+                /* FOCUS ON FIRST ROW */
+                tblEmail.getSelectionModel().select(0);
+                tblEmail.getFocusModel().focus(0);
+                pnEmail = tblEmail.getSelectionModel().getSelectedIndex();
+
+            }
+            getSelectedEmail();
+        } else {
+            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+            tblEmail.getSelectionModel().select(pnEmail);
+            tblEmail.getFocusModel().focus(pnEmail);
+            getSelectedEmail();
         }
     }
 
     private void loadRecordSocialMedia() {
-        socialmedia_data.clear();
-        for (int lnCtr = 0; lnCtr < oTrans.getSocMedCount(); lnCtr++) {
-            socialmedia_data.add(new ModelSocialMedia(String.valueOf(lnCtr + 1),
-                    oTrans.SocialMedia(pnSocialMedia).getModel().getValue("sAccountx").toString(),
-                    oTrans.SocialMedia(pnSocialMedia).getModel().getSocMedType(),
-                    oTrans.SocialMedia(pnSocialMedia).getModel().getValue("sRemarksx").toString()
-            ));
-        }
-    }
-
-    private void loadRecordAddress() {
-        int lnCtr;
-        address_data.clear();
         int lnCtr2 = 0;
-//        oTrans.getAddress(pnAddress).list();
-
-
-        
-
-        if (oTrans.getAddressCount() >= 0) {
-            for (lnCtr = 0; lnCtr < oTrans.getAddressCount(); lnCtr++) {
-            TownCity loTownCity = new TownCity();
-            loTownCity.setApplicationDriver(oApp);
-            loTownCity.setRecordStatus("1");
-            loTownCity.initialize();
-            loTownCity.openRecord(oTrans.Address(lnCtr2).getModel().getTownId());
-
-            Barangay loBarangay = new Barangay(oApp, true);
-            loBarangay.setRecordStatus("1");
-            loBarangay.openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
-
-//                String lsTown = (String) oTrans.getAddress(lnCtr, 20) + ", " + (String) oTrans.getAddress(lnCtr, 22);
-            address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
-                    (String) oTrans.Address(lnCtr2).getModel().getValue("sHouseNox"),
-                    (String) oTrans.Address(lnCtr2).getModel().getValue("sAddressx"),
-                    (String) loTownCity.getModel().getTownName(),
-                    (String) loBarangay.getModel().getBarangayName()
-            ));
-            lnCtr2 += 1;
-
+        socialmedia_data.clear();
+        if (oTrans.getSocMedCount() >= 0) {
+            for (int lnCtr = 0; lnCtr < oTrans.getSocMedCount(); lnCtr++) {
+                socialmedia_data.add(new ModelSocialMedia(String.valueOf(lnCtr + 1),
+                        oTrans.SocialMedia(lnCtr2).getModel().getAccount(),
+                        oTrans.SocialMedia(lnCtr2).getModel().getSocMedType(),
+                        oTrans.SocialMedia(lnCtr2).getModel().getRemarks()
+                ));
+                lnCtr2 += 1;
+            }
         }
-    }
-
-    if (pnAddress< 0 || pnAddress
-
-    >= address_data.size () 
-        ) {
-            if (!address_data.isEmpty()) {
-            /* FOCUS ON FIRST ROW */
-            tblAddress.getSelectionModel().select(0);
-            tblAddress.getFocusModel().focus(0);
-            pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
-        }
-    }
-
-    
-        else {
+        if (pnSocialMedia < 0 || pnSocialMedia
+                >= socialmedia_data.size()) {
+            if (!socialmedia_data.isEmpty()) {
+                /* FOCUS ON FIRST ROW */
+                tblSocMed.getSelectionModel().select(0);
+                tblSocMed.getFocusModel().focus(0);
+                pnSocialMedia = tblSocMed.getSelectionModel().getSelectedIndex();
+            }
+            getSelectedSocialMedia();
+        } else {
             /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
-            tblAddress.getSelectionModel().select(pnAddress);
-        tblAddress.getFocusModel().focus(pnAddress);
+            tblSocMed.getSelectionModel().select(pnSocialMedia);
+            tblSocMed.getFocusModel().focus(pnSocialMedia);
+            getSelectedSocialMedia();
+
+        }
     }
 
-}
+    private void getSelectedSocialMedia() {
+        int lsSocMedType = 0;
+        if (oTrans.getSocMedCount() > 0) {
+            lsSocMedType = Integer.parseInt(oTrans.SocialMedia(pnSocialMedia).getModel().getSocMedType());
+            cmbSocMed01.getSelectionModel().select(lsSocMedType);
 
-private void getSelectedSocialMedia() {
-        txtSocial01.setText(oTrans.SocialMedia(pnSocialMedia).getModel().getAccount());
-        txtSocial02.setText(oTrans.SocialMedia(pnSocialMedia).getModel().getRemarks());
+            txtSocial01.setText(oTrans.SocialMedia(pnSocialMedia).getModel().getAccount());
+            txtSocial02.setText(oTrans.SocialMedia(pnSocialMedia).getModel().getRemarks());
+
+            cbSocMed01.setSelected(oTrans.SocialMedia(pnSocialMedia).getModel().getRecordStatus() == "1" ? true : false);
+        }
+
     }
 
     private void getSelectedAddress() {
+        clearAddress();
 //        TextField[] fields = {AddressField01, AddressField02, AddressField03, AddressField04,
 //            AddressField05, AddressField06, AddressField07};
 //        for (TextField field : fields) {
@@ -1281,7 +1452,12 @@ private void getSelectedSocialMedia() {
         if (oTrans.getAddressCount() > 0) {
             AddressField01.setText(oTrans.Address(pnAddress).getModel().getHouseNo());
             AddressField02.setText(oTrans.Address(pnAddress).getModel().getAddress());
-//            AddressField03.setText(oTrans.Address(pnAdd).getModel().get());
+
+            Province loProvince = new Province(oApp, true);
+            loProvince.setRecordStatus("1");
+            loProvince.openRecord(oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId());
+
+            AddressField03.setText(loProvince.getModel().getProvinceName());
 
             TownCity loTownCity = new TownCity();
             loTownCity.setApplicationDriver(oApp);
@@ -1293,7 +1469,7 @@ private void getSelectedSocialMedia() {
             loBarangay.setRecordStatus("1");
             loBarangay.openRecord(oTrans.Address(pnAddress).getModel().getBarangayId());
 
-            AddressField04.setText(loTownCity.getModel().getTownName());
+            AddressField04.setText((String) loTownCity.getModel().getTownName());
             AddressField05.setText(loBarangay.getModel().getBarangayName());
             AddressField06.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLatitude()));
             AddressField07.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLongitude()));
@@ -1310,11 +1486,45 @@ private void getSelectedSocialMedia() {
     }
 
     private void getSelectedEmail() {
-        mailFields01.setText(oTrans.Mail(0).getModel().getEmailId());
+        if (oTrans.getMailCount() > 0) {
+            mailFields01.setText(oTrans.Mail(pnEmail).getModel().getMailAddress()); // ask if searchable
+            int lsOwnerType = 0;
+            lsOwnerType = Integer.parseInt(oTrans.Mail(pnEmail).getModel().getOwnershipType());
+            cbEmail01.setSelected(oTrans.Mail(pnEmail).getModel().getRecordStatus() == "1" ? true : false);
+            cbEmail02.setSelected(oTrans.Mail(pnEmail).getModel().isPrimaryEmail());
+
+            cmbEmail01.getSelectionModel().select(lsOwnerType);
+
+//        Client_Mobile loclient_mobile = new Client_Mobile();
+//        loclient_mobile.setApplicationDriver(oApp);
+//        loclient_mobile.setRecordStatus("1");
+//        loclient_mobile.initialize();
+//        loclient_mobile.openRecord(oTrans.Mail(pnEmail).getModel().getEmailId());
+        }
+
     }
 
     private void getSelectedMobile() {
-        txtMobile01.setText(oTrans.Address(0).getModel().getHouseNo());
+        if (oTrans.getMobileCount() > 0) {
+            txtMobile01.setText(oTrans.Mobile(pnMobile).getModel().getMobileNo());
+            int lsOwnerType = 0;
+            int lsMobileType = 0;
+            try {
+                lsOwnerType = Integer.parseInt(oTrans.Mobile(pnMobile).getModel().getOwnershipType());
+                lsMobileType = Integer.parseInt(oTrans.Mobile(pnMobile).getModel().getMobileType());
+            } catch (Exception e) {
+
+            }
+            try {
+                cmbMobile01.getSelectionModel().select(lsOwnerType);
+                cmbMobile02.getSelectionModel().select(lsMobileType);
+            } catch (Exception e) {
+            }
+            cbMobileNo01.setSelected(((String) oTrans.Mobile(pnMobile).getModel().getRecordStatus() == "1") ? true : false);
+            cbMobileNo02.setSelected(oTrans.Mobile(pnMobile).getModel().isPrimaryMobile());
+
+        }
+
     }
 
     private void initAddressCheckbox() {
@@ -1324,99 +1534,105 @@ private void getSelectedSocialMedia() {
             final CheckBox checkbox = cbAddressCheckboxes[i]; // Capture the current checkbox
             checkbox.setOnMouseClicked(event -> {
                 JSONObject loJSON;
-                if (checkbox.isSelected()) {
-                    String id = checkbox.getId();
-                    String numberPart = id.substring(10, 12);
-                    try {
-                        int number = Integer.parseInt(numberPart);
-                        switch (number) {
-                            case 1: // ask if this is crecordstat // isActive
-                                System.out.println("Checkbox 01 selected");
-                                break;
-                            case 2: // Primary Address
-                                loJSON = oTrans.Address(0).getModel().isPrimaryAddress(true);
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                                break;
-                            case 3: //Office
-                                loJSON = oTrans.Address(0).getModel().isOfficeAddress(true);
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                                break;
-                            case 4: // Province
-                                loJSON = oTrans.Address(0).getModel().isProvinceAddress(true);
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                                break;
-                            case 5: // Billing
-                                loJSON = oTrans.Address(0).getModel().isBillingAddress(true);
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                                break;
-                            case 6: // Shipping
-                                loJSON = oTrans.Address(0).getModel().isShippingAddress(true);
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                                break;
-                            case 7: // Current
-                                loJSON = oTrans.Address(0).getModel().isCurrentAddress(true);
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                                break;
-                            case 8: // LTMS
-                                loJSON = oTrans.Address(0).getModel().isLTMSAddress(true);
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                                break;
-                            default:
-                                System.out.println("Unknown checkbox selected");
-                                break;
-                        }
-                    } catch (NumberFormatException e) {
+                String id = checkbox.getId();
+                String numberPart = id.substring(id.length() - 2);
+                try {
+                    int number = Integer.parseInt(numberPart);
+                    switch (number) {
+                        case 1: // ask if this is crecordstat // isActive
+                            System.out.println("Checkbox 01 selected");
+                            loJSON = oTrans.Address(pnAddress).getModel().setRecordStatus((checkbox.isSelected()) ? "1" : "0");
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        case 2: // Primary Address
+                            loJSON = oTrans.Address(pnAddress).getModel().isPrimaryAddress(checkbox.isSelected());
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        case 3: //Office
+                            loJSON = oTrans.Address(pnAddress).getModel().isOfficeAddress(checkbox.isSelected());
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        case 4: // Province
+                            loJSON = oTrans.Address(pnAddress).getModel().isProvinceAddress(checkbox.isSelected());
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        case 5: // Billing
+                            loJSON = oTrans.Address(pnAddress).getModel().isBillingAddress(checkbox.isSelected());
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        case 6: // Shipping
+                            loJSON = oTrans.Address(pnAddress).getModel().isShippingAddress(checkbox.isSelected());
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        case 7: // Current
+                            loJSON = oTrans.Address(pnAddress).getModel().isCurrentAddress(checkbox.isSelected());
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        case 8: // LTMS
+                            loJSON = oTrans.Address(pnAddress).getModel().isLTMSAddress(checkbox.isSelected());
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        default:
+                            System.out.println("Unknown checkbox selected");
+                            break;
                     }
-
+                } catch (NumberFormatException e) {
                 }
+
             });
         }
     }
 
     private void initEmailCheckbox() {
-        CheckBox[] cbEmailCheckboxes = {cbMobileNo01, cbMobileNo02};
+        CheckBox[] cbEmailCheckboxes = {cbEmail01, cbEmail02};
 
         for (int i = 0; i < cbEmailCheckboxes.length; i++) {
             final CheckBox checkbox = cbEmailCheckboxes[i]; // Capture the current checkbox
             checkbox.setOnMouseClicked(event -> {
                 JSONObject loJSON;
-                if (checkbox.isSelected()) {
-                    String id = checkbox.getId();
-                    String numberPart = id.substring(id.length() - 2);
-                    try {
-                        int number = Integer.parseInt(numberPart);
-                        switch (number) {
-                            case 1: // ask if this is crecordstat // isActive
-                                System.out.println("Checkbox 01 selected");
-                                break;
-                            case 2: // Primary Address
-                                loJSON = oTrans.Mail(0).getModel().isPrimaryEmail(true);
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                                break;
-                            default:
-                                System.out.println("Unknown checkbox selected");
-                                break;
-                        }
-                    } catch (NumberFormatException e) {
-                    }
 
+                String id = checkbox.getId();
+                String numberPart = id.substring(id.length() - 2);
+                try {
+                    int number = Integer.parseInt(numberPart);
+                    switch (number) {
+                        case 1: // ask if this is crecordstat // isActive
+                            System.out.println("Checkbox 01 selected");
+
+                            loJSON = oTrans.Mail(pnEmail).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        case 2: // Primary Address
+                            loJSON = oTrans.Mail(pnEmail).getModel().isPrimaryEmail(checkbox.isSelected());
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        default:
+                            System.out.println("Unknown checkbox selected");
+                            break;
+                    }
+                } catch (NumberFormatException e) {
                 }
+
             });
         }
     }
@@ -1456,28 +1672,29 @@ private void getSelectedSocialMedia() {
             final CheckBox checkbox = cbMobileCheckboxes[i]; // Capture the current checkbox
             checkbox.setOnMouseClicked(event -> {
                 JSONObject loJSON;
-                if (checkbox.isSelected()) {
-                    String id = checkbox.getId();
-                    String numberPart = id.substring(id.length() - 2);
-                    try {
-                        int number = Integer.parseInt(numberPart);
-                        switch (number) {
-                            case 1: // ask if this is crecordstat // isActive
-                                System.out.println("Checkbox 01 selected");
-                                break;
-                            case 2: // Primary Address
-                                loJSON = oTrans.Mobile(0).getModel().isPrimaryMobile(true);
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                                break;
-                            default:
-                                System.out.println("Unknown checkbox selected");
-                                break;
-                        }
-                    } catch (NumberFormatException e) {
+                String id = checkbox.getId();
+                String numberPart = id.substring(id.length() - 2);
+                try {
+                    int number = Integer.parseInt(numberPart);
+                    switch (number) {
+                        case 1: // ask if this is crecordstat // isActive
+                            System.out.println("Checkbox 01 selected");
+                            loJSON = oTrans.Mobile(pnMobile).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        case 2: // Primary Address
+                            loJSON = oTrans.Mobile(pnMobile).getModel().isPrimaryMobile(checkbox.isSelected());
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        default:
+                            System.out.println("Unknown checkbox selected");
+                            break;
                     }
-
+                } catch (NumberFormatException e) {
                 }
             });
         }
@@ -1495,20 +1712,20 @@ private void getSelectedSocialMedia() {
 
         tblMobile.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1) {  // Detect single click (or use another condition for double click)
-                pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+                pnMobile = tblMobile.getSelectionModel().getSelectedIndex();
                 getSelectedMobile();
             }
         });
         tblEmail.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1) {  // Detect single click (or use another condition for double click)
-                pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+                pnEmail = tblEmail.getSelectionModel().getSelectedIndex();
                 getSelectedEmail();
             }
         });
 
         tblSocMed.setOnMouseClicked(event -> {
             if (event.getClickCount() == 1) {  // Detect single click (or use another condition for double click)
-                pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+                pnSocialMedia = tblSocMed.getSelectionModel().getSelectedIndex();
                 getSelectedSocialMedia();
             }
         });
@@ -1604,7 +1821,7 @@ private void getSelectedSocialMedia() {
      * Initializes the controller class.
      */
     @Override
-public void initialize(URL url, ResourceBundle rb) {
+    public void initialize(URL url, ResourceBundle rb) {
         System.setProperty("sys.default.path.temp", "D:/GGC_Maven_Systems/temp/");
         System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
         // ShowMessageFX.OkayCancel(null, "", "samp");
@@ -1623,6 +1840,11 @@ public void initialize(URL url, ResourceBundle rb) {
 
         oTrans = new Client(oApp, "", null);
         oTrans.New();
+        oTrans.deleteAddress(0);
+        oTrans.deleteMobile(0);
+        oTrans.deleteEmail(0);
+        oTrans.deleteSocialMedia(0);
+
         oTrans.Master().getModel().setClientType(ClientType.INDIVIDUAL);
 
         initButton();
@@ -1632,40 +1854,15 @@ public void initialize(URL url, ResourceBundle rb) {
 
         personalinfo09.setOnAction(event -> {
             String selectedItem = String.valueOf(personalinfo09.getSelectionModel().getSelectedIndex());
-            ShowMessageFX.OkayCancel(oTransnox, selectedItem, selectedItem);
-            switch (selectedItem) {
-                case "0":
-                    oTrans.Master().getModel().setGender("0");
-                    break;
-                case "1":
-                    oTrans.Master().getModel().setGender("1");
-                    break;
-                case "2":
-                    oTrans.Master().getModel().setGender("2");
-                    break;
-            }
+            oTrans.Master().getModel().setGender(selectedItem);
+
             personalinfo09.setValue(personalinfo09.getValue());
         });
-
         personalinfo10.setItems(civilstatus);
         personalinfo10.setOnAction(event -> {
             String selectedItem = String.valueOf(personalinfo10.getSelectionModel().getSelectedIndex());
-            switch (selectedItem) {
-                case "0":
-                    oTrans.Master().getModel().setCivilStatus("0");
-                    break;
-                case "1":
-                    oTrans.Master().getModel().setCivilStatus("1");
-                    break;
-                case "2":
-                    oTrans.Master().getModel().setCivilStatus("2");
-                    break;
-                case "3":
-                    oTrans.Master().getModel().setCivilStatus("3");
-                    break;
-            }
+            oTrans.Master().getModel().setCivilStatus(selectedItem);
             personalinfo10.setValue(personalinfo10.getValue());
-
         });
 
         InitAddressTextFields();
@@ -1676,16 +1873,21 @@ public void initialize(URL url, ResourceBundle rb) {
 
         cmbMobile01.setItems(mobileOwn);
         cmbMobile01.setOnAction(event -> {
-            String selectedItem = (String) cmbMobile01.getValue();
-            oTrans.Mobile(pnMobile).getModel().setClientId(selectedItem);
-            cmbMobile01.setValue(selectedItem);
+            int selectedIndex = cmbMobile01.getSelectionModel().getSelectedIndex();
+            oTrans.Mobile(pnMobile).getModel().setOwnershipType(String.valueOf(selectedIndex));
+            cmbMobile01.getSelectionModel().select(selectedIndex);
+
+            loadRecordMobile();
         });
 
         cmbMobile02.setItems(mobileType);
         cmbMobile02.setOnAction(event -> {
+            int selectedIndex = cmbMobile02.getSelectionModel().getSelectedIndex();
             String selectedItem = (String) cmbMobile02.getValue();
-            oTrans.Mobile(pnMobile).getModel().setMobileType(selectedItem);
-            cmbMobile02.setValue(selectedItem);
+            oTrans.Mobile(pnMobile).getModel().setMobileType(String.valueOf(selectedIndex));
+            cmbMobile02.getSelectionModel().select(selectedIndex);
+
+            loadRecordMobile();
         });
 
         InitEmailTextFields();
@@ -1693,9 +1895,11 @@ public void initialize(URL url, ResourceBundle rb) {
 
         cmbEmail01.setItems(emailOwn);
         cmbEmail01.setOnAction(event -> {
-            String selectedItem = (String) cmbEmail01.getValue();
-            oTrans.Mail(pnEmail).getModel().setClientId(selectedItem);
-            cmbEmail01.setValue(selectedItem);
+            int selectedIndex = cmbEmail01.getSelectionModel().getSelectedIndex();
+            oTrans.Mail(pnEmail).getModel().setOwnershipType(String.valueOf(selectedIndex));
+            cmbEmail01.getSelectionModel().select(selectedIndex);
+
+            loadRecordEmail();
         });
 
         InitSocialMediaTextFields();
@@ -1703,9 +1907,11 @@ public void initialize(URL url, ResourceBundle rb) {
 
         cmbSocMed01.setItems(socialTyp);
         cmbSocMed01.setOnAction(event -> {
-            String selectedItem = (String) cmbSocMed01.getValue();
-            oTrans.SocialMedia(pnSocialMedia).getModel().setClientId(selectedItem);
-            cmbSocMed01.setValue(selectedItem);
+            int selectedIndex = cmbSocMed01.getSelectionModel().getSelectedIndex();
+            oTrans.SocialMedia(pnSocialMedia).getModel().setSocMedType(String.valueOf(selectedIndex));
+            cmbSocMed01.getSelectionModel().select(selectedIndex);
+
+            loadRecordSocialMedia();
         });
 
         initAddressGrid();
@@ -1719,11 +1925,13 @@ public void initialize(URL url, ResourceBundle rb) {
         clearSocMed();
         clearMobile();
 
+        InitMasterTextFields();
+
         loadRecordMobile();
         loadRecordAddress();
         loadRecordSocialMedia();
         loadRecordEmail();
-        
+
         initTableOnClick();
 
         pbLoaded = true;

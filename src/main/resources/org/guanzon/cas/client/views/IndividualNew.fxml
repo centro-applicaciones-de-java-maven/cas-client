@@ -60,7 +60,7 @@
                                                                     <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                 </rowConstraints>
                                                                 <children>
-                                                                    <TextField fx:id="txtField02" editable="false" styleClass="text-field" text="This is a test" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
+                                                                    <TextField fx:id="txtField02" styleClass="text-field" text="This is a test" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
                                                                         <GridPane.margin>
                                                                             <Insets left="5.0" />
                                                                         </GridPane.margin>
