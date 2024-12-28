@@ -557,6 +557,7 @@ public class IndividualNewController implements Initializable {
                     }
                     clearAddress();
                     JSONObject addObjAddress = oTrans.addAddress();
+                     oTrans.Address(pnAddress).getModel().setRecordStatus("0");
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
@@ -581,6 +582,7 @@ public class IndividualNewController implements Initializable {
                     }
                     clearEmail();
                     JSONObject addObjMail = oTrans.addMail();
+                    oTrans.Mail(pnEmail).getModel().setRecordStatus("0");
                     oTrans.Mail(pnEmail).getModel().setEmailId("");
                     oTrans.Mail(pnEmail).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addObjMail.get("message"));
@@ -605,6 +607,7 @@ public class IndividualNewController implements Initializable {
                     clearMobile();
                     System.out.println(oTrans.getMobileCount());
                     JSONObject addObj = oTrans.addMobile();
+                    oTrans.Mobile(pnMobile).getModel().setRecordStatus("0");
                     oTrans.Mobile(pnMobile).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addObj.get("message"));
                     if ("error".equals((String) addObj.get("result"))) {
@@ -626,6 +629,7 @@ public class IndividualNewController implements Initializable {
                     }
                     clearSocMed();
                     JSONObject addSocMed = oTrans.addSocialMedia();
+                    oTrans.SocialMedia(pnSocialMedia).getModel().setRecordStatus("0");
                     oTrans.SocialMedia(pnSocialMedia).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addSocMed.get("message"));
                     if ("error".equals((String) addSocMed.get("result"))) {
