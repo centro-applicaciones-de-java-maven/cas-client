@@ -704,12 +704,12 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </ComboBox>
-                                                                                    <TextField fx:id="mailFields01" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                                    <TextField fx:id="mailFields01" maxWidth="200.0" minWidth="150.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <CheckBox fx:id="cbEmail02" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                                                    <CheckBox fx:id="cbEmail01" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -717,7 +717,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </CheckBox>
-                                                                                    <CheckBox fx:id="cbEmail01" mnemonicParsing="false" text="Primary Email" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                                                    <CheckBox fx:id="cbEmail02" mnemonicParsing="false" text="Primary Email" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
