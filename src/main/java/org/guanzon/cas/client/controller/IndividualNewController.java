@@ -49,16 +49,18 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.client.Client;
+import org.guanzon.cas.client.Client_Address;
 import org.guanzon.cas.client.Client_Mail;
 import org.guanzon.cas.client.Client_Master;
 import org.guanzon.cas.client.Client_Mobile;
+import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.models.ModelAddress;
 import org.guanzon.cas.client.models.ModelEmail;
 import org.guanzon.cas.client.models.ModelMobile;
 import org.guanzon.cas.client.models.ModelSocialMedia;
 import org.guanzon.cas.controller.ScreenInterface;
+import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.TownCity;
-import org.guanzon.cas.parameters.Barangay;
 import org.guanzon.cas.parameters.Country;
 import org.guanzon.cas.parameters.Province;
 import org.json.simple.JSONObject;
@@ -90,7 +92,7 @@ public class IndividualNewController implements Initializable {
     ObservableList<String> mobileOwn = FXCollections.observableArrayList("Personal", "Office", "Others");
     ObservableList<String> mobileType = FXCollections.observableArrayList("Mobile No", "Tel No", "Fax No");
     ObservableList<String> emailOwn = FXCollections.observableArrayList("Personal", "Office", "Others");
-    ObservableList<String> socialTyp = FXCollections.observableArrayList("Facebook", "Instagram", "Twitter");
+    ObservableList<String> socialTyp = FXCollections.observableArrayList("Facebook", "Instagram", "X", "Others");
 
     int pnPersonalInfo = 0;
     int pnAddress = 0;
@@ -406,7 +408,6 @@ public class IndividualNewController implements Initializable {
         cbAddress06.setSelected(false);
         cbAddress07.setSelected(false);
         cbAddress08.setSelected(false);
-
     }
 
     private void clearMaster() {
@@ -548,16 +549,17 @@ public class IndividualNewController implements Initializable {
 
                     break;
                 case "btnAddAddress":
-                    if (oTrans.getAddressCount() > 0) {
-                        JSONObject addObjMail = oTrans.Address(pnAddress).isEntryOkay();
-                        if ("error".equals((String) addObjMail.get("result"))) {
-                            ShowMessageFX.Information((String) addObjMail.get("message"), "Computerized Acounting System", pxeModuleName);
+                    if (oTrans.getAddressCount() > 1) {
+                        JSONObject addObj = oTrans.Address(pnAddress).isEntryOkay();
+                        if ("error".equals((String) addObj.get("result"))) {
+                            ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
                         }
                     }
                     clearAddress();
                     JSONObject addObjAddress = oTrans.addAddress();
-                     oTrans.Address(pnAddress).getModel().setRecordStatus("0");
+
+                    oTrans.Address(pnAddress).getModel().setRecordStatus("0");
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
@@ -582,8 +584,10 @@ public class IndividualNewController implements Initializable {
                     }
                     clearEmail();
                     JSONObject addObjMail = oTrans.addMail();
+
+                    ShowMessageFX.OkayCancel((String) oTrans.Mail(pnEmail).getModel().getEmailId(), tabText, tabText);
                     oTrans.Mail(pnEmail).getModel().setRecordStatus("0");
-                    oTrans.Mail(pnEmail).getModel().setEmailId("");
+//                    oTrans.Mail(pnEmail).getModel().setEmailId("");
                     oTrans.Mail(pnEmail).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addObjMail.get("message"));
                     if ("error".equals((String) addObjMail.get("result"))) {
@@ -597,7 +601,7 @@ public class IndividualNewController implements Initializable {
                     loadRecordEmail();
                     break;
                 case "btnAddMobile":
-                    if (oTrans.getMobileCount() > 0) {
+                    if (oTrans.getMobileCount() > 1) {
                         JSONObject addObjMobile = oTrans.Mobile(pnMobile).isEntryOkay();
                         if ("error".equals((String) addObjMobile.get("result"))) {
                             ShowMessageFX.Information((String) addObjMobile.get("message"), "Computerized Acounting System", pxeModuleName);
@@ -620,7 +624,7 @@ public class IndividualNewController implements Initializable {
                     loadRecordMobile();
                     break;
                 case "btnAddSocMed":
-                    if (oTrans.getSocMedCount() > 0) {
+                    if (oTrans.getSocMedCount() > 1) {
                         JSONObject addObjSocMed = oTrans.SocialMedia(pnSocialMedia).isEntryOkay();
                         if ("error".equals((String) addObjSocMed.get("result"))) {
                             ShowMessageFX.Information((String) addObjSocMed.get("message"), "Computerized Acounting System", pxeModuleName);
@@ -848,6 +852,7 @@ public class IndividualNewController implements Initializable {
             }
             // loadContctPerson();
             loadRecordPersonalInfo();
+            loadMasterName();
 
         } else {
             // txtContact.selectAll();
@@ -915,25 +920,33 @@ public class IndividualNewController implements Initializable {
                     case 5:
                         /*search barangay*/
 
-//                        if (!oTrans.Address(pnAddress).getModel().getTownId().equals("")) {
-//                            JSONObject loJSON = new JSONObject();
-//                            loJSON.put("result", "error");
-//                            loJSON.put("message", "Kindly choose the town or city first.");
-//                            ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
-//                            break;
-//                        }
                         poJson = new JSONObject();
-                        Barangay loBarangay = new Barangay(oApp, true);
+                        Barangay loBarangay = new Barangay();
+                        loBarangay.setApplicationDriver(oApp);
                         loBarangay.setRecordStatus("1");
-                        poJson = loBarangay.searchRecord(lsValue, false);
+                        loBarangay.initialize();
+
+                        try {
+                            if (!oTrans.Address(pnAddress).getModel().getTownId().equalsIgnoreCase("")) {
+                                poJson = loBarangay.searchRecord("", false, oTrans.Address(pnAddress).getModel().getTownId());
+                                poJson = loBarangay.searchRecordWithStatus("", false, oTrans.Address(pnAddress).getModel().getTownId());
+                            } else {
+                                poJson = loBarangay.searchRecord(lsValue, false);
+                            }
+                        } catch (Exception e) {
+                            poJson = loBarangay.searchRecord(lsValue, false);
+                        }
+
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             AddressField05.clear();
                         }
+
                         AddressField05.setText(loBarangay.getModel().getBarangayName());
-                        oTrans.Address(pnAddress).getModel().setBarangayId(loBarangay.getModel().getBarangayID());
-                        oTrans.Address(pnAddress).getModel().setTownId(loBarangay.getModel().getTownID());
+                        oTrans.Address(pnAddress).getModel().setBarangayId(loBarangay.getModel().getBarangayId());
+                        oTrans.Address(pnAddress).getModel().setTownId(loBarangay.getModel().getTownId());
                         loadRecordAddress();
+
                         break;
                 }
         }
@@ -984,6 +997,61 @@ public class IndividualNewController implements Initializable {
             // txtContact.selectAll();
         }
     };
+
+    public void loadMasterName() {
+        String lsCompName
+                = (((oTrans.Master().getModel().getFirstName() instanceof String) ? oTrans.Master().getModel().getFirstName() : "")
+                + " "
+                + ((oTrans.Master().getModel().getMiddleName() instanceof String) ? oTrans.Master().getModel().getMiddleName() : "")
+                + " "
+                + ((oTrans.Master().getModel().getLastName() instanceof String) ? oTrans.Master().getModel().getLastName() : ""));
+
+        txtField02.setText(lsCompName);
+    }
+
+    public void loadMasterAddress2() {
+        AddressField02.setText(oTrans.getMasterAddress(pnAddress));
+    }
+
+    public void loadMasterAddress() {
+        //This should also loaded every time f3 or lost focus is pressed 
+        // based on current modeladdress/ load it and find where cprimary is 1
+        // due to temp date is only loaded not on update mode
+
+        // Load the temp data instead
+        String lsTownId = "";
+        String lsHouseNo = "";
+        for (int i = 0; i < oTrans.getAddressCount(); i++) {
+            if (oTrans.Address(i).getModel().isPrimaryAddress()) {
+                txtField03.setText(oTrans.getMasterAddress(i));
+            }
+
+        }
+        //USE THIS IF THERE IS EXISTING RECORD
+//        Client_Address loclientAddress = new Client_Address();
+//        loclientAddress.setApplicationDriver(oApp);
+//        loclientAddress.setRecordStatus("1");
+//        loclientAddress.initialize();
+//        loclientAddress.searchRecordWithCondition("", "M00124000012", true);
+//
+//        Barangay loBarangay = new Barangay(oApp, true);
+//        loBarangay.setRecordStatus("1");
+//        loBarangay.openRecord(loclientAddress.getModel().getBarangayId());
+//
+//        TownCity loTownCity = new TownCity();
+//        loTownCity.setApplicationDriver(oApp);
+//        loTownCity.setRecordStatus("1");
+//        loTownCity.initialize();
+//        loTownCity.openRecord(loclientAddress.getModel().getTownId());
+//
+//        Province loProvince = new Province(oApp, true);
+//        loProvince.setRecordStatus("1");
+//        loProvince.openRecord(loTownCity.getModel().getProvinceId());
+//
+//        txtField03.setText(loclientAddress.getModel().getHouseNo() + " " + loBarangay.getModel().getBarangayName()
+//                + loTownCity.getModel().getTownName() + " " + loProvince.getModel().getProvinceName()
+//                + loTownCity.getModel().getZipCode());
+    }
 
     final ChangeListener<? super Boolean> address_Focus = (o, ov, nv) -> {
         JSONObject loJSON;
@@ -1072,20 +1140,21 @@ public class IndividualNewController implements Initializable {
                 switch (lnIndex) {
                     case 1:
                         /*search mobileNo*/
-                        poJson = new JSONObject();
-                        Client_Mail loclient_email = new Client_Mail();
-                        loclient_email.setApplicationDriver(oApp);
-                        loclient_email.setRecordStatus("1");
-                        loclient_email.initialize();
-
-                        poJson = loclient_email.searchRecord(lsValue, false);
-                        if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
-                            ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            mailFields01.clear();
-                        }
-                        mailFields01.setText((String) loclient_email.getModel().getMailAddress());
-                        oTrans.Mail(pnEmail).getModel().setEmailId((String) loclient_email.getModel().getEmailId());
-                        oTrans.Mail(pnEmail).getModel().setMailAddress((String) loclient_email.getModel().getMailAddress());
+//                        poJson = new JSONObject();
+//                        Client_Mail loclient_email = new Client_Mail();
+//                        loclient_email.setApplicationDriver(oApp);
+//                        loclient_email.setRecordStatus("1");
+//                        loclient_email.initialize();
+//
+////                        poJson =loclient_email.searchRecord(lsValue, false, oTrans.Master().getModel().getClientId());
+//                        
+//                        if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
+//                            ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
+//                            mailFields01.clear();
+//                        }
+//                        mailFields01.setText((String) loclient_email.getModel().getMailAddress());
+////                        oTrans.Mail(pnEmail).getModel().setEmailId((String) loclient_email.getModel().getEmailId());
+//                        oTrans.Mail(pnEmail).getModel().setMailAddress(lsValue);
                         break;
                 }
                 loadRecordEmail();
@@ -1159,14 +1228,17 @@ public class IndividualNewController implements Initializable {
             switch (lnIndex) {
                 case 1:
                     /*Email.*/
-//                    loJSON = oTrans.Mail(pnEmail).getModel().setMailAddress(lsValue);
-//                    if ("error".equals((String) loJSON.get("result"))) {
-//                        Assert.fail((String) loJSON.get("message"));
-//                    }
-
+                    loJSON = oTrans.Mail(pnEmail).getModel().setMailAddress(lsValue);
+                    if ("error".equalsIgnoreCase(loJSON.get("result").toString())) {
+                        ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
+                        mailFields01.clear();
+                    }
+                    mailFields01.setText((String) lsValue);
+//                        oTrans.Mail(pnEmail).getModel().setEmailId((String) loclient_email.getModel().getEmailId());
+                    // email id automatically set
                     break;
             }
-            // loadRecordEmail();
+            loadRecordEmail();
 
         } else {
             // txtContact.selectAll();
@@ -1364,6 +1436,8 @@ public class IndividualNewController implements Initializable {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 String formattedDate = formatter.format(selectedDate);
                 oTrans.Master().getModel().setBirthDate((SQLUtil.toDate(formattedDate, "yyyy-MM-dd")));
+                
+                
 
                 Date dateString = oTrans.Master().getModel().getBirthDate();
                 Calendar calendar = Calendar.getInstance();
@@ -1400,10 +1474,46 @@ public class IndividualNewController implements Initializable {
         personalinfo03.setText(oTrans.Master().getModel().getFirstName());
         personalinfo04.setText(oTrans.Master().getModel().getMiddleName());
         personalinfo05.setText(oTrans.Master().getModel().getSuffixName());
-//        personalinfo06.setText(oTrans.Master().getModel().getCitizenshipId());
-//        personalinfo07.setText(oTransnox);
-//        personalinfo08.setText(oTrans.Master().getModel().getBirthPlaceId());
-//        personalinfo09.setText(oTransnox);
+
+        Country loCountry = new Country(oApp, true);
+        loCountry.setRecordStatus("1");
+        loCountry.openRecord(oTrans.Master().getModel().getCitizenshipId());
+        personalinfo06.setText(loCountry.getModel().getNational());
+        
+        Date dateString = oTrans.Master().getModel().getBirthDate();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(dateString);
+
+        LocalDate defaultDate = LocalDate.of(calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH) + 1, // Months are 0-based
+                calendar.get(Calendar.DAY_OF_MONTH));
+
+        personalinfo07.setValue(defaultDate);
+        
+        personalinfo08.setText(oTrans.Master().getModel().getBirthPlaceId());
+        String lsGender = oTrans.Master().getModel().getGender();
+        switch(lsGender){
+            case "0":
+                break;
+            case "1":
+                break;
+            case "2":
+                break;
+        }
+        
+        
+        String lsCivilStatus = oTrans.Master().getModel().getCivilStatus();
+        switch (lsCivilStatus) {
+            case "0":
+                break;
+            case "1":
+                break;
+            case "2":
+                break;
+            case "3":
+                break;
+        }
+//        personalinfo09.setText();
 //        personalinfo10.setText(oTransnox);
         personalinfo11.setText(oTrans.Master().getModel().getSpouseId());
         personalinfo12.setText(oTrans.Master().getModel().getMothersMaidenName());
@@ -1414,6 +1524,7 @@ public class IndividualNewController implements Initializable {
     }
 
     private void loadRecordAddress() {
+        loadMasterAddress();
 
         int lnCtr;
         int lnCtr2 = 0;
@@ -1428,9 +1539,15 @@ public class IndividualNewController implements Initializable {
                 loTownCity.initialize();
                 loTownCity.openRecord(oTrans.Address(lnCtr2).getModel().getTownId());
 
-                Barangay loBarangay = new Barangay(oApp, true);
-                loBarangay.setRecordStatus("1");
-                loBarangay.openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
+                Barangay loBarangay = new Barangay();
+                try {
+                    loBarangay.setApplicationDriver(oApp);
+                    loBarangay.setRecordStatus("1");
+                    loBarangay.initialize();
+                    loBarangay.openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
+                } catch (Exception e) {
+
+                }
 
 //                String lsTown = (String) oTrans.getAddress(lnCtr, 20) + ", " + (String) oTrans.getAddress(lnCtr, 22);
                 address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
@@ -1452,6 +1569,7 @@ public class IndividualNewController implements Initializable {
                 tblAddress.getFocusModel().focus(0);
                 pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
                 getSelectedAddress();
+
             }
         } else {
             /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
@@ -1620,6 +1738,7 @@ public class IndividualNewController implements Initializable {
 
     private void getSelectedAddress() {
         clearAddress();
+        loadMasterAddress2();
 //        TextField[] fields = {AddressField01, AddressField02, AddressField03, AddressField04,
 //            AddressField05, AddressField06, AddressField07};
 //        for (TextField field : fields) {
@@ -1650,8 +1769,10 @@ public class IndividualNewController implements Initializable {
             loTownCity.initialize();
             loTownCity.openRecord(oTrans.Address(pnAddress).getModel().getTownId());
 
-            Barangay loBarangay = new Barangay(oApp, true);
+            Barangay loBarangay = new Barangay();
+            loBarangay.setApplicationDriver(oApp);
             loBarangay.setRecordStatus("1");
+            loBarangay.initialize();
             loBarangay.openRecord(oTrans.Address(pnAddress).getModel().getBarangayId());
 
             AddressField04.setText((String) loTownCity.getModel().getTownName());
@@ -1662,7 +1783,7 @@ public class IndividualNewController implements Initializable {
             cbAddress01.setSelected(((String) oTrans.Address(pnAddress).getModel().getRecordStatus() == "0") ? true : false);
             cbAddress02.setSelected(oTrans.Address(pnAddress).getModel().isPrimaryAddress());
             cbAddress03.setSelected(oTrans.Address(pnAddress).getModel().isOfficeAddress());
-            cbAddress04.setSelected(oTrans.Address(pnAddress).getModel().isPrimaryAddress());
+            cbAddress04.setSelected(oTrans.Address(pnAddress).getModel().isProvinceAddress());
             cbAddress05.setSelected(oTrans.Address(pnAddress).getModel().isBillingAddress());
             cbAddress06.setSelected(oTrans.Address(pnAddress).getModel().isShippingAddress());
             cbAddress07.setSelected(oTrans.Address(pnAddress).getModel().isCurrentAddress());
@@ -1825,6 +1946,7 @@ public class IndividualNewController implements Initializable {
                             System.out.println("Unknown checkbox selected");
                             break;
                     }
+                    loadRecordAddress();
                 } catch (NumberFormatException e) {
                 }
 
@@ -2078,6 +2200,7 @@ public class IndividualNewController implements Initializable {
 
         oTrans = new Client(oApp, "", null);
         oTrans.New();
+        
         oTrans.deleteAddress(0);
         oTrans.deleteMobile(0);
         oTrans.deleteEmail(0);
