@@ -13,20 +13,17 @@ import org.guanzon.cas.client.controller.IndividualNewController;
 
 public class Test_IndividualNew extends Application {
 
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Load FXML file
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/IndividualNew.fxml"));
 
         // Set the controller to the FXMLLoader (Optional, depending on how the FXML is set up)
-       //loader.setController(getClass().getResource("/org/guanzon/cas/client/controller/IndividualNewController.java"));
-      //  IndividualNewController controller = new IndividualNewController(); // create the controller instance
-     //   loader.setController(controller); // set the controller instance here
-        
-     
-     IndividualNewController controller = new IndividualNewController();
-     loader.setController(controller);
+        //loader.setController(getClass().getResource("/org/guanzon/cas/client/controller/IndividualNewController.java"));
+        //  IndividualNewController controller = new IndividualNewController(); // create the controller instance
+        //   loader.setController(controller); // set the controller instance here
+        IndividualNewController controller = new IndividualNewController();
+        loader.setController(controller);
         if (controller != null) {
             System.out.println("Controller loaded successfully: " + controller.getClass().getName());
         } else {
@@ -37,7 +34,7 @@ public class Test_IndividualNew extends Application {
         scene.getStylesheets().add(getClass().getResource("/org/guanzon/cas/client/css/Tables.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/org/guanzon/cas/client/css/StyleSheet.css").toExternalForm());
 
-       // primaryStage.initStyle(StageStyle.UNDECORATED); // Or StageStyle.UNDECORATED for complete removal of window borders
+        // primaryStage.initStyle(StageStyle.UNDECORATED); // Or StageStyle.UNDECORATED for complete removal of window borders
         primaryStage.setTitle("");
         primaryStage.setScene(scene);
         primaryStage.show();

@@ -8,11 +8,12 @@ import com.ibm.icu.impl.Assert;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
+import java.sql.Timestamp;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
@@ -41,6 +42,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GRider;
@@ -396,12 +398,15 @@ public class IndividualNewController implements Initializable {
 //                field.clear();
 //            }
 //        }
+        if (oTrans.getAddressCount() >= 1) {
+            oTrans.Address(pnAddress).getModel().setRecordStatus("0");
+        }
         AddressField01.clear();
         AddressField02.clear();
         AddressField03.clear();
         AddressField04.clear();
         AddressField05.clear();
-        AddressField06.clear();
+
         cbAddress01.setSelected(true);
         cbAddress02.setSelected(false);
         cbAddress03.setSelected(false);
@@ -419,6 +424,10 @@ public class IndividualNewController implements Initializable {
     }
 
     private void clearMobile() {
+
+        if (oTrans.getMobileCount() >= 1) {
+            oTrans.Mobile(pnMobile).getModel().setRecordStatus("0");
+        }
         txtMobile01.clear();
         cmbMobile01.setItems(mobileOwn);
         cmbMobile01.getSelectionModel().select(0);
@@ -433,6 +442,11 @@ public class IndividualNewController implements Initializable {
 
     private void clearEmail() {
         mailFields01.clear();
+
+        if (oTrans.getMailCount() >= 1) {
+            oTrans.Mail(pnEmail).getModel().setRecordStatus("0");
+        }
+
         cmbEmail01.setItems(emailOwn);
         cmbEmail01.getSelectionModel().select(0);
         cbEmail01.setSelected(true);
@@ -441,6 +455,10 @@ public class IndividualNewController implements Initializable {
     }
 
     private void clearSocMed() {
+        if (oTrans.getSocMedCount() >= 1) {
+            oTrans.SocialMedia(pnSocialMedia).getModel().setRecordStatus("0");
+        }
+
         txtSocial01.clear();
         txtSocial02.clear();
         cmbSocMed01.setItems(socialTyp);
@@ -468,11 +486,28 @@ public class IndividualNewController implements Initializable {
     }
 
     private void handleButtonAction(javafx.event.ActionEvent event) {
+        JSONObject loJson = new JSONObject();
+
         String tabText = "";
         Tab selectedTab = TabPane.getSelectionModel().getSelectedItem();
         if (selectedTab != null) {
             tabText = selectedTab.getId();
         }
+        switch (tabText) {
+            case "PersonalInfo":
+//                oTrans.deleteMobile(0);
+                break;
+            case "Address":
+//                oTrans.deleteAddress(0);
+                break;
+            case "Mobile":
+//                oTrans.deleteSocialMedia(0);
+                break;
+            case "Email":
+//                oTrans.deleteEmail(0);
+                break;
+        }
+
         Object source = event.getSource();
         if (source instanceof Button) {
             Button clickedButton = (Button) source;
@@ -561,14 +596,18 @@ public class IndividualNewController implements Initializable {
                         }
                     }
                     clearAddress();
+                    oTrans.Address(pnAddress).getModel().setLatitude("0.0");
+                    oTrans.Address(pnAddress).getModel().setLongitude("0.0");
                     JSONObject addObjAddress = oTrans.addAddress();
-                    oTrans.Address(pnAddress).getModel().setClientId(oTrans.Master().getModel().getClientId());
-                    oTrans.Address(pnAddress).getModel().setRecordStatus("0");
+
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
+                    } else {
+                        oTrans.Address(pnAddress).getModel().setClientId(oTrans.Master().getModel().getClientId());
+                        oTrans.Address(pnAddress).getModel().setClientId(oTrans.Master().getModel().getClientId());
+
                     }
-                    oTrans.Address(pnAddress).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     pnAddress = oTrans.getAddressCount() - 1;
                     tblAddress.getSelectionModel().select(pnAddress + 1);
                     loadRecordAddress();
@@ -589,7 +628,6 @@ public class IndividualNewController implements Initializable {
                     }
                     clearEmail();
                     JSONObject addObjMail = oTrans.addMail();
-                    oTrans.Mail(pnEmail).getModel().setRecordStatus("0");
 //                    oTrans.Mail(pnEmail).getModel().setEmailId("");
                     oTrans.Mail(pnEmail).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addObjMail.get("message"));
@@ -614,7 +652,6 @@ public class IndividualNewController implements Initializable {
                     clearMobile();
                     System.out.println(oTrans.getMobileCount());
                     JSONObject addObj = oTrans.addMobile();
-                    oTrans.Mobile(pnMobile).getModel().setRecordStatus("0");
                     oTrans.Mobile(pnMobile).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addObj.get("message"));
                     if ("error".equals((String) addObj.get("result"))) {
@@ -627,6 +664,7 @@ public class IndividualNewController implements Initializable {
                     loadRecordMobile();
                     break;
                 case "btnAddSocMed":
+
                     if (oTrans.getSocMedCount() > 1) {
                         JSONObject addObjSocMed = oTrans.SocialMedia(pnSocialMedia).isEntryOkay();
                         if ("error".equals((String) addObjSocMed.get("result"))) {
@@ -636,7 +674,6 @@ public class IndividualNewController implements Initializable {
                     }
                     clearSocMed();
                     JSONObject addSocMed = oTrans.addSocialMedia();
-                    oTrans.SocialMedia(pnSocialMedia).getModel().setRecordStatus("0");
                     oTrans.SocialMedia(pnSocialMedia).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addSocMed.get("message"));
                     if ("error".equals((String) addSocMed.get("result"))) {
@@ -652,10 +689,16 @@ public class IndividualNewController implements Initializable {
                     break;
 
                 case "btnDelAddress":
+                    if (oTrans.getAddressCount() > 0) {
+                        loJson.put("result", "error");
+                        loJson.put("message", "No Record.");
+                        ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                        break;
+                    }
                     clearAddress();
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
 //                        oTrans.Address(pnAddress).deleteRecord();
-                        JSONObject loJson = oTrans.deleteAddress(pnAddress);
+                        loJson = oTrans.deleteAddress(pnAddress);
                         if ("error".equals((String) loJson.get("result"))) {
                             ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
@@ -670,9 +713,15 @@ public class IndividualNewController implements Initializable {
                     }
                     break;
                 case "btnDelMobile":
+                    if (oTrans.getMobileCount() > 0) {
+                        loJson.put("result", "error");
+                        loJson.put("message", "No Record.");
+                        ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                        break;
+                    }
                     clearMobile();
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        JSONObject loJson = oTrans.deleteMobile(pnMobile);
+                        loJson = oTrans.deleteMobile(pnMobile);
                         if ("error".equals((String) loJson.get("result"))) {
                             ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
@@ -687,9 +736,15 @@ public class IndividualNewController implements Initializable {
                     }
                     break;
                 case "btnDelEmail":
+                    if (oTrans.getMailCount() > 0) {
+                        loJson.put("result", "error");
+                        loJson.put("message", "No Record.");
+                        ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                        break;
+                    }
                     clearEmail();
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        JSONObject loJson = oTrans.deleteEmail(pnEmail);
+                        loJson = oTrans.deleteEmail(pnEmail);
                         if ("error".equals((String) loJson.get("result"))) {
                             ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
@@ -704,8 +759,14 @@ public class IndividualNewController implements Initializable {
                     }
                     break;
                 case "btnDelSocMed":
+                    if (oTrans.getSocMedCount() > 0) {
+                        loJson.put("result", "error");
+                        loJson.put("message", "No Record.");
+                        ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                        break;
+                    }
                     if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        JSONObject loJson = oTrans.deleteSocialMedia(pnSocialMedia);
+                        loJson = oTrans.deleteSocialMedia(pnSocialMedia);
                         if ("error".equals((String) loJson.get("result"))) {
                             ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
@@ -865,7 +926,7 @@ public class IndividualNewController implements Initializable {
                     } else {
                         // Input is invalid
                         oTrans.Master().getModel().setLTOClientId("");
-                          ShowMessageFX.Information("Input must be 11 digits and contain numbers only.", "Computerized Acounting System", "Invalid input");
+                        ShowMessageFX.Information("Input must be 11 digits and contain numbers only.", "Computerized Acounting System", "Invalid input");
                     }
                     break;
                 case 15:
@@ -1045,11 +1106,11 @@ public class IndividualNewController implements Initializable {
     };
 
     public void loadMasterName() {
-String lsCompName
-        = (((oTrans.Master().getModel().getLastName() instanceof String) && (!oTrans.Master().getModel().getLastName().equals("")) ? oTrans.Master().getModel().getLastName()  : "")
-        + ((oTrans.Master().getModel().getFirstName() instanceof String) && (!oTrans.Master().getModel().getFirstName().equals("")) ?  ", " + oTrans.Master().getModel().getFirstName() : "")
-        + ((oTrans.Master().getModel().getMiddleName() instanceof String) && (!oTrans.Master().getModel().getMiddleName().equals("")) ? " " + oTrans.Master().getModel().getMiddleName() : "")
-        + ((oTrans.Master().getModel().getSuffixName() instanceof String) && (!oTrans.Master().getModel().getSuffixName().equals("")) ? " " + oTrans.Master().getModel().getSuffixName() : ""));
+        String lsCompName
+                = (((oTrans.Master().getModel().getLastName() instanceof String) && (!oTrans.Master().getModel().getLastName().equals("")) ? oTrans.Master().getModel().getLastName() : "")
+                + ((oTrans.Master().getModel().getFirstName() instanceof String) && (!oTrans.Master().getModel().getFirstName().equals("")) ? ", " + oTrans.Master().getModel().getFirstName() : "")
+                + ((oTrans.Master().getModel().getMiddleName() instanceof String) && (!oTrans.Master().getModel().getMiddleName().equals("")) ? " " + oTrans.Master().getModel().getMiddleName() : "")
+                + ((oTrans.Master().getModel().getSuffixName() instanceof String) && (!oTrans.Master().getModel().getSuffixName().equals("")) ? " " + oTrans.Master().getModel().getSuffixName() : ""));
         oTrans.Master().getModel().setCompanyName(lsCompName);
         txtField02.setText(oTrans.Master().getModel().getCompanyName());
     }
@@ -1099,7 +1160,7 @@ String lsCompName
     }
 
     final ChangeListener<? super Boolean> address_Focus = (o, ov, nv) -> {
-        JSONObject loJSON;
+        JSONObject loJSON = new JSONObject();
         if (!pbLoaded) {
             return;
         }
@@ -1132,40 +1193,48 @@ String lsCompName
                 case 3:
                     /*Province*/
                     //leave blank as it is searchable 
-//                    loJSON =  oTrans.Address(pnAddress).getModel().Town().setProvinceId(lsValue);
-//                    if ("error".equals((String) loJSON.get("result"))) {
-//                        Assert.fail((String) loJSON.get("message"));
-//                    }
                     break;
                 case 4:
                     /*City*/
-//                    loJSON = oTrans.Address(pnAddress).getModel().setTownId(lsValue);
-//                    if ("error".equals((String) loJSON.get("result"))) {
-//                        Assert.fail((String) loJSON.get("message"));
-//                    }
+                    //leave blank as it is searchable 
                     break;
                 case 5:
                     /*Barangay*/
-//                    loJSON = oTrans.Address(pnAddress).getModel().setBarangayId(lsValue);
-//                    if ("error".equals((String) loJSON.get("result"))) {
-//                        Assert.fail((String) loJSON.get("message"));
-//                    }
+                    //leave blank as it is searchable 
                     break;
                 case 6:
                     /*Latitude*/
-                    loJSON = oTrans.Address(pnAddress).getModel().setLatitude(lsValue);
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        Assert.fail((String) loJSON.get("message"));
+                    if (!lsValue.matches("-?\\d+\\.?\\d*")) {
+                        oTrans.Address(pnAddress).getModel().setLatitude("0.0");
+                        loJSON.put("error", lsValue);
+                        loJSON.put("message", "Value must contain numbers only");
+                        oTrans.Address(pnAddress).getModel().setLatitude("0.0");
+                                            loadRecordAddress();
+
+                        ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
+                    }else{
+                        loJSON = oTrans.Address(pnAddress).getModel().setLatitude(lsValue);
+                        if ("error".equals((String) loJSON.get("result"))) {
+                            Assert.fail((String) loJSON.get("message"));
+                        }
                     }
                     loadRecordAddress();
                     break;
                 case 7:
                     /*Longitud*/
-                    loJSON = oTrans.Address(pnAddress).getModel().setLongitude(lsValue);
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        Assert.fail((String) loJSON.get("message"));
+                    if (!lsValue.matches("-?\\d+\\.?\\d*")) {
+                        loJSON.put("error", lsValue);
+                        loJSON.put("message", "Value must contain numbers only");
+                        oTrans.Address(pnAddress).getModel().setLongitude("0.0");
+                        ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
+                    }else{
+                        loJSON = oTrans.Address(pnAddress).getModel().setLongitude(lsValue);
+                        if ("error".equals((String) loJSON.get("result"))) {
+                            Assert.fail((String) loJSON.get("message"));
+                        }
                     }
-                    loadRecordAddress();
+                        loadRecordAddress();
+
                     break;
 
             }
@@ -1476,41 +1545,29 @@ String lsCompName
         personalinfo06.setOnKeyPressed(this::personalinfo_KeyPressed);
         personalinfo08.setOnKeyPressed(this::personalinfo_KeyPressed);
 
-        personalinfo07.setOnAction(event -> {
-            // Get the selected date
-            LocalDate selectedDate = personalinfo07.getValue();
-            if (selectedDate != null) {
-//                ShowMessageFX.OkayCancel(null, "", "Selected Date: " + selectedDate);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                String formattedDate = formatter.format(selectedDate);
-                oTrans.Master().getModel().setBirthDate((SQLUtil.toDate(formattedDate, "yyyy-MM-dd")));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        personalinfo07.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
 
-                Date dateString = oTrans.Master().getModel().getBirthDate();
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(dateString);
-
-                LocalDate defaultDate = LocalDate.of(calendar.get(Calendar.YEAR),
-                        calendar.get(Calendar.MONTH) + 1, // Months are 0-based
-                        calendar.get(Calendar.DAY_OF_MONTH));
-
-                personalinfo07.setValue(defaultDate);
-
-            } else {
-                System.out.println("No date selected!");
-                ShowMessageFX.OkayCancel(null, "", "No date selected!");
+                return (date != null) ? date.format(formatter) : "";
             }
-        });
+
+            @Override
+            public LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
+            }
+        }
+        );
 
         personalinfo07.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue) { // Lost focus
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
                 LocalDate selectedDate = personalinfo07.getValue();
+                System.out.println("this is date " + selectedDate);
                 LocalDate localbdate = LocalDate.parse(selectedDate.toString(), formatter);
-                if (selectedDate != null) {
-                    String formattedDate = formatter.format(selectedDate);
-                    oTrans.Master().getModel().setBirthDate((SQLUtil.toDate(formattedDate, "yyyy-MM-dd")));
-                    personalinfo07.setValue(localbdate);
-                }
+                String formattedDate = formatter.format(selectedDate);
+                oTrans.Master().getModel().setBirthDate((SQLUtil.toDate(formattedDate, "yyyy-MM-dd")));
+                personalinfo07.setValue(localbdate);
             }
         });
 
@@ -1532,15 +1589,51 @@ String lsCompName
         loCountry.setRecordStatus("1");
         loCountry.openRecord(oTrans.Master().getModel().getCitizenshipId());
         personalinfo06.setText(loCountry.getModel().getNational());
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        personalinfo07.setConverter(new StringConverter<LocalDate>() {
+            @Override
+            public String toString(LocalDate date) {
+                return (date != null) ? date.format(formatter) : "";
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
+            }
+        }
+        );
 
         if (!oTrans.Master().getModel().getBirthDate().equals("")) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate selectedDate = oTrans.Master().getModel().getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            LocalDate localbdate = LocalDate.parse(selectedDate.toString(), formatter);
-            String formattedDate = formatter.format(selectedDate);
-            oTrans.Master().getModel().setBirthDate((SQLUtil.toDate(formattedDate, "yyyy-MM-dd")));
-            personalinfo07.setValue(localbdate);
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//            LocalDate selectedDate = oTrans.Master().getModel().getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+//            LocalDate localbdate = LocalDate.parse(selectedDate.toString(), formatter);
+//            String formattedDate = formatter.format(selectedDate);
 
+            // Get the object from the model
+            Object dbegInvxx = oTrans.Master().getModel().getBirthDate();
+
+            if (dbegInvxx == null) {
+                // If the object is null, set the DatePicker to the current date
+                personalinfo07.setValue(LocalDate.now());
+            } else if (dbegInvxx instanceof Timestamp) {
+                // If the object is a Timestamp, convert it to LocalDate
+                Timestamp timestamp = (Timestamp) dbegInvxx;
+                LocalDate localDate = timestamp.toLocalDateTime().toLocalDate();
+                personalinfo07.setValue(localDate);
+            } else if (dbegInvxx instanceof Date) {
+                // If the object is a java.sql.Date, convert it to LocalDate
+                Date sqlDate = (Date) dbegInvxx;
+                LocalDate localDate = sqlDate.toLocalDate();
+                personalinfo07.setValue(localDate);
+            } else {
+                // Handle unexpected types or throw an exception
+                throw new IllegalArgumentException("Expected a Timestamp or Date, but got: " + dbegInvxx.getClass().getName());
+            }
+
+//            oTrans.Master().getModel().setBirthDate((SQLUtil.toDate(formattedDate, "yyyy-MM-dd")));
+//            personalinfo07.setValue(localbdate);
         }
         if (!oTrans.Master().getModel().getBirthPlaceId().equals("")) {
             TownCity loTownCity = new TownCity();
@@ -1556,27 +1649,12 @@ String lsCompName
             personalinfo08.setText(loTownCity.getModel().getTownName() + " " + loProvince.getModel().getProvinceName());
         }
 
-        String lsGender = oTrans.Master().getModel().getGender();
-        switch (lsGender) {
-            case "0":
-                break;
-            case "1":
-                break;
-            case "2":
-                break;
-        }
+        int lsGender = Integer.parseInt(oTrans.Master().getModel().getGender());
+        personalinfo09.getSelectionModel().select(lsGender);
 
-        String lsCivilStatus = oTrans.Master().getModel().getCivilStatus();
-        switch (lsCivilStatus) {
-            case "0":
-                break;
-            case "1":
-                break;
-            case "2":
-                break;
-            case "3":
-                break;
-        }
+        int lsCivilStatus = Integer.parseInt(oTrans.Master().getModel().getCivilStatus());
+        personalinfo10.getSelectionModel().select(lsCivilStatus);
+
 //        personalinfo09.setText();
 //        personalinfo10.setText(oTransnox);
         personalinfo11.setText(oTrans.Master().getModel().getCompanyName());
@@ -1679,7 +1757,6 @@ String lsCompName
     }
 
     private void loadRecordEmail() {
-
         int lnCtr2 = 0;
         email_data.clear();
         if (oTrans.getMailCount() >= 0) {
@@ -2244,39 +2321,9 @@ String lsCompName
     /**
      * Initializes the controller class.
      */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        System.setProperty("sys.default.path.temp", "D:/GGC_Maven_Systems/temp/");
-        System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
-        // ShowMessageFX.OkayCancel(null, "", "samp");
-//        JSONObject poJson = new JSONObject();
-//        poJson = oTrans.getModel().setClientType(ClientType.INDIVIDUAL);
-//        if ("error".equals((String) poJson.get("result"))) {
-//            Assert.fail((String) poJson.get("message"));
-//        }  
-
-        oApp = MiscUtil.Connect();
-
-        if (oTransnox == null || oTransnox.isEmpty()) { // Check if oTransnox is null or empty
-            pnEditMode = EditMode.ADDNEW;
-//            initButton(pnEditMode);
-        }
-
-        oTrans = new Client(oApp, "", null);
-        oTrans.New();
-
-        oTrans.deleteAddress(0);
-        oTrans.deleteMobile(0);
-        oTrans.deleteEmail(0);
-        oTrans.deleteSocialMedia(0);
-
-        oTrans.Master().getModel().setClientType(ClientType.INSTITUTION);
-
-        initButton();
-        InitPersonalInfoTextFields();
-
+    public void initComboboxes() {
+        // Personal info
         personalinfo09.setItems(gender);
-
         personalinfo09.setOnAction(event -> {
             String selectedItem = String.valueOf(personalinfo09.getSelectionModel().getSelectedIndex());
             oTrans.Master().getModel().setGender(selectedItem);
@@ -2290,12 +2337,7 @@ String lsCompName
             personalinfo10.setValue(personalinfo10.getValue());
         });
 
-        InitAddressTextFields();
-        initAddressCheckbox();
-
-        InitMobileTextFields();
-        initMobileCheckbox();
-
+        // Mobile
         cmbMobile01.setItems(mobileOwn);
         cmbMobile01.setOnAction(event -> {
             int selectedIndex = cmbMobile01.getSelectionModel().getSelectedIndex();
@@ -2315,9 +2357,7 @@ String lsCompName
             loadRecordMobile();
         });
 
-        InitEmailTextFields();
-        initEmailCheckbox();
-
+        // Email
         cmbEmail01.setItems(emailOwn);
         cmbEmail01.setOnAction(event -> {
             int selectedIndex = cmbEmail01.getSelectionModel().getSelectedIndex();
@@ -2327,9 +2367,7 @@ String lsCompName
             loadRecordEmail();
         });
 
-        InitSocialMediaTextFields();
-        initSocialMediaCheckbox();
-
+        // Social Media
         cmbSocMed01.setItems(socialTyp);
         cmbSocMed01.setOnAction(event -> {
             int selectedIndex = cmbSocMed01.getSelectionModel().getSelectedIndex();
@@ -2338,6 +2376,45 @@ String lsCompName
 
             loadRecordSocialMedia();
         });
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        System.setProperty("sys.default.path.temp", "D:/GGC_Maven_Systems/temp/");
+        System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
+
+        oApp = MiscUtil.Connect();
+        if (oTransnox == null || oTransnox.isEmpty()) { // Check if oTransnox is null or empty
+            pnEditMode = EditMode.ADDNEW;
+//            initButton(pnEditMode);
+        }
+
+        oTrans = new Client(oApp, "", null);
+
+        // NEW RECORD
+        oTrans.New();
+        oTrans.Master().getModel().setClientType(ClientType.INSTITUTION);
+
+        // OPEN RECORD
+//        oTrans.Master().openRecord("M00125000002");
+//        oTrans.OpenClientAddress("M00125000002");
+//        oTrans.OpenClientMobile("M00125000002");
+//        oTrans.OpenClientMail("M00125000002");
+//        oTrans.OpenClientSocialMedia("M00125000002");
+        initButton();
+        InitPersonalInfoTextFields();
+
+        InitAddressTextFields();
+        initAddressCheckbox();
+
+        InitMobileTextFields();
+        initMobileCheckbox();
+
+        InitEmailTextFields();
+        initEmailCheckbox();
+
+        InitSocialMediaTextFields();
+        initSocialMediaCheckbox();
 
         initAddressGrid();
         initSocialMediaGrid();
@@ -2352,16 +2429,20 @@ String lsCompName
 
         InitMasterTextFields();
 
+        initComboboxes();
+
         loadRecordMobile();
         loadRecordAddress();
         loadRecordSocialMedia();
         loadRecordEmail();
 
+        // load when using open record
+//        loadMasterName();
+//        loadRecordPersonalInfo();
         initTableOnClick();
 
         pbLoaded = true;
 
-//        oTrans.New();
         String lsClientID = (String) oTrans.Master().getModel().getClientId();
         if (txtField01 != null) { // Check if txtField01 is not null before setting its text
             oTrans.Master().getModel().setClientId(lsClientID);
@@ -2370,10 +2451,11 @@ String lsCompName
             // Handle the case where txtField01 is null
             ShowMessageFX.OkayCancel(oTransnox, lsClientID, "No Client ID");
         }
-
         oTrans.Master().getModel().setSpouseId(lsClientID);
         personalinfo11.setText(oTrans.Master().getModel().getCompanyName());
 
+        // Create open record of existing id in client_master
+        // M00125000002
     }
 
 }
