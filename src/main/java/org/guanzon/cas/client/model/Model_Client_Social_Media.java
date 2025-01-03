@@ -93,8 +93,8 @@ public class Model_Client_Social_Media extends Model{
         return (String) getValue("sAccountx");
     }
     
-    public JSONObject setRemarks(String socialMediaType){
-        return setValue("sRemarksx", socialMediaType);
+    public JSONObject setRemarks(String remarks){
+        return setValue("sRemarksx", remarks);
     }
 
     public String getRemarks(){

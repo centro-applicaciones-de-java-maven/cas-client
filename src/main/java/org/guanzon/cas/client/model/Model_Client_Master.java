@@ -179,81 +179,14 @@ public class Model_Client_Master extends Model{
             return (String) getValue("sCompnyNm");
         } else {
             return ((String) getValue("sLastName") + ", " + 
-                    (String) getValue("sFrstName") + 
-                    ("".equals((String) getValue("sSuffixNm")) ? "" : " " + (String) getValue("sSuffixNm")) + 
-                    (String) getValue("sMiddName")).trim();
+                    (String) getValue("sFrstName") + " " +
+                    (String) getValue("sMiddName") + " "+
+                    ("".equals((String) getValue("sSuffixNm")) ? "" : (String) getValue("sSuffixNm"))).trim();
         }        
     }
     
     
-    public JSONObject SearchBarangay(String fsValue, boolean fbByCode) {
-
-        JSONObject loJSON;
-        if (fbByCode) {
-//            if (fsValue.equals((String) getBarangayID())) {
-//                loJSON = new JSONObject();
-//                loJSON.put("result", "success");
-//                loJSON.put("message", "Search barangay success.");
-//                return loJSON;
-//            }
-        } else {
-            if (getValue(21) != null && !getValue(21).toString().trim().isEmpty()) {
-                if (fsValue.equals(getValue(21))) {
-                    loJSON = new JSONObject();
-                    loJSON.put("result", "success");
-                    loJSON.put("message", "Search barangay success.");
-                    return loJSON;
-                }
-            }
-        }
-        
-        String lsSQL = "SELECT "
-                + "  a.sBrgyIDxx"
-                + ", a.sBrgyName"
-                + ", b.sTownName"
-                + ", b.sZippCode"
-                + ", c.sProvName"
-                + ", c.sProvIDxx"
-                + ", b.sTownIDxx"
-                + " FROM Barangay a"
-                + ", TownCity b"
-                + ", Province c"
-                + " WHERE a.sTownIDxx = b.sTownIDxx"
-                + " AND b.sProvIDxx = c.sProvIDxx"
-                + " AND a.cRecdStat = '1'"
-                + " AND b.cRecdStat = '1'"
-                + " AND c.cRecdStat = '1'"
-                + " AND a.sTownIDxx = " ;
-//                + SQLUtil.toSQL(getTownID());
-
-        if (fbByCode) {
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sBrgyIDxx = " + SQLUtil.toSQL(fsValue));
-        } else {
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sBrgyName LIKE " + SQLUtil.toSQL(fsValue + "%"));
-        }
-
-        loJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                fsValue,
-                "ID»Barangay»Town»Province",
-                "sBrgyIDxx»sBrgyName»sTownName»sProvName",
-                "sBrgyIDxx»sBrgyName»sTownName»sProvName",
-                fbByCode ? 0 : 1);
-
-        if (loJSON != null) {
-//                setBarangayID((String) loJSON.get("sBrgyIDxx"));
-//                setBarangayName((String) loJSON.get("sBrgyName"));
-//                setValue(13, (String) loJSON.get("sBrgyName"));
-
-            loJSON.put("result", "success");
-            loJSON.put("message", "Search barangay success.");
-            return loJSON;
-        } else {
-            loJSON.put("result", "error");
-            loJSON.put("message", "No record selected.");
-            return loJSON;
-        }
-    }
+ 
     
     
     public JSONObject setGender(String genderCode){

@@ -1,5 +1,6 @@
 package org.guanzon.cas.client.model;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.ShowDialogFX;
@@ -140,146 +141,6 @@ public class Model_Client_Address extends Model{
         }
     }
     
-        public JSONObject SearchTown(String fsValue, boolean fbByCode) {
-        
-        JSONObject loJSON;
-        if (fbByCode){
-//            if (fsValue.equals((String) getTownID())) {
-//                loJSON = new JSONObject();
-//                loJSON.put("result", "success");
-//                loJSON.put("message", "Search town success.");
-//                return loJSON;
-//            }
-        }else{
-            
-            String townProvince = getValue(20) + ", " + getValue(22);
-            System.out.println("fsValue = " + fsValue);
-            System.out.println("townProvince = " + townProvince);
-            if (fsValue.equals(townProvince)){
-                loJSON = new JSONObject();
-                loJSON.put("result", "success");
-                loJSON.put("message", "Search town success.");
-                return loJSON;
-            }
-        }
-        
-       String lsSQL = "SELECT " +
-                            "  a.sTownIDxx" +
-                            ", a.sTownName" + 
-                            ", a.sZippCode" +
-                            ", b.sProvName" + 
-                            ", b.sProvIDxx" +
-                        " FROM TownCity a" +
-                            ", Province b" +
-                        " WHERE a.sProvIDxx = b.sProvIDxx" + 
-                            " AND a.cRecdStat = '1'";
-        
-        if (fbByCode)
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sTownIDxx = " + SQLUtil.toSQL(fsValue));
-        else
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sTownName LIKE " + SQLUtil.toSQL(fsValue + "%"));
-       
-            
-      
-        System.out.println("lsSQL Town = " + lsSQL);
-        
-        loJSON = ShowDialogFX.Search(poGRider, 
-                            lsSQL, 
-                            fsValue,
-                            "ID»Town»Postal Code»Province", 
-                            "sTownIDxx»sTownName»sZippCode»sProvName", 
-                            "a.sTownIDxx»a.sTownName»a.sZippCode»b.sProvName", 
-                            fbByCode ? 0 : 1);
-        System.out.println("loJSON Town = " + loJSON);
-            
-            if (loJSON != null) {
-//                setTownID((String) loJSON.get("sTownIDxx"));
-//                setTownName((String) loJSON.get("sTownName"));
-//                setProvinceName((String) loJSON.get("sProvName"));
-//                setBarangayID("");
-//                setBarangayName("");
-                loJSON.put("result", "success");
-                loJSON.put("message", "Search town success.");
-//                loJSON.put("message", "Search town success.");
-                return loJSON;
-            }else {
-                loJSON.put("result", "error");
-                loJSON.put("message", "No record selected.");
-                return loJSON;
-            }
-    }
-    
-    
-        public JSONObject SearchBarangay(String fsValue, boolean fbByCode) {
-        
-        JSONObject loJSON;
-        if (fbByCode){
-//            if (fsValue.equals((String) getBarangayID())) {
-//                loJSON = new JSONObject();
-//                loJSON.put("result", "success");
-//                loJSON.put("message", "Search barangay success.");
-//                return loJSON;
-//            }
-        }else{
-            if(getValue(21)!= null && !getValue(21).toString().trim().isEmpty()){
-                if (fsValue.equals(getValue(21))){
-                    loJSON = new JSONObject();
-                    loJSON.put("result", "success");
-                    loJSON.put("message", "Search barangay success.");
-                    return loJSON;
-                }
-            }
-        }
-      String lsSQL = "SELECT " +
-                            "  a.sBrgyIDxx" +
-                            ", a.sBrgyName" +
-                            ", b.sTownName" + 
-                            ", b.sZippCode" +
-                            ", c.sProvName" + 
-                            ", c.sProvIDxx" +
-                            ", b.sTownIDxx" +
-                        " FROM Barangay a" + 
-                            ", TownCity b" +
-                            ", Province c" +
-                        " WHERE a.sTownIDxx = b.sTownIDxx" + 
-                            " AND b.sProvIDxx = c.sProvIDxx" + 
-                            " AND a.cRecdStat = '1'" + 
-                            " AND b.cRecdStat = '1'" + 
-                            " AND c.cRecdStat = '1'" + 
-                            " AND a.sTownIDxx = " ;
-//      + SQLUtil.toSQL(getTownID());
-        
-        if (fbByCode)
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sBrgyIDxx = " + SQLUtil.toSQL(fsValue));
-        else
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sBrgyName LIKE " + SQLUtil.toSQL(fsValue + "%"));
-       
-            
-            
-            
-        loJSON = ShowDialogFX.Search(poGRider, 
-                            lsSQL, 
-                            fsValue,
-                            "ID»Barangay»Town»Province", 
-                            "sBrgyIDxx»sBrgyName»sTownName»sProvName",
-                            "sBrgyIDxx»sBrgyName»sTownName»sProvName",
-                            fbByCode ? 0 : 1);
-            
-            if (loJSON != null) {
-//                setBarangayID((String) loJSON.get("sBrgyIDxx"));
-//                setBarangayName((String) loJSON.get("sBrgyName"));
-//                setValue(13, (String) loJSON.get("sBrgyName"));
-                
-                loJSON.put("result", "success");
-                loJSON.put("message", "Search barangay success.");
-                return loJSON;
-            }else {
-                loJSON.put("result", "error");
-                loJSON.put("message", "No record selected.");
-                return loJSON;
-            }
-    }
-    
     
     public JSONObject setAddressId(String addressId){
         return setValue("sAddrssID", addressId);
@@ -330,19 +191,23 @@ public class Model_Client_Address extends Model{
     }
     
     public JSONObject setLatitude(String latitude){
-        return setValue("nLatitude", latitude);
+        return setValue("nLatitude", Double.parseDouble(latitude));
     }
     
-    public double getLatitude(){
-        return (double) getValue("nLatitude");
+    public Number getLatitude(){
+//        return (Number) getValue("nLatitude");
+        Object value = getValue("nLatitude");
+            return ((Number) value).doubleValue();
     }
     
     public JSONObject setLongitude(String longitude){
-        return setValue("nLongitud", longitude);
+        return setValue("nLongitud", Double.parseDouble(longitude));
     }
     
-    public double getLongitude(){
-        return (double) getValue("nLongitud");
+    public Number getLongitude(){
+        Object value = getValue("nLongitud");
+        return ((Number) value).doubleValue();
+//        return (Number) getValue("nLongitud");
     }
     
     public JSONObject isPrimaryAddress(boolean isPrimaryAddress){
