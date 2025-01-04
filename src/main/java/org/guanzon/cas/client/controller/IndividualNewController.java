@@ -398,9 +398,14 @@ public class IndividualNewController implements Initializable {
 //                field.clear();
 //            }
 //        }
-        if (oTrans.getAddressCount() >= 1) {
-            oTrans.Address(pnAddress).getModel().setRecordStatus("0");
+        try {
+            if (oTrans.getAddressCount() >= 1) {
+                oTrans.Address(pnAddress).getModel().setRecordStatus("0");
+            }
+        } catch (Exception e) {
+
         }
+
         AddressField01.clear();
         AddressField02.clear();
         AddressField03.clear();
@@ -424,9 +429,11 @@ public class IndividualNewController implements Initializable {
     }
 
     private void clearMobile() {
-
-        if (oTrans.getMobileCount() >= 1) {
-            oTrans.Mobile(pnMobile).getModel().setRecordStatus("0");
+        try {
+            if (oTrans.getMobileCount() >= 1) {
+                oTrans.Mobile(pnMobile).getModel().setRecordStatus("0");
+            }
+        } catch (Exception e) {
         }
         txtMobile01.clear();
         cmbMobile01.setItems(mobileOwn);
@@ -442,11 +449,13 @@ public class IndividualNewController implements Initializable {
 
     private void clearEmail() {
         mailFields01.clear();
+        try {
+            if (oTrans.getMailCount() >= 1) {
+                oTrans.Mail(pnEmail).getModel().setRecordStatus("0");
+            }
+        } catch (Exception e) {
 
-        if (oTrans.getMailCount() >= 1) {
-            oTrans.Mail(pnEmail).getModel().setRecordStatus("0");
         }
-
         cmbEmail01.setItems(emailOwn);
         cmbEmail01.getSelectionModel().select(0);
         cbEmail01.setSelected(true);
@@ -455,8 +464,12 @@ public class IndividualNewController implements Initializable {
     }
 
     private void clearSocMed() {
-        if (oTrans.getSocMedCount() >= 1) {
-            oTrans.SocialMedia(pnSocialMedia).getModel().setRecordStatus("0");
+        try {
+            if (oTrans.getSocMedCount() >= 1) {
+                oTrans.SocialMedia(pnSocialMedia).getModel().setRecordStatus("0");
+            }
+        } catch (Exception e) {
+
         }
 
         txtSocial01.clear();
@@ -589,22 +602,24 @@ public class IndividualNewController implements Initializable {
                     break;
                 case "btnAddAddress":
                     if (oTrans.getAddressCount() > 1) {
-                        JSONObject addObj = oTrans.Address(pnAddress).isEntryOkay();
+                        JSONObject addObj = oTrans.Address(pnAddress - 1).isEntryOkay();
                         if ("error".equals((String) addObj.get("result"))) {
                             ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
                         }
                     }
                     clearAddress();
-                    oTrans.Address(pnAddress).getModel().setLatitude("0.0");
-                    oTrans.Address(pnAddress).getModel().setLongitude("0.0");
-                    JSONObject addObjAddress = oTrans.addAddress();
+                    try {
+                        oTrans.Address(pnAddress).getModel().setLatitude("0.0");
+                        oTrans.Address(pnAddress).getModel().setLongitude("0.0");
+                    } catch (Exception e) {
+                    }
 
+                    JSONObject addObjAddress = oTrans.addAddress();
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     } else {
-                        oTrans.Address(pnAddress).getModel().setClientId(oTrans.Master().getModel().getClientId());
                         oTrans.Address(pnAddress).getModel().setClientId(oTrans.Master().getModel().getClientId());
 
                     }
@@ -618,22 +633,28 @@ public class IndividualNewController implements Initializable {
                 case "btnAddEmail":
                     //    oTrans.Mail(pnEmail).getModel().setEmailId("");
 
-                    if (oTrans.getMailCount() > 0) {
+                    if (oTrans.getMailCount() > 1) {
                         //  oTrans.Mail(pnEmail).getModel().setEmailId("");
-                        JSONObject addObjMail = oTrans.Mail(pnEmail).isEntryOkay();
+                        JSONObject addObjMail = oTrans.Mail(pnEmail - 1).isEntryOkay();
                         if ("error".equals((String) addObjMail.get("result"))) {
                             ShowMessageFX.Information((String) addObjMail.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
                         }
                     }
                     clearEmail();
+                    try {
+                        oTrans.Mail(pnEmail).getModel().setClientId(oTrans.Master().getModel().getClientId());
+                    } catch (Exception e) {
+
+                    }
                     JSONObject addObjMail = oTrans.addMail();
 //                    oTrans.Mail(pnEmail).getModel().setEmailId("");
-                    oTrans.Mail(pnEmail).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addObjMail.get("message"));
                     if ("error".equals((String) addObjMail.get("result"))) {
                         ShowMessageFX.Information((String) addObjMail.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
+                    } else {
+                        oTrans.Mail(pnEmail).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     }
 
                     mailFields01.clear();
@@ -643,20 +664,21 @@ public class IndividualNewController implements Initializable {
                     break;
                 case "btnAddMobile":
                     if (oTrans.getMobileCount() > 1) {
-                        JSONObject addObjMobile = oTrans.Mobile(pnMobile).isEntryOkay();
+                        JSONObject addObjMobile = oTrans.Mobile(pnMobile - 1).isEntryOkay();
                         if ("error".equals((String) addObjMobile.get("result"))) {
                             ShowMessageFX.Information((String) addObjMobile.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
                         }
                     }
                     clearMobile();
-                    System.out.println(oTrans.getMobileCount());
+
                     JSONObject addObj = oTrans.addMobile();
-                    oTrans.Mobile(pnMobile).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addObj.get("message"));
                     if ("error".equals((String) addObj.get("result"))) {
                         ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
+                    } else {
+                        oTrans.Mobile(pnMobile).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     }
                     txtMobile01.clear();
                     pnMobile = oTrans.getMobileCount() - 1;
@@ -666,19 +688,20 @@ public class IndividualNewController implements Initializable {
                 case "btnAddSocMed":
 
                     if (oTrans.getSocMedCount() > 1) {
-                        JSONObject addObjSocMed = oTrans.SocialMedia(pnSocialMedia).isEntryOkay();
+                        JSONObject addObjSocMed = oTrans.SocialMedia(pnSocialMedia - 1).isEntryOkay();
                         if ("error".equals((String) addObjSocMed.get("result"))) {
                             ShowMessageFX.Information((String) addObjSocMed.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
                         }
                     }
-                    clearSocMed();
                     JSONObject addSocMed = oTrans.addSocialMedia();
-                    oTrans.SocialMedia(pnSocialMedia).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     System.out.println((String) addSocMed.get("message"));
                     if ("error".equals((String) addSocMed.get("result"))) {
                         ShowMessageFX.Information((String) addSocMed.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
+                    } else {
+                        clearSocMed();
+                        oTrans.SocialMedia(pnSocialMedia).getModel().setClientId(oTrans.Master().getModel().getClientId());
                     }
                     txtSocial01.clear();
                     txtSocial02.clear();
@@ -689,96 +712,101 @@ public class IndividualNewController implements Initializable {
                     break;
 
                 case "btnDelAddress":
-                    if (oTrans.getAddressCount() > 0) {
+                    if (oTrans.getAddressCount() == 0) {
                         loJson.put("result", "error");
                         loJson.put("message", "No Record.");
                         ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
-                    clearAddress();
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-//                        oTrans.Address(pnAddress).deleteRecord();
-                        loJson = oTrans.deleteAddress(pnAddress);
-                        if ("error".equals((String) loJson.get("result"))) {
-                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
+
+                            loJson = oTrans.deleteAddress(pnAddress);
+                            if ("error".equals((String) loJson.get("result"))) {
+                                ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                                break;
+                            }
+                            clearAddress();
+                            if (oTrans.getAddressCount() <= 0) {
+                                pnAddress = oTrans.getAddressCount();
+                            } else {
+//                            pnAddress = oTrans.getAddressCount() - 1;
+                            }
+                            loadRecordAddress();
+                            AddressField01.requestFocus();
                         }
-                        if (oTrans.getAddressCount() <= 0) {
-                            pnAddress = oTrans.getAddressCount();
-                        } else {
-                            pnAddress = oTrans.getAddressCount() - 1;
-                        }
-                        loadRecordAddress();
-                        AddressField01.requestFocus();
-                    }
+
+                    
                     break;
                 case "btnDelMobile":
-                    if (oTrans.getMobileCount() > 0) {
+                    if (oTrans.getMobileCount() == 0) {
                         loJson.put("result", "error");
                         loJson.put("message", "No Record.");
                         ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
-                    clearMobile();
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        loJson = oTrans.deleteMobile(pnMobile);
-                        if ("error".equals((String) loJson.get("result"))) {
-                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        }
-                        if (oTrans.getMobileCount() <= 0) {
-                            pnMobile = oTrans.getMobileCount();
-                        } else {
-                            pnMobile = oTrans.getMobileCount() - 1;
-                        }
 
-                        loadRecordMobile();
-                    }
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
+                            loJson = oTrans.deleteMobile(pnMobile);
+                            if ("error".equals((String) loJson.get("result"))) {
+                                ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                                break;
+                            }
+                            clearMobile();
+                            if (oTrans.getMobileCount() <= 0) {
+                                pnMobile = oTrans.getMobileCount();
+                            } else {
+                                //this is where should be getting table get selected then minus one if it is not equal to 
+//                            pnMobile = oTrans.getMobileCount() - 1;
+                            }
+
+                            loadRecordMobile();
+                        }
+                   
                     break;
                 case "btnDelEmail":
-                    if (oTrans.getMailCount() > 0) {
+                    if (oTrans.getMailCount() == 0) {
                         loJson.put("result", "error");
                         loJson.put("message", "No Record.");
                         ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
-                    clearEmail();
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        loJson = oTrans.deleteEmail(pnEmail);
-                        if ("error".equals((String) loJson.get("result"))) {
-                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
+                            loJson = oTrans.deleteEmail(pnEmail);
+                            if ("error".equals((String) loJson.get("result"))) {
+                                ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                                break;
+                            }
+                            clearEmail();
+                            if (oTrans.getMailCount() <= 0) {
+                                pnEmail = oTrans.getMailCount();
+                            } else {
+//                            pnEmail = oTrans.getMailCount() - 1;
+                            }
+                            loadRecordEmail();
                         }
-
-                        if (oTrans.getMailCount() <= 0) {
-                            pnEmail = oTrans.getMailCount();
-                        } else {
-                            pnEmail = oTrans.getMailCount() - 1;
-                        }
-                        loadRecordEmail();
-                    }
+                   
                     break;
                 case "btnDelSocMed":
-                    if (oTrans.getSocMedCount() > 0) {
+                    if (oTrans.getSocMedCount() == 0) {
                         loJson.put("result", "error");
                         loJson.put("message", "No Record.");
                         ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        loJson = oTrans.deleteSocialMedia(pnSocialMedia);
-                        if ("error".equals((String) loJson.get("result"))) {
-                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
+                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
+                            loJson = oTrans.deleteSocialMedia(pnSocialMedia);
+                            if ("error".equals((String) loJson.get("result"))) {
+                                ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                                break;
+                            }
+                            clearSocMed();
+                            if (oTrans.getSocMedCount() <= 0) {
+                                pnSocialMedia = oTrans.getSocMedCount();
+                            } else {
+//                            pnSocialMedia = oTrans.getSocMedCount() - 1;
+                            }
+                            loadRecordSocialMedia();
                         }
-                        if (oTrans.getSocMedCount() <= 0) {
-                            pnSocialMedia = oTrans.getSocMedCount();
-                        } else {
-                            pnSocialMedia = oTrans.getSocMedCount() - 1;
-                        }
-
-                        loadRecordSocialMedia();
-                    }
                     break;
 
                 default:
@@ -907,39 +935,45 @@ public class IndividualNewController implements Initializable {
                     break;
                 case 13:
                     /*TIN No*/ //ADD VALIDATIONS
-                    if (lsValue.length() == 9 && lsValue.matches("\\d+")) {
-                        String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 9);
-                        oTrans.Master().getModel().setTaxIdNumber(lsformattedValue);
-                    } else {
-                        // Input is invalid
-                        oTrans.Master().getModel().setTaxIdNumber("");
-                        ShowMessageFX.Information("Input must be 9 digits and contain numbers only.", "Computerized Acounting System", "Invalid input");
+                    if (!lsValue.equals("")) {
+                        if (lsValue.length() == 9 && lsValue.matches("\\d+")) {
+                            String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 9);
+                            oTrans.Master().getModel().setTaxIdNumber(lsformattedValue);
+                        } else {
+                            // Input is invalid
+                            oTrans.Master().getModel().setTaxIdNumber("");
+                            ShowMessageFX.Information("Input must be 9 digits and contains numbers only.", "Computerized Acounting System", pxeModuleName);
+                        }
                     }
+
                     break;
                 case 14:
                     /*LTO ID*/
-
-                    if (lsValue.length() == 11 && lsValue.matches("\\d+")) {
-                        // Format the input
-                        String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 11);
-                        oTrans.Master().getModel().setLTOClientId(lsformattedValue);
-                    } else {
-                        // Input is invalid
-                        oTrans.Master().getModel().setLTOClientId("");
-                        ShowMessageFX.Information("Input must be 11 digits and contain numbers only.", "Computerized Acounting System", "Invalid input");
+                    if (!lsValue.equals("")) {
+                        if (lsValue.length() == 11 && lsValue.matches("\\d+")) {
+                            // Format the input
+                            String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 11);
+                            oTrans.Master().getModel().setLTOClientId(lsformattedValue);
+                        } else {
+                            // Input is invalid
+                            oTrans.Master().getModel().setLTOClientId("");
+                            ShowMessageFX.Information("Input must be 11 digits and contains numbers only.", "Computerized Acounting System", pxeModuleName);
+                        }
                     }
+
                     break;
                 case 15:
                     /*National ID */
-
-                    if (lsValue.length() == 11 && lsValue.matches("\\d+")) {
-                        // Format the input
-                        String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 11);
-                        oTrans.Master().getModel().setPhNationalId(lsformattedValue);
-                    } else {
-                        // Input is invalid
-                        oTrans.Master().getModel().setPhNationalId("");
-                        ShowMessageFX.Information("Input must be 11 digits and contain numbers only.", "Computerized Acounting System", "Invalid input");
+                    if (!lsValue.equals("")) {
+                        if (lsValue.length() == 11 && lsValue.matches("\\d+")) {
+                            // Format the input
+                            String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 11);
+                            oTrans.Master().getModel().setPhNationalId(lsformattedValue);
+                        } else {
+                            // Input is invalid
+                            oTrans.Master().getModel().setPhNationalId("");
+                            ShowMessageFX.Information("Input must be 11 digits and contains numbers only.", "Computerized Acounting System", pxeModuleName);
+                        }
                     }
                     break;
 
@@ -1023,7 +1057,9 @@ public class IndividualNewController implements Initializable {
                         break;
                     case 5:
                         /*search barangay*/
-
+//                        if (!oTrans.getProvinceID_temp().equals("")) {
+//                            //define the provinceid and make it basis in barangay if existing in any town that has it Province
+//                        }
                         poJson = new JSONObject();
                         Barangay loBarangay = new Barangay();
                         loBarangay.setApplicationDriver(oApp);
@@ -1127,12 +1163,27 @@ public class IndividualNewController implements Initializable {
         // Load the temp data instead
         String lsTownId = "";
         String lsHouseNo = "";
+//        for (int i = 0; i < oTrans.getAddressCount(); i++) {
+//            if (oTrans.Address(i).getModel().isPrimaryAddress()) {
+//                txtField03.setText(oTrans.getMasterAddress(i));
+//            }
+//        }
+
+        boolean primaryAddressExists = false;
+
         for (int i = 0; i < oTrans.getAddressCount(); i++) {
             if (oTrans.Address(i).getModel().isPrimaryAddress()) {
                 txtField03.setText(oTrans.getMasterAddress(i));
+                primaryAddressExists = true; // Mark as found
+                break; // Exit the loop since a primary address is found
             }
+        }
+
+        if (!primaryAddressExists) {
+            txtField03.setText("");
 
         }
+
         //USE THIS IF THERE IS EXISTING RECORD
 //        Client_Address loclientAddress = new Client_Address();
 //        loclientAddress.setApplicationDriver(oApp);
@@ -1197,10 +1248,17 @@ public class IndividualNewController implements Initializable {
                 case 4:
                     /*City*/
                     //leave blank as it is searchable 
+                    if (lsValue.equals("")) {
+                        oTrans.Address(pnAddress).getModel().setTownId(lsValue);
+                        oTrans.Address(pnAddress).getModel().setAddress(lsValue);
+                        oTrans.Address(pnAddress).getModel().setBarangayId(lsValue);
+                    }
+                    loadRecordAddress();
                     break;
                 case 5:
                     /*Barangay*/
                     //leave blank as it is searchable 
+                    loadRecordAddress();
                     break;
                 case 6:
                     /*Latitude*/
@@ -1209,10 +1267,10 @@ public class IndividualNewController implements Initializable {
                         loJSON.put("error", lsValue);
                         loJSON.put("message", "Value must contain numbers only");
                         oTrans.Address(pnAddress).getModel().setLatitude("0.0");
-                                            loadRecordAddress();
+                        loadRecordAddress();
 
                         ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
-                    }else{
+                    } else {
                         loJSON = oTrans.Address(pnAddress).getModel().setLatitude(lsValue);
                         if ("error".equals((String) loJSON.get("result"))) {
                             Assert.fail((String) loJSON.get("message"));
@@ -1227,13 +1285,13 @@ public class IndividualNewController implements Initializable {
                         loJSON.put("message", "Value must contain numbers only");
                         oTrans.Address(pnAddress).getModel().setLongitude("0.0");
                         ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
-                    }else{
+                    } else {
                         loJSON = oTrans.Address(pnAddress).getModel().setLongitude(lsValue);
                         if ("error".equals((String) loJSON.get("result"))) {
                             Assert.fail((String) loJSON.get("message"));
                         }
                     }
-                        loadRecordAddress();
+                    loadRecordAddress();
 
                     break;
 
@@ -1604,16 +1662,10 @@ public class IndividualNewController implements Initializable {
             }
         }
         );
-
         if (!oTrans.Master().getModel().getBirthDate().equals("")) {
-//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//            LocalDate selectedDate = oTrans.Master().getModel().getBirthDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-//            LocalDate localbdate = LocalDate.parse(selectedDate.toString(), formatter);
-//            String formattedDate = formatter.format(selectedDate);
-
             // Get the object from the model
-            Object dbegInvxx = oTrans.Master().getModel().getBirthDate();
 
+            Object dbegInvxx = oTrans.Master().getModel().getBirthDate();
             if (dbegInvxx == null) {
                 // If the object is null, set the DatePicker to the current date
                 personalinfo07.setValue(LocalDate.now());
@@ -1628,14 +1680,13 @@ public class IndividualNewController implements Initializable {
                 LocalDate localDate = sqlDate.toLocalDate();
                 personalinfo07.setValue(localDate);
             } else {
-                // Handle unexpected types or throw an exception
-                throw new IllegalArgumentException("Expected a Timestamp or Date, but got: " + dbegInvxx.getClass().getName());
+//                throw new IllegalArgumentException("Expected a Timestamp or Date, but got: " + dbegInvxx.getClass().getName());
             }
 
-//            oTrans.Master().getModel().setBirthDate((SQLUtil.toDate(formattedDate, "yyyy-MM-dd")));
-//            personalinfo07.setValue(localbdate);
         }
+
         if (!oTrans.Master().getModel().getBirthPlaceId().equals("")) {
+
             TownCity loTownCity = new TownCity();
             loTownCity.setApplicationDriver(oApp);
             loTownCity.setRecordStatus("1");
@@ -1648,7 +1699,6 @@ public class IndividualNewController implements Initializable {
 
             personalinfo08.setText(loTownCity.getModel().getTownName() + " " + loProvince.getModel().getProvinceName());
         }
-
         int lsGender = Integer.parseInt(oTrans.Master().getModel().getGender());
         personalinfo09.getSelectionModel().select(lsGender);
 
@@ -1745,7 +1795,7 @@ public class IndividualNewController implements Initializable {
                 /* FOCUS ON FIRST ROW */
                 tblMobile.getSelectionModel().select(0);
                 tblMobile.getFocusModel().focus(0);
-                pnMobile = tblMobile.getSelectionModel().getSelectedIndex();
+                pnMobile = 0;
             }
             getSelectedMobile();
         } else {
@@ -1878,21 +1928,7 @@ public class IndividualNewController implements Initializable {
     }
 
     private void getSelectedAddress() {
-        clearAddress();
         loadMasterAddress2();
-//        TextField[] fields = {AddressField01, AddressField02, AddressField03, AddressField04,
-//            AddressField05, AddressField06, AddressField07};
-//        for (TextField field : fields) {
-//            field.clear();
-//        }
-//
-//        CheckBox[] checkboxs = {cbAddress01, cbAddress02, cbAddress03,
-//            cbAddress04, cbAddress05, cbAddress06, cbAddress07, cbAddress08};
-//
-//        // Loop through each array of TextFields and clear them
-//        for (CheckBox checkbox : checkboxs) {
-//            checkbox.setSelected(false);
-//        }
 
         if (oTrans.getAddressCount() > 0) {
             AddressField01.setText(oTrans.Address(pnAddress).getModel().getHouseNo());
@@ -2034,7 +2070,7 @@ public class IndividualNewController implements Initializable {
                     switch (number) {
                         case 1: // ask if this is crecordstat // isActive
                             System.out.println("Checkbox 01 selected");
-                            loJSON = oTrans.Address(pnAddress).getModel().setRecordStatus((checkbox.isSelected()) ? "0" : "1");
+                            loJSON = oTrans.Address(pnAddress).getModel().setRecordStatus(checkbox.isSelected() ? "0" : "1");
                             if ("error".equals((String) loJSON.get("result"))) {
                                 Assert.fail((String) loJSON.get("message"));
                             }
@@ -2323,6 +2359,9 @@ public class IndividualNewController implements Initializable {
      */
     public void initComboboxes() {
         // Personal info
+        oTrans.Master().getModel().setGender("0");
+        oTrans.Master().getModel().setCivilStatus("0");
+
         personalinfo09.setItems(gender);
         personalinfo09.setOnAction(event -> {
             String selectedItem = String.valueOf(personalinfo09.getSelectionModel().getSelectedIndex());
@@ -2336,6 +2375,8 @@ public class IndividualNewController implements Initializable {
             oTrans.Master().getModel().setCivilStatus(selectedItem);
             personalinfo10.setValue(personalinfo10.getValue());
         });
+        personalinfo09.getSelectionModel().select(0);
+        personalinfo10.getSelectionModel().select(0);
 
         // Mobile
         cmbMobile01.setItems(mobileOwn);
@@ -2382,25 +2423,45 @@ public class IndividualNewController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         System.setProperty("sys.default.path.temp", "D:/GGC_Maven_Systems/temp/");
         System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
-
+        boolean[] booleanArray = {true, true, true, true};
         oApp = MiscUtil.Connect();
-        if (oTransnox == null || oTransnox.isEmpty()) { // Check if oTransnox is null or empty
-            pnEditMode = EditMode.ADDNEW;
-//            initButton(pnEditMode);
-        }
+//        if (oTransnox == null || oTransnox.isEmpty()) { // Check if oTransnox is null or empty
+//            pnEditMode = EditMode.ADDNEW;
+////            initButton(pnEditMode);
+//        }
 
         oTrans = new Client(oApp, "", null);
 
-        // NEW RECORD
-        oTrans.New();
-        oTrans.Master().getModel().setClientType(ClientType.INSTITUTION);
+        Boolean lbOption = true;
+        if (lbOption) {
+            // NEW RECORD
+            oTrans.New();
+            oTrans.Master().getModel().setClientType(ClientType.INSTITUTION);
+            pnEditMode = EditMode.ADDNEW;
+        } else {
+            // OPEN RECORD
+            //Define if address, mobile, mail, social media have data or else cancel the load of them
+            String lsID = "M00124000012";
+            oTrans.Master().openRecord(lsID);
+            oTrans.OpenClientAddress(lsID);
+            oTrans.OpenClientMobile(lsID);
+            oTrans.OpenClientMail(lsID);
+            oTrans.OpenClientSocialMedia(lsID);
 
-        // OPEN RECORD
-//        oTrans.Master().openRecord("M00125000002");
-//        oTrans.OpenClientAddress("M00125000002");
-//        oTrans.OpenClientMobile("M00125000002");
-//        oTrans.OpenClientMail("M00125000002");
-//        oTrans.OpenClientSocialMedia("M00125000002");
+            if (oTrans.getAddressCount() <= 0) {
+                booleanArray[0] = false;
+            }
+            if (oTrans.getMobileCount() <= 0) {
+                booleanArray[1] = false;
+            }
+            if (oTrans.getMailCount() <= 0) {
+                booleanArray[2] = false;
+            }
+            if (oTrans.getSocMedCount() <= 0) {
+                booleanArray[3] = false;
+            }
+        }
+
         initButton();
         InitPersonalInfoTextFields();
 
@@ -2430,15 +2491,32 @@ public class IndividualNewController implements Initializable {
         InitMasterTextFields();
 
         initComboboxes();
+        if (lbOption) {
+            loadRecordMobile();
+            loadRecordAddress();
+            loadRecordSocialMedia();
+            loadRecordEmail();
+        } else {
+            if (booleanArray[0]) {
+                loadRecordMobile();
+            }
+            if (booleanArray[1]) {
+                loadRecordAddress();
+            }
+            if (booleanArray[2]) {
+                loadRecordSocialMedia();
+            }
+            if (booleanArray[3]) {
+                loadRecordEmail();
+            }
+        }
 
-        loadRecordMobile();
-        loadRecordAddress();
-        loadRecordSocialMedia();
-        loadRecordEmail();
+        if (!lbOption) {
+            // load when using open record
+            loadMasterName();
+            loadRecordPersonalInfo();
+        }
 
-        // load when using open record
-//        loadMasterName();
-//        loadRecordPersonalInfo();
         initTableOnClick();
 
         pbLoaded = true;

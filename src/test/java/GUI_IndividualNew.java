@@ -11,10 +11,12 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.guanzon.cas.client.controller.IndividualNewController;
 
-public class Test_IndividualNew extends Application {
-
+public class GUI_IndividualNew extends Application {
+    private double xOffset = 0; // Tracks the X offset between the stage and the mouse
+    private double yOffset = 0; // Tracks the Y offset between the stage and the mouse
     @Override
     public void start(Stage primaryStage) throws Exception {
+
         // Load FXML file
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/IndividualNew.fxml"));
 
@@ -30,11 +32,24 @@ public class Test_IndividualNew extends Application {
             System.out.println("Controller is null!");
         }
         Parent root = loader.load();
+        root.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        root.setOnMouseDragged(event -> {
+            primaryStage.setX(event.getScreenX() - xOffset);
+            primaryStage.setY(event.getScreenY() - yOffset);
+        });
+
+        
+        
+        
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/org/guanzon/cas/client/css/Tables.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/org/guanzon/cas/client/css/StyleSheet.css").toExternalForm());
 
-        // primaryStage.initStyle(StageStyle.UNDECORATED); // Or StageStyle.UNDECORATED for complete removal of window borders
+        primaryStage.initStyle(StageStyle.UNDECORATED); // Or StageStyle.UNDECORATED for complete removal of window borders
         primaryStage.setTitle("");
         primaryStage.setScene(scene);
         primaryStage.show();

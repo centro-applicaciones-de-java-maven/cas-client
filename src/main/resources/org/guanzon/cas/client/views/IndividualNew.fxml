@@ -342,8 +342,8 @@
                                                                   <TableColumn fx:id="indexAddress01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                   <TableColumn fx:id="indexAddress02" prefWidth="75.0" text="House No." />
                                                                   <TableColumn fx:id="indexAddress03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="180.0" text="Address" />
-                                                                  <TableColumn fx:id="indexAddress04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="180.0" text="Town" />
-                                                                  <TableColumn fx:id="indexAddress05" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="180.0" text="Brangay" />
+                                                                  <TableColumn fx:id="indexAddress04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="141.0" text="Town" />
+                                                                  <TableColumn fx:id="indexAddress05" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="180.0" text="Barangay" />
                                                                </columns>
                                                             </TableView>
                                                             <GridPane hgap="2.0" layoutX="14.0" layoutY="233.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -581,7 +581,7 @@
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin></ComboBox>
-                                                                                    <TextField fx:id="txtMobile01" maxWidth="200.0" minWidth="150.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                                    <TextField fx:id="txtMobile01" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin></TextField>
@@ -654,7 +654,7 @@
                                                                                     <TableColumn fx:id="indexMobileNo01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexMobileNo02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" text="Mobile No." />
                                                                                     <TableColumn fx:id="indexMobileNo03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="157.0" text="Owner" />
-                                                                                    <TableColumn fx:id="indexMobileNo04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="156.0" text="Mobile Type" />
+                                                                                    <TableColumn fx:id="indexMobileNo04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="279.0" text="Mobile Type" />
                                                                                  </columns>
                                                                               </TableView>
                                                                            </children>
@@ -704,7 +704,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </ComboBox>
-                                                                                    <TextField fx:id="mailFields01" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                                    <TextField fx:id="mailFields01" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="219.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
@@ -781,7 +781,7 @@
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexEmail01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexEmail02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="180.0" text="Owner" />
-                                                                                    <TableColumn fx:id="indexEmail03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="280.0" text="Email" />
+                                                                                    <TableColumn fx:id="indexEmail03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="404.0" text="Email" />
                                                                                  </columns>
                                                                               </TableView>
                                                                            </children>
@@ -916,7 +916,7 @@
                                                                                     <TableColumn fx:id="indexSocMed01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexSocMed02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="160.0" text="Account" />
                                                                                     <TableColumn fx:id="indexSocMed03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="140.0" text="Social Media" />
-                                                                                    <TableColumn fx:id="indexSocMed04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="240.0" text="Remarks" />
+                                                                                    <TableColumn fx:id="indexSocMed04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="284.0" text="Remarks" />
                                                                                  </columns>
                                                                               </TableView>
                                                                            </children>
