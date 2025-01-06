@@ -86,11 +86,11 @@ public class Client {
 
                 }
 
-                return (poAddress.get(lnRow).getModel().getHouseNo().equals("") ? "" : poAddress.get(lnRow).getModel().getHouseNo() + " ")
-                        + ((loBarangay.getModel().getBarangayName() instanceof String) && (!loBarangay.getModel().getBarangayName().equals("")) ? loBarangay.getModel().getBarangayName()+ " " : "")
-                        + ((loTownCity.getModel().getTownName() instanceof String) && (!loTownCity.getModel().getTownName().equals(""))  ? loTownCity.getModel().getTownName() + " " : "")
-                        + ((loProvince.getModel().getProvinceName() instanceof String)  && (!loProvince.getModel().getProvinceName().equals("")) ? loProvince.getModel().getProvinceName() + " " : "")
-                        + ((loTownCity.getModel().getZipCode() instanceof String)  && (!loTownCity.getModel().getZipCode().equals("")) ? loTownCity.getModel().getZipCode() : "");
+                return (poAddress.get(lnRow).getModel().getHouseNo().equals("") ? "" : poAddress.get(lnRow).getModel().getHouseNo())
+                        + ((loBarangay.getModel().getBarangayName() instanceof String) && (!loBarangay.getModel().getBarangayName().equals("")) ?  ", " + loBarangay.getModel().getBarangayName() : "")
+                        + ((loTownCity.getModel().getTownName() instanceof String) && (!loTownCity.getModel().getTownName().equals(""))  ? ", " + loTownCity.getModel().getTownName() : "")
+                        + ((loProvince.getModel().getProvinceName() instanceof String)  && (!loProvince.getModel().getProvinceName().equals("")) ? ", " + loProvince.getModel().getProvinceName() : "")
+                        + ((loTownCity.getModel().getZipCode() instanceof String)  && (!loTownCity.getModel().getZipCode().equals("")) ? " " + loTownCity.getModel().getZipCode() : "");
         
     }
 
