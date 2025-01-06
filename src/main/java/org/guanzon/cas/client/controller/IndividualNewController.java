@@ -560,30 +560,6 @@ public class IndividualNewController implements Initializable {
                         ShowMessageFX.OkayCancel(oTrans.Master().getModel().getCompanyName(), "", "Successfully saved!");
                     }
 
-//                    switch (tabText) {
-//                        
-//                        case "PersonalInfo":
-//
-//                            break;
-//                        case "Address":
-//                            break;
-//                        case "Mobile":
-//                            break;
-//                        case "Email":
-//                            break;
-//                    }
-//                    break;
-//                case "btnClose":
-//                    switch (tabText) {
-//                        case "PersonalInfo":
-//                            break;
-//                        case "Address":
-//                            break;
-//                        case "Mobile":
-//                            break;
-//                        case "Email":
-//                            break;
-//                    }
                     break;
 
                 case "btnCancel":
@@ -658,7 +634,7 @@ public class IndividualNewController implements Initializable {
                     }
 
                     mailFields01.clear();
-                    pnEmail = oTrans.getMailCount() - 1;
+                    pnEmail = oTrans.getMailCount() - 1;                  
                     tblEmail.getSelectionModel().select(pnEmail + 1);
                     loadRecordEmail();
                     break;
@@ -718,24 +694,23 @@ public class IndividualNewController implements Initializable {
                         ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
-                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
 
-                            loJson = oTrans.deleteAddress(pnAddress);
-                            if ("error".equals((String) loJson.get("result"))) {
-                                ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                                break;
-                            }
-                            clearAddress();
-                            if (oTrans.getAddressCount() <= 0) {
-                                pnAddress = oTrans.getAddressCount();
-                            } else {
-//                            pnAddress = oTrans.getAddressCount() - 1;
-                            }
-                            loadRecordAddress();
-                            AddressField01.requestFocus();
+                        loJson = oTrans.deleteAddress(pnAddress);
+                        if ("error".equals((String) loJson.get("result"))) {
+                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
                         }
+                        clearAddress();
+                        if (oTrans.getAddressCount() <= 0) {
+                            pnAddress = oTrans.getAddressCount();
+                        } else {
+//                            pnAddress = oTrans.getAddressCount() - 1;
+                        }
+                        loadRecordAddress();
+                        AddressField01.requestFocus();
+                    }
 
-                    
                     break;
                 case "btnDelMobile":
                     if (oTrans.getMobileCount() == 0) {
@@ -745,23 +720,23 @@ public class IndividualNewController implements Initializable {
                         break;
                     }
 
-                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                            loJson = oTrans.deleteMobile(pnMobile);
-                            if ("error".equals((String) loJson.get("result"))) {
-                                ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                                break;
-                            }
-                            clearMobile();
-                            if (oTrans.getMobileCount() <= 0) {
-                                pnMobile = oTrans.getMobileCount();
-                            } else {
-                                //this is where should be getting table get selected then minus one if it is not equal to 
-//                            pnMobile = oTrans.getMobileCount() - 1;
-                            }
-
-                            loadRecordMobile();
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
+                        loJson = oTrans.deleteMobile(pnMobile);
+                        if ("error".equals((String) loJson.get("result"))) {
+                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
                         }
-                   
+                        clearMobile();
+                        if (oTrans.getMobileCount() <= 0) {
+                            pnMobile = oTrans.getMobileCount();
+                        } else {
+                            //this is where should be getting table get selected then minus one if it is not equal to 
+//                            pnMobile = oTrans.getMobileCount() - 1;
+                        }
+
+                        loadRecordMobile();
+                    }
+
                     break;
                 case "btnDelEmail":
                     if (oTrans.getMailCount() == 0) {
@@ -770,21 +745,21 @@ public class IndividualNewController implements Initializable {
                         ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
-                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                            loJson = oTrans.deleteEmail(pnEmail);
-                            if ("error".equals((String) loJson.get("result"))) {
-                                ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                                break;
-                            }
-                            clearEmail();
-                            if (oTrans.getMailCount() <= 0) {
-                                pnEmail = oTrans.getMailCount();
-                            } else {
-//                            pnEmail = oTrans.getMailCount() - 1;
-                            }
-                            loadRecordEmail();
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
+                        loJson = oTrans.deleteEmail(pnEmail);
+                        if ("error".equals((String) loJson.get("result"))) {
+                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
                         }
-                   
+                        clearEmail();
+                        if (oTrans.getMailCount() <= 0) {
+                            pnEmail = oTrans.getMailCount();
+                        } else {
+//                            pnEmail = oTrans.getMailCount() - 1;
+                        }
+                        loadRecordEmail();
+                    }
+
                     break;
                 case "btnDelSocMed":
                     if (oTrans.getSocMedCount() == 0) {
@@ -793,20 +768,20 @@ public class IndividualNewController implements Initializable {
                         ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
                     }
-                        if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                            loJson = oTrans.deleteSocialMedia(pnSocialMedia);
-                            if ("error".equals((String) loJson.get("result"))) {
-                                ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                                break;
-                            }
-                            clearSocMed();
-                            if (oTrans.getSocMedCount() <= 0) {
-                                pnSocialMedia = oTrans.getSocMedCount();
-                            } else {
-//                            pnSocialMedia = oTrans.getSocMedCount() - 1;
-                            }
-                            loadRecordSocialMedia();
+                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
+                        loJson = oTrans.deleteSocialMedia(pnSocialMedia);
+                        if ("error".equals((String) loJson.get("result"))) {
+                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
                         }
+                        clearSocMed();
+                        if (oTrans.getSocMedCount() <= 0) {
+                            pnSocialMedia = oTrans.getSocMedCount();
+                        } else {
+//                            pnSocialMedia = oTrans.getSocMedCount() - 1;
+                        }
+                        loadRecordSocialMedia();
+                    }
                     break;
 
                 default:
@@ -936,6 +911,7 @@ public class IndividualNewController implements Initializable {
                 case 13:
                     /*TIN No*/ //ADD VALIDATIONS
                     if (!lsValue.equals("")) {
+                        lsValue = lsValue.replace("-", "");
                         if (lsValue.length() == 9 && lsValue.matches("\\d+")) {
                             String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 9);
                             oTrans.Master().getModel().setTaxIdNumber(lsformattedValue);
@@ -944,12 +920,15 @@ public class IndividualNewController implements Initializable {
                             oTrans.Master().getModel().setTaxIdNumber("");
                             ShowMessageFX.Information("Input must be 9 digits and contains numbers only.", "Computerized Acounting System", pxeModuleName);
                         }
+                    }else{
+                        oTrans.Master().getModel().setTaxIdNumber("");
                     }
-
                     break;
                 case 14:
                     /*LTO ID*/
+
                     if (!lsValue.equals("")) {
+                        lsValue = lsValue.replace("-", "");
                         if (lsValue.length() == 11 && lsValue.matches("\\d+")) {
                             // Format the input
                             String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 11);
@@ -959,12 +938,14 @@ public class IndividualNewController implements Initializable {
                             oTrans.Master().getModel().setLTOClientId("");
                             ShowMessageFX.Information("Input must be 11 digits and contains numbers only.", "Computerized Acounting System", pxeModuleName);
                         }
+                    }else{
+                         oTrans.Master().getModel().setLTOClientId("");
                     }
-
                     break;
                 case 15:
                     /*National ID */
                     if (!lsValue.equals("")) {
+                        lsValue = lsValue.replace("-", "");
                         if (lsValue.length() == 11 && lsValue.matches("\\d+")) {
                             // Format the input
                             String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 11);
@@ -974,9 +955,10 @@ public class IndividualNewController implements Initializable {
                             oTrans.Master().getModel().setPhNationalId("");
                             ShowMessageFX.Information("Input must be 11 digits and contains numbers only.", "Computerized Acounting System", pxeModuleName);
                         }
+                    }else{
+                         oTrans.Master().getModel().setPhNationalId("");
                     }
                     break;
-
             }
             // loadContctPerson();
             loadMasterName();
@@ -1184,30 +1166,7 @@ public class IndividualNewController implements Initializable {
 
         }
 
-        //USE THIS IF THERE IS EXISTING RECORD
-//        Client_Address loclientAddress = new Client_Address();
-//        loclientAddress.setApplicationDriver(oApp);
-//        loclientAddress.setRecordStatus("1");
-//        loclientAddress.initialize();
-//        loclientAddress.searchRecordWithCondition("", "M00124000012", true);
-//
-//        Barangay loBarangay = new Barangay(oApp, true);
-//        loBarangay.setRecordStatus("1");
-//        loBarangay.openRecord(loclientAddress.getModel().getBarangayId());
-//
-//        TownCity loTownCity = new TownCity();
-//        loTownCity.setApplicationDriver(oApp);
-//        loTownCity.setRecordStatus("1");
-//        loTownCity.initialize();
-//        loTownCity.openRecord(loclientAddress.getModel().getTownId());
-//
-//        Province loProvince = new Province(oApp, true);
-//        loProvince.setRecordStatus("1");
-//        loProvince.openRecord(loTownCity.getModel().getProvinceId());
-//
-//        txtField03.setText(loclientAddress.getModel().getHouseNo() + " " + loBarangay.getModel().getBarangayName()
-//                + loTownCity.getModel().getTownName() + " " + loProvince.getModel().getProvinceName()
-//                + loTownCity.getModel().getZipCode());
+
     }
 
     final ChangeListener<? super Boolean> address_Focus = (o, ov, nv) -> {
@@ -1262,6 +1221,7 @@ public class IndividualNewController implements Initializable {
                     break;
                 case 6:
                     /*Latitude*/
+
                     if (!lsValue.matches("-?\\d+\\.?\\d*")) {
                         oTrans.Address(pnAddress).getModel().setLatitude("0.0");
                         loJSON.put("error", lsValue);
@@ -1453,11 +1413,12 @@ public class IndividualNewController implements Initializable {
         if (!pbLoaded) {
             return;
         }
-
+        
         TextArea txtField = (TextArea) ((ReadOnlyBooleanPropertyBase) o).getBean();
         int lnIndex = Integer.parseInt(txtField.getId().substring(txtField.getId().length() - 2));
         String lsValue = txtField.getText();
 
+        
         if (lsValue == null) {
             return;
         }
@@ -1517,6 +1478,7 @@ public class IndividualNewController implements Initializable {
         if (!pbLoaded) {
             return;
         }
+        
         TextField txtMobile = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
         int lnIndex = Integer.parseInt(txtMobile.getId().substring(txtMobile.getId().length() - 2));
         String lsValue = (txtMobile.getText() == null ? "" : txtMobile.getText());
@@ -1537,7 +1499,6 @@ public class IndividualNewController implements Initializable {
             }
             oTrans.Mobile(pnMobile).getModel().setMobileNetwork(MobileNetwork.GLOBE);
             loadRecordMobile();
-
         } else {
             // txtContact.selectAll();
         }
