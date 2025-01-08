@@ -145,7 +145,7 @@ public class Client_Master extends Parameter {
 
         String lsSQL = "SELECT"
                 + "  a.sTownIDxx"
-                + ", CONCAT(a.sTownName, ', ', b.sProvName) AS xBrthPlce"
+                + ", CONCAT(a.sTownName, ', ', b.sProvName, ' ', a.sZippCode) AS xBrthPlce"
                 + " FROM TownCity a "
                 + " INNER JOIN Province b "
                 + "   ON a.sProvIDxx = b.sProvIDxx "
@@ -166,8 +166,8 @@ public class Client_Master extends Parameter {
                 fbByCode ? 0 : 1);
 
         if (loJSON != null) {
-            setMaster(11, (String) loJSON.get("sTownIDxx"));
-            setMaster(13, (String) loJSON.get("xBrthPlce"));
+//            setMaster(11, (String) loJSON.get("sTownIDxx"));
+//            setMaster(13, (String) loJSON.get("xBrthPlce"));
             loJSON.put("result", "success");
             loJSON.put("message", "Search birth place success.");
             return loJSON;

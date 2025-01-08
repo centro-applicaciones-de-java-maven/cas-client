@@ -65,8 +65,8 @@ import org.guanzon.cas.client.models.ModelSocialMedia;
 import org.guanzon.cas.controller.ScreenInterface;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.TownCity;
-import org.guanzon.cas.parameters.Country;
-import org.guanzon.cas.parameters.Province;
+import org.guanzon.cas.parameter.Country;
+import org.guanzon.cas.parameter.Province;
 import org.json.simple.JSONObject;
 
 /**
@@ -573,6 +573,8 @@ public class IndividualNewController implements Initializable {
                         // Initialize the Client_Master transaction
                         oTrans.Master().getModel().setClientType(ClientType.INDIVIDUAL);
                         pnEditMode = EditMode.UNKNOWN;
+                        Stage stage = (Stage) txtField01.getScene().getWindow();
+                        stage.close();
                     }
 
                     break;
@@ -634,7 +636,7 @@ public class IndividualNewController implements Initializable {
                     }
 
                     mailFields01.clear();
-                    pnEmail = oTrans.getMailCount() - 1;                  
+                    pnEmail = oTrans.getMailCount() - 1;
                     tblEmail.getSelectionModel().select(pnEmail + 1);
                     loadRecordEmail();
                     break;
@@ -920,7 +922,7 @@ public class IndividualNewController implements Initializable {
                             oTrans.Master().getModel().setTaxIdNumber("");
                             ShowMessageFX.Information("Input must be 9 digits and contains numbers only.", "Computerized Acounting System", pxeModuleName);
                         }
-                    }else{
+                    } else {
                         oTrans.Master().getModel().setTaxIdNumber("");
                     }
                     break;
@@ -938,8 +940,8 @@ public class IndividualNewController implements Initializable {
                             oTrans.Master().getModel().setLTOClientId("");
                             ShowMessageFX.Information("Input must be 11 digits and contains numbers only.", "Computerized Acounting System", pxeModuleName);
                         }
-                    }else{
-                         oTrans.Master().getModel().setLTOClientId("");
+                    } else {
+                        oTrans.Master().getModel().setLTOClientId("");
                     }
                     break;
                 case 15:
@@ -955,8 +957,8 @@ public class IndividualNewController implements Initializable {
                             oTrans.Master().getModel().setPhNationalId("");
                             ShowMessageFX.Information("Input must be 11 digits and contains numbers only.", "Computerized Acounting System", pxeModuleName);
                         }
-                    }else{
-                         oTrans.Master().getModel().setPhNationalId("");
+                    } else {
+                        oTrans.Master().getModel().setPhNationalId("");
                     }
                     break;
             }
@@ -981,17 +983,19 @@ public class IndividualNewController implements Initializable {
                     case 3:
                         /*search province*/
                         poJson = new JSONObject();
-                        Province loProvince = new Province(oApp, true);
+                        Province loProvince = new Province();
+                        loProvince.setApplicationDriver(oApp);
                         loProvince.setRecordStatus("1");
+                        loProvince.initialize();
                         poJson = loProvince.searchRecord(lsValue, false);
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             AddressField03.clear();
                         } else {
                             AddressField03.setText((String) loProvince.getModel().getProvinceName());
-                            oTrans.Address(pnAddress).getModel().Town().Province().setProvinceId(loProvince.getModel().getProvinceID());
+                            oTrans.Address(pnAddress).getModel().Town().Province().setProvinceId(loProvince.getModel().getProvinceId());
                             oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId();
-                            oTrans.setProvinceID_temp(loProvince.getModel().getProvinceID());
+                            oTrans.setProvinceID_temp(loProvince.getModel().getProvinceId());
 
 //                            oTrans.Address(pnAddress).getModel().setTownId("");
                             oTrans.Address(pnAddress).getModel().setTownId("");
@@ -1165,7 +1169,6 @@ public class IndividualNewController implements Initializable {
             txtField03.setText("");
 
         }
-
 
     }
 
@@ -1413,12 +1416,11 @@ public class IndividualNewController implements Initializable {
         if (!pbLoaded) {
             return;
         }
-        
+
         TextArea txtField = (TextArea) ((ReadOnlyBooleanPropertyBase) o).getBean();
         int lnIndex = Integer.parseInt(txtField.getId().substring(txtField.getId().length() - 2));
         String lsValue = txtField.getText();
 
-        
         if (lsValue == null) {
             return;
         }
@@ -1478,7 +1480,7 @@ public class IndividualNewController implements Initializable {
         if (!pbLoaded) {
             return;
         }
-        
+
         TextField txtMobile = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
         int lnIndex = Integer.parseInt(txtMobile.getId().substring(txtMobile.getId().length() - 2));
         String lsValue = (txtMobile.getText() == null ? "" : txtMobile.getText());
@@ -1604,10 +1606,13 @@ public class IndividualNewController implements Initializable {
         personalinfo04.setText(oTrans.Master().getModel().getMiddleName());
         personalinfo05.setText(oTrans.Master().getModel().getSuffixName());
 
-        Country loCountry = new Country(oApp, true);
+        Country loCountry = new Country();
+        loCountry.setApplicationDriver(oApp);
+
         loCountry.setRecordStatus("1");
+        loCountry.initialize();
         loCountry.openRecord(oTrans.Master().getModel().getCitizenshipId());
-        personalinfo06.setText(loCountry.getModel().getNational());
+        personalinfo06.setText(loCountry.getModel().getNationality());
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -1654,8 +1659,10 @@ public class IndividualNewController implements Initializable {
             loTownCity.initialize();
             loTownCity.openRecord(oTrans.Master().getModel().getBirthPlaceId());
 
-            Province loProvince = new Province(oApp, true);
+            Province loProvince = new Province();
+            loProvince.setApplicationDriver(oApp);
             loProvince.setRecordStatus("1");
+            loProvince.initialize();
             loProvince.openRecord(loTownCity.getModel().getProvinceId());
 
             personalinfo08.setText(loTownCity.getModel().getTownName() + " " + loProvince.getModel().getProvinceName());
@@ -1895,8 +1902,11 @@ public class IndividualNewController implements Initializable {
             AddressField01.setText(oTrans.Address(pnAddress).getModel().getHouseNo());
             AddressField02.setText(oTrans.Address(pnAddress).getModel().getAddress());
 
-            Province loProvince = new Province(oApp, true);
+            Province loProvince = new Province();
+            loProvince.setApplicationDriver(oApp);
+
             loProvince.setRecordStatus("1");
+            loProvince.initialize();
             loProvince.openRecord(oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId());
 
             AddressField03.setText(loProvince.getModel().getProvinceName());
