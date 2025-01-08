@@ -12,7 +12,7 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.TownCity;
-import org.guanzon.cas.parameters.Province;
+import org.guanzon.cas.parameter.Province;
 import org.json.simple.JSONObject;
 
 public class Client {
@@ -77,7 +77,10 @@ public class Client {
 
                 }
 
-                Province loProvince = new Province(poGRider, true);
+                Province loProvince = new Province();
+                loProvince.setApplicationDriver(poGRider);
+                loProvince.setRecordStatus("1");
+                loProvince.initialize();
                 try {
                     loProvince.setRecordStatus("1");
                     loProvince.openRecord(loTownCity.getModel().getProvinceId());
@@ -153,7 +156,7 @@ public class Client {
             poMobile.add(mobile());
         } else {
             if (!poMobile.get(poMobile.size() - 1).getModel().getMobileNo().isEmpty()) {
-                poMobile.add(mobile());
+                 poMobile.add(mobile());
             } else {
                 poJSON.put("result", "error");
                 poJSON.put("message", "Unable to add mobile. Last row mobile number is still empty.");
