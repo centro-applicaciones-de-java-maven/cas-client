@@ -29,7 +29,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="AnchorMain" maxWidth="2500.0" minWidth="1100.0" stylesheets="@Client.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="AnchorMain" maxWidth="2500.0" minWidth="688.0" prefHeight="647.0" prefWidth="688.0" stylesheets="@Client.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
 
     <children>
       <StackPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -42,7 +42,7 @@
                            <children>
                               <BorderPane>
                                  <top>
-                                                <AnchorPane BorderPane.alignment="CENTER">
+                                                <AnchorPane stylesheets="@StyleSheet.css" BorderPane.alignment="CENTER">
                                                     <children>
                                                             <GridPane layoutX="20.0" layoutY="1.0" vgap="2.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                                 <columnConstraints>
@@ -53,14 +53,14 @@
                                                 <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                 </columnConstraints>
                                                                 <rowConstraints>
-                                                                    <RowConstraints minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                                                                    <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
                                                                     <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                                    <RowConstraints minHeight="28.0" prefHeight="28.0" vgrow="SOMETIMES" />
+                                                                    <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
                                                                     <RowConstraints minHeight="56.0" prefHeight="56.0" vgrow="SOMETIMES" />
                                                                     <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                 </rowConstraints>
                                                                 <children>
-                                                                    <TextField fx:id="txtField02" editable="false" styleClass="text-field" text="This is a test" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
+                                                                    <TextField fx:id="txtField02" disable="true" editable="false" styleClass="text-field" text="This is a test" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
                                                                         <GridPane.margin>
                                                                             <Insets left="5.0" />
                                                                         </GridPane.margin>
@@ -81,25 +81,22 @@
                                                                             <Insets left="10.0" />
                                                                         </GridPane.margin>
                                                                     </Text>
-                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Client ID " wrappingWidth="49.34765625" GridPane.halignment="RIGHT">
+                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Client ID " wrappingWidth="59.34765625" GridPane.halignment="RIGHT">
                                                                         <font>
                                                                             <Font size="14.0" />
                                                                         </font>
                                                                     </Text>
-                                                                    <TextField fx:id="txtField01" editable="false" styleClass="text-field-Id" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                                                                    <TextField fx:id="txtField01" disable="true" editable="false" prefHeight="27.0" styleClass="text-field-Id" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" />
                                                    </GridPane.margin>
                                                 </TextField>
                                                 <Text fill="#00a43c" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label-new" text="*New" GridPane.columnIndex="3">
-                                                   <font>
-                                                      <Font size="14.0" />
-                                                   </font>
                                                    <GridPane.margin>
                                                       <Insets left="5.0" />
                                                    </GridPane.margin>
                                                 </Text>
-                                                <TextArea fx:id="txtField03" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="text-area" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3">
+                                                <TextArea fx:id="txtField03" disable="true" editable="false" prefHeight="200.0" prefWidth="200.0" styleClass="text-area" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" />
                                                    </GridPane.margin>
@@ -124,7 +121,7 @@
                                                          <content>
                                                             <AnchorPane>
                                                                <padding>
-                                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                                  <Insets bottom="10.0" left="10.0" right="10.0" top="5.0" />
                                                                </padding>
                                                                <children>
                                                                   <GridPane hgap="2.0" layoutX="-37.0" layoutY="13.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -137,19 +134,19 @@
                                                                         <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" prefWidth="80.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="97.0" minWidth="75.0" prefWidth="75.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.0" minWidth="63.0" prefWidth="139.0" />
-                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="85.0" minWidth="10.0" prefWidth="31.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="160.0" minWidth="5.0" prefWidth="5.0" />
                                                                      </columnConstraints>
                                                                      <rowConstraints>
-                                                                        <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
-                                                                        <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                        <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
                                                                      </rowConstraints>
                                                                      <children>
@@ -161,17 +158,17 @@
                                                                               <Font size="14.0" />
                                                                            </font>
                                                                         </Text>
-                                                                        <TextField fx:id="personalinfo02" styleClass="text-field" stylesheets="@../css/StyleSheet.css" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                                                                        <TextField fx:id="personalinfo02" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="personalinfo03" styleClass="text-field" stylesheets="@../css/StyleSheet.css" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                        <TextField fx:id="personalinfo03" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="personalinfo04" styleClass="text-field" stylesheets="@../css/StyleSheet.css" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                        <TextField fx:id="personalinfo04" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -192,7 +189,7 @@
                                                                               <Insets left="10.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <TextField fx:id="personalinfo05" prefHeight="27.0" prefWidth="167.0" styleClass="text-field" stylesheets="@../css/StyleSheet.css" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                                        <TextField fx:id="personalinfo05" prefWidth="167.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -205,7 +202,7 @@
                                                                               <Insets left="10.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <TextField fx:id="personalinfo12" styleClass="text-field" stylesheets="@../css/StyleSheet.css" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                                        <TextField fx:id="personalinfo12" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="6">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -234,17 +231,17 @@
                                                                               <Insets left="15.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <ComboBox fx:id="personalinfo09" maxWidth="182.0" minWidth="95.0" prefHeight="27.0" prefWidth="95.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                        <ComboBox fx:id="personalinfo09" maxWidth="182.0" minWidth="95.0" prefHeight="27.0" prefWidth="95.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </ComboBox>
-                                                                        <ComboBox fx:id="personalinfo10" maxWidth="184.0" minWidth="130.0" prefHeight="27.0" prefWidth="156.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                                        <ComboBox fx:id="personalinfo10" maxWidth="184.0" minWidth="130.0" prefHeight="27.0" prefWidth="156.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </ComboBox>
-                                                                        <TextField fx:id="personalinfo06" promptText="Press F3: Search" styleClass="text-field" stylesheets="@../css/StyleSheet.css" GridPane.columnIndex="6" GridPane.columnSpan="2">
+                                                                        <TextField fx:id="personalinfo06" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -270,7 +267,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </DatePicker>
-                                                                        <TextField fx:id="personalinfo08" promptText="Press F3: Search" styleClass="text-field" stylesheets="@../css/StyleSheet.css" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                        <TextField fx:id="personalinfo08" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -283,48 +280,51 @@
                                                                               <Insets left="10.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <TextField fx:id="personalinfo11" styleClass="text-field" stylesheets="@../css/StyleSheet.css" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                        <TextField fx:id="personalinfo11" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="4" />
+                                                                        <Separator minWidth="-Infinity" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
+                                                                           <GridPane.margin>
+                                                                              <Insets />
+                                                                           </GridPane.margin></Separator>
                                                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Suffix " GridPane.rowIndex="3">
                                                                            <font>
                                                                               <Font size="14.0" />
                                                                            </font>
                                                                         </Text>
-                                                                        <Separator prefWidth="200.0" GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
-                                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="TIN No " GridPane.rowIndex="8">
-                                                                           <font>
-                                                                              <Font size="14.0" />
-                                                                           </font>
-                                                                        </Text>
-                                                                        <TextField fx:id="personalinfo13" minWidth="89.0" prefHeight="25.0" prefWidth="89.0" promptText="XXX-XX-XXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                                        <Separator GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
+                                                                        <TextField fx:id="personalinfo13" minWidth="89.0" prefWidth="89.0" promptText="XXX-XX-XXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="LTO ID " GridPane.columnIndex="5" GridPane.rowIndex="8">
-                                                                           <font>
-                                                                              <Font size="14.0" />
-                                                                           </font>
-                                                                        </Text>
-                                                                        <TextField fx:id="personalinfo14" maxWidth="200.0" minWidth="150.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                                        <TextField fx:id="personalinfo14" maxWidth="213.0" minWidth="150.0" prefWidth="213.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="National ID " GridPane.rowIndex="9">
-                                                                           <font>
-                                                                              <Font size="14.0" />
-                                                                           </font>
-                                                                        </Text>
                                                                         <TextField fx:id="personalinfo15" maxWidth="200.0" minWidth="150.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
+                                                                        <Text layoutX="27.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="TIN NO" GridPane.rowIndex="8">
+                                                                           <font>
+                                                                              <Font size="14.0" />
+                                                                           </font>
+                                                                        </Text>
+                                                                        <Text layoutX="27.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="National ID" GridPane.rowIndex="9">
+                                                                           <font>
+                                                                              <Font size="14.0" />
+                                                                           </font>
+                                                                        </Text>
+                                                                        <Text layoutX="27.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="LTO ID" GridPane.columnIndex="5" GridPane.rowIndex="8">
+                                                                           <font>
+                                                                              <Font size="14.0" />
+                                                                           </font>
+                                                                        </Text>
                                                                      </children>
                                                                      <padding>
                                                                         <Insets top="5.0" />
@@ -338,7 +338,7 @@
                                                    <content>
                                                       <AnchorPane fx:id="anchorAddress">
                                                          <children>
-                                                            <TableView fx:id="tblAddress" layoutX="20.0" layoutY="230.0" prefHeight="150.0" prefWidth="615.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="190.0">
+                                                            <TableView fx:id="tblAddress" layoutX="20.0" layoutY="210.0" prefHeight="150.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="200.0">
                                                                <columns>
                                                                   <TableColumn fx:id="indexAddress01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                   <TableColumn fx:id="indexAddress02" prefWidth="75.0" text="House No." />
@@ -361,26 +361,26 @@
                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="30.0" />
                                                                </columnConstraints>
                                                                <rowConstraints>
-                                                                  <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
-                                                                  <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                  <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                         <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                   <RowConstraints minHeight="25.0" vgrow="SOMETIMES" />
                                                                   <RowConstraints minHeight="25.0" prefHeight="28.0" vgrow="SOMETIMES" />
                                                                </rowConstraints>
                                                                <children>
-                                                                  <TextField fx:id="AddressField01" minWidth="62.0" prefHeight="27.0" prefWidth="62.0" styleClass="text-field" GridPane.columnIndex="1">
+                                                                  <TextField fx:id="AddressField01" minWidth="62.0" prefWidth="62.0" styleClass="text-field" GridPane.columnIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField02" editable="false" maxWidth="243.0" minWidth="-Infinity" prefHeight="26.0" prefWidth="243.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                  <TextField fx:id="AddressField02" maxWidth="243.0" minWidth="-Infinity" prefWidth="243.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField04" maxWidth="200.0" minWidth="150.0" prefHeight="10.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+                                                                  <TextField fx:id="AddressField04" maxWidth="200.0" minWidth="150.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -522,7 +522,7 @@
                                                                         <Insets />
                                                                      </GridPane.margin>
                                                                   </Button>
-                                                                        <TextField fx:id="AddressField03" maxWidth="200.0" minWidth="150.0" prefHeight="15.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                        <TextField fx:id="AddressField03" maxWidth="200.0" minWidth="150.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -545,11 +545,11 @@
                                                          <content>
                                                             <AnchorPane>
                                                                <children>
-                                                                  <VBox prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                  <VBox prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                      <children>
                                                                         <AnchorPane prefWidth="100.0">
                                                                            <padding>
-                                                                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                                              <Insets bottom="10.0" top="10.0" />
                                                                            </padding>
                                                                            <children>
                                                                               <GridPane hgap="2.0" layoutX="-7.0" vgap="2.0" AnchorPane.leftAnchor="0.0">
@@ -557,32 +557,27 @@
                                                                                     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="40.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="40.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="30.0" />
                                                                                  </columnConstraints>
                                                                                  <rowConstraints>
-                                                                                    <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                  </rowConstraints>
                                                                                  <children>
-                                                                                    <ComboBox fx:id="cmbMobile01" prefWidth="150.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                                                                                    <ComboBox fx:id="cmbMobile01" prefWidth="159.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin></ComboBox>
-                                                                                    <ComboBox fx:id="cmbMobile02" prefWidth="150.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                                    <ComboBox fx:id="cmbMobile02" prefWidth="159.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin></ComboBox>
-                                                                                    <TextField fx:id="txtMobile01" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                                    <TextField fx:id="txtMobile01" maxWidth="200.0" prefHeight="30.0" prefWidth="155.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin></TextField>
@@ -594,7 +589,7 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </CheckBox>
-                                                                                    <CheckBox fx:id="cbMobileNo02" mnemonicParsing="false" text="Primary Number" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
+                                                                                    <CheckBox fx:id="cbMobileNo02" minWidth="-Infinity" mnemonicParsing="false" text="Primary Number" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="4">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
@@ -604,7 +599,7 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </Text>
-                                                              <Button fx:id="btnAddMobile" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9">
+                                                              <Button fx:id="btnAddMobile" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="4">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="PLUS" size="15" textAlignment="CENTER" />
                                                                      </graphic>
@@ -615,7 +610,7 @@
                                                                               <Insets />
                                                                            </GridPane.margin>
                                                                   </Button>
-                                                                  <Button fx:id="btnDelMobile" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                                                                  <Button fx:id="btnDelMobile" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="4" GridPane.rowIndex="1">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="TRASH" size="15" text="" textAlignment="CENTER" />
                                                                      </graphic>
@@ -626,14 +621,6 @@
                                                                         <Insets />
                                                                      </GridPane.margin>
                                                                   </Button>
-                                                                                    <Label fx:id="lblMobileStat" alignment="CENTER" contentDisplay="CENTER" maxWidth="150.0" prefHeight="25.0" prefWidth="150.0" style="-fx-background-color: FF8201;" text="ACTIVE" textAlignment="CENTER" textFill="#111111" GridPane.columnIndex="5" GridPane.columnSpan="2">
-                                                                                       <font>
-                                                                                          <Font name="System Bold" size="18.0" />
-                                                                                       </font>
-                                                                                       <padding>
-                                                                                          <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                                                                                       </padding>
-                                                                                    </Label>
                                                                                     <Text layoutX="8.0" layoutY="28.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Mobile Type" textAlignment="RIGHT" wrappingWidth="82.029296875" GridPane.rowIndex="1">
                                                                                        <font>
                                                                                           <Font size="14.0" />
@@ -650,7 +637,7 @@
                                                                         </AnchorPane>
                                                                         <AnchorPane prefWidth="615.0">
                                                                            <children>
-                                                                              <TableView fx:id="tblMobile" layoutX="14.0" layoutY="53.0" prefHeight="173.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <TableView fx:id="tblMobile" layoutX="14.0" layoutY="-46.0" prefHeight="210.0" prefWidth="623.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="-46.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexMobileNo01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexMobileNo02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" text="Mobile No." />
@@ -673,7 +660,7 @@
                                                          <content>
                                                             <AnchorPane>
                                                                <children>
-                                                                  <VBox prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                  <VBox prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                      <children>
                                                                         <AnchorPane prefWidth="100.0">
                                                                            <padding>
@@ -685,17 +672,13 @@
                                                                                     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="40.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="40.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
+                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="76.66665649414062" minWidth="38.666656494140625" prefWidth="60.0" />
+                                                                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="46.333343505859375" minWidth="5.0" prefWidth="5.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="30.0" />
                                                                                  </columnConstraints>
                                                                                  <rowConstraints>
-                                                                                    <RowConstraints />
-                                                                                    <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints minHeight="27.0" prefHeight="30.0" />
+                                                                                    <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="5.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                  </rowConstraints>
@@ -705,7 +688,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </ComboBox>
-                                                                                    <TextField fx:id="mailFields01" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="26.0" prefWidth="219.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                                    <TextField fx:id="mailFields01" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="219.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
@@ -742,7 +725,7 @@
                                                                                           <Insets left="10.0" />
                                                                                        </GridPane.margin>
                                                                                     </Text>
-                                                              <Button fx:id="btnAddEmail" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9">
+                                                              <Button fx:id="btnAddEmail" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="5">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="PLUS" size="15" text="" textAlignment="CENTER" />
                                                                      </graphic>
@@ -753,7 +736,7 @@
                                                                               <Insets />
                                                                            </GridPane.margin>
                                                                   </Button>
-                                                                  <Button fx:id="btnDelEmail" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                                                                  <Button fx:id="btnDelEmail" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="5" GridPane.rowIndex="1">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="TRASH" size="15" textAlignment="CENTER" />
                                                                      </graphic>
@@ -764,21 +747,13 @@
                                                                         <Insets />
                                                                      </GridPane.margin>
                                                                   </Button>
-                                                                                    <Label fx:id="lblEmailStat" alignment="CENTER" contentDisplay="CENTER" maxWidth="150.0" minWidth="100.0" prefHeight="25.0" prefWidth="144.0" style="-fx-background-color: FF8201;" text="ACTIVE" textAlignment="CENTER" textFill="#111111" GridPane.columnIndex="5" GridPane.columnSpan="2">
-                                                                                       <font>
-                                                                                          <Font name="System Bold" size="18.0" />
-                                                                                       </font>
-                                                                                       <padding>
-                                                                                          <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                                                                                       </padding>
-                                                                                    </Label>
                                                                                  </children>
                                                                               </GridPane>
                                                                            </children>
                                                                         </AnchorPane>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <TableView fx:id="tblEmail" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <TableView fx:id="tblEmail" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexEmail01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexEmail02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="180.0" text="Owner" />
@@ -800,11 +775,11 @@
                                                          <content>
                                                             <AnchorPane>
                                                                <children>
-                                                                  <VBox prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                  <VBox prefHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                      <children>
                                                                         <AnchorPane prefWidth="100.0">
                                                                            <padding>
-                                                                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                                                              <Insets bottom="5.0" top="10.0" />
                                                                            </padding>
                                                                            <children>
                                                                               <GridPane hgap="2.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-10.0">
@@ -814,17 +789,14 @@
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="40.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="40.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="30.0" />
                                                                                  </columnConstraints>
                                                                                  <rowConstraints>
-                                                                                    <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
                                                                                  </rowConstraints>
@@ -842,7 +814,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextArea fx:id="txtSocial02" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.rowSpan="2">
+                                                                                    <TextArea fx:id="txtSocial02" minWidth="-Infinity" prefHeight="56.0" prefWidth="321.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2" GridPane.rowSpan="2">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
@@ -876,7 +848,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </CheckBox>
-                                                              <Button fx:id="btnAddSocMed" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9">
+                                                              <Button fx:id="btnAddSocMed" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="6">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="PLUS" size="15" textAlignment="CENTER" />
                                                                      </graphic>
@@ -887,7 +859,7 @@
                                                                               <Insets />
                                                                            </GridPane.margin>
                                                                   </Button>
-                                                                  <Button fx:id="btnDelSocMed" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="1">
+                                                                  <Button fx:id="btnDelSocMed" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="6" GridPane.rowIndex="1">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="TRASH" size="15" textAlignment="CENTER" />
                                                                      </graphic>
@@ -898,21 +870,13 @@
                                                                         <Insets />
                                                                      </GridPane.margin>
                                                                   </Button>
-                                                                                    <Label fx:id="lblSocMedStat" alignment="CENTER" contentDisplay="CENTER" maxWidth="150.0" minWidth="100.0" prefHeight="25.0" prefWidth="120.0" style="-fx-background-color: FF8201;" text="ACTIVE" textAlignment="CENTER" textFill="#111111" GridPane.columnIndex="5" GridPane.columnSpan="2">
-                                                                                       <font>
-                                                                                          <Font name="System Bold" size="18.0" />
-                                                                                       </font>
-                                                                                       <padding>
-                                                                                          <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
-                                                                                       </padding>
-                                                                                    </Label>
                                                                                  </children>
                                                                               </GridPane>
                                                                            </children>
                                                                         </AnchorPane>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <TableView fx:id="tblSocMed" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                              <TableView fx:id="tblSocMed" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexSocMed01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexSocMed02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="160.0" text="Account" />
@@ -932,10 +896,11 @@
                                                          </content>
                                                                       </Tab>
                                                                   </tabs>
-                                                                  <stylesheets>
-                                                                      <URL value="@../css/StyleSheet.css" />
-                                                                      <URL value="@../css/Tables.css" />
-                                                                  </stylesheets>
+                                                   <stylesheets>
+                                                      <URL value="@Tables.css" />
+                                                      <URL value="@StyleSheet.css" />
+                                                      <URL value="@Client.css" />
+                                                   </stylesheets>
                                                               </TabPane>
                                                           </children>
                                                       </AnchorPane>
@@ -951,7 +916,7 @@
                <bottom>
                   <AnchorPane maxHeight="80.0" minHeight="80.0" style="-fx-background-color: E9E9E9;" BorderPane.alignment="CENTER">
                      <children>
-                        <HBox fx:id="hbButtons" alignment="CENTER_LEFT" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+                        <HBox fx:id="hbButtons" alignment="CENTER_LEFT" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                            <children>
                               <Button fx:id="btnSave" contentDisplay="TOP" ellipsisString="" maxHeight="70.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" styleClass="button_process_dark" stylesheets="@../css/StyleSheet.css" text="Okay">
                                  <graphic>
@@ -978,7 +943,7 @@
                   <AnchorPane id="anchorHeader" fx:id="draggablePane" prefHeight="30.0" BorderPane.alignment="CENTER">
                      <children>
                         <FontAwesomeIconView fill="WHITE" glyphName="USERS" size="20" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
-                        <Label styleClass="label-header" text="Client Information" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="5.0" />
+                        <Label styleClass="label-header" text="Client Information" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="5.0" />
                         <Button fx:id="btnExit" mnemonicParsing="false" prefHeight="17.0" prefWidth="21.0" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="System Bold" size="8.0" />

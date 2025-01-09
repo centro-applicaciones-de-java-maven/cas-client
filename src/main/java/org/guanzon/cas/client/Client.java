@@ -88,12 +88,13 @@ public class Client {
                     System.out.println("error");
 
                 }
-
-                return (poAddress.get(lnRow).getModel().getHouseNo().equals("") ? "" : poAddress.get(lnRow).getModel().getHouseNo())
-                        + ((loBarangay.getModel().getBarangayName() instanceof String) && (!loBarangay.getModel().getBarangayName().equals("")) ?  ", " + loBarangay.getModel().getBarangayName() : "")
-                        + ((loTownCity.getModel().getTownName() instanceof String) && (!loTownCity.getModel().getTownName().equals(""))  ? ", " + loTownCity.getModel().getTownName() : "")
-                        + ((loProvince.getModel().getProvinceName() instanceof String)  && (!loProvince.getModel().getProvinceName().equals("")) ? ", " + loProvince.getModel().getProvinceName() : "")
+                String lsAddress= (poAddress.get(lnRow).getModel().getHouseNo().equals("") ? "" : poAddress.get(lnRow).getModel().getHouseNo())
+                        +(( poAddress.get(lnRow).getModel().getAddress() instanceof String) && (!poAddress.get(lnRow).getModel().getAddress().equals("")) ?  " " + poAddress.get(lnRow).getModel().getAddress()  : "")
+                        + ((loBarangay.getModel().getBarangayName() instanceof String) && (!loBarangay.getModel().getBarangayName().equals("")) ?  " " + loBarangay.getModel().getBarangayName()  : "")
+                        + ((loTownCity.getModel().getTownName() instanceof String) && (!loTownCity.getModel().getTownName().equals(""))  ? " " + loTownCity.getModel().getTownName() : "")
+                        + ((loProvince.getModel().getProvinceName() instanceof String)  && (!loProvince.getModel().getProvinceName().equals("")) ? " " + loProvince.getModel().getProvinceName() : "")
                         + ((loTownCity.getModel().getZipCode() instanceof String)  && (!loTownCity.getModel().getZipCode().equals("")) ? " " + loTownCity.getModel().getZipCode() : "");
+                return lsAddress.trim();
         
     }
 
