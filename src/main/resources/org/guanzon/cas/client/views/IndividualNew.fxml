@@ -29,7 +29,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="AnchorMain" maxWidth="2500.0" minWidth="688.0" prefHeight="647.0" prefWidth="688.0" stylesheets="@Client.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="AnchorMain" maxWidth="2500.0" minWidth="688.0" prefHeight="624.0" prefWidth="688.0" stylesheets="@Client.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
 
     <children>
       <StackPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -42,7 +42,7 @@
                            <children>
                               <BorderPane>
                                  <top>
-                                                <AnchorPane stylesheets="@StyleSheet.css" BorderPane.alignment="CENTER">
+                                                <AnchorPane BorderPane.alignment="CENTER">
                                                     <children>
                                                             <GridPane layoutX="20.0" layoutY="1.0" vgap="2.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                                 <columnConstraints>
@@ -108,12 +108,16 @@
                                                             </GridPane>
                                           <ImageView fitHeight="128.0" fitWidth="128.0" layoutX="436.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="490.0" AnchorPane.topAnchor="5.0" />
                                                     </children>
+                                       <stylesheets>
+                                          <URL value="@StyleSheet.css" />
+                                          <URL value="@Client.css" />
+                                       </stylesheets>
                                                 </AnchorPane>
                                  </top>
                                  <center>
                                     <AnchorPane BorderPane.alignment="CENTER">
                                        <children>
-                                                      <AnchorPane layoutX="15.0" layoutY="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                      <AnchorPane layoutX="15.0" layoutY="15.0" prefHeight="408.0" prefWidth="688.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                           <children>
                                                               <TabPane fx:id="TabPane" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                   <tabs>
@@ -914,11 +918,11 @@
                   </AnchorPane>
                   </center>
                <bottom>
-                  <AnchorPane maxHeight="80.0" minHeight="80.0" style="-fx-background-color: E9E9E9;" BorderPane.alignment="CENTER">
+                  <AnchorPane maxHeight="80.0" minHeight="44.0" prefHeight="50.0" prefWidth="688.0" style="-fx-background-color: E9E9E9;" BorderPane.alignment="CENTER">
                      <children>
-                        <HBox fx:id="hbButtons" alignment="CENTER_LEFT" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
+                        <HBox fx:id="hbButtons" alignment="CENTER_LEFT" layoutY="18.0" prefHeight="51.0" prefWidth="678.0" spacing="3.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Button fx:id="btnSave" contentDisplay="TOP" ellipsisString="" maxHeight="70.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" styleClass="button_process_dark" stylesheets="@../css/StyleSheet.css" text="Okay">
+                              <Button fx:id="btnSave" ellipsisString="" graphicTextGap="7.0" maxHeight="70.0" mnemonicParsing="false" prefWidth="107.0" styleClass="button_process_dark" stylesheets="@../css/StyleSheet.css" text="Okay">
                                  <graphic>
                                     <FontAwesomeIconView glyphName="SAVE" size="20" />
                                  </graphic>
@@ -926,7 +930,7 @@
                                     <Blend />
                                  </effect>
                               </Button>
-                              <Button fx:id="btnCancel" contentDisplay="TOP" ellipsisString="" maxHeight="70.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="70.0" styleClass="button_process_dark" stylesheets="@../css/StyleSheet.css" text="Cancel">
+                              <Button fx:id="btnCancel" ellipsisString="" graphicTextGap="7.0" maxHeight="70.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="107.0" styleClass="button_process_dark" stylesheets="@../css/StyleSheet.css" text="Cancel">
                                  <graphic>
                                     <FontAwesomeIconView glyphName="CLOSE" size="20" />
                                  </graphic>
@@ -935,6 +939,9 @@
                                  </effect>
                               </Button>
                            </children>
+                           <padding>
+                              <Insets bottom="5.0" top="5.0" />
+                           </padding>
                         </HBox>
                      </children>
                   </AnchorPane>

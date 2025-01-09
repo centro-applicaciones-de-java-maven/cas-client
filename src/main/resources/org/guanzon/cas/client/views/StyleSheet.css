@@ -336,23 +336,7 @@ TAB PANE CSS                                                                    
         #CFCFCF,
         white;
 
-}/*
-
-.text-field, .text-area:focused {
-    -fx-min-height: 26;
-    -fx-background-color:
-        #F88222,
-        white;
 }
-.text-field, .text-area:disabled {
-    -fx-font-size: 10pt;
-    -fx-min-height: 26;
-    -fx-opacity: 1.0;
-    -fx-background-color:
-        grey,
-        white;
-    -fx-textflow: wrap;
-}*/
 
 .text-field:focused {
     -fx-background-color: #ffffff;   

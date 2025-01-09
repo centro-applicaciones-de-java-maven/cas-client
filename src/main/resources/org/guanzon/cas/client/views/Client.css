@@ -87,6 +87,16 @@
     -fx-background-color: transparent;
     -fx-background-radius: 5 5 0 0;
 }
+.text-field-Id{
+    -fx-font-weight: bold;
+    -fx-pref-height: 25px;            
+    -fx-background-color: #ffffff;   
+    -fx-background-radius: 5;        
+    -fx-border-color: #cccccc;        
+    -fx-border-radius: 5;             
+    -fx-font-size: 12px;              
+    -fx-text-fill: #333333;           
+}
 
 /* Default TextField style */
 /*.text-field{
@@ -137,6 +147,11 @@
     -fx-fill: #aaaaaa;               Gray placeholder text color 
     -fx-font-style: italic;          Italic placeholder text 
 }*/
+
+.text-field .text {
+    -fx-fill: #aaaaaa;              
+    -fx-font-style: italic;          
+}
 .text-field:disabled {
     -fx-background-color: #f0f0f0;  
     -fx-border-color: #cccccc;     
