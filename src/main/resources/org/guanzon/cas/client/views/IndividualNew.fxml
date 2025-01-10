@@ -348,7 +348,7 @@
                                                                   <TableColumn fx:id="indexAddress02" prefWidth="75.0" text="House No." />
                                                                   <TableColumn fx:id="indexAddress03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="180.0" text="Address" />
                                                                   <TableColumn fx:id="indexAddress04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="141.0" text="Town" />
-                                                                  <TableColumn fx:id="indexAddress05" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="180.0" text="Barangay" />
+                                                                  <TableColumn fx:id="indexAddress05" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="213.0" text="Barangay" />
                                                                </columns>
                                                             </TableView>
                                                             <GridPane hgap="2.0" layoutX="14.0" layoutY="233.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -644,9 +644,9 @@
                                                                               <TableView fx:id="tblMobile" layoutX="14.0" layoutY="-46.0" prefHeight="210.0" prefWidth="623.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="-46.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexMobileNo01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
-                                                                                    <TableColumn fx:id="indexMobileNo02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="150.0" text="Mobile No." />
-                                                                                    <TableColumn fx:id="indexMobileNo03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="157.0" text="Owner" />
-                                                                                    <TableColumn fx:id="indexMobileNo04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="279.0" text="Mobile Type" />
+                                                                                    <TableColumn fx:id="indexMobileNo02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="160.0" text="Mobile No." />
+                                                                                    <TableColumn fx:id="indexMobileNo03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="180.0" text="Owner" />
+                                                                                    <TableColumn fx:id="indexMobileNo04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="268.0" text="Mobile Type" />
                                                                                  </columns>
                                                                               </TableView>
                                                                            </children>
@@ -760,8 +760,8 @@
                                                                               <TableView fx:id="tblEmail" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexEmail01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
-                                                                                    <TableColumn fx:id="indexEmail02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="180.0" text="Owner" />
-                                                                                    <TableColumn fx:id="indexEmail03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="404.0" text="Email" />
+                                                                                    <TableColumn fx:id="indexEmail02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="233.0" text="Owner" />
+                                                                                    <TableColumn fx:id="indexEmail03" maxWidth="-1.0" minWidth="376.0" prefWidth="-1.0" text="Email" />
                                                                                  </columns>
                                                                               </TableView>
                                                                            </children>
@@ -885,7 +885,7 @@
                                                                                     <TableColumn fx:id="indexSocMed01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexSocMed02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="160.0" text="Account" />
                                                                                     <TableColumn fx:id="indexSocMed03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="140.0" text="Social Media" />
-                                                                                    <TableColumn fx:id="indexSocMed04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="284.0" text="Remarks" />
+                                                                                    <TableColumn fx:id="indexSocMed04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="310.0" text="Remarks" />
                                                                                  </columns>
                                                                               </TableView>
                                                                            </children>
@@ -903,7 +903,6 @@
                                                    <stylesheets>
                                                       <URL value="@Tables.css" />
                                                       <URL value="@StyleSheet.css" />
-                                                      <URL value="@Client.css" />
                                                    </stylesheets>
                                                               </TabPane>
                                                           </children>

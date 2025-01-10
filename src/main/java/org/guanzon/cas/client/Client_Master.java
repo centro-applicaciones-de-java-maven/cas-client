@@ -145,7 +145,7 @@ public class Client_Master extends Parameter {
 
         String lsSQL = "SELECT"
                 + "  a.sTownIDxx"
-                + ", CONCAT(a.sTownName, ', ', b.sProvName, ' ', a.sZippCode) AS xBrthPlce"
+                + ", CONCAT(a.sTownName, ', ', b.sProvName) AS xBrthPlce"
                 + " FROM TownCity a "
                 + " INNER JOIN Province b "
                 + "   ON a.sProvIDxx = b.sProvIDxx "

@@ -291,6 +291,9 @@ TAB PANE CSS                                                                    
         white;
     -fx-text-fill: black;
 }
+.text-area .content {
+    -fx-background-color: white;
+}
 
 .text-area:focused {
     -fx-background-color: #ffffff;  /* White background */
@@ -313,10 +316,14 @@ TAB PANE CSS                                                                    
     -fx-opacity: 1.0;
 }
 
+.text-area:disabled .content {
+    -fx-background-color:  #F8F8F8;
+}
+
 .text-area:disabled {
     -fx-text-fill: black;
     -fx-background-color: #ffffff;
-    -fx-border-color: #CFCFCF;
+    -fx-border-color: #D4D4D4;
     -fx-text-fill: black;
     -fx-border-radius: 3;
 

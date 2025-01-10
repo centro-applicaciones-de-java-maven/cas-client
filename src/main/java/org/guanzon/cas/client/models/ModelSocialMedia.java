@@ -19,7 +19,7 @@ public class ModelSocialMedia {
     public SimpleStringProperty index04; 
     public SimpleStringProperty index05;
     
-    ObservableList<String> socialTyp = FXCollections.observableArrayList("Facebook", "Instagram", "Twitter");
+    ObservableList<String> socialTyp = FXCollections.observableArrayList("Facebook", "Instagram", "X","Others");
     
     public ModelSocialMedia(String index01,
                String index02,
