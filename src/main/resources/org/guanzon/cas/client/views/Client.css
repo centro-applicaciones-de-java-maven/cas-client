@@ -87,16 +87,6 @@
     -fx-background-color: transparent;
     -fx-background-radius: 5 5 0 0;
 }
-.text-field-Id{
-     -fx-font-size: 10pt;
-    -fx-font-weight: bold;
-    -fx-pref-height: 25px;            
-    -fx-background-color: #ffffff;   
-    -fx-background-radius: 5;        
-    -fx-border-color: #cccccc;        
-    -fx-border-radius: 5;             
-    -fx-text-fill: #333333;           
-}
 
 /* Default TextField style */
 /*.text-field{

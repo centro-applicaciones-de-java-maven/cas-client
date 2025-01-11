@@ -42,7 +42,7 @@
                            <children>
                               <BorderPane>
                                  <top>
-                                                <AnchorPane BorderPane.alignment="CENTER">
+                                                <AnchorPane stylesheets="@StyleSheet.css" BorderPane.alignment="CENTER">
                                                     <children>
                                                             <GridPane layoutX="20.0" layoutY="1.0" vgap="2.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="0.0">
                                                                 <columnConstraints>
@@ -60,7 +60,12 @@
                                                                     <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                 </rowConstraints>
                                                                 <children>
-                                                                    <TextField fx:id="txtField02" disable="true" editable="false" styleClass="text-field" text="This is a test" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
+                                                                    <TextField fx:id="txtField01" editable="false" prefHeight="27.0" styleClass="text-field-Id" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </GridPane.margin>
+                                                </TextField>
+                                                                    <TextField fx:id="txtField02" editable="false" maxHeight="1.7976931348623157E308" styleClass="text-field-Id2" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="2">
                                                                         <GridPane.margin>
                                                                             <Insets left="5.0" />
                                                                         </GridPane.margin>
@@ -86,11 +91,6 @@
                                                                             <Font size="14.0" />
                                                                         </font>
                                                                     </Text>
-                                                                    <TextField fx:id="txtField01" disable="true" editable="false" prefHeight="27.0" styleClass="text-field-Id" GridPane.columnIndex="1" GridPane.columnSpan="2">
-                                                   <GridPane.margin>
-                                                      <Insets left="5.0" />
-                                                   </GridPane.margin>
-                                                </TextField>
                                                 <Text fill="#00a43c" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label-new" text="*New" GridPane.columnIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" />
@@ -108,10 +108,6 @@
                                                             </GridPane>
                                           <ImageView fitHeight="128.0" fitWidth="128.0" layoutX="436.0" layoutY="-5.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="490.0" AnchorPane.topAnchor="5.0" />
                                                     </children>
-                                       <stylesheets>
-                                          <URL value="@StyleSheet.css" />
-                                          <URL value="@Client.css" />
-                                       </stylesheets>
                                                 </AnchorPane>
                                  </top>
                                  <center>
@@ -266,7 +262,7 @@
                                                                               <Insets left="15.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <DatePicker fx:id="personalinfo07" prefHeight="28.0" prefWidth="227.0" promptText="YYYY-MM-DD" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                        <DatePicker fx:id="personalinfo07" prefWidth="227.0" promptText="YYYY-MM-DD" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -342,7 +338,7 @@
                                                    <content>
                                                       <AnchorPane fx:id="anchorAddress">
                                                          <children>
-                                                            <TableView fx:id="tblAddress" layoutX="20.0" layoutY="210.0" prefHeight="150.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="200.0">
+                                                            <TableView fx:id="tblAddress" layoutX="20.0" layoutY="210.0" prefHeight="150.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="200.0">
                                                                <columns>
                                                                   <TableColumn fx:id="indexAddress01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                   <TableColumn fx:id="indexAddress02" prefWidth="75.0" text="House No." />
@@ -641,7 +637,7 @@
                                                                         </AnchorPane>
                                                                         <AnchorPane prefWidth="615.0">
                                                                            <children>
-                                                                              <TableView fx:id="tblMobile" layoutX="14.0" layoutY="-46.0" prefHeight="210.0" prefWidth="623.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="-46.0">
+                                                                              <TableView fx:id="tblMobile" layoutX="14.0" layoutY="-46.0" prefHeight="210.0" prefWidth="623.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="-46.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexMobileNo01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexMobileNo02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="160.0" text="Mobile No." />
@@ -757,7 +753,7 @@
                                                                         </AnchorPane>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <TableView fx:id="tblEmail" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                                              <TableView fx:id="tblEmail" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexEmail01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexEmail02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="233.0" text="Owner" />
@@ -880,7 +876,7 @@
                                                                         </AnchorPane>
                                                                         <AnchorPane>
                                                                            <children>
-                                                                              <TableView fx:id="tblSocMed" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0">
+                                                                              <TableView fx:id="tblSocMed" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexSocMed01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                                     <TableColumn fx:id="indexSocMed02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="160.0" text="Account" />

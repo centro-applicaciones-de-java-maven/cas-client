@@ -9,21 +9,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.client.controller.IndividualNewController;
 
 public class GUI_IndividualNew extends Application {
-    private double xOffset = 0; // Tracks the X offset between the stage and the mouse
-    private double yOffset = 0; // Tracks the Y offset between the stage and the mouse
+    private double xOffset = 0; 
+    private double yOffset = 0;
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         // Load FXML file
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/IndividualNew.fxml"));
 
-        // Set the controller to the FXMLLoader (Optional, depending on how the FXML is set up)
-        //loader.setController(getClass().getResource("/org/guanzon/cas/client/controller/IndividualNewController.java"));
-        //  IndividualNewController controller = new IndividualNewController(); // create the controller instance
-        //   loader.setController(controller); // set the controller instance here
         IndividualNewController controller = new IndividualNewController();
         loader.setController(controller);
         if (controller != null) {
@@ -31,6 +28,9 @@ public class GUI_IndividualNew extends Application {
         } else {
             System.out.println("Controller is null!");
         }
+        controller.pnEditMode= EditMode.ADDNEW;
+        controller.lsID ="M00125000003";
+        
         Parent root = loader.load();
         root.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
@@ -41,22 +41,16 @@ public class GUI_IndividualNew extends Application {
             primaryStage.setX(event.getScreenX() - xOffset);
             primaryStage.setY(event.getScreenY() - yOffset);
         });
-
-        
-        
         
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/org/guanzon/cas/client/css/Tables.css").toExternalForm());
-        scene.getStylesheets().add(getClass().getResource("/org/guanzon/cas/client/css/StyleSheet.css").toExternalForm());
-
-        primaryStage.initStyle(StageStyle.UNDECORATED); // Or StageStyle.UNDECORATED for complete removal of window borders
+        primaryStage.initStyle(StageStyle.UNDECORATED); 
         primaryStage.setTitle("");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
     public static void main(String[] args) {
-        launch(args); // Launch JavaFX application        launch(args); // Launch JavaFX application
+        launch(args); // Launch JavaFX application  
 
     }
 }

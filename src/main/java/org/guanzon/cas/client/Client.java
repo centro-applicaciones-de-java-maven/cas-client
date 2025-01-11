@@ -50,7 +50,6 @@ public class Client {
         poSocMed = new ArrayList<>();
         poInsContact = new ArrayList<>();
     }
-
     public String getMasterAddress(int lnRow) {
        String lsTownId = "";
         String lsHouseNo = "";
@@ -449,11 +448,11 @@ public class Client {
             return poJSON;
         }
 
-        if (poMobile.get(row).getEditMode() != EditMode.ADDNEW) {
-            poJSON.put("result", "error");
-            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
-            return poJSON;
-        }
+//        if (poMobile.get(row).getEditMode() != EditMode.ADDNEW) {
+//            poJSON.put("result", "error");
+//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
+//            return poJSON;
+//        }
 
         poMobile.remove(row);
         poJSON.put("result", "success");
@@ -465,21 +464,21 @@ public class Client {
 
         if (poSocMed.isEmpty()) {
             poJSON.put("result", "error");
-            poJSON.put("result", "Unable to delete mobile. Mobile list is empty.");
+            poJSON.put("result", "Unable to delete social media. Social media list is empty.");
             return poJSON;
         }
 
         if (row >= poSocMed.size()) {
             poJSON.put("result", "error");
-            poJSON.put("result", "Unable to delete mobile. Row is more than the mobile list.");
+            poJSON.put("result", "Unable to delete social media. Row is more than the social media list.");
             return poJSON;
         }
-
-        if (poSocMed.get(row).getEditMode() != EditMode.ADDNEW) {
-            poJSON.put("result", "error");
-            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
-            return poJSON;
-        }
+//
+//        if (poSocMed.get(row).getEditMode() != EditMode.ADDNEW) {
+//            poJSON.put("result", "error");
+//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
+//            return poJSON;
+//        }
 
         poSocMed.remove(row);
         poJSON.put("result", "success");
@@ -501,11 +500,11 @@ public class Client {
             return poJSON;
         }
 
-        if (poMail.get(row).getEditMode() != EditMode.ADDNEW) {
-            poJSON.put("result", "error");
-            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
-            return poJSON;
-        }
+//        if (poMail.get(row).getEditMode() != EditMode.ADDNEW) {
+//            poJSON.put("result", "error");
+//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
+//            return poJSON;
+//        }
 
         poMail.remove(row);
         poJSON.put("result", "success");
@@ -517,27 +516,37 @@ public class Client {
 
         if (poAddress.isEmpty()) {
             poJSON.put("result", "error");
-            poJSON.put("result", "Unable to delete mobile. Mobile list is empty.");
+            poJSON.put("result", "Unable to delete address. Address list is empty.");
             return poJSON;
         }
 
         if (row >= poAddress.size()) {
             poJSON.put("result", "error");
-            poJSON.put("result", "Unable to delete mobile. Row is more than the mobile list.");
+            poJSON.put("result", "Unable to delete address .Row is more than the address list.");
             return poJSON;
         }
 
-        if (poAddress.get(row).getEditMode() != EditMode.ADDNEW) {
-            poJSON.put("result", "error");
-            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
-            return poJSON;
-        }
+//        if (poAddress.get(row).getEditMode() != EditMode.ADDNEW) {
+//            poJSON.put("result", "error");
+//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
+//            return poJSON;
+//        }
 
         poAddress.remove(row);
         poJSON.put("result", "success");
         return poJSON;
     }
-
+    public JSONObject Update() {
+        poJSON = poClient.updateRecord();
+        if (!"success".equals((String) poJSON.get("result"))) {
+            return poJSON;
+        }
+        poJSON = new JSONObject();
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
+    
     public JSONObject New() {
         poJSON = poClient.newRecord();
         if (!"success".equals((String) poJSON.get("result"))) {

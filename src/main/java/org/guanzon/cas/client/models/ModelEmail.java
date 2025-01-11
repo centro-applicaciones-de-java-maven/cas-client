@@ -17,7 +17,7 @@ public class ModelEmail {
     public SimpleStringProperty index02;
     public SimpleStringProperty index03;
     
-    ObservableList<String> EmailOwn = FXCollections.observableArrayList("Personal", "Office", "Others");
+    public static ObservableList<String> emailOwn = FXCollections.observableArrayList("Personal", "Office", "Others");
     public ModelEmail(String index01,
                String index02,
                String index03
@@ -36,7 +36,7 @@ public class ModelEmail {
     public void setIndex01(String index01){this.index01.set(index01);}
     
     public String getIndex02(){
-        return EmailOwn.get(Integer.parseInt(index02.get()));
+        return emailOwn.get(Integer.parseInt(index02.get()));
     }
     public void setIndex02(String index02){this.index02.set(index02);}
        

@@ -284,6 +284,7 @@ TAB PANE CSS                                                                    
    -fx-text-fill: black;
 } */
 .text-area {
+    -fx-font-size: 10pt;
     -fx-resize: auto;
     -fx-opacity: 1.0;
     -fx-background-color:
@@ -346,10 +347,46 @@ TAB PANE CSS                                                                    
 }
 
 .text-field:focused {
-    -fx-background-color: #ffffff;   
-    -fx-border-color: #0078d7;        
-    -fx-border-width: 1;    
-     -fx-border-radius: 3;  
+    -fx-background-color: #ffffff;
+    -fx-border-color: #0078d7;
+    -fx-border-width: 1;
+    -fx-border-radius: 3;
+}
+.text-field-Id{
+    -fx-cursor: default;
+    -fx-font-size: 10pt;
+    -fx-font-weight: bold;
+    -fx-pref-height: 25px;
+    -fx-background-color: #F8F8F8;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-text-fill: #333333;           
+}
+.text-field-Id2{
+    -fx-cursor: default;
+    -fx-font-size: 10pt;
+    -fx-pref-height: 25px;
+    -fx-background-color: #F8F8F8;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-text-fill: #333333;           
+}
+.text-field-Id:focused{
+    -fx-font-size: 10pt;
+    -fx-font-weight: bold;
+    -fx-pref-height: 25px;
+    -fx-background-color: #F8F8F8;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-text-fill: #333333;
+}
+.text-field-Id2:focused{
+    -fx-font-size: 10pt;
+    -fx-pref-height: 25px;
+    -fx-background-color: #F8F8F8;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 5;
+    -fx-text-fill: #333333;
 }
 .menu-button {
     -fx-font-size: 10pt;
