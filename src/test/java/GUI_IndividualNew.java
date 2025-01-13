@@ -28,6 +28,8 @@ public class GUI_IndividualNew extends Application {
         } else {
             System.out.println("Controller is null!");
         }
+        
+        //ADDNEW OR UPDATE
         controller.pnEditMode= EditMode.ADDNEW;
         controller.lsID ="M00125000003";
         

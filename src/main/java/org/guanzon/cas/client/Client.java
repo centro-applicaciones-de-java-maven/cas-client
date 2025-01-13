@@ -51,50 +51,56 @@ public class Client {
         poInsContact = new ArrayList<>();
     }
     public String getMasterAddress(int lnRow) {
-       String lsTownId = "";
+        String lsTownId = "";
         String lsHouseNo = "";
-                lsTownId = poAddress.get(lnRow).getModel().getTownId();
-                lsHouseNo = poAddress.get(lnRow).getModel().getHouseNo();
+        lsTownId = poAddress.get(lnRow).getModel().getTownId();
+        lsHouseNo = poAddress.get(lnRow).getModel().getHouseNo();
 
-                TownCity loTownCity = new TownCity();
-                try {
-                    loTownCity.setApplicationDriver(poGRider);
-                    loTownCity.setRecordStatus("1");
-                    loTownCity.initialize();
-                    loTownCity.openRecord(poAddress.get(lnRow).getModel().getTownId());
-                } catch (Exception e) {
-                    System.out.println("error");
-                }
-                Barangay loBarangay = new Barangay();
-                try {
-                    loBarangay.setApplicationDriver(poGRider);
-                    loBarangay.setRecordStatus("1");
-                    loBarangay.initialize();
-                    loBarangay.openRecord(poAddress.get(lnRow).getModel().getBarangayId());
-                } catch (Exception e) {
-                    System.out.println("error");
+        TownCity loTownCity = new TownCity();
+        try {
+            loTownCity.setApplicationDriver(poGRider);
+            loTownCity.setRecordStatus("1");
+            loTownCity.initialize();
+            loTownCity.openRecord(poAddress.get(lnRow).getModel().getTownId());
+        } catch (Exception e) {
+            System.out.println("error");
+        }
+        Barangay loBarangay = new Barangay();
+        try {
+            loBarangay.setApplicationDriver(poGRider);
+            loBarangay.setRecordStatus("1");
+            loBarangay.initialize();
+            loBarangay.openRecord(poAddress.get(lnRow).getModel().getBarangayId());
+        } catch (Exception e) {
+            System.out.println("error");
 
-                }
+        }
 
-                Province loProvince = new Province();
-                loProvince.setApplicationDriver(poGRider);
-                loProvince.setRecordStatus("1");
-                loProvince.initialize();
-                try {
-                    loProvince.setRecordStatus("1");
-                    loProvince.openRecord(loTownCity.getModel().getProvinceId());
-                } catch (Exception e) {
-                    System.out.println("error");
+        Province loProvince = new Province();
+        loProvince.setApplicationDriver(poGRider);
+        loProvince.setRecordStatus("1");
+        loProvince.initialize();
+        try {
+            loProvince.setRecordStatus("1");
+            loProvince.openRecord(loTownCity.getModel().getProvinceId());
+        } catch (Exception e) {
+            System.out.println("error");
 
-                }
-                String lsAddress= (poAddress.get(lnRow).getModel().getHouseNo().equals("") ? "" : poAddress.get(lnRow).getModel().getHouseNo())
-                        +(( poAddress.get(lnRow).getModel().getAddress() instanceof String) && (!poAddress.get(lnRow).getModel().getAddress().equals("")) ?  " " + poAddress.get(lnRow).getModel().getAddress()  : "")
-                        + ((loBarangay.getModel().getBarangayName() instanceof String) && (!loBarangay.getModel().getBarangayName().equals("")) ?  " " + loBarangay.getModel().getBarangayName()  : "")
-                        + ((loTownCity.getModel().getTownName() instanceof String) && (!loTownCity.getModel().getTownName().equals(""))  ? " " + loTownCity.getModel().getTownName() : "")
-                        + ((loProvince.getModel().getProvinceName() instanceof String)  && (!loProvince.getModel().getProvinceName().equals("")) ? " " + loProvince.getModel().getProvinceName() : "")
-                        + ((loTownCity.getModel().getZipCode() instanceof String)  && (!loTownCity.getModel().getZipCode().equals("")) ? " " + loTownCity.getModel().getZipCode() : "");
-                return lsAddress.trim();
-        
+        }
+        String HouseNo = (poAddress.get(lnRow).getModel().getHouseNo().equals("") ? "" : poAddress.get(lnRow).getModel().getHouseNo());
+        String Address = ((poAddress.get(lnRow).getModel().getAddress() instanceof String) && (!poAddress.get(lnRow).getModel().getAddress().equals("")) ? " " + poAddress.get(lnRow).getModel().getAddress() : "");
+        String Province = ((loProvince.getModel().getProvinceName() instanceof String) && (!loProvince.getModel().getProvinceName().equals("")) ? " " + loProvince.getModel().getProvinceName() : "");
+        String City = ((loTownCity.getModel().getTownName() instanceof String) && (!loTownCity.getModel().getTownName().equals("")) ? " " + loTownCity.getModel().getTownName() : "");
+        String Barangay = ((loBarangay.getModel().getBarangayName() instanceof String) && (!loBarangay.getModel().getBarangayName().equals("")) ? " " + loBarangay.getModel().getBarangayName() : "");
+        String ZipCode = ((loTownCity.getModel().getZipCode() instanceof String) && (!loTownCity.getModel().getZipCode().equals("")) ? " " + loTownCity.getModel().getZipCode() : "");
+
+        StringBuilder lsAddress = new StringBuilder();
+        for (String lsDetail : new String[]{HouseNo, Address, Barangay, City, Province, ZipCode}) {
+            if (lsDetail != null && !lsDetail.trim().isEmpty()) {
+                lsAddress.append(lsDetail.trim()).append(", ");
+            }
+        }
+        return lsAddress.toString().replaceAll(", $", "");
     }
 
     public void setProvinceID_temp(String lsValue) {

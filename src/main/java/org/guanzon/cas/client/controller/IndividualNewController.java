@@ -1098,11 +1098,26 @@ public class IndividualNewController implements Initializable {
     };
 
     public void loadMasterName() {
-        String lsCompName
-                = (((oTrans.Master().getModel().getLastName() instanceof String) && (!oTrans.Master().getModel().getLastName().equals("")) ? oTrans.Master().getModel().getLastName() : "")
-                + ((oTrans.Master().getModel().getFirstName() instanceof String) && (!oTrans.Master().getModel().getFirstName().equals("")) ? ", " + oTrans.Master().getModel().getFirstName() : "")
-                + ((oTrans.Master().getModel().getMiddleName() instanceof String) && (!oTrans.Master().getModel().getMiddleName().equals("")) ? " " + oTrans.Master().getModel().getMiddleName() : "")
-                + ((oTrans.Master().getModel().getSuffixName() instanceof String) && (!oTrans.Master().getModel().getSuffixName().equals("")) ? " " + oTrans.Master().getModel().getSuffixName() : ""));
+        String lsLastName = ((oTrans.Master().getModel().getLastName() instanceof String) && (!oTrans.Master().getModel().getLastName().equals("")) ? oTrans.Master().getModel().getLastName() : "");
+        String lsFirstName = ((oTrans.Master().getModel().getFirstName() instanceof String) && (!oTrans.Master().getModel().getFirstName().equals("")) ?  oTrans.Master().getModel().getFirstName() : "");
+        String lsMiddleName = ((oTrans.Master().getModel().getMiddleName() instanceof String) && (!oTrans.Master().getModel().getMiddleName().equals("")) ?  oTrans.Master().getModel().getMiddleName() : "");
+        String lsSuffixName = ((oTrans.Master().getModel().getSuffixName() instanceof String) && (!oTrans.Master().getModel().getSuffixName().equals("")) ?  oTrans.Master().getModel().getSuffixName() : "");
+
+        StringBuilder fullName = new StringBuilder();
+        if (lsLastName != null && !lsLastName.trim().isEmpty()) {
+            fullName.append(lsLastName).append(", ");
+        }
+        if (lsFirstName != null && !lsFirstName.trim().isEmpty()) {
+            fullName.append(lsFirstName).append(" ");
+        }
+        if (lsMiddleName != null && !lsMiddleName.trim().isEmpty()) {
+            fullName.append(lsMiddleName).append(" ");
+        }
+        if (lsSuffixName != null && !lsSuffixName.trim().isEmpty()) {
+            fullName.append(lsSuffixName);
+        }
+
+        String lsCompName = fullName.toString().trim();
         oTrans.Master().getModel().setCompanyName(lsCompName);
         txtField02.setText(oTrans.Master().getModel().getCompanyName());
     }
@@ -2129,7 +2144,7 @@ public class IndividualNewController implements Initializable {
             int selectedIndex = cmbSocMed01.getSelectionModel().getSelectedIndex();
             oTrans.SocialMedia(pnSocialMedia).getModel().setSocMedType(String.valueOf(selectedIndex));
             cmbSocMed01.getSelectionModel().select(selectedIndex);
-
+            
             loadRecordSocialMedia();
         });
     }
@@ -2140,9 +2155,10 @@ public class IndividualNewController implements Initializable {
         System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
         boolean[] booleanArray = {true, true, true, true};
         oApp = MiscUtil.Connect();
-
+        
         oTrans = new Client(oApp, "", null);
         Boolean lbOption = true;
+        
         if (pnEditMode == EditMode.UPDATE) {
             lbOption = false;
         }
