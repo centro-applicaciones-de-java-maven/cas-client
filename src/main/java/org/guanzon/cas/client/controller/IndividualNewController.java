@@ -626,7 +626,7 @@ public class IndividualNewController implements Initializable {
                         if ("error".equals((String) addObjMobile.get("result"))) {
                             ShowMessageFX.Information((String) addObjMobile.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
-                        } 
+                        }
                     }
 
                     JSONObject addObj = oTrans.addMobile();
@@ -649,7 +649,7 @@ public class IndividualNewController implements Initializable {
                         if ("error".equals((String) addObjSocMed.get("result"))) {
                             ShowMessageFX.Information((String) addObjSocMed.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
-                        } 
+                        }
                     }
                     JSONObject addSocMed = oTrans.addSocialMedia();
                     System.out.println((String) addSocMed.get("message"));
@@ -1133,7 +1133,6 @@ public class IndividualNewController implements Initializable {
         if (!primaryAddressExists) {
             txtField03.setText("");
         }
-
     }
 
     final ChangeListener<? super Boolean> address_Focus = (o, ov, nv) -> {
@@ -1688,7 +1687,7 @@ public class IndividualNewController implements Initializable {
             txtSocial01.setText(oTrans.SocialMedia(pnSocialMedia).getModel().getAccount());
             txtSocial02.setText(oTrans.SocialMedia(pnSocialMedia).getModel().getRemarks());
 
-            cbSocMed01.setSelected(oTrans.SocialMedia(pnSocialMedia).getModel().getRecordStatus() == "0" ? true : false);
+            cbSocMed01.setSelected(oTrans.SocialMedia(pnSocialMedia).getModel().getRecordStatus() == "1" ? true : false);
         }
     }
 
@@ -1723,7 +1722,7 @@ public class IndividualNewController implements Initializable {
             AddressField06.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLatitude()));
             AddressField07.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLongitude()));
 
-            cbAddress01.setSelected(((String) oTrans.Address(pnAddress).getModel().getRecordStatus() == "0") ? true : false);
+            cbAddress01.setSelected(((String) oTrans.Address(pnAddress).getModel().getRecordStatus() == "1") ? true : false);
             cbAddress02.setSelected(oTrans.Address(pnAddress).getModel().isPrimaryAddress());
             cbAddress03.setSelected(oTrans.Address(pnAddress).getModel().isOfficeAddress());
             cbAddress04.setSelected(oTrans.Address(pnAddress).getModel().isProvinceAddress());
@@ -1740,7 +1739,7 @@ public class IndividualNewController implements Initializable {
 
             int lsOwnerType = 0;
             lsOwnerType = Integer.parseInt(oTrans.Mail(pnEmail).getModel().getOwnershipType());
-            cbEmail01.setSelected(oTrans.Mail(pnEmail).getModel().getRecordStatus() == "0" ? true : false);
+            cbEmail01.setSelected(oTrans.Mail(pnEmail).getModel().getRecordStatus() == "1" ? true : false);
             cbEmail02.setSelected(oTrans.Mail(pnEmail).getModel().isPrimaryEmail());
 
             cmbEmail01.getSelectionModel().select(lsOwnerType);
@@ -1763,7 +1762,7 @@ public class IndividualNewController implements Initializable {
                 cmbMobile02.getSelectionModel().select(lsMobileType);
             } catch (Exception e) {
             }
-            cbMobileNo01.setSelected(((String) oTrans.Mobile(pnMobile).getModel().getRecordStatus() == "0") ? true : false);
+            cbMobileNo01.setSelected(((String) oTrans.Mobile(pnMobile).getModel().getRecordStatus() == "1") ? true : false);
             cbMobileNo02.setSelected(oTrans.Mobile(pnMobile).getModel().isPrimaryMobile());
 
         }
@@ -1784,7 +1783,7 @@ public class IndividualNewController implements Initializable {
                     switch (number) {
                         case 1: // 
                             System.out.println("Checkbox 01 selected");
-                            loJSON = oTrans.Address(pnAddress).getModel().setRecordStatus(checkbox.isSelected() ? "0" : "1");
+                            loJSON = oTrans.Address(pnAddress).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
                             if ("error".equals((String) loJSON.get("result"))) {
                                 Assert.fail((String) loJSON.get("message"));
                             }
@@ -1793,14 +1792,19 @@ public class IndividualNewController implements Initializable {
                         case 2: // Primary Address || Restricted to 1 Primary Address
                             boolean primaryAddressExists = false;
                             for (int in = 0; in < oTrans.getAddressCount(); in++) {
-                                if (oTrans.Address(in).getModel().isPrimaryAddress()) {
-                                    primaryAddressExists = true;
-                                    if (ShowMessageFX.YesNo("Do you want to change the primary address? \n", "Computerized Acounting System", pxeModuleName)) {
+                                primaryAddressExists = true;
+                                if (oTrans.Address(in).getModel().getAddressId() == oTrans.Address(pnAddress).getModel().getAddressId()) {
+                                    if (ShowMessageFX.YesNo("There will be no primary address, proceed? \n", "Computerized Acounting System", pxeModuleName)) {
                                         primaryAddressExists = false;
                                         oTrans.Address(in).getModel().isPrimaryAddress(false);
                                     }
-                                    break;
+                                } else {
+                                    if (ShowMessageFX.YesNo("Do you want to change the current primary address? \n", "Computerized Acounting System", pxeModuleName)) {
+                                        primaryAddressExists = false;
+                                        oTrans.Address(in).getModel().isPrimaryAddress(false);
+                                    }
                                 }
+                                break;
                             }
                             if (!primaryAddressExists) {
                                 loJSON = oTrans.Address(pnAddress).getModel().isPrimaryAddress(checkbox.isSelected());
@@ -1871,16 +1875,41 @@ public class IndividualNewController implements Initializable {
                     int number = Integer.parseInt(numberPart);
                     switch (number) {
                         case 1:
-                            loJSON = oTrans.Mail(pnEmail).getModel().setRecordStatus(checkbox.isSelected() ? "0" : "1");
+                            loJSON = oTrans.Mail(pnEmail).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
                             if ("error".equals((String) loJSON.get("result"))) {
                                 Assert.fail((String) loJSON.get("message"));
                             }
                             break;
-                        case 2: // Primary Address
-                            loJSON = oTrans.Mail(pnEmail).getModel().isPrimaryEmail(checkbox.isSelected());
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
+                        case 2: // Primary Email
+                            boolean primaryEmailExists = false;
+                            for (int in = 0; in < oTrans.getMailCount(); in++) {
+                                if (oTrans.Mail(in).getModel().isPrimaryEmail()) {
+                                    primaryEmailExists = true;
+                                    if (oTrans.Mail(in).getModel().getEmailId() == oTrans.Mail(pnEmail).getModel().getEmailId()) {
+                                        if (ShowMessageFX.YesNo("There will be no primary email, proceed? \n", "Computerized Acounting System", pxeModuleName)) {
+                                            primaryEmailExists = false;
+                                            oTrans.Mail(in).getModel().isPrimaryEmail(false);
+                                        }
+                                    } else {
+                                        if (ShowMessageFX.YesNo("Do you want to change the current primary email? \n", "Computerized Acounting System", pxeModuleName)) {
+                                            primaryEmailExists = false;
+                                            oTrans.Mail(in).getModel().isPrimaryEmail(false);
+                                        }
+                                    }
+                                    break;
+                                }
                             }
+                            if (!primaryEmailExists) {
+                                loJSON = oTrans.Mail(pnEmail).getModel().isPrimaryEmail(checkbox.isSelected());
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                            }
+
+//                            loJSON = oTrans.Mail(pnEmail).getModel().isPrimaryEmail(checkbox.isSelected());
+//                            if ("error".equals((String) loJSON.get("result"))) {
+//                                Assert.fail((String) loJSON.get("message"));
+//                            }
                             break;
                         default:
                             System.out.println("Unknown checkbox selected");
@@ -1908,7 +1937,7 @@ public class IndividualNewController implements Initializable {
                     switch (number) {
                         case 1:
                             System.out.println("Checkbox 01 selected");
-                            oTrans.SocialMedia(pnSocialMedia).getModel().setRecordStatus(checkbox.isSelected() ? "0" : "1");
+                            oTrans.SocialMedia(pnSocialMedia).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
                             getSelectedSocialMedia();
                             break;
                         default:
@@ -1934,16 +1963,41 @@ public class IndividualNewController implements Initializable {
                     int number = Integer.parseInt(numberPart);
                     switch (number) {
                         case 1:
-                            loJSON = oTrans.Mobile(pnMobile).getModel().setRecordStatus(checkbox.isSelected() ? "0" : "1");
+                            loJSON = oTrans.Mobile(pnMobile).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
                             if ("error".equals((String) loJSON.get("result"))) {
                                 Assert.fail((String) loJSON.get("message"));
                             }
                             break;
-                        case 2: // Primary Address
-                            loJSON = oTrans.Mobile(pnMobile).getModel().isPrimaryMobile(checkbox.isSelected());
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
+                        case 2: // Primary Mobile
+                            boolean primaryMobileExists = false;
+                            for (int in = 0; in < oTrans.getMobileCount(); in++) {
+                                if (oTrans.Mobile(in).getModel().isPrimaryMobile()) {
+                                    primaryMobileExists = true;
+                                    if (oTrans.Mobile(in).getModel().getMobileId() == oTrans.Mobile(pnMobile).getModel().getMobileId()) {
+                                        if (ShowMessageFX.YesNo("There will be no primary mobile, proceed? \n", "Computerized Acounting System", pxeModuleName)) {
+                                            primaryMobileExists = false;
+                                            oTrans.Mobile(in).getModel().isPrimaryMobile(false);
+                                        }
+                                    } else {
+                                        if (ShowMessageFX.YesNo("Do you want to change the current primary mobile? \n", "Computerized Acounting System", pxeModuleName)) {
+                                            primaryMobileExists = false;
+                                            oTrans.Mobile(in).getModel().isPrimaryMobile(false);
+                                        }
+                                    }
+                                    break;
+                                }
                             }
+                            if (!primaryMobileExists) {
+                                loJSON = oTrans.Mobile(pnMobile).getModel().isPrimaryMobile(checkbox.isSelected());
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                            }
+
+//                            loJSON = oTrans.Mobile(pnMobile).getModel().isPrimaryMobile(checkbox.isSelected());
+//                            if ("error".equals((String) loJSON.get("result"))) {
+//                                Assert.fail((String) loJSON.get("message"));
+//                            }
                             break;
                         default:
                             System.out.println("Unknown checkbox selected");
@@ -2135,7 +2189,6 @@ public class IndividualNewController implements Initializable {
             int selectedIndex = cmbSocMed01.getSelectionModel().getSelectedIndex();
             oTrans.SocialMedia(pnSocialMedia).getModel().setSocMedType(String.valueOf(selectedIndex));
             cmbSocMed01.getSelectionModel().select(selectedIndex);
-
             loadRecordSocialMedia();
         });
     }
@@ -2160,7 +2213,6 @@ public class IndividualNewController implements Initializable {
             oTrans.New();
             oTrans.Master().getModel().setClientType(ClientType.INSTITUTION);
             pnEditMode = EditMode.ADDNEW;
-
         } else {
             // OPEN RECORD
 

@@ -168,7 +168,7 @@ TAB PANE CSS                                                                    
 }
 
 .tab-pane {
-    -fx-tab-min-height:30px;
+    -fx-tab-min-height:20px;
     -fx-tab-max-height:30px;
     -fx-min-width: USE_PREF_SIZE;        /* Allow the tab to grow based on the text */
     -fx-max-width: USE_PREF_SIZE;        /* Max width set based on text content */
@@ -180,6 +180,7 @@ TAB PANE CSS                                                                    
     -fx-pref-width: USE_COMPUTED_SIZE;
     -fx-tab-min-height:30px;
     -fx-tab-max-height:30px;
+    -fx-pref-height: 31px;
     -fx-font-family: Arial;
     -fx-font-size: 12;
     -fx-cursor: hand;
@@ -189,6 +190,7 @@ TAB PANE CSS                                                                    
     -fx-background-insets: 0 0.083333em 0 0, 1 0.083333em 1 1, 0.083333em 0 0;
     -fx-padding: 0.083333em 0.083333em 0.083333em 0.083333em;
 }
+
 
 .tab-label{
     -fx-padding: 0 15 0 15;
@@ -360,7 +362,7 @@ TAB PANE CSS                                                                    
     -fx-background-color: #F8F8F8;
     -fx-border-color: #cccccc;
     -fx-border-radius: 5;
-    -fx-text-fill: #333333;           
+    -fx-text-fill: #333333;
 }
 .text-field-Id2{
     -fx-cursor: default;
@@ -369,7 +371,7 @@ TAB PANE CSS                                                                    
     -fx-background-color: #F8F8F8;
     -fx-border-color: #cccccc;
     -fx-border-radius: 5;
-    -fx-text-fill: #333333;           
+    -fx-text-fill: #333333;
 }
 .text-field-Id:focused{
     -fx-font-size: 10pt;

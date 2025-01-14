@@ -150,14 +150,6 @@
                                                                         <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
                                                                      </rowConstraints>
                                                                      <children>
-                                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Last Name ">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="10.0" />
-                                                                           </GridPane.margin>
-                                                                           <font>
-                                                                              <Font size="14.0" />
-                                                                           </font>
-                                                                        </Text>
                                                                         <TextField fx:id="personalinfo02" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
@@ -173,6 +165,69 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
+                                                                        <TextField fx:id="personalinfo05" prefWidth="167.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                        <TextField fx:id="personalinfo06" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                        <DatePicker fx:id="personalinfo07" prefWidth="227.0" promptText="YYYY-MM-DD" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </DatePicker>
+                                                                        <TextField fx:id="personalinfo08" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                        <ComboBox fx:id="personalinfo09" maxWidth="182.0" minWidth="95.0" prefHeight="27.0" prefWidth="95.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </ComboBox>
+                                                                        <ComboBox fx:id="personalinfo10" maxWidth="184.0" minWidth="130.0" prefHeight="27.0" prefWidth="156.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </ComboBox>
+                                                                        <TextField fx:id="personalinfo11" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                        <TextField fx:id="personalinfo12" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                        <TextField fx:id="personalinfo13" minWidth="89.0" prefWidth="89.0" promptText="XXX-XX-XXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                        <TextField fx:id="personalinfo15" maxWidth="200.0" minWidth="150.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                        <TextField fx:id="personalinfo14" maxWidth="213.0" minWidth="150.0" prefWidth="213.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Last Name ">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="10.0" />
+                                                                           </GridPane.margin>
+                                                                           <font>
+                                                                              <Font size="14.0" />
+                                                                           </font>
+                                                                        </Text>
                                                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="First Name " GridPane.rowIndex="1">
                                                                            <font>
                                                                               <Font size="14.0" />
@@ -189,11 +244,6 @@
                                                                               <Insets left="10.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <TextField fx:id="personalinfo05" prefWidth="167.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
                                                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Mother's Maiden Name " GridPane.columnIndex="5" GridPane.rowIndex="6">
                                                                            <font>
                                                                               <Font size="14.0" />
@@ -202,11 +252,6 @@
                                                                               <Insets left="10.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <TextField fx:id="personalinfo12" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="6">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
                                                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Gender " GridPane.halignment="RIGHT" GridPane.rowIndex="5">
                                                                            <font>
                                                                               <Font size="14.0" />
@@ -231,21 +276,6 @@
                                                                               <Insets left="15.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <ComboBox fx:id="personalinfo09" maxWidth="182.0" minWidth="95.0" prefHeight="27.0" prefWidth="95.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </ComboBox>
-                                                                        <ComboBox fx:id="personalinfo10" maxWidth="184.0" minWidth="130.0" prefHeight="27.0" prefWidth="156.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </ComboBox>
-                                                                        <TextField fx:id="personalinfo06" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
                                                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Birth Date " GridPane.columnIndex="5" GridPane.rowIndex="1">
                                                                            <font>
                                                                               <Font size="14.0" />
@@ -262,16 +292,6 @@
                                                                               <Insets left="15.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <DatePicker fx:id="personalinfo07" prefWidth="227.0" promptText="YYYY-MM-DD" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </DatePicker>
-                                                                        <TextField fx:id="personalinfo08" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="2">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
                                                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Spouse " GridPane.columnIndex="5" GridPane.rowIndex="5">
                                                                            <font>
                                                                               <Font size="14.0" />
@@ -280,11 +300,6 @@
                                                                               <Insets left="10.0" />
                                                                            </GridPane.margin>
                                                                         </Text>
-                                                                        <TextField fx:id="personalinfo11" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="5">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
                                                                         <Separator minWidth="-Infinity" GridPane.columnSpan="2147483647" GridPane.rowIndex="4">
                                                                            <GridPane.margin>
                                                                               <Insets />
@@ -295,21 +310,6 @@
                                                                            </font>
                                                                         </Text>
                                                                         <Separator GridPane.columnSpan="2147483647" GridPane.rowIndex="7" />
-                                                                        <TextField fx:id="personalinfo13" minWidth="89.0" prefWidth="89.0" promptText="XXX-XX-XXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
-                                                                        <TextField fx:id="personalinfo14" maxWidth="213.0" minWidth="150.0" prefWidth="213.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
-                                                                        <TextField fx:id="personalinfo15" maxWidth="200.0" minWidth="150.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
                                                                         <Text layoutX="27.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="TIN NO" GridPane.rowIndex="8">
                                                                            <font>
                                                                               <Font size="14.0" />
@@ -380,6 +380,11 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
+                                                                        <TextField fx:id="AddressField03" maxWidth="200.0" minWidth="150.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
                                                                   <TextField fx:id="AddressField04" maxWidth="200.0" minWidth="150.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
@@ -400,7 +405,31 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
+                                                                  <CheckBox fx:id="cbAddress01" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                     <font>
+                                                                        <Font size="14.0" />
+                                                                     </font>
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                  </CheckBox>
+                                                                  <CheckBox fx:id="cbAddress02" mnemonicParsing="false" text="Primary" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                     <font>
+                                                                        <Font size="14.0" />
+                                                                     </font>
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                  </CheckBox>
                                                                   <CheckBox fx:id="cbAddress03" mnemonicParsing="false" text="Office" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+                                                                     <font>
+                                                                        <Font size="14.0" />
+                                                                     </font>
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                  </CheckBox>
+                                                                  <CheckBox fx:id="cbAddress04" mnemonicParsing="false" text="Province" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -424,14 +453,6 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress04" mnemonicParsing="false" text="Province" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="5">
-                                                                     <font>
-                                                                        <Font size="14.0" />
-                                                                     </font>
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                  </CheckBox>
                                                                   <CheckBox fx:id="cbAddress07" mnemonicParsing="false" prefWidth="81.0" text="Current" GridPane.columnIndex="3" GridPane.rowIndex="6">
                                                                      <font>
                                                                         <Font size="14.0" />
@@ -441,22 +462,6 @@
                                                                            </GridPane.margin>
                                                                   </CheckBox>
                                                                   <CheckBox fx:id="cbAddress08" mnemonicParsing="false" text="LTMS" GridPane.columnIndex="4" GridPane.rowIndex="6">
-                                                                     <font>
-                                                                        <Font size="14.0" />
-                                                                     </font>
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                  </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress01" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                                                     <font>
-                                                                        <Font size="14.0" />
-                                                                     </font>
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                  </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress02" mnemonicParsing="false" text="Primary" GridPane.columnIndex="2" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -522,11 +527,6 @@
                                                                         <Insets />
                                                                      </GridPane.margin>
                                                                   </Button>
-                                                                        <TextField fx:id="AddressField03" maxWidth="200.0" minWidth="150.0" prefWidth="157.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
                                                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Province" textAlignment="RIGHT" wrappingWidth="81.35546875" GridPane.rowIndex="2">
                                                                            <font>
                                                                               <Font size="14.0" />
