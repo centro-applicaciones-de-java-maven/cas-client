@@ -58,10 +58,10 @@ import org.guanzon.cas.client.Client_Mail;
 import org.guanzon.cas.client.Client_Master;
 import org.guanzon.cas.client.Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Address;
-import org.guanzon.cas.client.models.ModelAddress;
-import org.guanzon.cas.client.models.ModelEmail;
-import org.guanzon.cas.client.models.ModelMobile;
-import org.guanzon.cas.client.models.ModelSocialMedia;
+import org.guanzon.cas.client.table.models.ModelAddress;
+import org.guanzon.cas.client.table.models.ModelEmail;
+import org.guanzon.cas.client.table.models.ModelMobile;
+import org.guanzon.cas.client.table.models.ModelSocialMedia;
 import org.guanzon.cas.controller.ScreenInterface;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.TownCity;
@@ -569,6 +569,7 @@ public class IndividualNewController implements Initializable {
                             ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
                         } else {
+                            clearAddress();
                             try {
                                 oTrans.Address(pnAddress).getModel().setLatitude("0.0");
                                 oTrans.Address(pnAddress).getModel().setLongitude("0.0");
@@ -578,7 +579,7 @@ public class IndividualNewController implements Initializable {
                     }
 
                     JSONObject addObjAddress = oTrans.addAddress();
-                    System.out.println("THE ID2 "+  oTrans.Address(pnAddress).getModel().getAddressId() +" and number "+String.valueOf(pnAddress));
+                    System.out.println("THE ADDRESS ID "+  oTrans.Address(pnAddress).getModel().getAddressId() +" and number "+String.valueOf(pnAddress));
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
@@ -843,7 +844,8 @@ public class IndividualNewController implements Initializable {
         if (!pbLoaded) {
             return;
         }
-
+        
+        
         TextField txtPersonalInfo = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
         int lnIndex = Integer.parseInt(txtPersonalInfo.getId().substring(12, 14));
         String lsValue = (txtPersonalInfo.getText() == null ? "" : txtPersonalInfo.getText());
