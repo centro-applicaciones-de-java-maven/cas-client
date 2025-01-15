@@ -561,13 +561,14 @@ public class IndividualNewController implements Initializable {
 
                     break;
                 case "btnAddAddress":
+                    
+                
                     if (oTrans.getAddressCount() > 1) {
                         JSONObject addObj = oTrans.Address(pnAddress - 1).isEntryOkay();
                         if ("error".equals((String) addObj.get("result"))) {
                             ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
                             break;
                         } else {
-                            clearAddress();
                             try {
                                 oTrans.Address(pnAddress).getModel().setLatitude("0.0");
                                 oTrans.Address(pnAddress).getModel().setLongitude("0.0");
@@ -577,6 +578,7 @@ public class IndividualNewController implements Initializable {
                     }
 
                     JSONObject addObjAddress = oTrans.addAddress();
+                    System.out.println("THE ID2 "+  oTrans.Address(pnAddress).getModel().getAddressId() +" and number "+String.valueOf(pnAddress));
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
@@ -1065,37 +1067,6 @@ public class IndividualNewController implements Initializable {
         }
     }
 
-    final ChangeListener<? super Boolean> master_Focus = (o, ov, nv) -> {
-        JSONObject loJSON;
-        if (!pbLoaded) {
-            return;
-        }
-
-        TextField txtMaster = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(txtMaster.getId().substring(txtMaster.getId().length() - 2));
-        String lsValue = (txtMaster.getText() == null ? "" : txtMaster.getText());
-        JSONObject jsonObject = new JSONObject();
-        if (lsValue == null) {
-            return;
-        }
-        if (!nv) {
-            /*Lost Focus*/
-            lsValue = lsValue.trim();
-            switch (lnIndex) {
-                case 2:
-                    /*Client Name should be company name*/
-                    break;
-                case 3:
-                    /*Client Name should be company name*/
-                    break;
-            }
-            loadRecordMaster();
-
-        } else {
-            // txtContact.selectAll();
-        }
-    };
-
     public void loadMasterName() {
         String lsLastName = ((oTrans.Master().getModel().getLastName() instanceof String) && (!oTrans.Master().getModel().getLastName().equals("")) ? oTrans.Master().getModel().getLastName() : "");
         String lsFirstName = ((oTrans.Master().getModel().getFirstName() instanceof String) && (!oTrans.Master().getModel().getFirstName().equals("")) ? oTrans.Master().getModel().getFirstName() : "");
@@ -1362,11 +1333,6 @@ public class IndividualNewController implements Initializable {
         /*MOBILE INFO FOCUSED PROPERTY*/
         txtSocial01.focusedProperty().addListener(socialmedia_Focus);
         txtSocial02.focusedProperty().addListener(txtAreaSocialMedia_Focus);
-    }
-
-    private void InitMasterTextFields() {
-        /*MOBILE INFO FOCUSED PROPERTY*/
-        txtField02.focusedProperty().addListener(master_Focus);
     }
 
     private void InitEmailTextFields() {
@@ -1790,24 +1756,27 @@ public class IndividualNewController implements Initializable {
                             getSelectedAddress();
                             break;
                         case 2: // Primary Address || Restricted to 1 Primary Address
+                            System.out.println("THE LTA " + oTrans.Address(pnAddress).getModel().getAddressId());
                             boolean primaryAddressExists = false;
                             for (int in = 0; in < oTrans.getAddressCount(); in++) {
-                                primaryAddressExists = true;
-                                if (oTrans.Address(in).getModel().getAddressId() == oTrans.Address(pnAddress).getModel().getAddressId()) {
-                                    if (ShowMessageFX.YesNo("There will be no primary address, proceed? \n", "Computerized Acounting System", pxeModuleName)) {
-                                        primaryAddressExists = false;
-                                        oTrans.Address(in).getModel().isPrimaryAddress(false);
+                                if (oTrans.Address(in).getModel().isPrimaryAddress()) {
+                                    primaryAddressExists = true;
+                                    if (oTrans.Address(in).getModel().getAddressId() == oTrans.Address(pnMobile).getModel().getAddressId()) {
+                                        if (ShowMessageFX.YesNo("There will be no primary address, proceed? \n", "Computerized Acounting System", pxeModuleName)) {
+                                            primaryAddressExists = false;
+                                            oTrans.Address(in).getModel().isPrimaryAddress(false);
+                                        }
+                                    } else {
+                                        if (ShowMessageFX.YesNo("Do you want to change the current primary address? \n", "Computerized Acounting System", pxeModuleName)) {
+                                            primaryAddressExists = false;
+                                            oTrans.Address(in).getModel().isPrimaryAddress(false);
+                                        }
                                     }
-                                } else {
-                                    if (ShowMessageFX.YesNo("Do you want to change the current primary address? \n", "Computerized Acounting System", pxeModuleName)) {
-                                        primaryAddressExists = false;
-                                        oTrans.Address(in).getModel().isPrimaryAddress(false);
-                                    }
+                                    break;
                                 }
-                                break;
                             }
                             if (!primaryAddressExists) {
-                                loJSON = oTrans.Address(pnAddress).getModel().isPrimaryAddress(checkbox.isSelected());
+                                loJSON = oTrans.Address(pnMobile).getModel().isPrimaryAddress(checkbox.isSelected());
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
@@ -2261,8 +2230,6 @@ public class IndividualNewController implements Initializable {
         clearEmail();
         clearSocMed();
         clearMobile();
-
-        InitMasterTextFields();
 
         initComboboxes();
         if (lbOption) {
