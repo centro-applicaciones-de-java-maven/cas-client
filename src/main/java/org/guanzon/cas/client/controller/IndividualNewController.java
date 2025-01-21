@@ -2122,6 +2122,9 @@ public class IndividualNewController implements Initializable {
             TextField textField = textFields[i];
 
             textField.setOnKeyTyped((KeyEvent e) -> {
+                if (e.isControlDown() || e.isMetaDown()) {
+                    return;
+                }
                 String text = textField.getText().replaceAll("[^\\d]", "");
                 System.out.println("those " + textField.getId());
                 if (textField.getId().equals("personalinfo13")) {
