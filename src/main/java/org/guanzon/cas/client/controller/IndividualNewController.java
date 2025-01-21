@@ -2116,6 +2116,30 @@ public class IndividualNewController implements Initializable {
         });
 
     }
+    public void initTextFieldsAutoFormat(){
+        TextField[] textFields = {personalinfo15, personalinfo14, personalinfo13};
+        for (int i = 0; i < textFields.length; i++) {
+            TextField textField = textFields[i];
+
+            textField.setOnKeyTyped((KeyEvent e) -> {
+                String text = textField.getText().replaceAll("[^\\d]", "");
+                System.out.println("those " + textField.getId());
+                if (textField.getId().equals("personalinfo13")) {
+                    if (text.length() >= 9) {
+                        e.consume();  // Prevent additional input beyond 9 digits
+                        text = text.substring(0, 9);
+                    }
+                } else {
+                    if (text.length() >= 11) {
+                        e.consume();  // Prevent additional input beyond 9 digits
+                        text = text.substring(0, 11);
+                    }
+                }
+                textField.setText(formatInput(text));  // Format and set the text
+                textField.positionCaret(textField.getText().length()); // Move cursor to end
+            });
+        }
+    }
 
    private String formatInput(String digits) {
         StringBuilder formatted = new StringBuilder();
@@ -2223,7 +2247,7 @@ public class IndividualNewController implements Initializable {
             loadMasterName();
             loadRecordPersonalInfo();
         }
-
+        initTextFieldsAutoFormat();
         initTableOnClick();
         pbLoaded = true;
 
@@ -2240,27 +2264,6 @@ public class IndividualNewController implements Initializable {
       
         
         
-        TextField[] textFields = {personalinfo15, personalinfo14, personalinfo13};
-        for (int i = 0; i < textFields.length; i++) {
-            TextField textField = textFields[i];
 
-            textField.setOnKeyTyped((KeyEvent e) -> {
-                String text = textField.getText().replaceAll("[^\\d]", "");
-                System.out.println("those " + textField.getId());
-                if (textField.getId().equals("personalinfo13")) {
-                    if (text.length() >= 9) {
-                        e.consume();  // Prevent additional input beyond 9 digits
-                        text = text.substring(0, 9);
-                    }
-                } else {
-                    if (text.length() >= 11) {
-                        e.consume();  // Prevent additional input beyond 9 digits
-                        text = text.substring(0, 11);
-                    }
-                }
-                textField.setText(formatInput(text));  // Format and set the text
-                textField.positionCaret(textField.getText().length()); // Move cursor to end
-            });
-        }
     }
 }
