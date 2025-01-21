@@ -2126,7 +2126,6 @@ public class IndividualNewController implements Initializable {
                     return;
                 }
                 String text = textField.getText().replaceAll("[^\\d]", "");
-                System.out.println("those " + textField.getId());
                 if (textField.getId().equals("personalinfo13")) {
                     if (text.length() >= 9) {
                         e.consume();  // Prevent additional input beyond 9 digits
