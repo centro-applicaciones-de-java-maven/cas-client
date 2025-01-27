@@ -797,20 +797,15 @@ public class IndividualNewController implements Initializable {
                     case 11:
                         /*search spouse*/
                         poJson = new JSONObject();
-                        Client_Master loclientMaster = new Client_Master();
-                        loclientMaster.setApplicationDriver(oApp);
-                        loclientMaster.setRecordStatus("1");
-                        loclientMaster.setClientType(ClientType.INDIVIDUAL);
-                        loclientMaster.initialize();
-                        poJson = loclientMaster.searchRecordWithClientType(lsValue, false);
+                        poJson = oTrans.Master().searchRecordWithClientType(lsValue, false);
 
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             personalinfo11.clear();
                         } else {
                             //loadspousename
-                            oTrans.Master().getModel().setSpouseId(loclientMaster.getModel().getClientId());
-                            personalinfo11.setText(loadSpouseName(loclientMaster.getModel().getClientId()));
+                            oTrans.Master().getModel().setSpouseId(oTrans.Master().getModel().getClientId());
+                            personalinfo11.setText(loadSpouseName(oTrans.Master().getModel().getClientId()));
                         }
                         poJson = new JSONObject();
                         break;
@@ -1084,17 +1079,12 @@ public class IndividualNewController implements Initializable {
         String lsSpouseName = "";
         if (!lsClientID.equals("")) {
 
-            Client_Master loclientMaster = new Client_Master();
-            loclientMaster.setApplicationDriver(oApp);
-            loclientMaster.setRecordStatus("1");
-            loclientMaster.setClientType(ClientType.INDIVIDUAL);
-            loclientMaster.initialize();
-            loclientMaster.openRecord(lsClientID);
+            oTrans.Master().openRecord(lsClientID);
 
-            String lsLastName = ((loclientMaster.getModel().getLastName() instanceof String) && (!loclientMaster.getModel().getLastName().equals("")) ? loclientMaster.getModel().getLastName() : "");
-            String lsFirstName = ((loclientMaster.getModel().getFirstName() instanceof String) && (!loclientMaster.getModel().getFirstName().equals("")) ? loclientMaster.getModel().getFirstName() : "");
-            String lsMiddleName = ((loclientMaster.getModel().getMiddleName() instanceof String) && (!loclientMaster.getModel().getMiddleName().equals("")) ? loclientMaster.getModel().getMiddleName() : "");
-            String lsSuffixName = ((loclientMaster.getModel().getSuffixName() instanceof String) && (!loclientMaster.getModel().getSuffixName().equals("")) ? loclientMaster.getModel().getSuffixName() : "");
+            String lsLastName = ((oTrans.Master().getModel().getLastName() instanceof String) && (!oTrans.Master().getModel().getLastName().equals("")) ? oTrans.Master().getModel().getLastName() : "");
+            String lsFirstName = ((oTrans.Master().getModel().getFirstName() instanceof String) && (!oTrans.Master().getModel().getFirstName().equals("")) ? oTrans.Master().getModel().getFirstName() : "");
+            String lsMiddleName = ((oTrans.Master().getModel().getMiddleName() instanceof String) && (!oTrans.Master().getModel().getMiddleName().equals("")) ? oTrans.Master().getModel().getMiddleName() : "");
+            String lsSuffixName = ((oTrans.Master().getModel().getSuffixName() instanceof String) && (!oTrans.Master().getModel().getSuffixName().equals("")) ? oTrans.Master().getModel().getSuffixName() : "");
 
             if (lsLastName != null && !lsLastName.trim().isEmpty()) {
                 fullName.append(lsLastName).append(", ");
