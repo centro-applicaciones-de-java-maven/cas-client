@@ -89,9 +89,9 @@ public class Client_Master extends Parameter {
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
-                "ID�Name�Birthday�Birth Place",
-                "sClientID�sCompnyNm�dBirthDte�xBirthPlc",
-                "a.sBrgyIDxx�TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))�a.dBirthDte�CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))",
+                "ID»Name»Birthday»Birth Place",
+                "sClientID»sCompnyNm»dBirthDte»xBirthPlc",
+                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -108,9 +108,9 @@ public class Client_Master extends Parameter {
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
-                "ID�Name�Birthday�Birth Place�Client Type",
-                "sClientID�sCompnyNm�dBirthDte�xBirthPlc�xClientTp",
-                "a.sBrgyIDxx�TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))�a.dBirthDte�CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))�IF(a.cClientTp = 0, 'Individual', 'Corporate')",
+                "ID»Name»Birthday»Birth Place»Client Type",
+                "sClientID»sCompnyNm»dBirthDte»xBirthPlc»xClientTp",
+                "a.sClientID»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))»IF(a.cClientTp = 0, 'Individual', 'Corporate')",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -321,9 +321,10 @@ public class Client_Master extends Parameter {
                 + ", a.cRecdStat"
                 + ", TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm)) xFullName"
                 + ", CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode))) xBirthPlc"
+                + ", IF(a.cClientTp = 0, 'Individual', 'Corporate') xClientTp"
                 + " FROM Client_Master a"
                 + " LEFT JOIN TownCity b ON a.sBirthPlc = b.sTownIDxx"
-                + " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx;";
+                + " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx";
         
 
         if (!psRecdStat.isEmpty()) {
