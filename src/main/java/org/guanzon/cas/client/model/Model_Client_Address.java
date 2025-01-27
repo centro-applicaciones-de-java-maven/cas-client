@@ -1,9 +1,12 @@
 package org.guanzon.cas.client.model;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Date;
+import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
+import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -115,6 +118,8 @@ public class Model_Client_Address extends Model{
         }
     }
     
+    
+    
     public Model_Client_Master Client(){
         if (!"".equals((String) getValue("sClientID"))){
             if (poClient.getEditMode() == EditMode.READY && 
@@ -135,6 +140,7 @@ public class Model_Client_Address extends Model{
             return poClient;
         }
     }
+    
     
     public JSONObject setAddressId(String addressId){
         return setValue("sAddrssID", addressId);
@@ -185,19 +191,23 @@ public class Model_Client_Address extends Model{
     }
     
     public JSONObject setLatitude(String latitude){
-        return setValue("nLatitude", latitude);
+        return setValue("nLatitude", Double.parseDouble(latitude));
     }
     
-    public double getLatitude(){
-        return (double) getValue("nLatitude");
+    public Number getLatitude(){
+//        return (Number) getValue("nLatitude");
+        Object value = getValue("nLatitude");
+            return ((Number) value).doubleValue();
     }
     
     public JSONObject setLongitude(String longitude){
-        return setValue("nLongitud", longitude);
+        return setValue("nLongitud", Double.parseDouble(longitude));
     }
     
-    public double getLongitude(){
-        return (double) getValue("nLongitud");
+    public Number getLongitude(){
+        Object value = getValue("nLongitud");
+        return ((Number) value).doubleValue();
+//        return (Number) getValue("nLongitud");
     }
     
     public JSONObject isPrimaryAddress(boolean isPrimaryAddress){

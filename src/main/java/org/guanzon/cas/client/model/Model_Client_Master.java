@@ -2,6 +2,7 @@ package org.guanzon.cas.client.model;
 
 import java.sql.SQLException;
 import java.util.Date;
+import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
@@ -178,11 +179,15 @@ public class Model_Client_Master extends Model{
             return (String) getValue("sCompnyNm");
         } else {
             return ((String) getValue("sLastName") + ", " + 
-                    (String) getValue("sFrstName") + 
-                    ("".equals((String) getValue("sSuffixNm")) ? "" : " " + (String) getValue("sSuffixNm")) + 
-                    (String) getValue("sMiddName")).trim();
+                    (String) getValue("sFrstName") + " " +
+                    (String) getValue("sMiddName") + " "+
+                    ("".equals((String) getValue("sSuffixNm")) ? "" : (String) getValue("sSuffixNm"))).trim();
         }        
     }
+    
+    
+ 
+    
     
     public JSONObject setGender(String genderCode){
         return setValue("cGenderCd", genderCode);
@@ -255,6 +260,15 @@ public class Model_Client_Master extends Model{
     public String getPhNationalId(){
         return (String) getValue("sPHBNIDxx");
     }
+    
+    public JSONObject setCivilStatus(String CivilStatus) {
+        return setValue("cCvilStat", CivilStatus);
+    }
+
+    public String getCivilStatus() {
+        return (String) getValue("cCvilStat");
+    }
+    
     
     public JSONObject isLoanReceivableClient(boolean isLoanReceivableClient){
         return setValue("cLRClient", isLoanReceivableClient ? "1" : "0");
