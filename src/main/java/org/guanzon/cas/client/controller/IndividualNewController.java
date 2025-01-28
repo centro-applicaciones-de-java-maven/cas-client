@@ -58,6 +58,7 @@ import org.guanzon.cas.parameter.Country;
 import org.guanzon.cas.parameter.Province;
 import org.json.simple.JSONObject;
 import org.guanzon.appdriver.base.CommonUtils;
+import org.guanzon.cas.client.Client_Master;
 
 /**
  * FXML Controller class
@@ -783,16 +784,20 @@ public class IndividualNewController implements Initializable {
                         break;
                     case 11:
                         /*search spouse*/
-                        poJson = new JSONObject();
-                        poJson = oTrans.Master().searchRecordWithClientType(lsValue, false);
+                        Client_Master loclientMaster = new Client_Master();
+                        loclientMaster.setApplicationDriver(oApp);
+                        loclientMaster.setRecordStatus("1");
+                        loclientMaster.initialize();
+                        loclientMaster.setClientType(ClientType.INDIVIDUAL);
+                        poJson = loclientMaster.searchRecordWithClientType(lsValue, true);
 
                         if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
                             ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
                             personalinfo11.clear();
                         } else {
                             //loadspousename
-                            oTrans.Master().getModel().setSpouseId(oTrans.Master().getModel().getClientId());
-                            personalinfo11.setText(loadSpouseName(oTrans.Master().getModel().getClientId()));
+                            oTrans.Master().getModel().setSpouseId(loclientMaster.getModel().getClientId());
+                            personalinfo11.setText(loadSpouseName(loclientMaster.getModel().getClientId()));
                         }
                         poJson = new JSONObject();
                         break;
@@ -2208,7 +2213,7 @@ public class IndividualNewController implements Initializable {
             oTrans.New();
             System.out.println(oTrans.Mobile(0).getModel().getRecordStatus());
 
-            oTrans.Master().getModel().setClientType(ClientType.INSTITUTION);
+            oTrans.Master().getModel().setClientType(ClientType.INDIVIDUAL);
             pnEditMode = EditMode.ADDNEW;
         } else {
             // OPEN RECORD
