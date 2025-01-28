@@ -11,11 +11,8 @@ import java.net.URL;
 import java.sql.Timestamp;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -27,15 +24,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.cell.PropertyValueFactory;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
@@ -47,30 +41,23 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.guanzon.appdriver.agent.ShowMessageFX;
-import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GRider;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.appdriver.constant.MobileNetwork;
 import org.guanzon.cas.client.Client;
-import org.guanzon.cas.client.Client_Address;
-import org.guanzon.cas.client.Client_Mail;
-import org.guanzon.cas.client.Client_Master;
-import org.guanzon.cas.client.Client_Mobile;
-import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.table.models.ModelAddress;
 import org.guanzon.cas.client.table.models.ModelEmail;
 import org.guanzon.cas.client.table.models.ModelMobile;
 import org.guanzon.cas.client.table.models.ModelSocialMedia;
-import org.guanzon.cas.controller.ScreenInterface;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.Country;
 import org.guanzon.cas.parameter.Province;
 import org.json.simple.JSONObject;
+import org.guanzon.appdriver.base.CommonUtils;
 
 /**
  * FXML Controller class
@@ -1334,7 +1321,7 @@ public class IndividualNewController implements Initializable {
                     }
                     break;
             }
-            oTrans.Mobile(pnMobile).getModel().setMobileNetwork(MobileNetwork.GLOBE);
+            oTrans.Mobile(pnMobile).getModel().setMobileNetwork(CommonUtils.classifyNetwork(lsValue));
             loadRecordMobile();
         } else {
             // txtContact.selectAll();
@@ -1429,7 +1416,6 @@ public class IndividualNewController implements Initializable {
 
         Country loCountry = new Country();
         loCountry.setApplicationDriver(oApp);
-
         loCountry.setRecordStatus("1");
         loCountry.initialize();
         loCountry.openRecord(oTrans.Master().getModel().getCitizenshipId());
