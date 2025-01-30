@@ -84,6 +84,24 @@ public class Client_Institution_Contact  extends Parameter{
             return poJSON;
         }
     }
+    public JSONObject searchRecordx(String value, boolean byCode) {
+        poJSON = ShowDialogFX.Search(poGRider,
+                getSQ_Browse(),
+                value,
+                "ID»ID»Company Name»Contact Person»Mobile Phone»Mail Address»Primary",
+                "sContctIDx»sClientID»FullName»sCPerson1»sMobileNo»sEMailAdd»xPrimaryx",
+                "a.sContctID»a.sClientID»TRIM(IF(b.cClientTp = '0', CONCAT(b.sLastName, ', ', b.sFrstName, IF(TRIM(IFNull(b.sSuffixNm, '')) = '', ' ', CONCAT(' ', b.sSuffixNm, ' ')), b.sMiddName), b.sCompnyNm))»a.sCPerson1»a.sMobileNo»a.sEMailAdd»IF(a.cPrimaryx = '1', 'Yes', 'No')",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sContctID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
     
     public JSONObject searchRecord(String value, boolean byCode, String clientId) {
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sClientID = " + SQLUtil.toSQL(clientId));
@@ -141,7 +159,8 @@ public class Client_Institution_Contact  extends Parameter{
                 " FROM Client_Institution_Contact_Person a" +
                     ", Client_Master b" +
                 " WHERE a.sClientID = b.sClientID";
-        
+        System.out.println("get SQ BRowse == " + lsSQL);
         return MiscUtil.addCondition(lsSQL, lsCondition);
+        
     }
 }

@@ -164,25 +164,26 @@ public class Model_Client_Master extends Model{
     }
     
     public JSONObject setCompanyName(String fullName){
-        if ("0".equals((String) getValue("cClientTp"))){
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "Unable to assign company name on individual accounts.");
-            return poJSON;
-        }
+//        if ("0".equals((String) getValue("cClientTp"))){
+//            poJSON = new JSONObject();
+//            poJSON.put("result", "error");
+//            poJSON.put("message", "Unable to assign company name on individual accounts.");
+//            return poJSON;
+//        }
 
         return setValue("sCompnyNm", fullName);
     }
 
     public String getCompanyName(){
-        if ("1".equals((String) getValue("cClientTp"))){
-            return (String) getValue("sCompnyNm");
-        } else {
-            return ((String) getValue("sLastName") + ", " + 
-                    (String) getValue("sFrstName") + " " +
-                    (String) getValue("sMiddName") + " "+
-                    ("".equals((String) getValue("sSuffixNm")) ? "" : (String) getValue("sSuffixNm"))).trim();
-        }        
+          return (String) getValue("sCompnyNm");
+//        if ("1".equals((String) getValue("cClientTp"))){
+//            return (String) getValue("sCompnyNm");
+//        } else {
+//            return ((String) getValue("sLastName") + ", " + 
+//                    (String) getValue("sFrstName") + " " +
+//                    (String) getValue("sMiddName") + " "+
+//                    ("".equals((String) getValue("sSuffixNm")) ? "" : (String) getValue("sSuffixNm"))).trim();
+//        }        
     }
     
     
