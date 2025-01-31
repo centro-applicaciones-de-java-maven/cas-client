@@ -3,9 +3,12 @@ package org.guanzon.cas.client.account;
 import javax.sound.midi.SysexMessage;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GRider;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
+import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
+import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.client.Client;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
@@ -100,14 +103,33 @@ public class Account_Accreditation extends Parameter{
         }
     }
     
+    public JSONObject searchRecordbyClient(String value, boolean byCode) {
+        poJSON = ShowDialogFX.Search(poGRider,
+                getSQ_Browse(),
+                value,
+                "Transaction No»Client»Date»Name",
+                "sTransNox»sClientID»dTransact»sCompnyNm",
+                "sTransNox»a.sClientID»dTransact»sCompnyNm",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sTransNox"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+    
     public JSONObject searchRecord(String value, 
                                     boolean byCode, 
                                     boolean openStat) {
         String lsCondition = "";
         if (openStat == true){
-            lsCondition =  " a.cTranStat = 0";
+            lsCondition =  "LEFT (sTransNox, 4) = '" + poGRider.getBranchCode() + "' AND  a.cTranStat = 0";
         }else{
-            lsCondition =  " a.cTranStat <> 0";
+            lsCondition =  "LEFT (sTransNox, 4) = '" + poGRider.getBranchCode() + "' AND  a.cTranStat <> 0";
         }
 
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), 
@@ -423,5 +445,45 @@ public class Account_Accreditation extends Parameter{
 //        if (!psRecdStat.isEmpty()) lsSQL = MiscUtil.addCondition(lsSQL, lsRecdStat);
         
         return lsSQL;
+    }
+    
+    public JSONObject postTransaction() {
+        poJSON = new JSONObject();
+            if (poModel.getTransactionNo() != null || !poModel.getTransactionNo().isEmpty()){
+                poJSON = poModel.updateRecord();
+                    if ("success".equals((String) poJSON.get("result"))){
+                        poJSON = poModel.setRecordStatus("1");
+                        poJSON = poModel.setApproved(poGRider.getUserID());
+                        poJSON = poModel.setModifyingId(poGRider.getUserID());
+                        poJSON = poModel.setDateApproved(poGRider.getServerDate());
+                        poJSON = poModel.setModifiedDate(poGRider.getServerDate());
+                        poJSON = poModel.saveRecord();
+                    }
+                return poJSON;
+            }else{
+                poJSON.put("result", "error");
+                poJSON.put("message", "No record loaded.");
+            }
+        return poJSON;
+    }
+    
+    public JSONObject voidTransaction() {
+        poJSON = new JSONObject();
+            if (poModel.getTransactionNo() != null || !poModel.getTransactionNo().isEmpty()){
+                poJSON = poModel.updateRecord();
+                    if ("success".equals((String) poJSON.get("result"))){
+                        poJSON = poModel.setRecordStatus("3");
+                        poJSON = poModel.setApproved(poGRider.getUserID());
+                        poJSON = poModel.setModifyingId(poGRider.getUserID());
+                        poJSON = poModel.setDateApproved(poGRider.getServerDate());
+                        poJSON = poModel.setModifiedDate(poGRider.getServerDate());
+                        poJSON = poModel.saveRecord();
+                    }
+                return poJSON;
+            }else{
+                poJSON.put("result", "error");
+                poJSON.put("message", "No record loaded.");
+            }
+        return poJSON;
     }
 }
