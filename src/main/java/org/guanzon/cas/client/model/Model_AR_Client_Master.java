@@ -21,7 +21,7 @@ import org.guanzon.cas.parameter.model.Model_Warehouse;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-public class Model_AP_Client_Master extends Model{      
+public class Model_AR_Client_Master extends Model{      
     //reference objects
     Model_Branch poBranch;
     Model_Warehouse poWarehouse;

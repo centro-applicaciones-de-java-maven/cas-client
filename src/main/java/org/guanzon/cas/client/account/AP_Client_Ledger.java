@@ -6,6 +6,7 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
+import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
 import org.guanzon.cas.client.model.Model_AP_Client_Master;
 import org.guanzon.cas.parameter.Branch;
 import org.guanzon.cas.parameter.InvLocation;
@@ -15,7 +16,7 @@ import org.json.simple.JSONObject;
 
 public class AP_Client_Ledger extends Parameter{
     //object model
-    Model_AP_Client_Master poModel;
+    Model_AP_Client_Ledger poModel;
     
     //reference objects
     ParamControllers poParams;
@@ -55,10 +56,10 @@ public class AP_Client_Ledger extends Parameter{
     public void initialize() {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_AP_Client_Master();
+        poModel = new Model_AP_Client_Ledger();
         poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_AP_Client_Master");
-        poModel.setTableName("AP_Client_Master");
+        poModel.setXML("Model_AP_Client_Ledger");
+        poModel.setTableName("AP_Client_Ledger");
         poModel.initialize();
         
         psBranchCd = poGRider.getBranchCode();
@@ -91,23 +92,23 @@ public class AP_Client_Ledger extends Parameter{
 //                return poJSON;
 //            }
             
-            if (poModel.getAddressId().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "Address must not be empty.");
-                return poJSON;
-            }
-            
-            if (poModel.getContactId().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "Contact must not be empty.");
-                return poJSON;
-            }
-            
-            if (poModel.getCategoryCode().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "Category must not be empty.");
-                return poJSON;
-            }
+//            if (poModel.getAddressId().isEmpty()){
+//                poJSON.put("result", "error");
+//                poJSON.put("message", "Address must not be empty.");
+//                return poJSON;
+//            }
+//            
+//            if (poModel.getContactId().isEmpty()){
+//                poJSON.put("result", "error");
+//                poJSON.put("message", "Contact must not be empty.");
+//                return poJSON;
+//            }
+//            
+//            if (poModel.getCategoryCode().isEmpty()){
+//                poJSON.put("result", "error");
+//                poJSON.put("message", "Category must not be empty.");
+//                return poJSON;
+//            }
             
 //            if (poModel.getBeginningDate().isEmpty()){
 //                poJSON.put("result", "error");
@@ -124,7 +125,7 @@ public class AP_Client_Ledger extends Parameter{
     }
     
     @Override
-    public Model_AP_Client_Master getModel() {
+    public Model_AP_Client_Ledger getModel() {
         return poModel;
     }
     
@@ -352,35 +353,17 @@ public class AP_Client_Ledger extends Parameter{
         }
         
         lsSQL = "SELECT" +
-                    "  a.sStockIDx" +
-                    ", a.sBarCodex" +
-                    ", a.sDescript" +
-                    ", a.sAltBarCd" +
-                    ", a.nUnitPrce" +
-                    ", a.nSelPrice" +
-                    ", IFNULL(b.sDescript, '') xBrandNme" +
-                    ", IF(IFNULL(c.sDescript, '') = '', '', CONCAT(c.sDescript, '(', c.sModelCde, ')')) xModelNme" +
-                    ", IFNULL(d.sDescript, '') xColorNme" +
-                    ", IFNULL(e.sMeasurNm, '') xMeasurNm" +
-                    ", IFNULL(f.sDescript, '') xCategNm1" +
-                    ", IFNULL(g.sDescript, '') xCategNm2" +
-                    ", IFNULL(h.sDescript, '') xCategNm3" +
-                    ", IFNULL(i.sDescript, '') xCategNm4" +
-                    ", IFNULL(j.sDescript, '') xInvTypNm" +
-                    ", k.nQtyOnHnd" +
-                " FROM Inventory a" +
-                        " LEFT JOIN Brand b ON a.sBrandIDx = b.sBrandIDx" +
-                        " LEFT JOIN Model c ON a.sModelIDx = c.sModelIDx" +
-                        " LEFT JOIN Color d ON a.sColorIDx = d.sColorIDx" +
-                        " LEFT JOIN Measure e ON a.sMeasurID = e.sMeasurID" +
-                        " LEFT JOIN Category f ON a.sCategCd1 = f.sCategrCd" +
-                        " LEFT JOIN Category_Level2 g ON a.sCategCd2 = g.sCategrCd" +
-                        " LEFT JOIN Category_Level3 h ON a.sCategCd3 = h.sCategrCd" +
-                        " LEFT JOIN Category_Level4 i ON a.sCategCd4 = i.sCategrCd" +
-                        " LEFT JOIN Inv_Type j ON a.sInvTypCd = j.sInvTypCd" +
-                    ", Inv_Master k" + 
-                " WHERE a.sStockIDx = k.sStockIDx" +
-                " AND k.sBranchCd = " + SQLUtil.toSQL(psBranchCd);
+                        "  sClientID" +
+                        ", nLedgerNo" +
+                        ", dTransact" +
+                        ", sSourceCd" +
+                        ", sSourceNo" +
+                        ", nAmountIn" +
+                        ", nAmountOt" +
+                        ", dPostedxx" +
+                        ", nABalance" +
+                        ", dModified" +
+                        " FROM AP_Client_Ledger";
         
         if (!psRecdStat.isEmpty()) lsSQL = MiscUtil.addCondition(lsSQL, lsRecdStat);
         

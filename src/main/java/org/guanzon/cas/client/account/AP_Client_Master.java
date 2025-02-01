@@ -6,6 +6,7 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
+import org.guanzon.cas.client.Client;
 import org.guanzon.cas.client.model.Model_AP_Client_Master;
 import org.guanzon.cas.parameter.Branch;
 import org.guanzon.cas.parameter.InvLocation;
@@ -16,6 +17,7 @@ import org.json.simple.JSONObject;
 public class AP_Client_Master extends Parameter{
     //object model
     Model_AP_Client_Master poModel;
+    Client poClients;
     
     //reference objects
     ParamControllers poParams;
@@ -55,6 +57,8 @@ public class AP_Client_Master extends Parameter{
     public void initialize() {
         psRecdStat = Logical.YES;
         
+        poClients = new Client(poGRider,"", logwrapr);
+        
         poModel = new Model_AP_Client_Master();
         poModel.setApplicationDriver(poGRider);
         poModel.setXML("Model_AP_Client_Master");
@@ -73,7 +77,9 @@ public class AP_Client_Master extends Parameter{
 //        poInventory = poInv.Inventory();
         //end - initialize reference objects
     }
-    
+    public Client Client() {
+        return poClients;
+    }
     @Override
     public JSONObject isEntryOkay() {
         poJSON = new JSONObject();
@@ -388,8 +394,9 @@ public class AP_Client_Master extends Parameter{
                         " LEFT JOIN Category e ON a.sCategrCd = e.sCategrCd" +
                         " LEFT JOIN Term f ON a.sTermIDxx = f.sTermCode";
         
-        if (!psRecdStat.isEmpty()) lsSQL = MiscUtil.addCondition(lsSQL, lsRecdStat);
         
+        if (!psRecdStat.isEmpty()) lsSQL = MiscUtil.addCondition(lsSQL, lsRecdStat);
+
         System.out.println("select == " + lsSQL);
         return lsSQL;
     }

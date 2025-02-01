@@ -1,6 +1,8 @@
+D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\account\ARClients.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\controller\IndividualNewController.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\Client_Institution_Contact.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\account\APClients.java
+D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\account\AR_Client_Ledgerx.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\services\CasClientControllers.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\account\Account_Accreditation_backup.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\controller\ClientMasterTransactionIndividualController.java
@@ -17,6 +19,7 @@ D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\Client_Social_
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Master.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\Client_Address.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\Client_Master.java
+D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AR_Client_Ledger.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\account\Account_Accreditationx.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\account\AP_Client_Ledger.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\model\ClientModels.java
@@ -28,6 +31,7 @@ D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\controller\Cli
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelSocialMedia.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\ClientTypes.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\Client_Mail.java
+D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\account\AR_Client_Masterx.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Mobile.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\Client_Mobile.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Account_Client_Accreditation.java
@@ -38,6 +42,7 @@ D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Cl
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelMobile.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\account\Account_Accreditations.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\account\Supplier_Accreditation.java
+D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AR_Client_Master.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\account\AR_Client_Master.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Institution_Contact.java
 D:\MAVEN PROJECTS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AP_Client_Master.java

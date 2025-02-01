@@ -12,11 +12,12 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
+import org.guanzon.cas.client.model.Model_AR_Client_Ledger;
 import org.guanzon.cas.client.services.CasClientControllers;
 import org.guanzon.cas.client.services.CasClientModel;
 import org.json.simple.JSONObject;
 
-public class APClients {
+public class ARClients {
 
     GRider poGRider;
     String psParent;
@@ -24,10 +25,10 @@ public class APClients {
     JSONObject poJSON;
     LogWrapper poLogWrapper;
 
-    AP_Client_Master poAPClientMaster;
-    List<Model_AP_Client_Ledger> poAPClientLedger;
+    AR_Client_Master poARClientMaster;
+    List<Model_AR_Client_Ledger> poARClientLedger;
 
-    public APClients(GRider applicationDriver,
+    public ARClients(GRider applicationDriver,
             String parentClass,
             LogWrapper logWrapper) {
 
@@ -35,29 +36,29 @@ public class APClients {
         psParent = parentClass;
         poLogWrapper = logWrapper;
 
-        poAPClientMaster = new CasClientControllers(applicationDriver, logWrapper).APClientMaster();
-        poAPClientLedger = new ArrayList<>();
+        poARClientMaster = new CasClientControllers(applicationDriver, logWrapper).ARClientMaster();
+        poARClientLedger = new ArrayList<>();
     }
 
-    public AP_Client_Master APClientMaster() {
-        return poAPClientMaster;
+    public AR_Client_Master ARClientMaster() {
+        return poARClientMaster;
     }
 
-    public Model_AP_Client_Ledger APClientLedger(int row) {
-        return poAPClientLedger.get(row);
+    public Model_AR_Client_Ledger ARClientLedger(int row) {
+        return poARClientLedger.get(row);
     }
        
     public int getLedgerCount() {
-        return poAPClientLedger.size();
+        return poARClientLedger.size();
     }
     
-    public JSONObject addAPClientLedger() {
+    public JSONObject addARClientLedger() {
         poJSON = new JSONObject();
-        if (poAPClientLedger.isEmpty()){
-            poAPClientLedger.add(aPClientLedger());            
+        if (poARClientLedger.isEmpty()){
+            poARClientLedger.add(aRClientLedger());            
         } else {
-            if (!poAPClientLedger.get(poAPClientLedger.size()-1).getClientId().isEmpty()){
-                poAPClientLedger.add(aPClientLedger());
+            if (!poARClientLedger.get(poARClientLedger.size()-1).getClientId().isEmpty()){
+                poARClientLedger.add(aRClientLedger());
             } else {
                 poJSON.put("result", "error");
                 poJSON.put("message", "Unable to add Ledger.");
@@ -68,28 +69,28 @@ public class APClients {
         poJSON.put("result", "success");
         return poJSON;
     }
-    public JSONObject delAPClientLedger(int row) {
+    public JSONObject delARClientLedger(int row) {
         poJSON = new JSONObject();
 
-        if (poAPClientLedger.isEmpty()) {
+        if (poARClientLedger.isEmpty()) {
             poJSON.put("result", "error");
             poJSON.put("result", "Unable to delete ledger. Mobile list is empty.");
             return poJSON;
         }
 
-        if (row >= poAPClientLedger.size()) {
+        if (row >= poARClientLedger.size()) {
             poJSON.put("result", "error");
             poJSON.put("result", "Unable to delete ledger. Row is more than the mobile list.");
             return poJSON;
         }
 
-        if (poAPClientLedger.get(row).getEditMode() != EditMode.ADDNEW) {
+        if (poARClientLedger.get(row).getEditMode() != EditMode.ADDNEW) {
             poJSON.put("result", "error");
             poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
             return poJSON;
         }
 
-        poAPClientLedger.remove(row);
+        poARClientLedger.remove(row);
         poJSON.put("result", "success");
         return poJSON;
     }
@@ -97,13 +98,13 @@ public class APClients {
    
 
     public JSONObject New() {
-        poJSON = poAPClientMaster.newRecord();
+        poJSON = poARClientMaster.newRecord();
         if (!"success".equals((String) poJSON.get("result"))) {
             return poJSON;
         }
 
-        poAPClientLedger.clear();
-        poJSON = addAPClientLedger();
+        poARClientLedger.clear();
+        poJSON = addARClientLedger();
         if (!"success".equals((String) poJSON.get("result"))) {
             return poJSON;
         }
@@ -121,10 +122,10 @@ public class APClients {
         }
 
         //assign modified info
-        poAPClientMaster.getModel().setModifiedDate(poGRider.getServerDate());
+        poARClientMaster.getModel().setModifiedDate(poGRider.getServerDate());
 
         //save client master
-        poJSON = poAPClientMaster.saveRecord();
+        poJSON = poARClientMaster.saveRecord();
 
         if (!"success".equals((String) poJSON.get("result"))) {
             if (psParent.isEmpty()) {
@@ -134,20 +135,20 @@ public class APClients {
         }
 
         //save inv ledger
-        if (!poAPClientLedger.isEmpty()) {
-            for (lnCtr = 0; lnCtr <= poAPClientLedger.size() - 1; lnCtr++) {
-                if ((poAPClientLedger.get(lnCtr).getEditMode() == EditMode.ADDNEW
-                        || poAPClientLedger.get(lnCtr).getEditMode() == EditMode.UPDATE)
-                        && !poAPClientLedger.get(lnCtr).getClientId().isEmpty()) {
+        if (!poARClientLedger.isEmpty()) {
+            for (lnCtr = 0; lnCtr <= poARClientLedger.size() - 1; lnCtr++) {
+                if ((poARClientLedger.get(lnCtr).getEditMode() == EditMode.ADDNEW
+                        || poARClientLedger.get(lnCtr).getEditMode() == EditMode.UPDATE)
+                        && !poARClientLedger.get(lnCtr).getClientId().isEmpty()) {
 
-                    if (poAPClientLedger.get(lnCtr).getEditMode() == EditMode.ADDNEW) {
-                        poAPClientLedger.get(lnCtr).setClientId(poAPClientMaster.getModel().getClientId());
+                    if (poARClientLedger.get(lnCtr).getEditMode() == EditMode.ADDNEW) {
+                        poARClientLedger.get(lnCtr).setClientId(poARClientMaster.getModel().getClientId());
                     }
 
-                    poAPClientLedger.get(lnCtr).setModifiedDate(poAPClientMaster.getModel().getModifiedDate());
+                    poARClientLedger.get(lnCtr).setModifiedDate(poARClientMaster.getModel().getModifiedDate());
 
                     //save
-                    poJSON = poAPClientLedger.get(lnCtr).saveRecord();
+                    poJSON = poARClientLedger.get(lnCtr).saveRecord();
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         if (psParent.isEmpty()) {
@@ -168,20 +169,20 @@ public class APClients {
         return poJSON;
     }
 
-    private Model_AP_Client_Ledger aPClientLedger() {
-        return new CasClientModel(poGRider).APClientLedger();
+    private Model_AR_Client_Ledger aRClientLedger() {
+        return new CasClientModel(poGRider).ARClientLedger();
     }
  
    
-    private Model_AP_Client_Ledger aP_Client_Ledger(String clientid,String date, String sourceCd, String sourceNo) {
-        Model_AP_Client_Ledger object = new CasClientModel(poGRider).APClientLedger();
+    private Model_AR_Client_Ledger aR_Client_Ledger(String clientid,String date, String sourceCd, String sourceNo) {
+        Model_AR_Client_Ledger object = new CasClientModel(poGRider).ARClientLedger();
 
         JSONObject loJSON = object.openRecord(clientid,date,sourceCd,sourceNo);
 
         if ("success".equals((String) loJSON.get("result"))) {
             return object;
         } else {
-            return new CasClientModel(poGRider).APClientLedger();
+            return new CasClientModel(poGRider).ARClientLedger();
         }
     }
     
@@ -199,7 +200,7 @@ public class APClients {
                         ", dPostedxx" +
                         ", nABalance" +
                         ", dModified" +
-                        " FROM AP_Client_Ledger");
+                        " FROM AR_Client_Ledger");
 
         // Use SQLUtil.toSQL for handling the dates
         String condition = "sClientID = " + SQLUtil.toSQL(fsclientID);
@@ -215,7 +216,7 @@ public class APClients {
             int lnctr = 0;
 
             if (MiscUtil.RecordCount(loRS) >= 0) {
-                poAPClientLedger = new ArrayList<>();
+                poARClientLedger = new ArrayList<>();
                 while (loRS.next()) {
                     // Print the result set
 
@@ -229,8 +230,8 @@ public class APClients {
                     System.out.println("nAmountOt: " + loRS.getString("nAmountOt"));
                     System.out.println("------------------------------------------------------------------------------");
 
-                    poAPClientLedger.add(aP_Client_Ledger(loRS.getString("sClientID"),loRS.getString("dTransact"),loRS.getString("sSourceCd"),loRS.getString("sSourceNo")));
-                    poAPClientLedger.get(poAPClientLedger.size() - 1)
+                    poARClientLedger.add(aR_Client_Ledger(loRS.getString("sClientID"),loRS.getString("dTransact"),loRS.getString("sSourceCd"),loRS.getString("sSourceNo")));
+                    poARClientLedger.get(poARClientLedger.size() - 1)
                             .openRecord(loRS.getString("sClientID"),loRS.getString("dTransact"),loRS.getString("sSourceCd"),loRS.getString("sSourceNo"));
                     lnctr++;
                 }
@@ -240,8 +241,8 @@ public class APClients {
                 poJSON.put("message", "Record loaded successfully.");
 
             } else {
-                poAPClientLedger = new ArrayList<>();
-                addAPClientLedger();
+                poARClientLedger = new ArrayList<>();
+                addARClientLedger();
                 poJSON.put("result", "error");
                 poJSON.put("continue", true);
                 poJSON.put("message", "No record found .");

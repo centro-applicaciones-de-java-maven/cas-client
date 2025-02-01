@@ -3,6 +3,8 @@ package org.guanzon.cas.client.services;
 import org.guanzon.appdriver.base.GRider;
 import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
 import org.guanzon.cas.client.model.Model_AP_Client_Master;
+import org.guanzon.cas.client.model.Model_AR_Client_Ledger;
+import org.guanzon.cas.client.model.Model_AR_Client_Master;
 public class CasClientModel {
 
     public CasClientModel(GRider applicationDriver) {
@@ -35,18 +37,53 @@ public class CasClientModel {
         if (poApClientLedger == null) {
             poApClientLedger = new Model_AP_Client_Ledger();
             poApClientLedger.setApplicationDriver(poGRider);
-            poApClientLedger.setXML("Model_Inv_Ledger");
-            poApClientLedger.setTableName("Inv_Ledger");
+            poApClientLedger.setXML("Model_AP_Client_Ledger");
+            poApClientLedger.setTableName("AP_Client_Ledger");
             poApClientLedger.initialize();
         }
 
         return poApClientLedger;
+    }
+    
+    public Model_AR_Client_Master ARClientMaster() {
+        if (poGRider == null) {
+            System.err.println("InvModels.Inventory: Application driver is not set.");
+            return null;
+        }
+
+        if (poArClientMaster == null) {
+            poArClientMaster = new Model_AR_Client_Master();
+            poArClientMaster.setApplicationDriver(poGRider);
+            poArClientMaster.setXML("Model_AR_Client_Master");
+            poArClientMaster.setTableName("AR_Client_Master");
+            poArClientMaster.initialize();
+        }
+
+        return poArClientMaster;
+    }
+    
+    public Model_AR_Client_Ledger ARClientLedger() {
+        if (poGRider == null) {
+            System.err.println("InvModels.InventoryLedger: Application driver is not set.");
+            return null;
+        }
+
+        if (poArClientLedger == null) {
+            poArClientLedger = new Model_AR_Client_Ledger();
+            poArClientLedger.setApplicationDriver(poGRider);
+            poArClientLedger.setXML("Model_AR_Client_Ledger");
+            poArClientLedger.setTableName("AR_Client_Ledger");
+            poArClientLedger.initialize();
+        }
+
+        return poArClientLedger;
     }
 
     private final GRider poGRider;
 
     private Model_AP_Client_Master poApClientMaster;
     private Model_AP_Client_Ledger poApClientLedger;
-    
+    private Model_AR_Client_Master poArClientMaster;
+    private Model_AR_Client_Ledger poArClientLedger;
 
 }
