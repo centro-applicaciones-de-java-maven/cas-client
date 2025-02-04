@@ -7,7 +7,7 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.client.Client;
-import org.guanzon.cas.client.model.Model_AP_Client_Master;
+import org.guanzon.cas.client.model.Model_AR_Client_Master;
 import org.guanzon.cas.parameter.Branch;
 import org.guanzon.cas.parameter.InvLocation;
 import org.guanzon.cas.parameter.services.ParamControllers;
@@ -16,7 +16,7 @@ import org.json.simple.JSONObject;
 
 public class AR_Client_Master extends Parameter{
     //object model
-    Model_AP_Client_Master poModel;
+    Model_AR_Client_Master poModel;
     Client poClients;
     
     //reference objects
@@ -59,7 +59,7 @@ public class AR_Client_Master extends Parameter{
         
         poClients = new Client(poGRider,"", logwrapr);
         
-        poModel = new Model_AP_Client_Master();
+        poModel = new Model_AR_Client_Master();
         poModel.setApplicationDriver(poGRider);
         poModel.setXML("Model_AR_Client_Master");
         poModel.setTableName("AR_Client_Master");
@@ -130,7 +130,7 @@ public class AR_Client_Master extends Parameter{
     }
     
     @Override
-    public Model_AP_Client_Master getModel() {
+    public Model_AR_Client_Master getModel() {
         return poModel;
     }
     @Override
@@ -401,10 +401,11 @@ public class AR_Client_Master extends Parameter{
     }
      private JSONObject openRecord(JSONObject json){
         if (json != null) {
-            System.out.println("(String) poJSON.get(\"sBranchCd\") == " + psBranchCd);
-            poJSON = poModel.openRecord((String) poJSON.get("sClientID"));
             
-            if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+            poJSON = poModel.openRecord((String) poJSON.get("sClientID"));
+            System.out.println("xclientNm == " + (String) poJSON.get("xClientNm"));
+            if (!"success".equals((String) poJSON.get("result"))) 
+                return poJSON;
             
            
         } else {

@@ -17,6 +17,8 @@ import org.json.simple.JSONObject;
 public class Account_Accreditation extends Parameter{
     Model_Account_Client_Accreditation poModel;
     Client poClients;
+    APClients poAPClients;
+    ARClients poARClients;
     String psTranStatus;
     @Override
     public void initialize() {
@@ -29,9 +31,20 @@ public class Account_Accreditation extends Parameter{
         poModel.initialize();
         
          poClients = new Client(poGRider,"", logwrapr);
+          poAPClients = new APClients(poGRider,"", logwrapr);
+           poARClients = new ARClients(poGRider,"", logwrapr);
+          
     }
     public Client Client() {
         return poClients;
+    }
+
+    public APClients APClient() {
+        return poAPClients;
+    }
+
+    public ARClients ARClient() {
+        return poARClients;
     }
     
     public void setTransactionStatus(String string) {
@@ -80,9 +93,6 @@ public class Account_Accreditation extends Parameter{
         return poModel;
     }
  
-    
-
-    
     @Override
     public JSONObject searchRecord(String value, boolean byCode) {
         poJSON = ShowDialogFX.Search(poGRider,
@@ -420,6 +430,7 @@ public class Account_Accreditation extends Parameter{
                         " a.sTransNox, " +
                         " a.cAcctType, " +
                         " a.sClientID, " +
+                        " a.sAddrssID, " +
                         " a.sContctID, " +
                         " a.dTransact, " +
                         " a.cAcctType, " +
@@ -434,7 +445,7 @@ public class Account_Accreditation extends Parameter{
                       " FROM Account_Client_Accreditation a " +
                         " LEFT JOIN Client_Master b " +
                           " on a.sClientID = b.sClientID " +
-                        " LEFT JOIN client_address c " +
+                        " LEFT JOIN Client_Address c " +
                           " on a.sClientID = c.sClientID " +
                         " LEFT JOIN Client_Institution_Contact_Person d " +
                           " on d.sClientID = a.sClientID " ;
@@ -446,26 +457,84 @@ public class Account_Accreditation extends Parameter{
         
         return lsSQL;
     }
-    
     public JSONObject postTransaction() {
         poJSON = new JSONObject();
-            if (poModel.getTransactionNo() != null || !poModel.getTransactionNo().isEmpty()){
-                poJSON = poModel.updateRecord();
-                    if ("success".equals((String) poJSON.get("result"))){
-                        poJSON = poModel.setRecordStatus("1");
-                        poJSON = poModel.setApproved(poGRider.getUserID());
-                        poJSON = poModel.setModifyingId(poGRider.getUserID());
-                        poJSON = poModel.setDateApproved(poGRider.getServerDate());
-                        poJSON = poModel.setModifiedDate(poGRider.getServerDate());
-                        poJSON = poModel.saveRecord();
-                    }
-                return poJSON;
-            }else{
-                poJSON.put("result", "error");
-                poJSON.put("message", "No record loaded.");
+
+        if (poModel.getTransactionNo() != null && !poModel.getTransactionNo().isEmpty()) {
+            poJSON = poModel.updateRecord();
+            poGRider.beginTrans();
+            if ("success".equals(poJSON.get("result"))) {
+                poJSON = poModel.setRecordStatus("1");
+                poJSON = poModel.setApproved(poGRider.getUserID());
+                poJSON = poModel.setModifyingId(poGRider.getUserID());
+                poJSON = poModel.setDateApproved(poGRider.getServerDate());
+                poJSON = poModel.setModifiedDate(poGRider.getServerDate());
+                poJSON = poModel.saveRecord();
+
+                switch (poModel.getAccountType()) {
+                    case "0":
+                        poJSON = poAPClients.poAPClientMaster.getModel().setClientId(poModel.getClientId());
+                        System.out.println("client ID == " + poAPClients.poAPClientMaster.getModel().getClientId());
+                        poJSON = poAPClients.poAPClientMaster.getModel().setAddressId(poModel.ClientAddress().getAddressId());
+                        poJSON = poAPClients.poAPClientMaster.getModel().setContactId(poModel.ClientInstitutionContact().getContactPId());
+                        poJSON = poAPClients.poAPClientMaster.getModel().setCategoryCode(poModel.getCategoryCode());
+                        poJSON = poAPClients.poAPClientMaster.getModel().setdateClientSince(poModel.getDateApproved());
+                        poJSON = poAPClients.poAPClientMaster.getModel().setBeginningDate(poModel.getDateApproved());
+                        poJSON = poAPClients.poAPClientMaster.getModel().setLedgerNo(0);
+                        poJSON = poAPClients.poAPClientMaster.getModel().setVatable("1");
+                        poJSON = poAPClients.poAPClientMaster.getModel().setModifyingId(poGRider.getUserID());
+                        poJSON = poAPClients.poAPClientMaster.getModel().setModifiedDate(poGRider.getServerDate());
+                        poJSON = poAPClients.poAPClientMaster.saveRecord();
+
+                        if (!"success".equals(poJSON.get("result"))) {
+                            // Rollback if saving client master fails
+                            poGRider.rollbackTrans();
+                            poJSON.put("result", "error");
+                            poJSON.put("message", "Transaction failed, rollback executed.");
+                            return poJSON;
+                        }
+                        break;
+                    case "1":
+                        poJSON = poARClients.poARClientMaster.getModel().setClientId(poModel.getClientId());
+                        System.out.println("client ID == " + poARClients.poARClientMaster.getModel().getClientId());
+                        poJSON = poARClients.poARClientMaster.getModel().setAddressId(poModel.ClientAddress().getAddressId());
+                        poJSON = poARClients.poARClientMaster.getModel().setContactId(poModel.ClientInstitutionContact().getContactPId());
+                        poJSON = poARClients.poARClientMaster.getModel().setCategoryCode(poModel.getCategoryCode());
+                        poJSON = poARClients.poARClientMaster.getModel().setdateClientSince(poModel.getDateApproved());
+                        poJSON = poARClients.poARClientMaster.getModel().setBeginningDate(poModel.getDateApproved());
+                        poJSON = poARClients.poARClientMaster.getModel().setLedgerNo(0);
+                        poJSON = poARClients.poARClientMaster.getModel().setVatable("1");
+                        poJSON = poARClients.poARClientMaster.getModel().setModifyingId(poGRider.getUserID());
+                        poJSON = poARClients.poARClientMaster.getModel().setModifiedDate(poGRider.getServerDate());
+                        poJSON = poARClients.poARClientMaster.saveRecord();
+
+                        if (!"success".equals(poJSON.get("result"))) {
+                            // Rollback if saving client master fails
+                            poGRider.rollbackTrans();
+                            poJSON.put("result", "error");
+                            poJSON.put("message", "Transaction failed, rollback executed.");
+                            return poJSON;
+                        }
+                        break;
+                    default:
+                        poJSON.put("result", "error");
+                        poJSON.put("message", "Invalid account type.");
+                        return poJSON;
+                }
+                // Commit the transaction if everything is successful
+                poGRider.commitTrans();
+                poJSON.put("message", "Transaction saved successfully.");
+            } else {
+                poGRider.rollbackTrans();
             }
+            return poJSON;
+        } else {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+        }
         return poJSON;
     }
+
     
     public JSONObject voidTransaction() {
         poJSON = new JSONObject();

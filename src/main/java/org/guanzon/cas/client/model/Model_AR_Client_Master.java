@@ -28,9 +28,7 @@ public class Model_AR_Client_Master extends Model{
 //    Model_Inventory poInventory;
     Model_Inv_Location poLocation;
     Model_Category poCategory;
-    Client poClients;
-    
-    Model_Client_Master poClientMaster;
+     Model_Client_Master poClientMaster;
     Model_Client_Address poClientAddress;
     Model_Client_Institution_Contact poClientInstitutionContact;
     Model_Client_Mobile poClientMobile;
@@ -90,6 +88,12 @@ public class Model_AR_Client_Master extends Model{
             poLocation = model.InventoryLocation();
             
             
+            poTerm = new Model_Term();
+            poTerm.setApplicationDriver(poGRider);
+            poTerm.setXML("Model_Term");
+            poTerm.setTableName("Term");
+            poTerm.initialize();
+            
             poClientMaster = new Model_Client_Master();
             poClientMaster.setApplicationDriver(poGRider);
             poClientMaster.setXML("Model_Client_Master");
@@ -116,21 +120,13 @@ public class Model_AR_Client_Master extends Model{
             poClientMobile.setTableName("Client_Mobile");
             poClientMobile.initialize();
             
-            poTerm = new Model_Term();
-            poTerm.setApplicationDriver(poGRider);
-            poTerm.setXML("Model_Term");
-            poTerm.setTableName("Term");
-            poTerm.initialize();
-            poClients = new Client(poGRider,"", logwrapr);
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
             System.exit(1);
         }
     }
-    public Client Client() {
-        return poClients;
-    }
+
     public JSONObject setClientId(String clientId){
         return setValue("sClientID", clientId);
     }
@@ -278,7 +274,8 @@ public class Model_AR_Client_Master extends Model{
     
     @Override
     public String getNextCode() {
-        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
+        return getClientId();
+//                MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
     }
     
 //    @Override
@@ -374,7 +371,30 @@ public class Model_AR_Client_Master extends Model{
         }
     }
         
-    public Model_Client_Master ClientMaster() {
+    
+        
+        public Model_Term Term() {
+            System.out.println("term == " + (String) getValue("sTermIDxx"));
+        if (!"".equals((String) getValue("sTermIDxx"))) {
+            if (poTerm.getEditMode() == EditMode.READY
+                    && poTerm.getTermCode().equals((String) getValue("sTermIDxx"))) {
+                return poTerm;
+            } else {
+                poJSON = poTerm.openRecord((String) getValue("sTermIDxx"));
+
+                if ("success".equals((String) poJSON.get("result"))) {
+                    return poTerm;
+                } else {
+                    poTerm.initialize();
+                    return poTerm;
+                }
+            }
+        } else {
+            poTerm.initialize();
+            return poTerm;
+        }
+    }
+        public Model_Client_Master ClientMaster() {
 
         
         if (!"".equals((String) getValue("sClientID"))) {
@@ -463,28 +483,6 @@ public class Model_AR_Client_Master extends Model{
         } else {
             poClientMobile.initialize();
             return poClientMobile;
-        }
-    }
-        
-        public Model_Term Term() {
-            System.out.println("term == " + (String) getValue("sTermIDxx"));
-        if (!"".equals((String) getValue("sTermIDxx"))) {
-            if (poTerm.getEditMode() == EditMode.READY
-                    && poTerm.getTermCode().equals((String) getValue("sTermIDxx"))) {
-                return poTerm;
-            } else {
-                poJSON = poTerm.openRecord((String) getValue("sTermIDxx"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poTerm;
-                } else {
-                    poTerm.initialize();
-                    return poTerm;
-                }
-            }
-        } else {
-            poTerm.initialize();
-            return poTerm;
         }
     }
 }

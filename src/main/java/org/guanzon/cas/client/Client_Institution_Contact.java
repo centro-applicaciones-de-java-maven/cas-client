@@ -84,7 +84,7 @@ public class Client_Institution_Contact  extends Parameter{
             return poJSON;
         }
     }
-    public JSONObject searchRecordx(String value, boolean byCode) {
+    public JSONObject searchRecordbyclient(String value, boolean byCode) {
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,

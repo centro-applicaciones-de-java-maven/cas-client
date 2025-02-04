@@ -23,7 +23,8 @@ public class Client {
     JSONObject poJSON;
     LogWrapper poLogWrapper;
 
-    Client_Master poClient;
+    Client_Master poClient;    
+    Client_Address poClientAddress;
     Client_Institution_Contact poClientIns;
     List<Client_Mobile> poMobile;
     List<Client_Address> poAddress;
@@ -45,11 +46,19 @@ public class Client {
 //        poClient.setLogWrapper(poLogWrapper);
         poClient.initialize();
         
+        poClientAddress = new Client_Address();
+        poClientAddress.setApplicationDriver(poGRider);
+        poClientAddress.setWithParentClass(true);
+//        poClient.setLogWrapper(poLogWrapper);
+        poClientAddress.initialize();
+        
         poClientIns = new Client_Institution_Contact();
         poClientIns.setApplicationDriver(poGRider);
         poClientIns.setWithParentClass(true);
 //        poClient.setLogWrapper(poLogWrapper);
         poClientIns.initialize();
+        
+        
 
         poMobile = new ArrayList<>();
         poAddress = new ArrayList<>();
@@ -131,6 +140,10 @@ public class Client {
 
     public Client_Master Master() {
         return poClient;
+    }
+    
+    public Client_Address ClientAddress() {
+        return poClientAddress;
     }
 
     public Client_Institution_Contact ClientInstitutionContact() {

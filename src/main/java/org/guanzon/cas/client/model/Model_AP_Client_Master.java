@@ -278,7 +278,8 @@ public class Model_AP_Client_Master extends Model{
     
     @Override
     public String getNextCode() {
-        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
+        return getClientId();
+//                MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
     }
     
 //    @Override

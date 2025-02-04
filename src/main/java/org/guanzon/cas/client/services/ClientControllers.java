@@ -11,28 +11,10 @@ public class ClientControllers {
         poLogWrapper = logWrapper;
     }
 
-//    public Inventory Inventory() {
-//        if (poGRider == null) {
-//            poLogWrapper.severe("InvControllers.Inventory: Application driver is not set.");
-//            return null;
-//        }
-//
-//        if (poInventory != null) {
-//            return poInventory;
-//        }
-//
-//        poInventory = new Inventory();
-//        poInventory.setApplicationDriver(poGRider);
-//        poInventory.setWithParentClass(true);
-//        poInventory.setLogWrapper(poLogWrapper);
-//        poInventory.initialize();
-//        poInventory.newRecord();
-//        return poInventory;
-//    }
 
     public Client Client() {
         if (poGRider == null) {
-            poLogWrapper.severe("InvControllers.InventoryMaster: Application driver is not set.");
+            poLogWrapper.severe("ClientControllers.Client: Application driver is not set.");
             return null;
         }
 

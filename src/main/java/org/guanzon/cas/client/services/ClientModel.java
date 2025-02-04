@@ -1,10 +1,10 @@
 package org.guanzon.cas.client.services;
 
 import org.guanzon.appdriver.base.GRider;
-import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
 import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
 import org.guanzon.cas.client.model.Model_Client_Master;
+import org.guanzon.cas.client.model.Model_Client_Mobile;
 public class ClientModel {
 
     public ClientModel(GRider applicationDriver) {
@@ -13,7 +13,7 @@ public class ClientModel {
 
     public Model_Client_Master ClientMaster() {
         if (poGRider == null) {
-            System.err.println("InvModels.Inventory: Application driver is not set.");
+            System.err.println("ClientModel.ClientMaster: Application driver is not set.");
             return null;
         }
 
@@ -30,7 +30,7 @@ public class ClientModel {
     
     public Model_Client_Address ClientAddress() {
         if (poGRider == null) {
-            System.err.println("InvModels.InventoryLedger: Application driver is not set.");
+            System.err.println("ClientModel.ClientAddress: Application driver is not set.");
             return null;
         }
 
@@ -47,7 +47,7 @@ public class ClientModel {
 
         public Model_Client_Institution_Contact ClientInstitutionContact() {
         if (poGRider == null) {
-            System.err.println("InvModels.InventoryLedger: Application driver is not set.");
+            System.err.println("ClientModel.ClientInstitutionContact: Application driver is not set.");
             return null;
         }
 
@@ -61,11 +61,28 @@ public class ClientModel {
 
         return poClientInstitutionContact;
     }
+        public Model_Client_Mobile ClientMobile() {
+        if (poGRider == null) {
+            System.err.println("ClientModel.ClientMobile: Application driver is not set.");
+            return null;
+        }
+
+        if (poClientMobile == null) {
+            poClientMobile = new Model_Client_Mobile();
+            poClientMobile.setApplicationDriver(poGRider);
+            poClientMobile.setXML("Model_Client_Mobile");
+            poClientMobile.setTableName("Client_Mobile");
+            poClientMobile.initialize();
+        }
+
+        return poClientMobile;
+    }
         
     private final GRider poGRider;
 
     private Model_Client_Master poClientMaster;
     private Model_Client_Address poClientAddress;
+    private Model_Client_Mobile poClientMobile;
     private Model_Client_Institution_Contact poClientInstitutionContact;
     
 

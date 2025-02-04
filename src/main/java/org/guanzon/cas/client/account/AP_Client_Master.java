@@ -143,8 +143,16 @@ public class AP_Client_Master extends Parameter{
                 "sClientID»xClientNm»xCPerson1",
                 "a.sClientID»b.sCompnyNm»d.sCPerson1",
                byCode ? 0 : 1);
-
-        return openRecord(poJSON);
+        
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sClientID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+        
     }
     
     public JSONObject searchRecord(String value, 

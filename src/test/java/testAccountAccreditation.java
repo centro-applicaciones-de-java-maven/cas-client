@@ -54,7 +54,7 @@ public class testAccountAccreditation {
             Assert.fail((String) loJSON.get("message"));
         }     
         
-        loJSON = record.getModel().setContatId("C00124000030");
+        loJSON = record.getModel().setContactId("C00124000030");
         if ("error".equals((String) loJSON.get("result"))) {
             Assert.fail((String) loJSON.get("message"));
         }        

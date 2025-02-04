@@ -21,6 +21,7 @@ public class Model_Account_Client_Accreditation extends Model {
 
     private Model_Category poCategory;
     private Model_Client_Master poClientMaster;
+    private Model_Client_Mobile poClientMobile;
     private Model_Client_Address poClientAddress;    
     private Model_Client_Institution_Contact poClientInstitutionContact;
 
@@ -60,19 +61,9 @@ public class Model_Account_Client_Accreditation extends Model {
             ClientModel clientmodel = new ClientModel(poGRider);
             poClientMaster = clientmodel.ClientMaster();
             poClientAddress = clientmodel.ClientAddress();
-            poClientInstitutionContact = clientmodel.ClientInstitutionContact();
+            poClientInstitutionContact = clientmodel.ClientInstitutionContact();            
+            poClientMobile = clientmodel.ClientMobile();
             
-//            poClientMaster = new Model_Client_Master();
-//            poClientMaster.setApplicationDriver(poGRider);
-//            poClientMaster.setXML("Model_Client_Master");
-//            poClientMaster.setTableName("Client_Master");
-//            poClientMaster.initialize();
-//            
-//            poClientAddress = new Model_Client_Address();
-//            poClientAddress.setApplicationDriver(poGRider);
-//            poClientAddress.setXML("Model_Client_Address");
-//            poClientAddress.setTableName("Client_Address");
-//            poClientAddress.initialize();
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -125,13 +116,17 @@ public class Model_Account_Client_Accreditation extends Model {
     }
     
     public Model_Client_Address ClientAddress() {
-        if (!"".equals((String) getValue("sAddrssID"))) {
+         System.out.println("Model_Client_Address == " + (String) getValue("sClientID"));
+        if (!"".equals((String) getValue("sClientID"))) {
             if (poClientAddress.getEditMode() == EditMode.READY
                     && poClientAddress.getClientId().equals((String) getValue("sAddrssID"))) {
                 return poClientAddress;
             } else {
+                
+                System.out.println("before = " + (String) poJSON.get("result"));
                 poJSON = poClientAddress.openRecord((String) getValue("sAddrssID"));
-
+                
+                System.out.println("after = " + (String) poJSON.get("result"));
                 if ("success".equals((String) poJSON.get("result"))) {
                     return poClientAddress;
                 } else {
@@ -145,7 +140,10 @@ public class Model_Account_Client_Accreditation extends Model {
         }
     }
     
+    
+    
         public Model_Client_Institution_Contact ClientInstitutionContact() {
+         System.out.println("Model_Client_Institution_Contact == " + (String) getValue("sClientID"));            
         if (!"".equals((String) getValue("sClientID"))) {
             if (poClientInstitutionContact.getEditMode() == EditMode.READY
                     && poClientInstitutionContact.getClientId().equals((String) getValue("sContctID"))) {
@@ -163,6 +161,26 @@ public class Model_Account_Client_Accreditation extends Model {
         } else {
             poClientInstitutionContact.initialize();
             return poClientInstitutionContact;
+        }
+    }
+        public Model_Client_Mobile ClientMobile() {
+        if (!"".equals((String) getValue("sClientID"))) {
+            if (poClientMobile.getEditMode() == EditMode.READY
+                    && poClientMobile.getClientId().equals((String) getValue("sContctID"))) {
+                return poClientMobile;
+            } else {
+                poJSON = poClientMobile.openRecord((String) getValue("sContctID"));
+
+                if ("success".equals((String) poJSON.get("result"))) {
+                    return poClientMobile;
+                } else {
+                    poClientMobile.initialize();
+                    return poClientMobile;
+                }
+            }
+        } else {
+            poClientMobile.initialize();
+            return poClientMobile;
         }
     }
     
@@ -199,7 +217,15 @@ public class Model_Account_Client_Accreditation extends Model {
         return (String) getValue("sClientID");
     }
     
-    public JSONObject setContatId(String contactId) {
+    public JSONObject setAddressId(String addressID) {
+        return setValue("sAddrssID", addressID);
+    }
+
+    public String getAddressId() {
+        return (String) getValue("sAddrssID");
+    }
+    
+    public JSONObject setContactId(String contactId) {
         return setValue("sContctID", contactId);
     }
 
