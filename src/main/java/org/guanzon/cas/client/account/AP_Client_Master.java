@@ -413,6 +413,7 @@ public class AP_Client_Master extends Parameter{
             System.out.println("(String) poJSON.get(\"sBranchCd\") == " + psBranchCd);
             poJSON = poModel.openRecord((String) poJSON.get("sClientID"));
             
+            
             if (!"success".equals((String) poJSON.get("result"))) return poJSON;
             
            
@@ -432,7 +433,7 @@ public class AP_Client_Master extends Parameter{
                 value,
                 "BarCode»Description»Selling Price»ID",
                 "sBarCodex»sDescript»nSelPrice»sStockIDx",
-                "a.sBarCodex»a.sDescript»a.nSelPrice»a.sStockIDx",
+                "a.sBarCodex»a.sDescript»a.nSelPrice»a.sStockIDx",  
                 byCode ? 0 : 1);
 
         return openRecord(poJSON);
@@ -454,4 +455,3 @@ public class AP_Client_Master extends Parameter{
         return openRecord(poJSON);
     }
 }
-        
