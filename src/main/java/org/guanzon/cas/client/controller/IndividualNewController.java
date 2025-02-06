@@ -534,7 +534,6 @@ public class IndividualNewController implements Initializable {
                         }
                     }
                     JSONObject addObjAddress = oTrans.addAddress();
-                    System.out.println("THE ADDRESS ID " + oTrans.Address(pnAddress).getModel().getAddressId() + " and number " + String.valueOf(pnAddress));
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
                         break;
@@ -947,6 +946,7 @@ public class IndividualNewController implements Initializable {
                     case 3:
                         /*search province*/
                         poJson = new JSONObject();
+
                         Province loProvince = new Province();
                         loProvince.setApplicationDriver(oApp);
                         loProvince.setRecordStatus("1");
@@ -959,9 +959,7 @@ public class IndividualNewController implements Initializable {
                         } else {
                             AddressField03.setText((String) loProvince.getModel().getProvinceName());
                             oTrans.Address(pnAddress).getModel().Town().Province().setProvinceId(loProvince.getModel().getProvinceId());
-                            oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId();
                             oTrans.setProvinceID_temp(loProvince.getModel().getProvinceId());
-
                             oTrans.Address(pnAddress).getModel().setTownId("");
                             oTrans.Address(pnAddress).getModel().setBarangayId("");
                             AddressField04.setText("");
@@ -1008,7 +1006,6 @@ public class IndividualNewController implements Initializable {
                         try {
                             if (!oTrans.Address(pnAddress).getModel().getTownId().equalsIgnoreCase("")) {
                                 poJson = loBarangay.searchRecord("", false, oTrans.Address(pnAddress).getModel().getTownId());
-                                poJson = loBarangay.searchRecordWithStatus("", false, oTrans.Address(pnAddress).getModel().getTownId());
                             } else {
                                 poJson = loBarangay.searchRecord(lsValue, false);
                             }
@@ -1147,12 +1144,14 @@ public class IndividualNewController implements Initializable {
                     break;
                 case 3:
                     /*Province*/
+
                     //leave blank as it is searchable 
                     break;
                 case 4:
                     /*City*/
                     //leave blank as it is searchable 
                     if (lsValue.equals("")) {
+                        oTrans.Address(pnAddress).getModel().Town().Province().setProvinceId(lsValue);
                         oTrans.Address(pnAddress).getModel().setTownId(lsValue);
                         oTrans.Address(pnAddress).getModel().setBarangayId(lsValue);
                     }
@@ -1499,26 +1498,20 @@ public class IndividualNewController implements Initializable {
 
         if (oTrans.getAddressCount() >= 0) {
             for (lnCtr = 0; lnCtr < oTrans.getAddressCount(); lnCtr++) {
-                TownCity loTownCity = new TownCity();
-                loTownCity.setApplicationDriver(oApp);
-                loTownCity.setRecordStatus("1");
-                loTownCity.initialize();
-                loTownCity.openRecord(oTrans.Address(lnCtr2).getModel().getTownId());
+
+                oTrans.Address(lnCtr2).getModel().Town().openRecord(oTrans.Address(lnCtr2).getModel().getTownId());
 
                 Barangay loBarangay = new Barangay();
                 try {
-                    loBarangay.setApplicationDriver(oApp);
-                    loBarangay.setRecordStatus("1");
-                    loBarangay.initialize();
-                    loBarangay.openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
+                    oTrans.Address(lnCtr2).getModel().Barangay().openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
                 } catch (Exception e) {
                 }
 
                 address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
                         (String) oTrans.Address(lnCtr2).getModel().getValue("sHouseNox"),
                         (String) oTrans.Address(lnCtr2).getModel().getValue("sAddressx"),
-                        (String) loTownCity.getModel().getTownName(),
-                        (String) loBarangay.getModel().getBarangayName()
+                        (String) oTrans.Address(lnCtr2).getModel().Town().getTownName(),
+                        (String) oTrans.Address(lnCtr2).getModel().Barangay().getBarangayName()
                 ));
                 lnCtr2 += 1;
 
@@ -1660,28 +1653,10 @@ public class IndividualNewController implements Initializable {
             AddressField01.setText(oTrans.Address(pnAddress).getModel().getHouseNo());
             AddressField02.setText(oTrans.Address(pnAddress).getModel().getAddress());
 
-            Province loProvince = new Province();
-            loProvince.setApplicationDriver(oApp);
-            loProvince.setRecordStatus("1");
-            loProvince.initialize();
-            loProvince.openRecord(oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId());
+            AddressField03.setText(oTrans.Address(pnAddress).getModel().Town().Province().getProvinceName());
 
-            AddressField03.setText(loProvince.getModel().getProvinceName());
-
-            TownCity loTownCity = new TownCity();
-            loTownCity.setApplicationDriver(oApp);
-            loTownCity.setRecordStatus("1");
-            loTownCity.initialize();
-            loTownCity.openRecord(oTrans.Address(pnAddress).getModel().getTownId());
-
-            Barangay loBarangay = new Barangay();
-            loBarangay.setApplicationDriver(oApp);
-            loBarangay.setRecordStatus("1");
-            loBarangay.initialize();
-            loBarangay.openRecord(oTrans.Address(pnAddress).getModel().getBarangayId());
-
-            AddressField04.setText((String) loTownCity.getModel().getTownName());
-            AddressField05.setText(loBarangay.getModel().getBarangayName());
+            AddressField04.setText(oTrans.Address(pnAddress).getModel().Town().getTownName());
+            AddressField05.setText(oTrans.Address(pnAddress).getModel().Barangay().getBarangayName());
             AddressField06.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLatitude()));
             AddressField07.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLongitude()));
 
