@@ -1418,14 +1418,9 @@ public class IndividualNewController implements Initializable {
         personalinfo04.setText(oTrans.Master().getModel().getMiddleName());
         personalinfo05.setText(oTrans.Master().getModel().getSuffixName());
 
-        Country loCountry = new Country();
-        loCountry.setApplicationDriver(oApp);
-        loCountry.setRecordStatus("1");
-        loCountry.initialize();
-        loCountry.openRecord(oTrans.Master().getModel().getCitizenshipId());
-        personalinfo06.setText(loCountry.getModel().getNationality());
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        personalinfo06.setText(oTrans.Master().getModel().Citizenship().getNationality());
 
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         personalinfo07.setConverter(new StringConverter<LocalDate>() {
             @Override
@@ -1461,19 +1456,7 @@ public class IndividualNewController implements Initializable {
 
         if (!oTrans.Master().getModel().getBirthPlaceId().equals("")) {
 
-            TownCity loTownCity = new TownCity();
-            loTownCity.setApplicationDriver(oApp);
-            loTownCity.setRecordStatus("1");
-            loTownCity.initialize();
-            loTownCity.openRecord(oTrans.Master().getModel().getBirthPlaceId());
-
-            Province loProvince = new Province();
-            loProvince.setApplicationDriver(oApp);
-            loProvince.setRecordStatus("1");
-            loProvince.initialize();
-            loProvince.openRecord(loTownCity.getModel().getProvinceId());
-
-            personalinfo08.setText(loTownCity.getModel().getTownName() + ", " + loProvince.getModel().getProvinceName());
+            personalinfo08.setText(oTrans.Master().getModel().BirthTown().getTownName() + ", " + oTrans.Master().getModel().BirthTown().Province().getProvinceName());
         }
         int lsGender = Integer.parseInt(oTrans.Master().getModel().getGender());
         personalinfo09.getSelectionModel().select(lsGender);
@@ -1501,7 +1484,6 @@ public class IndividualNewController implements Initializable {
 
                 oTrans.Address(lnCtr2).getModel().Town().openRecord(oTrans.Address(lnCtr2).getModel().getTownId());
 
-                Barangay loBarangay = new Barangay();
                 try {
                     oTrans.Address(lnCtr2).getModel().Barangay().openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
                 } catch (Exception e) {
