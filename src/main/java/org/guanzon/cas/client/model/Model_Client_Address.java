@@ -47,7 +47,7 @@ public class Model_Client_Address extends Model{
 
             poEntity.absolute(1);
 
-            ID = poEntity.getMetaData().getColumnLabel(1);
+            ID = ("sAddrssID");
             
             //initialize other connections
             poTownCity = new Model_TownCity();

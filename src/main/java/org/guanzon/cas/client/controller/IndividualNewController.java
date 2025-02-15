@@ -65,7 +65,7 @@ import org.guanzon.cas.client.table.models.ModelAddress;
 import org.guanzon.cas.client.table.models.ModelEmail;
 import org.guanzon.cas.client.table.models.ModelMobile;
 import org.guanzon.cas.client.table.models.ModelSocialMedia;
-import org.guanzon.cas.controller.ScreenInterface;
+//import org.guanzon.cas.controller.ScreenInterface;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.Country;

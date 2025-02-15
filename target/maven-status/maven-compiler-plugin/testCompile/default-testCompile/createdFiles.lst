@@ -1,2 +1,4 @@
+testAccountAccreditation.class
 testClient.class
-Test_IndividualNew.class
+GUI_IndividualNew.class
+testAPClientMaster.class
