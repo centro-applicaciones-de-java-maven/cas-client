@@ -10,6 +10,11 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.client.model.Model_Client_Address;
+import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
+import org.guanzon.cas.client.model.Model_Client_Mail;
+import org.guanzon.cas.client.model.Model_Client_Mobile;
+import org.guanzon.cas.client.model.Model_Client_Social_Media;
+import org.guanzon.cas.client.services.ClientModel;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.Province;
@@ -31,7 +36,13 @@ public class Client {
     List<Client_Mail> poMail;
     List<Client_Social_Media> poSocMed;
     List<Client_Institution_Contact> poInsContact;
-
+    
+    List<Model_Client_Address> poListAddress;
+    List<Model_Client_Mobile> poListMobile;
+    List<Model_Client_Mail> poListMail;
+    List<Model_Client_Social_Media> poListSocMed;
+    List<Model_Client_Institution_Contact> poListInsContact;
+    
     public Client(GRider applicationDriver,
             String parentClass,
             LogWrapper logWrapper) {
@@ -158,6 +169,7 @@ public class Client {
         return poAddress.get(row);
     }
 
+
     public Client_Mail Mail(int row) {
         return poMail.get(row);
     }
@@ -173,19 +185,32 @@ public class Client {
     public int getMobileCount() {
         return poMobile.size();
     }
+    public int getListMobileCount() {
+        return poListMobile.size();
+    }
 
     public int getAddressCount() {
         return poAddress.size();
+    }
+    
+    public int getListAddressCount() {
+        return poListAddress.size();
     }
 
     public int getMailCount() {
         return poMail.size();
     }
+    
+    public int getListMailCount() {
+        return poListMail.size();
+    }
 
     public int getSocMedCount() {
         return poSocMed.size();
     }
-
+    public int getListSocMedCount() {
+        return poListSocMed.size();
+    }
     public int getInstitutionContactPCount() {
         return poSocMed.size();
     }
@@ -233,7 +258,7 @@ public class Client {
                             " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx" +
                             " LEFT JOIN Barangay d ON a.sBrgyIDxx = d.sBrgyIDxx";
         lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID = " + SQLUtil.toSQL(fsValue) + " GROUP BY sAddrssID");
-        System.out.println(lsSQL);
+        System.out.println("OpenClientAddress " + fsValue + " ==  "   + lsSQL);
         ResultSet loRS = poGRider.executeQuery(lsSQL);
 
         try {
@@ -841,4 +866,366 @@ public class Client {
         object.newRecord();
         return object;
     }
+    
+    public JSONObject AdressList(String fsClientID) {
+        StringBuilder lsSQL = new StringBuilder("SELECT a.sAddrssID, "
+                + " a.sClientID, "
+                + " a.sHouseNox, "
+                + " a.sAddressx, "
+                + " a.sBrgyIDxx, "
+                + " b.sBrgyName, "
+                + " a.sTownIDxx, "
+                + " c.sTownName, "
+                + " a.nLatitude, "
+                + " a.nLongitud, "
+                + " a.cPrimaryx, "
+                + " a.cOfficexx, "
+                + " a.cProvince, "
+                + " a.cBillingx, "
+                + " a.cShipping, "
+                + " a.cCurrentx, "
+                + " a.cLTMSAddx, "
+                + " a.sSourceCd, "
+                + " a.sReferNox, "
+                + " a.cRecdStat "
+                + " FROM client_address a "
+                + " LEFT JOIN barangay b ON a.sBrgyIDxx = b.sBrgyIDxx "
+                + " LEFT JOIN towncity c ON a.sTownIDxx = c.sTownIDxx");
+
+        // Use SQLUtil.toSQL for handling the dates
+        String condition = "a.sClientID = " + SQLUtil.toSQL(fsClientID);
+        lsSQL.append(MiscUtil.addCondition("", condition));
+        lsSQL.append(" ORDER BY a.cPrimaryx DESC");
+
+        System.out.println("Executing SQL: " + lsSQL.toString());
+
+        ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
+        JSONObject poJSON = new JSONObject();
+        try {
+            int lnctr = 0;
+
+            if (MiscUtil.RecordCount(loRS) >= 0) {
+                poListAddress = new ArrayList<>();
+                while (loRS.next()) {
+                    // Print the result set
+
+                    System.out.println("sHouseNox: " + loRS.getString("sHouseNox"));
+                    System.out.println("sAddressx: " + loRS.getString("sAddressx"));
+                    System.out.println("sTownName: " + loRS.getString("sTownName"));
+                    System.out.println("sBrgyName: " + loRS.getString("sBrgyName"));
+                    System.out.println("------------------------------------------------------------------------------");
+                    
+                    
+                    poListAddress.add(clientAddress(loRS.getString("sAddrssID")));
+                    poListAddress.get(poListAddress.size() - 1)
+                            .openRecord(loRS.getString("sAddrssID"));
+                    lnctr++;
+                }
+
+                System.out.println("Records found: " + lnctr);
+                poJSON.put("result", "success");
+                poJSON.put("message", "Record loaded successfully.");
+
+            } else {
+                poListAddress = new ArrayList<>();
+                addAddress();
+                poJSON.put("result", "error");
+                poJSON.put("continue", true);
+                poJSON.put("message", "No record found .");
+            }
+            MiscUtil.close(loRS);
+        } catch (SQLException e) {
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+        }
+        return poJSON;
+    }
+    
+    
+    private Model_Client_Address clientAddress(){
+        return new Model_Client_Address();
+    }
+    
+    private Model_Client_Address clientAddress(String addressID){
+        Model_Client_Address object = new ClientModel(poGRider).ClientAddress();
+        
+        JSONObject loJSON = object.openRecord(addressID);
+        
+        if ("success".equals((String) loJSON.get("result"))){
+            return object;
+        } else {
+            return new ClientModel(poGRider).ClientAddress();
+        }        
+    }
+    
+
+    
+    public JSONObject addListAddress(){
+        poJSON = new JSONObject();
+        
+        if (poListAddress.isEmpty()){
+            poListAddress.add(clientAddress());            
+        } else {
+            if (!poListAddress.get(poListAddress.size()-1).getClientId().isEmpty()){
+                poListAddress.add(clientAddress());
+            } else {
+                poJSON.put("result", "error");
+                poJSON.put("message", "Unable to add Address.");
+                return poJSON;
+            }
+        }
+        
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
+    public Model_Client_Address ListAddress(int row){
+        return poListAddress.get(row);
+    }
+    
+    
+    public JSONObject MobileList(String fsClientID) {
+        StringBuilder lsSQL = new StringBuilder("SELECT" +
+                    "  sMobileID" +
+                    ", sClientID" +
+                    ",  sMobileNo" +
+                    ", cMobileTp" +
+                    ",  cOwnerxxx" +
+                    ",  cRecdStat" +
+                    ", cPrimaryx" +
+                     " FROM Client_Mobile") ;
+
+        // Use SQLUtil.toSQL for handling the dates
+        String condition = "sClientID = " + SQLUtil.toSQL(fsClientID);
+        lsSQL.append(MiscUtil.addCondition("", condition));
+        lsSQL.append(" ORDER BY cPrimaryx DESC");
+
+        System.out.println("Executing SQL: " + lsSQL.toString());
+
+        ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
+        JSONObject poJSON = new JSONObject();
+        try {
+            int lnctr = 0;
+
+            if (MiscUtil.RecordCount(loRS) >= 0) {
+                poListMobile = new ArrayList<>();
+                while (loRS.next()) {
+                    // Print the result set
+
+                    System.out.println("sMobileID: " + loRS.getString("sMobileID"));
+                    System.out.println("sClientID: " + loRS.getString("sClientID"));
+                    System.out.println("sMobileNo: " + loRS.getString("sMobileNo"));
+                    System.out.println("cMobileTp: " + loRS.getString("cMobileTp"));
+                    System.out.println("cOwnerxxx: " + loRS.getString("cOwnerxxx"));
+                    System.out.println("cRecdStat: " + loRS.getString("cRecdStat"));
+                    System.out.println("cPrimaryx: " + loRS.getString("cPrimaryx"));
+                    System.out.println("------------------------------------------------------------------------------");
+                    
+                    
+                   poListMobile.add(clientMobile(loRS.getString("sMobileID")));
+                    poListMobile.get(poListMobile.size() - 1)
+                            .openRecord(loRS.getString("sMobileID"));
+                    lnctr++;
+                }
+
+                System.out.println("Records found: " + lnctr);
+                poJSON.put("result", "success");
+                poJSON.put("message", "Record loaded successfully.");
+
+            } else {
+                poListMobile = new ArrayList<>();
+                addMobile();
+                poJSON.put("result", "error");
+                poJSON.put("continue", true);
+                poJSON.put("message", "No record found .");
+            }
+            MiscUtil.close(loRS);
+        } catch (SQLException e) {
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+        }
+        return poJSON;
+    }
+    
+    private Model_Client_Mobile clientMobile(){
+        return new Model_Client_Mobile();
+    }
+    
+    private Model_Client_Mobile clientMobile(String mobileID){
+        Model_Client_Mobile object = new ClientModel(poGRider).ClientMobile();
+        
+        JSONObject loJSON = object.openRecord(mobileID);
+        
+        if ("success".equals((String) loJSON.get("result"))){
+            return object;
+        } else {
+            return new ClientModel(poGRider).ClientMobile();
+        }        
+    }
+    public Model_Client_Mobile ListMobile(int row){
+        return poListMobile.get(row);
+    }
+    
+    
+    
+    public JSONObject EmailList(String fsClientID) {
+        StringBuilder lsSQL = new StringBuilder("SELECT" +
+                    "  sEmailIDx" +
+                    ", sClientID" +
+                    ", sEMailAdd" +
+                    ", cOwnerxxx" +
+                    ", cPrimaryx" +
+                    ", cRecdStat" +
+                        " FROM Client_Email_Address") ;
+
+        // Use SQLUtil.toSQL for handling the dates
+        String condition = "sClientID = " + SQLUtil.toSQL(fsClientID);
+        lsSQL.append(MiscUtil.addCondition("", condition));
+        lsSQL.append(" ORDER BY cPrimaryx DESC");
+
+        System.out.println("Executing SQL: " + lsSQL.toString());
+
+        ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
+        JSONObject poJSON = new JSONObject();
+        try {
+            int lnctr = 0;
+
+            if (MiscUtil.RecordCount(loRS) >= 0) {
+                poListMail = new ArrayList<>();
+                while (loRS.next()) {
+                    // Print the result set
+
+                    System.out.println("sEmailIDx: " + loRS.getString("sEmailIDx"));
+                    System.out.println("sClientID: " + loRS.getString("sClientID"));
+                    System.out.println("sEMailAdd: " + loRS.getString("sEMailAdd"));
+                    System.out.println("------------------------------------------------------------------------------");
+                    
+                    
+                   poListMail.add(clientMail(loRS.getString("sEmailIDx")));
+                    poListMail.get(poListMail.size() - 1)
+                            .openRecord(loRS.getString("sEmailIDx"));
+                    lnctr++;
+                }
+
+                System.out.println("Records found: " + lnctr);
+                poJSON.put("result", "success");
+                poJSON.put("message", "Record loaded successfully.");
+
+            } else {
+                poListMail = new ArrayList<>();
+                addMail();
+                poJSON.put("result", "error");
+                poJSON.put("continue", true);
+                poJSON.put("message", "No record found .");
+            }
+            MiscUtil.close(loRS);
+        } catch (SQLException e) {
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+        }
+        return poJSON;
+    }
+    
+    private Model_Client_Mail clientMail(){
+        return new Model_Client_Mail();
+    }
+    
+    private Model_Client_Mail clientMail(String mailID){
+        Model_Client_Mail object = new ClientModel(poGRider).ClientMail();
+        
+        JSONObject loJSON = object.openRecord(mailID);
+        
+        if ("success".equals((String) loJSON.get("result"))){
+            return object;
+        } else {
+            return new ClientModel(poGRider).ClientMail();
+        }        
+    }
+    
+    public Model_Client_Mail ListMail(int row){
+        return poListMail.get(row);
+    }
+    
+    
+    public JSONObject SocMedList(String fsClientID) {
+        StringBuilder lsSQL = new StringBuilder("SELECT" +
+                    "  sSocialID" +
+                    ", sClientID" +
+                    ", sAccountx" +
+                    ", sRemarksx" +
+                    ", cSocialTp" +
+                    ", cRecdStat" +
+                        " FROM Client_Social_Media") ;
+
+        // Use SQLUtil.toSQL for handling the dates
+        String condition = "sClientID = " + SQLUtil.toSQL(fsClientID);
+        lsSQL.append(MiscUtil.addCondition("", condition));
+        lsSQL.append(" ORDER BY sAccountx DESC");
+
+        System.out.println("Executing SQL: " + lsSQL.toString());
+
+        ResultSet loRS = poGRider.executeQuery(lsSQL.toString());
+        JSONObject poJSON = new JSONObject();
+        try {
+            int lnctr = 0;
+
+            if (MiscUtil.RecordCount(loRS) >= 0) {
+                poListSocMed = new ArrayList<>();
+                while (loRS.next()) {
+                    // Print the result set
+
+                    System.out.println("sSocialID: " + loRS.getString("sSocialID"));
+                    System.out.println("sClientID: " + loRS.getString("sClientID"));
+                    System.out.println("sAccountx: " + loRS.getString("sAccountx"));
+                    System.out.println("sRemarksx: " + loRS.getString("sRemarksx"));
+                    System.out.println("cSocialTp: " + loRS.getString("cSocialTp"));
+                    System.out.println("cSocialTp: " + loRS.getString("cSocialTp"));
+                    System.out.println("------------------------------------------------------------------------------");
+                    
+                    
+                   poListSocMed.add(clientSocMed(loRS.getString("sSocialID")));
+                    poListSocMed.get(poListSocMed.size() - 1)
+                            .openRecord(loRS.getString("sSocialID"));
+                    lnctr++;
+                }
+
+                System.out.println("Records found: " + lnctr);
+                poJSON.put("result", "success");
+                poJSON.put("message", "Record loaded successfully.");
+
+            } else {
+                poListSocMed = new ArrayList<>();
+                addSocialMedia();
+                poJSON.put("result", "error");
+                poJSON.put("continue", true);
+                poJSON.put("message", "No record found .");
+            }
+            MiscUtil.close(loRS);
+        } catch (SQLException e) {
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+        }
+        return poJSON;
+    }
+    
+    private Model_Client_Social_Media clientSocMed(){
+        return new Model_Client_Social_Media();
+    }
+    
+    private Model_Client_Social_Media clientSocMed(String socmedID){
+        Model_Client_Social_Media object = new ClientModel(poGRider).ClientSocMed();
+        
+        JSONObject loJSON = object.openRecord(socmedID);
+        
+        if ("success".equals((String) loJSON.get("result"))){
+            return object;
+        } else {
+            return new ClientModel(poGRider).ClientSocMed();
+        }        
+    }
+    
+    public Model_Client_Social_Media ListSocMed(int row){
+        return poListSocMed.get(row);
+    }
+    
 }

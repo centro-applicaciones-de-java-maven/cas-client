@@ -3,8 +3,10 @@ package org.guanzon.cas.client.services;
 import org.guanzon.appdriver.base.GRider;
 import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
+import org.guanzon.cas.client.model.Model_Client_Mail;
 import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
+import org.guanzon.cas.client.model.Model_Client_Social_Media;
 public class ClientModel {
 
     public ClientModel(GRider applicationDriver) {
@@ -77,12 +79,46 @@ public class ClientModel {
 
         return poClientMobile;
     }
+        public Model_Client_Mail ClientMail() {
+        if (poGRider == null) {
+            System.err.println("ClientModel.ClientMail: Application driver is not set.");
+            return null;
+        }
+
+        if (poClientMail == null) {
+            poClientMail = new Model_Client_Mail();
+            poClientMail.setApplicationDriver(poGRider);
+            poClientMail.setXML("Model_Client_Mail");
+            poClientMail.setTableName("Client_Email_Address");
+            poClientMail.initialize();
+        }
+
+        return poClientMail;
+    }
+    public Model_Client_Social_Media ClientSocMed() {
+        if (poGRider == null) {
+            System.err.println("ClientModel.ClientSocialMedia: Application driver is not set.");
+            return null;
+        }
+
+        if (poClientSocmed == null) {
+            poClientSocmed = new Model_Client_Social_Media();
+            poClientSocmed.setApplicationDriver(poGRider);
+            poClientSocmed.setXML("Model_Client_Social_Media");
+            poClientSocmed.setTableName("Client_Social_Media");
+            poClientSocmed.initialize();
+        }
+
+        return poClientSocmed;
+    }    
         
     private final GRider poGRider;
 
     private Model_Client_Master poClientMaster;
     private Model_Client_Address poClientAddress;
     private Model_Client_Mobile poClientMobile;
+    private Model_Client_Mail poClientMail;
+    private Model_Client_Social_Media poClientSocmed;
     private Model_Client_Institution_Contact poClientInstitutionContact;
     
 

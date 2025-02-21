@@ -103,6 +103,24 @@ public class Client_Master extends Parameter {
             return poJSON;
         }
     }
+    public JSONObject searchRecordSpouse(String value, boolean byCode) {
+        poJSON = ShowDialogFX.Search(poGRider,
+                getSQ_Browse(),
+                value,
+                "ID»Name",
+                "sClientID»sCompnyNm",
+                "a.sClientID»a.sCompnyNm",
+                byCode ? 0 : 1);
+        
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sClientID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
 
     public JSONObject searchRecordWithClientType(String value, boolean byCode) {
         poJSON = ShowDialogFX.Search(poGRider,
