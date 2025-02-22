@@ -350,7 +350,7 @@ public class Client_Master extends Parameter {
         if (!psClientTp.isEmpty()) {
             lsSQL = MiscUtil.addCondition(lsSQL, lsClientTp);
         }
-        System.out.println("GET SQ BROWSE == " + lsSQL);
+        
         return lsSQL;
     }
 }

@@ -154,7 +154,7 @@ public class Model_Client_Institution_Contact extends Model{
         return setValue("sAccount3", socialMediaAccount);
     }
 
-    public String geSocMedAccount3(){
+    public String getSocMedAccount3(){
         return (String) getValue("sAccount3");
     }
     
