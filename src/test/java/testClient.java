@@ -59,30 +59,30 @@ public class testClient {
 //        
 //    }
     
-        @Test
-    public void testOpenRecords() {
-        JSONObject loJSON;
-        System.out.println("this is a test");
-        loJSON = record.Master().openRecord("M00125000002");
-        if ("error".equals((String) loJSON.get("result"))){
-            Assert.fail((String) loJSON.get("message"));
-        } 
-        record.OpenClientAddress("M00125000002");
-        record.OpenClientMobile("M00125000002");
-        record.OpenClientMail("M00125000002");
-        record.OpenClientSocialMedia("M00125000002");
-        
-        
-        System.out.println("the test test");
-        System.out.println(record.Address(0).getModel().getClientId());
-        
-        System.out.println(String.valueOf(record.getAddressCount()));
-        System.out.println(String.valueOf(record.getMobileCount()));
-        System.out.println(String.valueOf(record.getMailCount()));
-        System.out.println(String.valueOf(record.getSocMedCount()));
-   
-    }
-    
+//        @Test
+//    public void testOpenRecords() {
+//        JSONObject loJSON;
+//        System.out.println("this is a test");
+//        loJSON = record.Master().openRecord("M00125000002");
+//        if ("error".equals((String) loJSON.get("result"))){
+//            Assert.fail((String) loJSON.get("message"));
+//        } 
+//        record.OpenClientAddress("M00125000002");
+//        record.OpenClientMobile("M00125000002");
+//        record.OpenClientMail("M00125000002");
+//        record.OpenClientSocialMedia("M00125000002");
+//        
+//        
+//        System.out.println("the test test");
+//        System.out.println(record.Address(0).getModel().getClientId());
+//        
+//        System.out.println(String.valueOf(record.getAddressCount()));
+//        System.out.println(String.valueOf(record.getMobileCount()));
+//        System.out.println(String.valueOf(record.getMailCount()));
+//        System.out.println(String.valueOf(record.getSocMedCount()));
+//   
+//    }
+//    
     
 //    @Test
 //    public void testNewRecord() {

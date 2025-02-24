@@ -89,54 +89,73 @@
 }
 
 /* Default TextField style */
-.text-field{
-    -fx-pref-height: 25px;           /* Preferred height */
-    -fx-background-color: #ffffff;   /* Light gray background */
-    -fx-background-radius: 5;        /* Rounded corners */
-    -fx-border-color: #cccccc;       /* Light gray border */
-    -fx-border-radius: 5;            /* Match background radius */
-    -fx-font-size: 12px;             /* Font size */
-    -fx-text-fill: #333333;          /* Dark gray text color */
-}
+/*.text-field{
+    -fx-pref-height: 25px;            Preferred height 
+    -fx-background-color: #ffffff;    Light gray background 
+    -fx-background-radius: 5;         Rounded corners 
+    -fx-border-color: #cccccc;        Light gray border 
+    -fx-border-radius: 5;             Match background radius 
+    -fx-font-size: 12px;              Font size 
+    -fx-text-fill: #333333;           Dark gray text color 
+}*/
 
-.text-field-Id{
+/*.text-field-Id{
     -fx-font-weight: bold;
-    -fx-pref-height: 25px;           /* Preferred height */
-    -fx-background-color: #ffffff;   /* Light gray background */
-    -fx-background-radius: 5;        /* Rounded corners */
-    -fx-border-color: #cccccc;       /* Light gray border */
-    -fx-border-radius: 5;            /* Match background radius */
-    -fx-font-size: 12px;             /* Font size */
-    -fx-text-fill: #333333;          /* Dark gray text color */
-}
+    -fx-pref-height: 25px;            Preferred height 
+    -fx-background-color: #ffffff;    Light gray background 
+    -fx-background-radius: 5;         Rounded corners 
+    -fx-border-color: #cccccc;        Light gray border 
+    -fx-border-radius: 5;             Match background radius 
+    -fx-font-size: 12px;              Font size 
+    -fx-text-fill: #333333;           Dark gray text color 
+}*/
 
 /* Focused TextField style */
-.text-field:focused {
-    -fx-background-color: #ffffff;  /* White background */
-    -fx-border-color: #0078d7;      /* Blue border */
-    -fx-border-width: 1;            /* Thicker border when focused */
+/*.text-field:focused {
+    -fx-background-color: #ffffff;   White background 
+      Blue border 
+    -fx-border-width: 1;             Thicker border when focused 
 }
 
-/* Disabled TextField style */
+ Disabled TextField style 
 .text-field:disabled {
-    -fx-background-color: #f0f0f0;  /* Light gray background */
-    -fx-border-color: #cccccc;      /* Gray border */
-    -fx-text-fill: #a6a6a6;         /* Light gray text color */
-}
+    -fx-background-color: #f0f0f0;   Light gray background 
+    -fx-border-color: #cccccc;       Gray border 
+    -fx-text-fill: #a6a6a6;          Light gray text color 
+}*/
 
 /* Error state (use in combination with a style class like "error") */
-.text-field.error {
-    -fx-background-color: #ffe6e6;  /* Light red background */
-    -fx-border-color: #ff0000;      /* Red border */
-    -fx-border-width: 2;            /* Thicker border */
-    -fx-text-fill: #ff0000;         /* Red text color */
+/*.text-field.error {
+    -fx-background-color: #ffe6e6;   Light red background 
+    -fx-border-color: #ff0000;       Red border 
+    -fx-border-width: 2;             Thicker border 
+    -fx-text-fill: #ff0000;          Red text color 
 }
 
-/* Placeholder (prompt text) style */
+ Placeholder (prompt text) style 
 .text-field .text {
-    -fx-fill: #aaaaaa;              /* Gray placeholder text color */
-    -fx-font-style: italic;         /* Italic placeholder text */
+    -fx-fill: #aaaaaa;               Gray placeholder text color 
+    -fx-font-style: italic;          Italic placeholder text 
+}*/
+
+.text-field .text {
+    -fx-fill: #aaaaaa;              
+    -fx-font-style: italic;          
 }
+.text-field:disabled {
+    -fx-background-color: #f0f0f0;  
+    -fx-border-color: #cccccc;     
+    -fx-text-fill: #a6a6a6;        
+    .text-field:disabled {
+    -fx-background-color: #f7f7f7;     
+}
+}
+/*.text-field:focused {
+    -fx-background-color: #ffffff;   
+    -fx-border-color: #0078d7;        
+    -fx-border-width: 1;    
+     -fx-border-radius: 3;  
+}*/
 
 .text-area{
     -fx-pref-height: 50;           /* Preferred height */

@@ -1,12 +1,9 @@
 package org.guanzon.cas.client.model;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Date;
-import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -47,7 +44,7 @@ public class Model_Client_Address extends Model{
 
             poEntity.absolute(1);
 
-            ID = poEntity.getMetaData().getColumnLabel(1);
+            ID = ("sAddrssID");
             
             //initialize other connections
             poTownCity = new Model_TownCity();
