@@ -656,6 +656,33 @@ public class Client {
         poJSON.put("result", "success");
         return poJSON;
     }
+    
+    public JSONObject deleteInstitutionContact(int row) {
+        poJSON = new JSONObject();
+
+        if (poInsContact.isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("result", "Unable to delete Institution Contact Person. nstitution Contact Person list is empty.");
+            return poJSON;
+        }
+
+        if (row >= poInsContact.size()) {
+            poJSON.put("result", "error");
+            poJSON.put("result", "Unable to delete Institution Contact Person .Row is more than the Institution Contact Person list.");
+            return poJSON;
+        }
+
+//        if (poAddress.get(row).getEditMode() != EditMode.ADDNEW) {
+//            poJSON.put("result", "error");
+//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
+//            return poJSON;
+//        }
+
+        poInsContact.remove(row);
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
     public JSONObject Update() {
         poJSON = poClient.updateRecord();
         if (!"success".equals((String) poJSON.get("result"))) {
