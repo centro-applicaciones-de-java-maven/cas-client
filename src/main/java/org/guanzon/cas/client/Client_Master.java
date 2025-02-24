@@ -103,13 +103,49 @@ public class Client_Master extends Parameter {
             return poJSON;
         }
     }
+    public JSONObject searchRecordClientType(String value, boolean byCode) {
+        poJSON = ShowDialogFX.Search(poGRider,
+                getSQ_Browse(),
+                value,
+                "ID»Name»Birthday»Birth Place",
+                "sClientID»sCompnyNm»dBirthDte»xBirthPlc",
+                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))",
+                byCode ? 0 : 1);
+
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sClientID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
+    public JSONObject searchRecordSpouse(String value, boolean byCode) {
+        poJSON = ShowDialogFX.Search(poGRider,
+                getSQ_Browse(),
+                value,
+                "ID»Name",
+                "sClientID»sCompnyNm",
+                "a.sClientID»a.sCompnyNm",
+                byCode ? 0 : 1);
+        
+        if (poJSON != null) {
+            return poModel.openRecord((String) poJSON.get("sClientID"));
+        } else {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+    }
 
     public JSONObject searchRecordWithClientType(String value, boolean byCode) {
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
                 "ID»Name»Birthday»Birth Place»Client Type",
-                "sClientID»sCompnyNm»dBirthDte»xBirthPlc»xClientTp",
+                "sClientID»sCompnyNm»dBirthDte»xBirthPlc»cClientTp",
                 "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))»IF(a.cClientTp = 0, 'Individual', 'Corporate')",
                 byCode ? 0 : 1);
 
@@ -332,7 +368,7 @@ public class Client_Master extends Parameter {
         if (!psClientTp.isEmpty()) {
             lsSQL = MiscUtil.addCondition(lsSQL, lsClientTp);
         }
-        System.out.println("GET SQ BROWSE == " + lsSQL);
+        
         return lsSQL;
     }
 }

@@ -10,6 +10,11 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.client.model.Model_Client_Address;
+import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
+import org.guanzon.cas.client.model.Model_Client_Mail;
+import org.guanzon.cas.client.model.Model_Client_Mobile;
+import org.guanzon.cas.client.model.Model_Client_Social_Media;
+import org.guanzon.cas.client.services.ClientModel;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.Province;
@@ -31,7 +36,13 @@ public class Client {
     List<Client_Mail> poMail;
     List<Client_Social_Media> poSocMed;
     List<Client_Institution_Contact> poInsContact;
-
+    
+    List<Model_Client_Address> poListAddress;
+    List<Model_Client_Mobile> poListMobile;
+    List<Model_Client_Mail> poListMail;
+    List<Model_Client_Social_Media> poListSocMed;
+    List<Model_Client_Institution_Contact> poListInsContact;
+    
     public Client(GRider applicationDriver,
             String parentClass,
             LogWrapper logWrapper) {
@@ -158,6 +169,7 @@ public class Client {
         return poAddress.get(row);
     }
 
+
     public Client_Mail Mail(int row) {
         return poMail.get(row);
     }
@@ -173,21 +185,40 @@ public class Client {
     public int getMobileCount() {
         return poMobile.size();
     }
+    public int getListMobileCount() {
+        return poListMobile.size();
+    }
 
     public int getAddressCount() {
         return poAddress.size();
+    }
+    
+    public int getListAddressCount() {
+        return poListAddress.size();
     }
 
     public int getMailCount() {
         return poMail.size();
     }
+    
+    public int getListMailCount() {
+        return poListMail.size();
+    }
 
     public int getSocMedCount() {
         return poSocMed.size();
     }
-
+    
+    public int getListSocMedCount() {
+        return poListSocMed.size();
+    }
+    
     public int getInstitutionContactPCount() {
-        return poSocMed.size();
+        return poInsContact.size();
+    }
+    
+    public int getListInstitutionContactCount() {
+        return poListInsContact.size();
     }
 
     public JSONObject addMobile() {
@@ -233,7 +264,7 @@ public class Client {
                             " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx" +
                             " LEFT JOIN Barangay d ON a.sBrgyIDxx = d.sBrgyIDxx";
         lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID = " + SQLUtil.toSQL(fsValue) + " GROUP BY sAddrssID");
-        System.out.println(lsSQL);
+        System.out.println("OpenClientAddress " + fsValue + " ==  "   + lsSQL);
         ResultSet loRS = poGRider.executeQuery(lsSQL);
 
         try {
@@ -252,7 +283,6 @@ public class Client {
 
                     } 
                 
-                System.out.println("lnctr = " + lnctr);
                 
             }else{
                 poAddress = new ArrayList<>();
@@ -297,7 +327,6 @@ public class Client {
  
                     } 
                 
-                System.out.println("lnctr = " + lnctr);
             }else{
                 poMobile = new ArrayList<>();
                 addMobile();
@@ -340,7 +369,6 @@ public class Client {
      
                     } 
                 
-                System.out.println("lnctr = " + lnctr);
             }else{
                 poMail = new ArrayList<>();
                 addMail();
@@ -381,11 +409,62 @@ public class Client {
                         }catch(Exception e){
                         }
                     } 
-                
-                System.out.println("lnctr = " + lnctr);
             }else{
                 poSocMed = new ArrayList<>();
                 addSocialMedia();
+                poJSON.put("result", "error");
+                poJSON.put("continue", true);
+                poJSON.put("message", "No record selected.");
+            }
+            MiscUtil.close(loRS);
+        } catch (SQLException e) {
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+        }
+        return poJSON;
+    }
+    
+    public JSONObject OpenClientinstitutionContact(String fsValue){
+        String lsSQL = "SELECT" +
+                    "  sContctID" +
+                    ", sClientID" +
+                    ", sCPerson1" +
+                    ", sCPPosit1" +
+                    ", sMobileNo" +
+                    ", sTelNoxxx" +
+                    ", sFaxNoxxx" +
+                    ", sEMailAdd" +
+                    ", sAccount1" +
+                    ", sAccount2" +
+                    ", sAccount3" +
+                    ", sRemarksx" +
+                    ", cPrimaryx" +
+                    ", cRecdStat" +
+                        " FROM Client_Institution_Contact_Person" ;
+        lsSQL = MiscUtil.addCondition(lsSQL, "sClientID = " + SQLUtil.toSQL(fsValue));
+        ResultSet loRS = poGRider.executeQuery(lsSQL);
+        
+        System.out.println(lsSQL);
+       try {
+            int lnctr = 0;
+            if (MiscUtil.RecordCount(loRS) > 0) {
+                poInsContact = new ArrayList<>();
+                while(loRS.next()){
+                        poInsContact.add(insCPerson());
+                        poInsContact.get(poInsContact.size() - 1).openRecord(loRS.getString("sContctID"));
+                        
+//                        pnEditMode = EditMode.UPDATE;
+                        lnctr++;
+                        try{
+                            poJSON.put("result", "success");
+                            poJSON.put("message", "Record loaded successfully.");
+                        }catch(Exception e){
+                        }
+                    } 
+                
+            }else{
+                poInsContact = new ArrayList<>();
+                addInsContactPerson();
                 poJSON.put("result", "error");
                 poJSON.put("continue", true);
                 poJSON.put("message", "No record selected.");
@@ -577,16 +656,118 @@ public class Client {
         poJSON.put("result", "success");
         return poJSON;
     }
+    
+    public JSONObject deleteInstitutionContact(int row) {
+        poJSON = new JSONObject();
+
+        if (poInsContact.isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("result", "Unable to delete Institution Contact Person. nstitution Contact Person list is empty.");
+            return poJSON;
+        }
+
+        if (row >= poInsContact.size()) {
+            poJSON.put("result", "error");
+            poJSON.put("result", "Unable to delete Institution Contact Person .Row is more than the Institution Contact Person list.");
+            return poJSON;
+        }
+
+//        if (poAddress.get(row).getEditMode() != EditMode.ADDNEW) {
+//            poJSON.put("result", "error");
+//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
+//            return poJSON;
+//        }
+
+        poInsContact.remove(row);
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
     public JSONObject Update() {
         poJSON = poClient.updateRecord();
         if (!"success".equals((String) poJSON.get("result"))) {
             return poJSON;
         }
+        
+        poJSON = updateAddress(); 
+        if (!"success".equals((String) poJSON.get("result"))) {
+            return poJSON;
+        }
+        
+        poJSON = updateMobile(); 
+        if (!"success".equals((String) poJSON.get("result"))) {
+            return poJSON;
+        }
+        
+        poJSON = updateMail(); 
+        if (!"success".equals((String) poJSON.get("result"))) {
+            return poJSON;
+        }
+        
+        poJSON = updateSocialMedia(); 
+        if (!"success".equals((String) poJSON.get("result"))) {
+            return poJSON;
+        }
+        
+        poJSON = updateInsContact(); 
+        if (!"success".equals((String) poJSON.get("result"))) {
+            return poJSON;
+        }
+        
         poJSON = new JSONObject();
         poJSON.put("result", "success");
         return poJSON;
     }
 
+    public JSONObject updateAddress(){
+        if (!poAddress.isEmpty()) {
+            for (int lnCtr = 0; lnCtr <= poAddress.size() - 1; lnCtr++) {
+              poJSON =   poAddress.get(lnCtr).updateRecord();
+            }
+        }
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
+    public JSONObject updateMobile(){
+        if (!poMobile.isEmpty()) {
+            for (int lnCtr = 0; lnCtr <= poMobile.size() - 1; lnCtr++) {
+              poJSON =   poMobile.get(lnCtr).updateRecord();
+            }
+        }
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
+    public JSONObject updateMail(){
+        if (!poMail.isEmpty()) {
+            for (int lnCtr = 0; lnCtr <= poMail.size() - 1; lnCtr++) {
+              poJSON =   poMail.get(lnCtr).updateRecord();
+            }
+        }
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
+    public JSONObject updateSocialMedia(){
+        if (!poSocMed.isEmpty()) {
+            for (int lnCtr = 0; lnCtr <= poSocMed.size() - 1; lnCtr++) {
+              poJSON =   poSocMed.get(lnCtr).updateRecord();
+            }
+        }
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
+    public JSONObject updateInsContact(){
+        if (!poInsContact.isEmpty()) {
+            for (int lnCtr = 0; lnCtr <= poInsContact.size() - 1; lnCtr++) {
+              poJSON =   poInsContact.get(lnCtr).updateRecord();
+            }
+        }
+        poJSON.put("result", "success");
+        return poJSON;
+    }
     
     
     public JSONObject New() {
@@ -650,6 +831,7 @@ public class Client {
             }
             return poJSON;
         }
+        
 
         //save mobile
         if (!poMobile.isEmpty()) {
@@ -677,6 +859,7 @@ public class Client {
             }
         }
 
+        
         //save address
         if (!poAddress.isEmpty()) {
             for (lnCtr = 0; lnCtr <= poAddress.size() - 1; lnCtr++) {
@@ -788,6 +971,7 @@ public class Client {
 
         poJSON = new JSONObject();
         poJSON.put("result", "success");
+        poJSON.put("message", "Transaction save successfully.");
         return poJSON;
     }
 
@@ -841,4 +1025,6 @@ public class Client {
         object.newRecord();
         return object;
     }
+   
+    
 }

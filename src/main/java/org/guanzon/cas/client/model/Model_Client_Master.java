@@ -17,6 +17,8 @@ public class Model_Client_Master extends Model{
     Model_TownCity poTownCity;
     Model_Country poCountry;
     
+//    Model_Client_Master poClientMaster;
+    
     @Override
     public void initialize() {
         try {
@@ -56,6 +58,13 @@ public class Model_Client_Master extends Model{
             poCountry.setXML("Model_Country");
             poCountry.setTableName("Country");
             poCountry.initialize();
+            
+            //initialize other connections
+//            poClientMaster = new Model_Client_Master();
+//            poClientMaster.setApplicationDriver(poGRider);
+//            poClientMaster.setXML("Model_Client_Master");
+//            poClientMaster.setTableName("Client_Master");
+//            poClientMaster.initialize();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
@@ -107,6 +116,27 @@ public class Model_Client_Master extends Model{
         }
     }
     
+//    public Model_Client_Master Spouse(){
+//        if (!"".equals((String) getValue("sClientID"))){
+//            if (poClientMaster.getEditMode() == EditMode.READY && 
+//                poClientMaster.getClientId().equals((String) getValue("sClientID")))
+//                return poClientMaster;
+//            else{
+//                poJSON = poClientMaster.openRecord((String) getValue("sClientID"));
+//
+//                if ("success".equals((String) poJSON.get("result")))
+//                    return poClientMaster;
+//                else {
+//                    poTownCity.initialize();
+//                    return poClientMaster;
+//                }
+//            }
+//        } else {
+//            poClientMaster.initialize();
+//            return poClientMaster;
+//        }
+//    }
+//    
     public JSONObject setClientId(String clientId){
         return setValue("sClientID", clientId);
     }
