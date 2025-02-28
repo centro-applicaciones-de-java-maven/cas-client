@@ -97,11 +97,11 @@ public class AP_Client_Master extends Parameter{
 //                return poJSON;
 //            }
             
-            if (poModel.getAddressId().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "Address must not be empty.");
-                return poJSON;
-            }
+//            if (poModel.getAddressId().isEmpty()){
+//                poJSON.put("result", "error");
+//                poJSON.put("message", "Address must not be empty.");
+//                return poJSON;
+//            }
             
             if (poModel.getContactId().isEmpty()){
                 poJSON.put("result", "error");
