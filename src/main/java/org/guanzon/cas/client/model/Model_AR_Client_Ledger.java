@@ -6,17 +6,10 @@ import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.cas.parameter.model.Model_Branch;
-import org.guanzon.cas.parameter.model.Model_Warehouse;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_AR_Client_Ledger extends Model {
-
     //reference objects
-    Model_Branch poBranch;
-    Model_Warehouse poWarehouse;
-//    Model_Inventory poInventory;
 
     @Override
     public void initialize() {
@@ -39,13 +32,7 @@ public class Model_AR_Client_Ledger extends Model {
             ID2 = "dTransact";
             ID3 = "sSourceCd";
             ID4 = "sSourceNo";
-            //initialize reference objects
-            ParamModels model = new ParamModels(poGRider);
-            poBranch = model.Branch();
-            poWarehouse = model.Warehouse();
 
-//            poInventory = new InvModels(poGRider).Inventory();
-            //end - initialize reference objects
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -93,13 +80,6 @@ public class Model_AR_Client_Ledger extends Model {
         return (String) getValue("sSourceNo");
     }
 
-//    public JSONObject setAmountIn(Double anmountIn){
-//        return setValue("nAmountIn", anmountIn);
-//    }
-//    
-//    public Double getAmountIn(){
-//        return (Double) getValue("nAmountIn");
-//    }   
     public Double getAmountIn() {
         Object value = getValue("nAmountIn");
         if (value instanceof BigDecimal) {
@@ -142,13 +122,6 @@ public class Model_AR_Client_Ledger extends Model {
         }
     }
 
-//    public JSONObject setAmountOt(Double anmountOt){
-//        return setValue("nAmountOt", anmountOt);
-//    }
-//    
-//    public Double getAmountOt(){
-//        return (Double) getValue("nAmountOt");
-//    }
     public JSONObject setDatePosted(Date datePosted) {
         return setValue("dPostedxx", datePosted);
     }
@@ -201,57 +174,4 @@ public class Model_AR_Client_Ledger extends Model {
         loJSON.put("message", "This feature is not supported.");
         return loJSON;
     }
-
-//    @Override
-//    public JSONObject openRecord(String Id1, Object Id2, Object Id3, Object Id4) {
-//        JSONObject loJSON = new JSONObject();
-//        loJSON.put("result", "error");
-//        loJSON.put("message", "This feature is not supported.");
-//        return loJSON;
-//    }
-    //reference object models
-    public Model_Branch Branch() {
-        if (!"".equals((String) getValue("sBranchCd"))) {
-            if (poBranch.getEditMode() == EditMode.READY
-                    && poBranch.getBranchCode().equals((String) getValue("sBranchCd"))) {
-                return poBranch;
-            } else {
-                poJSON = poBranch.openRecord((String) getValue("sBranchCd"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poBranch;
-                } else {
-                    poBranch.initialize();
-                    return poBranch;
-                }
-            }
-        } else {
-            poBranch.initialize();
-            return poBranch;
-        }
-    }
-
 }
-
-//    public Model_Inventory Inventory() {
-//        if (!"".equals((String) getValue("sStockIDx"))) {
-//            if (poInventory.getEditMode() == EditMode.READY
-//                    && poInventory.getStockId().equals((String) getValue("sStockIDx"))) {
-//                return poInventory;
-//            } else {
-//                poJSON = poInventory.openRecord((String) getValue("sStockIDx"));
-//
-//                if ("success".equals((String) poJSON.get("result"))) {
-//                    return poInventory;
-//                } else {
-//                    poInventory.initialize();
-//                    return poInventory;
-//                }
-//            }
-//        } else {
-//            poInventory.initialize();
-//            return poInventory;
-//        }
-//    }
-//end - reference object models
-

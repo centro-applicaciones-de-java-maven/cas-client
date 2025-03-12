@@ -3,6 +3,7 @@ package org.guanzon.cas.client.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
@@ -48,28 +49,7 @@ public class Model_Client_Institution_Contact extends Model{
             System.exit(1);
         }
     }
-    
-    public Model_Client_Master Client(){
-        if (!"".equals((String) getValue("sClientID"))){
-            if (poClient.getEditMode() == EditMode.READY && 
-                poClient.getClientId().equals((String) getValue("sClientID")))
-                return poClient;
-            else{
-                poJSON = poClient.openRecord((String) getValue("sClientID"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poClient;
-                else {
-                    poClient.initialize();
-                    return poClient;
-                }
-            }
-        } else {
-            poClient.initialize();
-            return poClient;
-        }
-    }
-    
+        
     public JSONObject setContactPId(String contactPersionId){
         return setValue("sContctID", contactPersionId);
     }
@@ -192,6 +172,27 @@ public class Model_Client_Institution_Contact extends Model{
     
     @Override
     public String getNextCode(){
-        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode()); 
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode()); 
+    }
+    
+    public Model_Client_Master Client() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sClientID"))){
+            if (poClient.getEditMode() == EditMode.READY && 
+                poClient.getClientId().equals((String) getValue("sClientID")))
+                return poClient;
+            else{
+                poJSON = poClient.openRecord((String) getValue("sClientID"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poClient;
+                else {
+                    poClient.initialize();
+                    return poClient;
+                }
+            }
+        } else {
+            poClient.initialize();
+            return poClient;
+        }
     }
 }

@@ -1,6 +1,6 @@
 package org.guanzon.cas.client.services;
 
-import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
 import org.guanzon.cas.client.model.Model_Client_Mail;
@@ -8,8 +8,7 @@ import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
 public class ClientModel {
-
-    public ClientModel(GRider applicationDriver) {
+    public ClientModel(GRiderCAS applicationDriver) {
         poGRider = applicationDriver;
     }
 
@@ -112,7 +111,7 @@ public class ClientModel {
         return poClientSocmed;
     }    
         
-    private final GRider poGRider;
+    private final GRiderCAS poGRider;
 
     private Model_Client_Master poClientMaster;
     private Model_Client_Address poClientAddress;

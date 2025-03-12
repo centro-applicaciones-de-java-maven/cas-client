@@ -1,17 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package org.guanzon.cas.client.table.models;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/**
- *
- * @author User
- */
 public class ModelMobile {
 
     public SimpleStringProperty index01;
@@ -81,5 +73,4 @@ public class ModelMobile {
     public void setIndex04(String index04) {
         this.index04.set(index04);
     }
-
 }

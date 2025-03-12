@@ -1,19 +1,14 @@
 package org.guanzon.cas.client;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
-import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.model.Model_Client_Master;
-import org.guanzon.cas.client.model.Model_Client_Mail;
-import org.guanzon.cas.client.model.Model_Client_Mobile;
-import org.guanzon.cas.client.model.Model_Client_Social_Media;
 import org.json.simple.JSONObject;
 
 public class Client_Master extends Parameter {
@@ -85,7 +80,7 @@ public class Client_Master extends Parameter {
     }
 
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -103,7 +98,7 @@ public class Client_Master extends Parameter {
             return poJSON;
         }
     }
-    public JSONObject searchRecordClientType(String value, boolean byCode) {
+    public JSONObject searchRecordClientType(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -121,7 +116,7 @@ public class Client_Master extends Parameter {
             return poJSON;
         }
     }
-    public JSONObject searchRecordSpouse(String value, boolean byCode) {
+    public JSONObject searchRecordSpouse(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -140,7 +135,7 @@ public class Client_Master extends Parameter {
         }
     }
 
-    public JSONObject searchRecordWithClientType(String value, boolean byCode) {
+    public JSONObject searchRecordWithClientType(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,

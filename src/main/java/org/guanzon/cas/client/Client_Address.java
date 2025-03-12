@@ -1,9 +1,9 @@
 package org.guanzon.cas.client;
 
-import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
@@ -25,7 +25,7 @@ public class Client_Address  extends Parameter{
     }
     
     @Override
-    public JSONObject isEntryOkay() {
+    public JSONObject isEntryOkay() throws SQLException, GuanzonException{
         poJSON = new JSONObject();
 
         if (poModel.getClientId().isEmpty()){
@@ -62,7 +62,7 @@ public class Client_Address  extends Parameter{
     }
     
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -80,7 +80,8 @@ public class Client_Address  extends Parameter{
             return poJSON;
         }
     }
-        public JSONObject searchRecordbyclient(String value, boolean byCode) {
+    
+    public JSONObject searchRecordbyclient(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -98,30 +99,10 @@ public class Client_Address  extends Parameter{
             return poJSON;
         }
     }
-    
-//    public JSONObject searchRecordbyclient(String value, boolean byCode) {
-//        poJSON = ShowDialogFX.Search(poGRider,
-//                getSQ_Browse(),
-//                value,
-//                "ID»ID",
-//                "sAddrssID»sClientID",
-//                "a.sAddrssID»a.sClientID",
-//                byCode ? 0 : 1);
-//        System.out.println("POJSON ==" + poJSON.toJSONString());
-//        if (poJSON != null) {
-//            System.out.println("POJSON ==" + poJSON.toJSONString());
-//            return poModel.openRecord((String) poJSON.get("sAddrssID"));
-//        } else {
-//            poJSON = new JSONObject();
-//            poJSON.put("result", "error");
-//            poJSON.put("message", "No record loaded.");
-//            return poJSON;
-//        }
-//    }
 
-    public JSONObject searchRecordWithCondition(String value,  String clientId, boolean isPrimay) {
+    public JSONObject searchRecordWithCondition(String value,  String clientId, boolean isPrimary) throws SQLException, GuanzonException{
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sClientID = " + SQLUtil.toSQL(clientId) +
-                " AND a.cPrimaryx = "+ SQLUtil.toSQL(isPrimay == true ? "1" : "0"));
+                " AND a.cPrimaryx = "+ SQLUtil.toSQL(isPrimary == true ? "1" : "0"));
         System.out.println(lsSQL);
             poJSON = ShowDialogFX.Search(poGRider,
                     lsSQL,
@@ -129,7 +110,7 @@ public class Client_Address  extends Parameter{
                     "ID»Client Name»Address»Birthday»Primary",
                     "sAddrssID»xFullName»xAddressx»dBirthDte»cPrimaryx",
                     "a.sAddrssID»TRIM(IF(b.cClientTp = '0', CONCAT(b.sLastName, ', ', b.sFrstName, IF(TRIM(IFNull(b.sSuffixNm, '')) = '', ' ', CONCAT(' ', b.sSuffixNm, ' ')), b.sMiddName), b.sCompnyNm))»CONCAT(IF(IFNull(a.sHouseNox, '') = '', '', CONCAT(a.sHouseNox, ' ')), a.sAddressx, IF(IFNull(e.sBrgyName, '') = '', '', CONCAT(' ', e.sBrgyName)), ', ', c.sTownName, ', ', d.sProvName, ' ', c.sZippCode)»b.dBirthDte»IF(a.cPrimaryx = '1', 'Yes', 'No')",
-                    isPrimay ? 0 : 2);
+                    isPrimary ? 0 : 2);
 
         if (poJSON != null) {
             return poModel.openRecord((String) poJSON.get("sAddrssID"));
@@ -141,7 +122,7 @@ public class Client_Address  extends Parameter{
         }
     }
     
-    public JSONObject searchRecord(String value, boolean byCode, String clientId) {
+    public JSONObject searchRecord(String value, boolean byCode, String clientId) throws SQLException, GuanzonException{
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sClientID = " + SQLUtil.toSQL(clientId));
         
         poJSON = ShowDialogFX.Search(poGRider,

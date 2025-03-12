@@ -1,7 +1,9 @@
 package org.guanzon.cas.client;
 
+import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
@@ -66,7 +68,7 @@ public class Client_Institution_Contact  extends Parameter{
     }
     
     @Override
-    public JSONObject searchRecord(String value, boolean byCode) {
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -84,7 +86,7 @@ public class Client_Institution_Contact  extends Parameter{
             return poJSON;
         }
     }
-    public JSONObject searchRecordbyclient(String value, boolean byCode) {
+    public JSONObject searchRecordbyclient(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),
                 value,
@@ -103,7 +105,7 @@ public class Client_Institution_Contact  extends Parameter{
         }
     }
     
-    public JSONObject searchRecord(String value, boolean byCode, String clientId) {
+    public JSONObject searchRecord(String value, boolean byCode, String clientId) throws SQLException, GuanzonException{
         String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sClientID = " + SQLUtil.toSQL(clientId));
         
         poJSON = ShowDialogFX.Search(poGRider,

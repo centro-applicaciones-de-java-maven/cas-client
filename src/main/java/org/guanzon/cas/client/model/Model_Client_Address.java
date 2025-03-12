@@ -3,6 +3,7 @@ package org.guanzon.cas.client.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
@@ -73,72 +74,6 @@ public class Model_Client_Address extends Model{
         }
     }
     
-    public Model_Barangay Barangay(){
-        if (!"".equals((String) getValue("sBrgyIDxx"))){
-            if (poBarangay.getEditMode() == EditMode.READY && 
-                poBarangay.getBarangayId().equals((String) getValue("sBrgyIDxx")))
-                return poBarangay;
-            else{
-                poJSON = poBarangay.openRecord((String) getValue("sBrgyIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poBarangay;
-                else {
-                    poBarangay.initialize();
-                    return poBarangay;
-                }
-            }
-        } else {
-            poBarangay.initialize();
-            return poBarangay;
-        }
-    }
-    
-    public Model_TownCity Town(){
-        if (!"".equals((String) getValue("sTownIDxx"))){
-            if (poTownCity.getEditMode() == EditMode.READY && 
-                poTownCity.getTownId().equals((String) getValue("sTownIDxx")))
-                return poTownCity;
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sTownIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity;
-                else {
-                    poBarangay.initialize();
-                    return poTownCity;
-                }
-            }
-        } else {
-            poTownCity.initialize();
-            return poTownCity;
-        }
-    }
-    
-    
-    
-    public Model_Client_Master Client(){
-        if (!"".equals((String) getValue("sClientID"))){
-            if (poClient.getEditMode() == EditMode.READY && 
-                poClient.getClientId().equals((String) getValue("sClientID")))
-                return poClient;
-            else{
-                poJSON = poClient.openRecord((String) getValue("sClientID"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poClient;
-                else {
-                    poClient.initialize();
-                    return poClient;
-                }
-            }
-        } else {
-            poClient.initialize();
-            return poClient;
-        }
-    }
-    
-    
     public JSONObject setAddressId(String addressId){
         return setValue("sAddrssID", addressId);
     }
@@ -188,23 +123,21 @@ public class Model_Client_Address extends Model{
     }
     
     public JSONObject setLatitude(String latitude){
-        return setValue("nLatitude", Double.parseDouble(latitude));
+        return setValue("nLatitude", Double.valueOf(latitude));
     }
     
     public Number getLatitude(){
-//        return (Number) getValue("nLatitude");
         Object value = getValue("nLatitude");
             return ((Number) value).doubleValue();
     }
     
     public JSONObject setLongitude(String longitude){
-        return setValue("nLongitud", Double.parseDouble(longitude));
+        return setValue("nLongitud", Double.valueOf(longitude));
     }
     
     public Number getLongitude(){
         Object value = getValue("nLongitud");
         return ((Number) value).doubleValue();
-//        return (Number) getValue("nLongitud");
     }
     
     public JSONObject isPrimaryAddress(boolean isPrimaryAddress){
@@ -297,6 +230,69 @@ public class Model_Client_Address extends Model{
     
     @Override
     public String getNextCode(){
-        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode()); 
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode()); 
+    }
+    
+    public Model_Barangay Barangay() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sBrgyIDxx"))){
+            if (poBarangay.getEditMode() == EditMode.READY && 
+                poBarangay.getBarangayId().equals((String) getValue("sBrgyIDxx")))
+                return poBarangay;
+            else{
+                poJSON = poBarangay.openRecord((String) getValue("sBrgyIDxx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poBarangay;
+                else {
+                    poBarangay.initialize();
+                    return poBarangay;
+                }
+            }
+        } else {
+            poBarangay.initialize();
+            return poBarangay;
+        }
+    }
+    
+    public Model_TownCity Town() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sTownIDxx"))){
+            if (poTownCity.getEditMode() == EditMode.READY && 
+                poTownCity.getTownId().equals((String) getValue("sTownIDxx")))
+                return poTownCity;
+            else{
+                poJSON = poTownCity.openRecord((String) getValue("sTownIDxx"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poTownCity;
+                else {
+                    poBarangay.initialize();
+                    return poTownCity;
+                }
+            }
+        } else {
+            poTownCity.initialize();
+            return poTownCity;
+        }
+    }
+    
+    public Model_Client_Master Client() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sClientID"))){
+            if (poClient.getEditMode() == EditMode.READY && 
+                poClient.getClientId().equals((String) getValue("sClientID")))
+                return poClient;
+            else{
+                poJSON = poClient.openRecord((String) getValue("sClientID"));
+
+                if ("success".equals((String) poJSON.get("result")))
+                    return poClient;
+                else {
+                    poClient.initialize();
+                    return poClient;
+                }
+            }
+        } else {
+            poClient.initialize();
+            return poClient;
+        }
     }
 }

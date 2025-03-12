@@ -4,7 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.GRiderCAS;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
@@ -14,15 +15,13 @@ import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
 import org.guanzon.cas.client.model.Model_Client_Mail;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
-import org.guanzon.cas.client.services.ClientModel;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.Province;
 import org.json.simple.JSONObject;
 
 public class Client {
-
-    GRider poGRider;
+    GRiderCAS poGRider;
     String psParent;
     String psProvinceTemp;
     JSONObject poJSON;
@@ -43,7 +42,7 @@ public class Client {
     List<Model_Client_Social_Media> poListSocMed;
     List<Model_Client_Institution_Contact> poListInsContact;
     
-    public Client(GRider applicationDriver,
+    public Client(GRiderCAS applicationDriver,
             String parentClass,
             LogWrapper logWrapper) {
 
@@ -240,10 +239,7 @@ public class Client {
         return poJSON;
     }
 
-    
-    
-    
-       public JSONObject OpenClientAddress(String fsValue){
+    public JSONObject OpenClientAddress(String fsValue) throws SQLException, GuanzonException{
         String lsSQL = "SELECT " +
                         " a.sAddrssID" +
                         ", a.sClientID" +
@@ -263,8 +259,7 @@ public class Client {
                  " LEFT JOIN TownCity b ON a.sTownIDxx = b.sTownIDxx" +
                             " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx" +
                             " LEFT JOIN Barangay d ON a.sBrgyIDxx = d.sBrgyIDxx";
-        lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID = " + SQLUtil.toSQL(fsValue) + " GROUP BY sAddrssID");
-        System.out.println("OpenClientAddress " + fsValue + " ==  "   + lsSQL);
+        lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID = " + SQLUtil.toSQL(fsValue) + " GROUP BY sAddrssID");        
         ResultSet loRS = poGRider.executeQuery(lsSQL);
 
         try {
@@ -299,7 +294,8 @@ public class Client {
         }
         return poJSON;
     }
-        public JSONObject OpenClientMobile(String fsValue){
+    
+    public JSONObject OpenClientMobile(String fsValue) throws SQLException, GuanzonException{
         String lsSQL = "SELECT" +
                     "  sMobileID" +
                     ", sClientID" +
@@ -313,20 +309,17 @@ public class Client {
             if (MiscUtil.RecordCount(loRS) > 0) {
                 poMobile = new ArrayList<>();
                 while(loRS.next()){
-                        poMobile.add(mobile());
-                        poMobile.get(poMobile.size() - 1).openRecord(loRS.getString("sMobileID"));
-                        
-//                        pnEditMode = EditMode.UPDATE;
-                        lnctr++;
-                        try{
-                            poJSON.put("result", "success");
-                            poJSON.put("message", "Record loaded successfully.");               
-                        }catch(Exception e){
-                            
-                        }
+                    poMobile.add(mobile());
+                    poMobile.get(poMobile.size() - 1).openRecord(loRS.getString("sMobileID"));
+
+                    lnctr++;
+                    try{
+                        poJSON.put("result", "success");
+                        poJSON.put("message", "Record loaded successfully.");               
+                    }catch(Exception e){
+                    }
  
-                    } 
-                
+                } 
             }else{
                 poMobile = new ArrayList<>();
                 addMobile();
@@ -339,9 +332,11 @@ public class Client {
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
         }
+       
         return poJSON;
     }
-    public JSONObject OpenClientMail(String fsValue){
+    
+    public JSONObject OpenClientMail(String fsValue) throws SQLException, GuanzonException{
         String lsSQL = "SELECT" +
                     "  sEmailIDx" +
                     ", sClientID" +
@@ -349,26 +344,21 @@ public class Client {
         lsSQL = MiscUtil.addCondition(lsSQL, "sClientID = " + SQLUtil.toSQL(fsValue));
         ResultSet loRS = poGRider.executeQuery(lsSQL);
         
-        System.out.println(lsSQL);
-       try {
+        try {
             int lnctr = 0;
             if (MiscUtil.RecordCount(loRS) > 0) {
                 poMail = new ArrayList<>();
                 while(loRS.next()){
                         poMail.add(email());
                         poMail.get(poMail.size() - 1).openRecord(loRS.getString("sEmailIDx"));
-                        
-//                        pnEditMode = EditMode.UPDATE;
+                       
                         lnctr++;
                         try{
                             poJSON.put("result", "success");
                             poJSON.put("message", "Record loaded successfully.");
-                        }catch(Exception e){
-                            
+                        }catch(Exception e){     
                         }
-     
                     } 
-                
             }else{
                 poMail = new ArrayList<>();
                 addMail();
@@ -381,10 +371,11 @@ public class Client {
             poJSON.put("result", "error");
             poJSON.put("message", e.getMessage());
         }
+        
         return poJSON;
     }
     
-    public JSONObject OpenClientSocialMedia(String fsValue){
+    public JSONObject OpenClientSocialMedia(String fsValue) throws SQLException, GuanzonException{
         String lsSQL = "SELECT" +
                     "  sSocialID" +
                     ", sClientID" +
@@ -401,7 +392,6 @@ public class Client {
                         poSocMed.add(socmed());
                         poSocMed.get(poSocMed.size() - 1).openRecord(loRS.getString("sSocialID"));
                         
-//                        pnEditMode = EditMode.UPDATE;
                         lnctr++;
                         try{
                             poJSON.put("result", "success");
@@ -424,7 +414,7 @@ public class Client {
         return poJSON;
     }
     
-    public JSONObject OpenClientinstitutionContact(String fsValue){
+    public JSONObject OpenClientinstitutionContact(String fsValue) throws SQLException, GuanzonException{
         String lsSQL = "SELECT" +
                     "  sContctID" +
                     ", sClientID" +
@@ -453,7 +443,6 @@ public class Client {
                         poInsContact.add(insCPerson());
                         poInsContact.get(poInsContact.size() - 1).openRecord(loRS.getString("sContctID"));
                         
-//                        pnEditMode = EditMode.UPDATE;
                         lnctr++;
                         try{
                             poJSON.put("result", "success");
@@ -568,12 +557,6 @@ public class Client {
             return poJSON;
         }
 
-//        if (poMobile.get(row).getEditMode() != EditMode.ADDNEW) {
-//            poJSON.put("result", "error");
-//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
-//            return poJSON;
-//        }
-
         poMobile.remove(row);
         poJSON.put("result", "success");
         return poJSON;
@@ -593,12 +576,6 @@ public class Client {
             poJSON.put("result", "Unable to delete social media. Row is more than the social media list.");
             return poJSON;
         }
-//
-//        if (poSocMed.get(row).getEditMode() != EditMode.ADDNEW) {
-//            poJSON.put("result", "error");
-//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
-//            return poJSON;
-//        }
 
         poSocMed.remove(row);
         poJSON.put("result", "success");
@@ -620,12 +597,6 @@ public class Client {
             return poJSON;
         }
 
-//        if (poMail.get(row).getEditMode() != EditMode.ADDNEW) {
-//            poJSON.put("result", "error");
-//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
-//            return poJSON;
-//        }
-
         poMail.remove(row);
         poJSON.put("result", "success");
         return poJSON;
@@ -646,12 +617,6 @@ public class Client {
             return poJSON;
         }
 
-//        if (poAddress.get(row).getEditMode() != EditMode.ADDNEW) {
-//            poJSON.put("result", "error");
-//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
-//            return poJSON;
-//        }
-
         poAddress.remove(row);
         poJSON.put("result", "success");
         return poJSON;
@@ -671,12 +636,6 @@ public class Client {
             poJSON.put("result", "Unable to delete Institution Contact Person .Row is more than the Institution Contact Person list.");
             return poJSON;
         }
-
-//        if (poAddress.get(row).getEditMode() != EditMode.ADDNEW) {
-//            poJSON.put("result", "error");
-//            poJSON.put("result", "Unable to delete old mobile. You can deactivate the record instead.");
-//            return poJSON;
-//        }
 
         poInsContact.remove(row);
         poJSON.put("result", "success");
@@ -811,7 +770,7 @@ public class Client {
         return poJSON;
     }
 
-    public JSONObject Save() {
+    public JSONObject Save() throws SQLException, GuanzonException{
         int lnCtr;
 
         if (psParent.isEmpty()) {

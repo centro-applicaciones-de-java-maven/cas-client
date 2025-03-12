@@ -1,17 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package org.guanzon.cas.client.table.models;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-/**
- *
- * @author User
- */
 public class ModelSocialMedia {
     public SimpleStringProperty index01;
     public SimpleStringProperty index02;
@@ -38,16 +30,9 @@ public class ModelSocialMedia {
     public String getIndex02(){return index02.get();}
     public void setIndex02(String index02){this.index02.set(index02);}
     
-    public String getIndex03(){
-        return socialTyp.get(Integer.parseInt(index03.get()));
-    }
+    public String getIndex03(){return socialTyp.get(Integer.parseInt(index03.get()));}
     public void setIndex03(String index03){this.index03.set(index03);}
     
-    public String getIndex04(){
-        return index04.get();
-    }
+    public String getIndex04(){return index04.get();}
     public void setIndex04(String index04){this.index04.set(index04);}
-  
-    
-    
 }
