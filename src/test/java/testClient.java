@@ -1,23 +1,16 @@
-
-import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.appdriver.constant.ClientType;
-import org.guanzon.appdriver.constant.MobileNetwork;
-import org.guanzon.appdriver.constant.SocMedAccountType;
 import org.guanzon.cas.client.Client;
-import org.json.simple.JSONObject;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testClient {
 
-    static GRider instance;
+    static GRiderCAS instance;
     static Client record;
     static LogWrapper logWrapper;
 

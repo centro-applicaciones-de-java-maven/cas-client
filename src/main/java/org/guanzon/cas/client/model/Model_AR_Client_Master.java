@@ -1,34 +1,19 @@
 package org.guanzon.cas.client.model;
 
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.CommonUtils;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.client.Client;
-import org.guanzon.cas.parameter.model.Model_Branch;
-import org.guanzon.cas.parameter.model.Model_Category;
-import org.guanzon.cas.parameter.model.Model_Inv_Location;
 import org.guanzon.cas.parameter.model.Model_Term;
-import org.guanzon.cas.parameter.model.Model_Warehouse;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_AR_Client_Master extends Model{      
     //reference objects
-    Model_Branch poBranch;
-    Model_Warehouse poWarehouse;
-//    Model_Inventory poInventory;
-    Model_Inv_Location poLocation;
-    Model_Category poCategory;
-     Model_Client_Master poClientMaster;
+    Model_Client_Master poClientMaster;
     Model_Client_Address poClientAddress;
     Model_Client_Institution_Contact poClientInstitutionContact;
     Model_Client_Mobile poClientMobile;
@@ -45,11 +30,6 @@ public class Model_AR_Client_Master extends Model{
             MiscUtil.initRowSet(poEntity);
             
             //assign default values
-            
-            Object currentDate = SQLUtil.toDate(poGRider.getServerDate().toString(), SQLUtil.FORMAT_SHORT_DATE);
-//            
-//            poEntity.updateObject("dCltSince", poGRider.getSysDate());
-//            poEntity.updateObject("dBegDatex", poGRider.getSysDate());
             poEntity.updateObject("dCltSince", "1900-01-01");
             poEntity.updateObject("dBegDatex", "1900-01-01");
             poEntity.updateObject("nDiscount", 0.00);
@@ -57,18 +37,6 @@ public class Model_AR_Client_Master extends Model{
             poEntity.updateObject("nABalance", 0.00);
             poEntity.updateObject("nOBalance", 0.00);
             poEntity.updateObject("nBegBalxx", 0.00);
-//            poEntity.updateObject("nQtyOnHnd", 0);
-//            poEntity.updateObject("nLedgerNo", 0);
-//            poEntity.updateObject("nMinLevel", 0);
-//            poEntity.updateObject("nMaxLevel", 0);
-//            poEntity.updateObject("nAvgMonSl", 0);
-//            poEntity.updateObject("nAvgCostx", 0.00);
-//            poEntity.updateString("cClassify", InventoryClassification.NEW_ITEMS);
-//            poEntity.updateObject("nBackOrdr", 0);
-//            poEntity.updateObject("nResvOrdr", 0);
-//            poEntity.updateObject("nFloatQty", 0);
-//            poEntity.updateObject("dLastTran", "0000-00-00");
-//            poEntity.updateString("cPrimaryx", Logical.NO);
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
 
@@ -78,16 +46,8 @@ public class Model_AR_Client_Master extends Model{
             poEntity.absolute(1);
 
             ID = "sClientID";
-//            ID2 = "sBranchCd";
             
             //initialize reference objects
-            ParamModels model = new ParamModels(poGRider);
-            poCategory = model.Category();
-            poBranch = model.Branch();
-            poWarehouse = model.Warehouse();
-            poLocation = model.InventoryLocation();
-            
-            
             poTerm = new Model_Term();
             poTerm.setApplicationDriver(poGRider);
             poTerm.setXML("Model_Term");
@@ -105,8 +65,6 @@ public class Model_AR_Client_Master extends Model{
             poClientAddress.setXML("Model_Client_Address");
             poClientAddress.setTableName("Client_Address");
             poClientAddress.initialize();
-//            poInventory = new InvModels(poGRider).Inventory();
-            //end - initialize reference objects
             
             poClientInstitutionContact = new Model_Client_Institution_Contact();
             poClientInstitutionContact.setApplicationDriver(poGRider);
@@ -119,6 +77,7 @@ public class Model_AR_Client_Master extends Model{
             poClientMobile.setXML("Model_Client_Mobile");
             poClientMobile.setTableName("Client_Mobile");
             poClientMobile.initialize();
+            //end - initialize reference objects
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -171,10 +130,6 @@ public class Model_AR_Client_Master extends Model{
         }
         return date;
     }
-    
-//    public Date getdateClientSince(){
-//        return (Date) getValue("dCltSince");
-//    }
     
     public JSONObject setBeginningDate(Date beginningDate){
         return setValue("dBegDatex", beginningDate);
@@ -274,107 +229,11 @@ public class Model_AR_Client_Master extends Model{
     
     @Override
     public String getNextCode() {
-        return getClientId();
-//                MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
+        return "";
     }
-    
-//    @Override
-//    public JSONObject openRecord(String Id1) {
-//        JSONObject loJSON = new JSONObject();
-//        loJSON.put("result", "error");
-//        loJSON.put("message", "This feature is not supported.");
-//        return loJSON;
-//    }
     
     //reference object models
-    public Model_Branch Branch() {
-        if (!"".equals((String) getValue("sBranchCd"))) {
-            if (poBranch.getEditMode() == EditMode.READY
-                    && poBranch.getBranchCode().equals((String) getValue("sBranchCd"))) {
-                return poBranch;
-            } else {
-                poJSON = poBranch.openRecord((String) getValue("sBranchCd"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poBranch;
-                } else {
-                    poBranch.initialize();
-                    return poBranch;
-                }
-            }
-        } else {
-            poBranch.initialize();
-            return poBranch;
-        }
-    }
-    
-    public Model_Warehouse Warehouse() {
-        if (!"".equals((String) getValue("sWHouseID"))) {
-            if (poWarehouse.getEditMode() == EditMode.READY
-                    && poWarehouse.getWarehouseId().equals((String) getValue("sWHouseID"))) {
-                return poWarehouse;
-            } else {
-                poJSON = poWarehouse.openRecord((String) getValue("sWHouseID"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poWarehouse;
-                } else {
-                    poWarehouse.initialize();
-                    return poWarehouse;
-                }
-            }
-        } else {
-            poWarehouse.initialize();
-            return poWarehouse;
-        }
-    }
-    
-    public Model_Inv_Location Location() {
-        if (!"".equals((String) getValue("sLocatnID"))) {
-            if (poLocation.getEditMode() == EditMode.READY
-                    && poLocation.getLocationId().equals((String) getValue("sLocatnID"))) {
-                return poLocation;
-            } else {
-                poJSON = poLocation.openRecord((String) getValue("sLocatnID"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poLocation;
-                } else {
-                    poLocation.initialize();
-                    return poLocation;
-                }
-            }
-        } else {
-            poLocation.initialize();
-            return poLocation;
-        }
-    }
-    
-        public Model_Category Category() {
-        if (!"".equals((String) getValue("sCategrCd"))) {
-            if (poCategory.getEditMode() == EditMode.READY
-                    && poCategory.getCategoryId().equals((String) getValue("sCategrCd"))) {
-                return poCategory;
-            } else {
-                poJSON = poCategory.openRecord((String) getValue("sCategrCd"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poCategory;
-                } else {
-                    poCategory.initialize();
-                    return poCategory;
-                }
-            }
-        } else {
-            poCategory.initialize();
-            return poCategory;
-        }
-    }
-        
-    
-        
-        public Model_Term Term() {
-            System.out.println("term == " + (String) getValue("sTermIDxx"));
+    public Model_Term Term() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sTermIDxx"))) {
             if (poTerm.getEditMode() == EditMode.READY
                     && poTerm.getTermCode().equals((String) getValue("sTermIDxx"))) {
@@ -394,9 +253,8 @@ public class Model_AR_Client_Master extends Model{
             return poTerm;
         }
     }
-        public Model_Client_Master ClientMaster() {
-
         
+    public Model_Client_Master Client() throws SQLException, GuanzonException{    
         if (!"".equals((String) getValue("sClientID"))) {
             if (poClientMaster.getEditMode() == EditMode.READY
                     && poClientMaster.getClientId().equals((String) getValue("sClientID"))) {
@@ -417,7 +275,7 @@ public class Model_AR_Client_Master extends Model{
         }
     }
     
-    public Model_Client_Address ClientAddress() {
+    public Model_Client_Address ClientAddress() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sClientID"))) {
             if (poClientAddress.getEditMode() == EditMode.READY
                     && poClientAddress.getClientId().equals((String) getValue("sAddrssID"))) {
@@ -441,7 +299,7 @@ public class Model_AR_Client_Master extends Model{
         }
     }
     
-    public Model_Client_Institution_Contact ClientInstitutionContact() {
+    public Model_Client_Institution_Contact ClientInstitutionContact() throws SQLException, GuanzonException{
         
             System.out.println("Client_Institution_Contact == " + (String) getValue("sClientID"));
         if (!"".equals((String) getValue("sClientID"))) {
@@ -464,7 +322,7 @@ public class Model_AR_Client_Master extends Model{
         }
     }
     
-        public Model_Client_Mobile ClientMobile() {
+        public Model_Client_Mobile ClientMobile() throws SQLException, GuanzonException{
             System.out.println("mobile == " + (String) getValue("sClientID"));
         if (!"".equals((String) getValue("sClientID"))) {
             if (poClientMobile.getEditMode() == EditMode.READY

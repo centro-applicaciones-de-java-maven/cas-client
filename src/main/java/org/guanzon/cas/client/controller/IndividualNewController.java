@@ -1,21 +1,15 @@
 package org.guanzon.cas.client.controller;
 
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
- */
 import com.ibm.icu.impl.Assert;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
 import java.sql.Timestamp;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.ResourceBundle;
-import java.util.function.UnaryOperator;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -27,15 +21,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextFormatter;
-import javafx.scene.control.TextFormatter.Change;
 import javafx.scene.control.cell.PropertyValueFactory;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
@@ -48,7 +39,8 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.base.CommonUtils;
-import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.GRiderCAS;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
@@ -56,31 +48,19 @@ import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.MobileNetwork;
 import org.guanzon.cas.client.Client;
-import org.guanzon.cas.client.Client_Address;
-import org.guanzon.cas.client.Client_Mail;
-import org.guanzon.cas.client.Client_Master;
-import org.guanzon.cas.client.Client_Mobile;
-import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.table.models.ModelAddress;
 import org.guanzon.cas.client.table.models.ModelEmail;
 import org.guanzon.cas.client.table.models.ModelMobile;
 import org.guanzon.cas.client.table.models.ModelSocialMedia;
-//import org.guanzon.cas.controller.ScreenInterface;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.Country;
 import org.guanzon.cas.parameter.Province;
 import org.json.simple.JSONObject;
 
-/**
- * FXML Controller class
- *
- * @author User
- */
 public class IndividualNewController implements Initializable {
-
     private final String pxeModuleName = "Individual New";
-    private GRider oApp;
+    private GRiderCAS oApp;
     private Client oTrans;
     public int pnEditMode;
     public String lsID;
@@ -494,26 +474,31 @@ public class IndividualNewController implements Initializable {
             switch (clickedButton.getId()) {
 
                 case "btnSave":
-                    JSONObject loJSON;
-                    oTrans.Master().getModel().setCompanyName(oTrans.Master().getModel().getCompanyName());
+                    try {
+                        JSONObject loJSON;
+                        oTrans.Master().getModel().setCompanyName(oTrans.Master().getModel().getCompanyName());
 
-                    loJSON = oTrans.Master().isEntryOkay();
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
-                        break;
-                    }
-                    if (pnEditMode == EditMode.UPDATE) {
-                        oTrans.Update();
-                    }
+                        loJSON = oTrans.Master().isEntryOkay();
+                        if ("error".equals((String) loJSON.get("result"))) {
+                            ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
+                        }
+                        if (pnEditMode == EditMode.UPDATE) {
+                            oTrans.Update();
+                        }
 
-                    loJSON = oTrans.Save();
+                        loJSON = oTrans.Save();
 
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
-                        break;
-                    } else {
-                        ShowMessageFX.OkayCancel((String) loJSON.get("message"), "", "Successfully saved!");
+                        if ("error".equals((String) loJSON.get("result"))) {
+                            ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
+                        } else {
+                            ShowMessageFX.OkayCancel((String) loJSON.get("message"), "", "Successfully saved!");
+                        }
+                    } catch (SQLException | GuanzonException e) {
+                        ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
                     }
+                    
                     break;
                 case "btnCancel":
                     if (ShowMessageFX.YesNo("Do you really want to cancel this record? \nAny data collected will not be kept.", "Computerized Acounting System", pxeModuleName)) {
@@ -532,30 +517,34 @@ public class IndividualNewController implements Initializable {
                     }
                     break;
                 case "btnAddAddress":
-                    if (oTrans.getAddressCount() > 1) {
-                        JSONObject addObj = oTrans.Address(pnAddress - 1).isEntryOkay();
-                        if ("error".equals((String) addObj.get("result"))) {
-                            ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        } else {
-                            clearAddress();
-                            try {
-                                oTrans.Address(pnAddress).getModel().setLatitude("0.0");
-                                oTrans.Address(pnAddress).getModel().setLongitude("0.0");
-                            } catch (Exception e) {
+                    try {
+                        if (oTrans.getAddressCount() > 1) {
+                            JSONObject addObj = oTrans.Address(pnAddress - 1).isEntryOkay();
+                            if ("error".equals((String) addObj.get("result"))) {
+                                ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
+                                break;
+                            } else {
+                                clearAddress();
+                                try {
+                                    oTrans.Address(pnAddress).getModel().setLatitude("0.0");
+                                    oTrans.Address(pnAddress).getModel().setLongitude("0.0");
+                                } catch (Exception e) {
+                                }
                             }
                         }
-                    }
-                    JSONObject addObjAddress = oTrans.addAddress();
-                    System.out.println("THE ADDRESS ID " + oTrans.Address(pnAddress).getModel().getAddressId() + " and number " + String.valueOf(pnAddress));
-                    if ("error".equals((String) addObjAddress.get("result"))) {
-                        ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
-                        break;
-                    } else {
-                        oTrans.Address(pnAddress).getModel().setClientId(oTrans.Master().getModel().getClientId());
-                        pnAddress = oTrans.getAddressCount() - 1;
-                        tblAddress.getSelectionModel().select(pnAddress + 1);
-                        loadRecordAddress();
+                        JSONObject addObjAddress = oTrans.addAddress();
+                        System.out.println("THE ADDRESS ID " + oTrans.Address(pnAddress).getModel().getAddressId() + " and number " + String.valueOf(pnAddress));
+                        if ("error".equals((String) addObjAddress.get("result"))) {
+                            ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
+                            break;
+                        } else {
+                            oTrans.Address(pnAddress).getModel().setClientId(oTrans.Master().getModel().getClientId());
+                            pnAddress = oTrans.getAddressCount() - 1;
+                            tblAddress.getSelectionModel().select(pnAddress + 1);
+                            loadRecordAddress();
+                        }
+                    } catch (SQLException | GuanzonException e) {
+                        ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
                     }
                     break;
                 case "btnAddEmail":
@@ -934,95 +923,99 @@ public class IndividualNewController implements Initializable {
         String lsProvince = "";
         JSONObject poJson;
 
-        switch (event.getCode()) {
-            case F3:
-                switch (lnIndex) {
-                    case 3:
-                        /*search province*/
-                        poJson = new JSONObject();
-                        Province loProvince = new Province();
-                        loProvince.setApplicationDriver(oApp);
-                        loProvince.setRecordStatus("1");
-                        loProvince.initialize();
+        try {
+            switch (event.getCode()) {
+                case F3:
+                    switch (lnIndex) {
+                        case 3:                        
+                            /*search province*/
+                            poJson = new JSONObject();
+                            Province loProvince = new Province();
+                            loProvince.setApplicationDriver(oApp);
+                            loProvince.setRecordStatus("1");
+                            loProvince.initialize();
 
-                        poJson = loProvince.searchRecord(lsValue, false);
-                        if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
-                            ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            AddressField03.clear();
-                        } else {
-                            AddressField03.setText((String) loProvince.getModel().getProvinceName());
-                            oTrans.Address(pnAddress).getModel().Town().Province().setProvinceId(loProvince.getModel().getProvinceId());
-                            oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId();
-                            oTrans.setProvinceID_temp(loProvince.getModel().getProvinceId());
-
-                            oTrans.Address(pnAddress).getModel().setTownId("");
-                            oTrans.Address(pnAddress).getModel().setBarangayId("");
-                            AddressField04.setText("");
-                            AddressField04.setText("");
-                        }
-
-                        break;
-                    case 4:
-                        /*search city*/
-                        poJson = new JSONObject();
-                        TownCity loTownCity = new TownCity();
-                        loTownCity.setApplicationDriver(oApp);
-                        loTownCity.setRecordStatus("1");
-                        loTownCity.initialize();
-
-                        try {
-                            if (!oTrans.getProvinceID_temp().equalsIgnoreCase("")) {
-                                poJson = loTownCity.searchRecord(lsValue, false, oTrans.getProvinceID_temp());
+                            poJson = loProvince.searchRecord(lsValue, false);
+                            if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
+                                ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                                AddressField03.clear();
                             } else {
+                                AddressField03.setText((String) loProvince.getModel().getProvinceName());
+                                oTrans.Address(pnAddress).getModel().Town().Province().setProvinceId(loProvince.getModel().getProvinceId());
+                                oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId();
+                                oTrans.setProvinceID_temp(loProvince.getModel().getProvinceId());
+
+                                oTrans.Address(pnAddress).getModel().setTownId("");
+                                oTrans.Address(pnAddress).getModel().setBarangayId("");
+                                AddressField04.setText("");
+                                AddressField04.setText("");
+                            }
+
+                            break;
+                        case 4:
+                            /*search city*/
+                            poJson = new JSONObject();
+                            TownCity loTownCity = new TownCity();
+                            loTownCity.setApplicationDriver(oApp);
+                            loTownCity.setRecordStatus("1");
+                            loTownCity.initialize();
+
+                            try {
+                                if (!oTrans.getProvinceID_temp().equalsIgnoreCase("")) {
+                                    poJson = loTownCity.searchRecord(lsValue, false, oTrans.getProvinceID_temp());
+                                } else {
+                                    poJson = loTownCity.searchRecord(lsValue, false);
+                                }
+                            } catch (Exception e) {
                                 poJson = loTownCity.searchRecord(lsValue, false);
                             }
-                        } catch (Exception e) {
-                            poJson = loTownCity.searchRecord(lsValue, false);
-                        }
 
-                        if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
-                            ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            AddressField04.clear();
-                        } else {
-//                            loadRecordAddress
-                            AddressField04.setText((String) loTownCity.getModel().getTownName());
-                            oTrans.Address(pnAddress).getModel().setTownId(loTownCity.getModel().getTownId());
-                        }
-                        loadRecordAddress();
-                        break;
-                    case 5:
-                        /*search barangay*/
-                        poJson = new JSONObject();
-                        Barangay loBarangay = new Barangay();
-                        loBarangay.setApplicationDriver(oApp);
-                        loBarangay.setRecordStatus("1");
-                        loBarangay.initialize();
-
-                        try {
-                            if (!oTrans.Address(pnAddress).getModel().getTownId().equalsIgnoreCase("")) {
-                                poJson = loBarangay.searchRecord("", false, oTrans.Address(pnAddress).getModel().getTownId());
-                                poJson = loBarangay.searchRecordWithStatus("", false, oTrans.Address(pnAddress).getModel().getTownId());
+                            if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
+                                ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                                AddressField04.clear();
                             } else {
+                                AddressField04.setText((String) loTownCity.getModel().getTownName());
+                                oTrans.Address(pnAddress).getModel().setTownId(loTownCity.getModel().getTownId());
+                            }
+                            loadRecordAddress();
+                            break;
+                        case 5:
+                            /*search barangay*/
+                            poJson = new JSONObject();
+                            Barangay loBarangay = new Barangay();
+                            loBarangay.setApplicationDriver(oApp);
+                            loBarangay.setRecordStatus("1");
+                            loBarangay.initialize();
+
+                            try {
+                                if (!oTrans.Address(pnAddress).getModel().getTownId().equalsIgnoreCase("")) {
+                                    poJson = loBarangay.searchRecord("", false, oTrans.Address(pnAddress).getModel().getTownId());
+                                    poJson = loBarangay.searchRecordWithStatus("", false, oTrans.Address(pnAddress).getModel().getTownId());
+                                } else {
+                                    poJson = loBarangay.searchRecord(lsValue, false);
+                                }
+                            } catch (Exception e) {
                                 poJson = loBarangay.searchRecord(lsValue, false);
                             }
-                        } catch (Exception e) {
-                            poJson = loBarangay.searchRecord(lsValue, false);
-                        }
 
-                        if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
-                            ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            AddressField05.clear();
-                        } else {
-                            AddressField05.setText(loBarangay.getModel().getBarangayName());
-                            oTrans.Address(pnAddress).getModel().setBarangayId(loBarangay.getModel().getBarangayId());
-                            oTrans.Address(pnAddress).getModel().setTownId(loBarangay.getModel().getTownId());
+                            if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
+                                ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                                AddressField05.clear();
+                            } else {
+                                AddressField05.setText(loBarangay.getModel().getBarangayName());
+                                oTrans.Address(pnAddress).getModel().setBarangayId(loBarangay.getModel().getBarangayId());
+                                oTrans.Address(pnAddress).getModel().setTownId(loBarangay.getModel().getTownId());
 
-                        }
-                        loadRecordAddress();
-                        break;
-                }
+                            }
+                            loadRecordAddress();
+                            break;
+                    }
 
+            }
+        } catch (SQLException | GuanzonException e) {
+            ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
         }
+        
         switch (event.getCode()) {
             case ENTER:
                 CommonUtils.SetNextFocus(address);
@@ -1377,139 +1370,144 @@ public class IndividualNewController implements Initializable {
     }
 
     private void loadRecordPersonalInfo() {
-        personalinfo02.setText(oTrans.Master().getModel().getLastName());
-        personalinfo03.setText(oTrans.Master().getModel().getFirstName());
-        personalinfo04.setText(oTrans.Master().getModel().getMiddleName());
-        personalinfo05.setText(oTrans.Master().getModel().getSuffixName());
+        try {
+            personalinfo02.setText(oTrans.Master().getModel().getLastName());
+            personalinfo03.setText(oTrans.Master().getModel().getFirstName());
+            personalinfo04.setText(oTrans.Master().getModel().getMiddleName());
+            personalinfo05.setText(oTrans.Master().getModel().getSuffixName());
 
-        Country loCountry = new Country();
-        loCountry.setApplicationDriver(oApp);
+            Country loCountry = new Country();
+            loCountry.setApplicationDriver(oApp);
 
-        loCountry.setRecordStatus("1");
-        loCountry.initialize();
-        loCountry.openRecord(oTrans.Master().getModel().getCitizenshipId());
-        personalinfo06.setText(loCountry.getModel().getNationality());
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            loCountry.setRecordStatus("1");
+            loCountry.initialize();
+            loCountry.openRecord(oTrans.Master().getModel().getCitizenshipId());
+            personalinfo06.setText(loCountry.getModel().getNationality());
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        personalinfo07.setConverter(new StringConverter<LocalDate>() {
-            @Override
-            public String toString(LocalDate date) {
-                return (date != null) ? date.format(formatter) : "";
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            personalinfo07.setConverter(new StringConverter<LocalDate>() {
+                @Override
+                public String toString(LocalDate date) {
+                    return (date != null) ? date.format(formatter) : "";
+                }
+
+                @Override
+                public LocalDate fromString(String string) {
+                    return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
+                }
+            }
+            );
+
+            if (!oTrans.Master().getModel().getBirthDate().equals("")) {
+                Object lobirthdate = oTrans.Master().getModel().getBirthDate();
+                if (lobirthdate == null) {
+                    // If the object is null, set the DatePicker to the current date
+                    personalinfo07.setValue(LocalDate.now());
+                } else if (lobirthdate instanceof Timestamp) {
+                    // If the object is a Timestamp, convert it to LocalDate
+                    Timestamp timestamp = (Timestamp) lobirthdate;
+                    LocalDate localDate = timestamp.toLocalDateTime().toLocalDate();
+                    personalinfo07.setValue(localDate);
+                } else if (lobirthdate instanceof Date) {
+                    // If the object is a java.sql.Date, convert it to LocalDate
+                    Date sqlDate = (Date) lobirthdate;
+                    LocalDate localDate = sqlDate.toLocalDate();
+                    personalinfo07.setValue(localDate);
+                } else {
+                }
             }
 
-            @Override
-            public LocalDate fromString(String string) {
-                return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
-            }
-        }
-        );
+            if (!oTrans.Master().getModel().getBirthPlaceId().equals("")) {
 
-        if (!oTrans.Master().getModel().getBirthDate().equals("")) {
-            Object lobirthdate = oTrans.Master().getModel().getBirthDate();
-            if (lobirthdate == null) {
-                // If the object is null, set the DatePicker to the current date
-                personalinfo07.setValue(LocalDate.now());
-            } else if (lobirthdate instanceof Timestamp) {
-                // If the object is a Timestamp, convert it to LocalDate
-                Timestamp timestamp = (Timestamp) lobirthdate;
-                LocalDate localDate = timestamp.toLocalDateTime().toLocalDate();
-                personalinfo07.setValue(localDate);
-            } else if (lobirthdate instanceof Date) {
-                // If the object is a java.sql.Date, convert it to LocalDate
-                Date sqlDate = (Date) lobirthdate;
-                LocalDate localDate = sqlDate.toLocalDate();
-                personalinfo07.setValue(localDate);
-            } else {
-            }
-        }
-
-        if (!oTrans.Master().getModel().getBirthPlaceId().equals("")) {
-
-            TownCity loTownCity = new TownCity();
-            loTownCity.setApplicationDriver(oApp);
-            loTownCity.setRecordStatus("1");
-            loTownCity.initialize();
-            loTownCity.openRecord(oTrans.Master().getModel().getBirthPlaceId());
-
-            Province loProvince = new Province();
-            loProvince.setApplicationDriver(oApp);
-            loProvince.setRecordStatus("1");
-            loProvince.initialize();
-            loProvince.openRecord(loTownCity.getModel().getProvinceId());
-
-            personalinfo08.setText(loTownCity.getModel().getTownName() + ", " + loProvince.getModel().getProvinceName());
-        }
-        int lsGender = Integer.parseInt(oTrans.Master().getModel().getGender());
-        personalinfo09.getSelectionModel().select(lsGender);
-
-        int lsCivilStatus = Integer.parseInt(oTrans.Master().getModel().getCivilStatus());
-        personalinfo10.getSelectionModel().select(lsCivilStatus);
-
-        personalinfo11.setText(oTrans.Master().getModel().getCompanyName());
-        personalinfo12.setText(oTrans.Master().getModel().getMothersMaidenName());
-        personalinfo13.setText(oTrans.Master().getModel().getTaxIdNumber());
-        personalinfo14.setText(oTrans.Master().getModel().getLTOClientId());
-        personalinfo15.setText(oTrans.Master().getModel().getPhNationalId());
-
-    }
-
-    private void loadRecordAddress() {
-        loadMasterAddress();
-
-        int lnCtr;
-        int lnCtr2 = 0;
-        address_data.clear();
-
-        if (oTrans.getAddressCount() >= 0) {
-            for (lnCtr = 0; lnCtr < oTrans.getAddressCount(); lnCtr++) {
                 TownCity loTownCity = new TownCity();
                 loTownCity.setApplicationDriver(oApp);
                 loTownCity.setRecordStatus("1");
                 loTownCity.initialize();
-                loTownCity.openRecord(oTrans.Address(lnCtr2).getModel().getTownId());
+                loTownCity.openRecord(oTrans.Master().getModel().getBirthPlaceId());
 
-                Barangay loBarangay = new Barangay();
-                try {
-                    loBarangay.setApplicationDriver(oApp);
-                    loBarangay.setRecordStatus("1");
-                    loBarangay.initialize();
-                    loBarangay.openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
-                } catch (Exception e) {
+                Province loProvince = new Province();
+                loProvince.setApplicationDriver(oApp);
+                loProvince.setRecordStatus("1");
+                loProvince.initialize();
+                loProvince.openRecord(loTownCity.getModel().getProvinceId());
+
+                personalinfo08.setText(loTownCity.getModel().getTownName() + ", " + loProvince.getModel().getProvinceName());
+            }
+            int lsGender = Integer.parseInt(oTrans.Master().getModel().getGender());
+            personalinfo09.getSelectionModel().select(lsGender);
+
+            int lsCivilStatus = Integer.parseInt(oTrans.Master().getModel().getCivilStatus());
+            personalinfo10.getSelectionModel().select(lsCivilStatus);
+
+            personalinfo11.setText(oTrans.Master().getModel().getCompanyName());
+            personalinfo12.setText(oTrans.Master().getModel().getMothersMaidenName());
+            personalinfo13.setText(oTrans.Master().getModel().getTaxIdNumber());
+            personalinfo14.setText(oTrans.Master().getModel().getLTOClientId());
+            personalinfo15.setText(oTrans.Master().getModel().getPhNationalId());
+        } catch (SQLException | GuanzonException e) {
+            ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
+        }
+    }
+
+    private void loadRecordAddress() {
+        try {
+            loadMasterAddress();
+
+            int lnCtr;
+            int lnCtr2 = 0;
+            address_data.clear();
+
+            if (oTrans.getAddressCount() >= 0) {
+                for (lnCtr = 0; lnCtr < oTrans.getAddressCount(); lnCtr++) {
+                    TownCity loTownCity = new TownCity();
+                    loTownCity.setApplicationDriver(oApp);
+                    loTownCity.setRecordStatus("1");
+                    loTownCity.initialize();
+                    loTownCity.openRecord(oTrans.Address(lnCtr2).getModel().getTownId());
+
+                    Barangay loBarangay = new Barangay();
+                    try {
+                        loBarangay.setApplicationDriver(oApp);
+                        loBarangay.setRecordStatus("1");
+                        loBarangay.initialize();
+                        loBarangay.openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
+                    } catch (Exception e) {
+                    }
+
+                    address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
+                            (String) oTrans.Address(lnCtr2).getModel().getValue("sHouseNox"),
+                            (String) oTrans.Address(lnCtr2).getModel().getValue("sAddressx"),
+                            (String) loTownCity.getModel().getTownName(),
+                            (String) loBarangay.getModel().getBarangayName()
+                    ));
+                    lnCtr2 += 1;
+
                 }
-
-                address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
-                        (String) oTrans.Address(lnCtr2).getModel().getValue("sHouseNox"),
-                        (String) oTrans.Address(lnCtr2).getModel().getValue("sAddressx"),
-                        (String) loTownCity.getModel().getTownName(),
-                        (String) loBarangay.getModel().getBarangayName()
-                ));
-                lnCtr2 += 1;
-
             }
-        }
 
-        if (pnAddress < 0 || pnAddress
-                >= address_data.size()) {
-            if (!address_data.isEmpty()) {
-                /* FOCUS ON FIRST ROW */
-                tblAddress.getSelectionModel().select(0);
-                tblAddress.getFocusModel().focus(0);
-                pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+            if (pnAddress < 0 || pnAddress
+                    >= address_data.size()) {
+                if (!address_data.isEmpty()) {
+                    /* FOCUS ON FIRST ROW */
+                    tblAddress.getSelectionModel().select(0);
+                    tblAddress.getFocusModel().focus(0);
+                    pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+                    getSelectedAddress();
+
+                }
+            } else {
+                /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+                tblAddress.getSelectionModel().select(pnAddress);
+                tblAddress.getFocusModel().focus(pnAddress);
                 getSelectedAddress();
-
             }
-        } else {
-            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
-            tblAddress.getSelectionModel().select(pnAddress);
-            tblAddress.getFocusModel().focus(pnAddress);
-            getSelectedAddress();
+        } catch (SQLException | GuanzonException e) {
+            ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
         }
-
     }
 
     private void loadRecordMobile() {
-
         int lnCtr2 = 0;
         mobile_data.clear();
 
@@ -1619,45 +1617,49 @@ public class IndividualNewController implements Initializable {
     }
 
     private void getSelectedAddress() {
+        try {
+            if (oTrans.getAddressCount() > 0) {
+                AddressField01.setText(oTrans.Address(pnAddress).getModel().getHouseNo());
+                AddressField02.setText(oTrans.Address(pnAddress).getModel().getAddress());
 
-        if (oTrans.getAddressCount() > 0) {
-            AddressField01.setText(oTrans.Address(pnAddress).getModel().getHouseNo());
-            AddressField02.setText(oTrans.Address(pnAddress).getModel().getAddress());
+                Province loProvince = new Province();
+                loProvince.setApplicationDriver(oApp);
+                loProvince.setRecordStatus("1");
+                loProvince.initialize();
+                loProvince.openRecord(oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId());
 
-            Province loProvince = new Province();
-            loProvince.setApplicationDriver(oApp);
-            loProvince.setRecordStatus("1");
-            loProvince.initialize();
-            loProvince.openRecord(oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId());
+                AddressField03.setText(loProvince.getModel().getProvinceName());
 
-            AddressField03.setText(loProvince.getModel().getProvinceName());
+                TownCity loTownCity = new TownCity();
+                loTownCity.setApplicationDriver(oApp);
+                loTownCity.setRecordStatus("1");
+                loTownCity.initialize();
+                loTownCity.openRecord(oTrans.Address(pnAddress).getModel().getTownId());
 
-            TownCity loTownCity = new TownCity();
-            loTownCity.setApplicationDriver(oApp);
-            loTownCity.setRecordStatus("1");
-            loTownCity.initialize();
-            loTownCity.openRecord(oTrans.Address(pnAddress).getModel().getTownId());
+                Barangay loBarangay = new Barangay();
+                loBarangay.setApplicationDriver(oApp);
+                loBarangay.setRecordStatus("1");
+                loBarangay.initialize();
+                loBarangay.openRecord(oTrans.Address(pnAddress).getModel().getBarangayId());
 
-            Barangay loBarangay = new Barangay();
-            loBarangay.setApplicationDriver(oApp);
-            loBarangay.setRecordStatus("1");
-            loBarangay.initialize();
-            loBarangay.openRecord(oTrans.Address(pnAddress).getModel().getBarangayId());
+                AddressField04.setText((String) loTownCity.getModel().getTownName());
+                AddressField05.setText(loBarangay.getModel().getBarangayName());
+                AddressField06.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLatitude()));
+                AddressField07.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLongitude()));
 
-            AddressField04.setText((String) loTownCity.getModel().getTownName());
-            AddressField05.setText(loBarangay.getModel().getBarangayName());
-            AddressField06.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLatitude()));
-            AddressField07.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLongitude()));
-            
-            cbAddress01.setSelected(((String) oTrans.Address(pnAddress).getModel().getRecordStatus() == "1") ? true : false);
-            cbAddress02.setSelected(oTrans.Address(pnAddress).getModel().isPrimaryAddress());
-            cbAddress03.setSelected(oTrans.Address(pnAddress).getModel().isOfficeAddress());
-            cbAddress04.setSelected(oTrans.Address(pnAddress).getModel().isProvinceAddress());
-            cbAddress05.setSelected(oTrans.Address(pnAddress).getModel().isBillingAddress());
-            cbAddress06.setSelected(oTrans.Address(pnAddress).getModel().isShippingAddress());
-            cbAddress07.setSelected(oTrans.Address(pnAddress).getModel().isCurrentAddress());
-            cbAddress08.setSelected(oTrans.Address(pnAddress).getModel().isLTMSAddress());
+                cbAddress01.setSelected(((String) oTrans.Address(pnAddress).getModel().getRecordStatus() == "1") ? true : false);
+                cbAddress02.setSelected(oTrans.Address(pnAddress).getModel().isPrimaryAddress());
+                cbAddress03.setSelected(oTrans.Address(pnAddress).getModel().isOfficeAddress());
+                cbAddress04.setSelected(oTrans.Address(pnAddress).getModel().isProvinceAddress());
+                cbAddress05.setSelected(oTrans.Address(pnAddress).getModel().isBillingAddress());
+                cbAddress06.setSelected(oTrans.Address(pnAddress).getModel().isShippingAddress());
+                cbAddress07.setSelected(oTrans.Address(pnAddress).getModel().isCurrentAddress());
+                cbAddress08.setSelected(oTrans.Address(pnAddress).getModel().isLTMSAddress());
+            }
+        } catch (SQLException | GuanzonException e) {
+            ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
         }
+        
     }
 
     private void getSelectedEmail() {
@@ -2177,23 +2179,27 @@ public class IndividualNewController implements Initializable {
             pnEditMode = EditMode.ADDNEW;
         } else {
             // OPEN RECORD
-            oTrans.Master().openRecord(lsID);
-            oTrans.OpenClientAddress(lsID);
-            oTrans.OpenClientMobile(lsID);
-            oTrans.OpenClientMail(lsID);
-            oTrans.OpenClientSocialMedia(lsID);
+            try {
+                oTrans.Master().openRecord(lsID);
+                oTrans.OpenClientAddress(lsID);
+                oTrans.OpenClientMobile(lsID);
+                oTrans.OpenClientMail(lsID);
+                oTrans.OpenClientSocialMedia(lsID);
 
-            if (oTrans.getAddressCount() <= 0) {
-                booleanArray[0] = false;
-            }
-            if (oTrans.getMobileCount() <= 0) {
-                booleanArray[1] = false;
-            }
-            if (oTrans.getMailCount() <= 0) {
-                booleanArray[2] = false;
-            }
-            if (oTrans.getSocMedCount() <= 0) {
-                booleanArray[3] = false;
+                if (oTrans.getAddressCount() <= 0) {
+                    booleanArray[0] = false;
+                }
+                if (oTrans.getMobileCount() <= 0) {
+                    booleanArray[1] = false;
+                }
+                if (oTrans.getMailCount() <= 0) {
+                    booleanArray[2] = false;
+                }
+                if (oTrans.getSocMedCount() <= 0) {
+                    booleanArray[3] = false;
+                }
+            } catch (SQLException | GuanzonException e) {
+                e.printStackTrace();
             }
         }
 
@@ -2263,9 +2269,5 @@ public class IndividualNewController implements Initializable {
 
         oTrans.Master().getModel().setSpouseId(lsClientID);
         personalinfo11.setText(oTrans.Master().getModel().getCompanyName());
-      
-        
-        
-
     }
 }

@@ -1,22 +1,17 @@
 package org.guanzon.cas.client.model;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.cas.client.services.ClientModel;
-import org.guanzon.cas.parameter.model.Model_Brand;
 import org.guanzon.cas.parameter.model.Model_Category;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
-/**
- *
- * @author Maynard
- */
 public class Model_Account_Client_Accreditation extends Model {
 
     private Model_Category poCategory;
@@ -36,14 +31,7 @@ public class Model_Account_Client_Accreditation extends Model {
             MiscUtil.initRowSet(poEntity);
 
             //assign default values
-//            poEntity.updateString("dTransact", RecordStatus.ACTIVE);
-//            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
-//            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
-//            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
-//            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
-//            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             poEntity.updateString("dApproved", "0000-00-00");
-            
             poEntity.updateString("cTranStat", RecordStatus.INACTIVE);
             //end - assign default values
 
@@ -64,7 +52,6 @@ public class Model_Account_Client_Accreditation extends Model {
             poClientInstitutionContact = clientmodel.ClientInstitutionContact();            
             poClientMobile = clientmodel.ClientMobile();
             
-            
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -72,119 +59,6 @@ public class Model_Account_Client_Accreditation extends Model {
         }
     }
 
-    public Model_Category Category() {
-        if (!"".equals((String) getValue("sCategrCd"))) {
-            if (poCategory.getEditMode() == EditMode.READY
-                    && poCategory.getCategoryId().equals((String) getValue("sCategrCd"))) {
-                return poCategory;
-            } else {
-                poJSON = poCategory.openRecord((String) getValue("sCategrCd"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poCategory;
-                } else {
-                    poCategory.initialize();
-                    return poCategory;
-                }
-            }
-        } else {
-            poCategory.initialize();
-            return poCategory;
-        }
-    }
-    
-    public Model_Client_Master ClientMaster() {
-        System.out.println("Model_Client_Master == " + (String) getValue("sClientID"));
-        if (!"".equals((String) getValue("sClientID"))) {
-            if (poClientMaster.getEditMode() == EditMode.READY
-                    && poClientMaster.getClientId().equals((String) getValue("sClientID"))) {
-                return poClientMaster;
-            } else {
-                poJSON = poClientMaster.openRecord((String) getValue("sClientID"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poClientMaster;
-                } else {
-                    poClientMaster.initialize();
-                    return poClientMaster;
-                }
-            }
-        } else {
-            poClientMaster.initialize();
-            return poClientMaster;
-        }
-    }
-    
-    public Model_Client_Address ClientAddress() {
-         System.out.println("Model_Client_Address == " + (String) getValue("sClientID"));
-        if (!"".equals((String) getValue("sClientID"))) {
-            if (poClientAddress.getEditMode() == EditMode.READY
-                    && poClientAddress.getClientId().equals((String) getValue("sAddrssID"))) {
-                return poClientAddress;
-            } else {
-                
-                System.out.println("before = " + (String) poJSON.get("result"));
-                poJSON = poClientAddress.openRecord((String) getValue("sAddrssID"));
-                
-                System.out.println("after = " + (String) poJSON.get("result"));
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poClientAddress;
-                } else {
-                    poClientAddress.initialize();
-                    return poClientAddress;
-                }
-            }
-        } else {
-            poClientAddress.initialize();
-            return poClientAddress;
-        }
-    }
-    
-    
-    
-        public Model_Client_Institution_Contact ClientInstitutionContact() {
-         System.out.println("Model_Client_Institution_Contact == " + (String) getValue("sClientID"));            
-        if (!"".equals((String) getValue("sClientID"))) {
-            if (poClientInstitutionContact.getEditMode() == EditMode.READY
-                    && poClientInstitutionContact.getClientId().equals((String) getValue("sContctID"))) {
-                return poClientInstitutionContact;
-            } else {
-                poJSON = poClientInstitutionContact.openRecord((String) getValue("sContctID"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poClientInstitutionContact;
-                } else {
-                    poClientInstitutionContact.initialize();
-                    return poClientInstitutionContact;
-                }
-            }
-        } else {
-            poClientInstitutionContact.initialize();
-            return poClientInstitutionContact;
-        }
-    }
-        public Model_Client_Mobile ClientMobile() {
-        if (!"".equals((String) getValue("sClientID"))) {
-            if (poClientMobile.getEditMode() == EditMode.READY
-                    && poClientMobile.getClientId().equals((String) getValue("sContctID"))) {
-                return poClientMobile;
-            } else {
-                poJSON = poClientMobile.openRecord((String) getValue("sContctID"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poClientMobile;
-                } else {
-                    poClientMobile.initialize();
-                    return poClientMobile;
-                }
-            }
-        } else {
-            poClientMobile.initialize();
-            return poClientMobile;
-        }
-    }
-    
-   
     public JSONObject setTransactionNo(String transactionNo) {
         return setValue("sTransNox", transactionNo);
     }
@@ -299,6 +173,118 @@ public class Model_Account_Client_Accreditation extends Model {
     
     @Override
     public String getNextCode() {
-        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getConnection(), poGRider.getBranchCode());
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode());
+    }
+    
+    public Model_Category Category() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sCategrCd"))) {
+            if (poCategory.getEditMode() == EditMode.READY
+                    && poCategory.getCategoryId().equals((String) getValue("sCategrCd"))) {
+                return poCategory;
+            } else {
+                poJSON = poCategory.openRecord((String) getValue("sCategrCd"));
+
+                if ("success".equals((String) poJSON.get("result"))) {
+                    return poCategory;
+                } else {
+                    poCategory.initialize();
+                    return poCategory;
+                }
+            }
+        } else {
+            poCategory.initialize();
+            return poCategory;
+        }
+    }
+    
+    public Model_Client_Master Client() throws SQLException, GuanzonException{
+        System.out.println("Model_Client_Master == " + (String) getValue("sClientID"));
+        if (!"".equals((String) getValue("sClientID"))) {
+            if (poClientMaster.getEditMode() == EditMode.READY
+                    && poClientMaster.getClientId().equals((String) getValue("sClientID"))) {
+                return poClientMaster;
+            } else {
+                poJSON = poClientMaster.openRecord((String) getValue("sClientID"));
+
+                if ("success".equals((String) poJSON.get("result"))) {
+                    return poClientMaster;
+                } else {
+                    poClientMaster.initialize();
+                    return poClientMaster;
+                }
+            }
+        } else {
+            poClientMaster.initialize();
+            return poClientMaster;
+        }
+    }
+    
+    public Model_Client_Address ClientAddress() throws SQLException, GuanzonException{
+         System.out.println("Model_Client_Address == " + (String) getValue("sClientID"));
+        if (!"".equals((String) getValue("sClientID"))) {
+            if (poClientAddress.getEditMode() == EditMode.READY
+                    && poClientAddress.getClientId().equals((String) getValue("sAddrssID"))) {
+                return poClientAddress;
+            } else {
+                
+                System.out.println("before = " + (String) poJSON.get("result"));
+                poJSON = poClientAddress.openRecord((String) getValue("sAddrssID"));
+                
+                System.out.println("after = " + (String) poJSON.get("result"));
+                if ("success".equals((String) poJSON.get("result"))) {
+                    return poClientAddress;
+                } else {
+                    poClientAddress.initialize();
+                    return poClientAddress;
+                }
+            }
+        } else {
+            poClientAddress.initialize();
+            return poClientAddress;
+        }
+    }
+    
+    
+    
+        public Model_Client_Institution_Contact ClientInstitutionContact() throws SQLException, GuanzonException{
+         System.out.println("Model_Client_Institution_Contact == " + (String) getValue("sClientID"));            
+        if (!"".equals((String) getValue("sClientID"))) {
+            if (poClientInstitutionContact.getEditMode() == EditMode.READY
+                    && poClientInstitutionContact.getClientId().equals((String) getValue("sContctID"))) {
+                return poClientInstitutionContact;
+            } else {
+                poJSON = poClientInstitutionContact.openRecord((String) getValue("sContctID"));
+
+                if ("success".equals((String) poJSON.get("result"))) {
+                    return poClientInstitutionContact;
+                } else {
+                    poClientInstitutionContact.initialize();
+                    return poClientInstitutionContact;
+                }
+            }
+        } else {
+            poClientInstitutionContact.initialize();
+            return poClientInstitutionContact;
+        }
+    }
+        public Model_Client_Mobile ClientMobile() throws SQLException, GuanzonException{
+        if (!"".equals((String) getValue("sClientID"))) {
+            if (poClientMobile.getEditMode() == EditMode.READY
+                    && poClientMobile.getClientId().equals((String) getValue("sContctID"))) {
+                return poClientMobile;
+            } else {
+                poJSON = poClientMobile.openRecord((String) getValue("sContctID"));
+
+                if ("success".equals((String) poJSON.get("result"))) {
+                    return poClientMobile;
+                } else {
+                    poClientMobile.initialize();
+                    return poClientMobile;
+                }
+            }
+        } else {
+            poClientMobile.initialize();
+            return poClientMobile;
+        }
     }
 }

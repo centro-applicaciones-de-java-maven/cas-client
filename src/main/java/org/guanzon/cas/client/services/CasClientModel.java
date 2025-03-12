@@ -1,13 +1,13 @@
 package org.guanzon.cas.client.services;
 
-import org.guanzon.appdriver.base.GRider;
+import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
 import org.guanzon.cas.client.model.Model_AP_Client_Master;
 import org.guanzon.cas.client.model.Model_AR_Client_Ledger;
 import org.guanzon.cas.client.model.Model_AR_Client_Master;
 public class CasClientModel {
 
-    public CasClientModel(GRider applicationDriver) {
+    public CasClientModel(GRiderCAS applicationDriver) {
         poGRider = applicationDriver;
     }
 
@@ -79,7 +79,7 @@ public class CasClientModel {
         return poArClientLedger;
     }
 
-    private final GRider poGRider;
+    private final GRiderCAS poGRider;
 
     private Model_AP_Client_Master poApClientMaster;
     private Model_AP_Client_Ledger poApClientLedger;
