@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.mycompany</groupId>
     <artifactId>cas-client</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
@@ -35,6 +35,43 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <exec.mainClass>com.mycompany.cas.client.CasClient</exec.mainClass>
     </properties>
+    <developers>
+        <developer>
+            <name>Rex S. Adversalo</name>
+            <email>rsadversalo@guanzongroup.com.ph</email>
+            <organization>Guanzon Group of Companies</organization>
+        </developer>
+           
+        <developer>
+            <name>Marlon A. Sayson</name>
+            <email>masayson@guanzongroup.com.ph</email>
+            <organization>Guanzon Group of Companies</organization>
+        </developer>
+        
+        <developer>    
+            <name>Michael T. Cuison</name>
+            <email>mtcuison@guanzongroup.com.ph</email>
+            <organization>Guanzon Group of Companies</organization>
+        </developer>
+    </developers>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <!-- Add any configuration options here -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Guanzon-Central-Repository Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/mtcuison/Guanzon-Central-Repository/</url>
+        </repository>
+    </distributionManagement>
 </project>
