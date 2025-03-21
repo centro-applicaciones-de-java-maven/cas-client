@@ -6,6 +6,7 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
+import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -28,6 +29,7 @@ public class Model_Client_Master extends Model{
             MiscUtil.initRowSet(poEntity);
             
             //assign default values
+            poEntity.updateObject("cClientTp", ClientType.INDIVIDUAL);
             poEntity.updateObject("dBirthDte", SQLUtil.toDate("1900-01-01", SQLUtil.FORMAT_SHORT_DATE));
             poEntity.updateString("cLRClient", Logical.NO);
             poEntity.updateString("cMCClient", Logical.NO);

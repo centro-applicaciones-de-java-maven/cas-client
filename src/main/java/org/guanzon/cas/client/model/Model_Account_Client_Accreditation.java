@@ -7,7 +7,7 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
-import org.guanzon.cas.client.services.ClientModel;
+import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.parameter.model.Model_Category;
 import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
@@ -46,7 +46,7 @@ public class Model_Account_Client_Accreditation extends Model {
             ParamModels model = new ParamModels(poGRider);
             poCategory = model.Category();
             
-            ClientModel clientmodel = new ClientModel(poGRider);
+            ClientModels clientmodel = new ClientModels(poGRider);
             poClientMaster = clientmodel.ClientMaster();
             poClientAddress = clientmodel.ClientAddress();
             poClientInstitutionContact = clientmodel.ClientInstitutionContact();            

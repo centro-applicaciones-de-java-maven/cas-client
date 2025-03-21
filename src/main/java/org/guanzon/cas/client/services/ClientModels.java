@@ -7,8 +7,8 @@ import org.guanzon.cas.client.model.Model_Client_Mail;
 import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
-public class ClientModel {
-    public ClientModel(GRiderCAS applicationDriver) {
+public class ClientModels {
+    public ClientModels(GRiderCAS applicationDriver) {
         poGRider = applicationDriver;
     }
 
