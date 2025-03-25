@@ -1,7 +1,6 @@
 package org.guanzon.cas.client;
 
 import java.sql.ResultSet;
-import java.sql.SQLClientInfoException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -255,7 +254,7 @@ public class Client {
                         ", a.dModified" +
                         ", b.sTownName xTownName" +
                         ", d.sBrgyName xBrgyName" +
-                        ", c.sProvName xProvName" +
+                        ", c.sDescript xProvName" +
                 " FROM Client_Address a" + 
                  " LEFT JOIN TownCity b ON a.sTownIDxx = b.sTownIDxx" +
                             " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx" +

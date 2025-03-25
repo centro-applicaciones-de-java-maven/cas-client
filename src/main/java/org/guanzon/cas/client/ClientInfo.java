@@ -66,13 +66,6 @@ public class ClientInfo extends Parameter{
                 poClient.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
                 poClient.setModifiedDate(poGRider.getServerDate());
             }
-            
-            
-//            if (poClient.getBirthDate() == SQLUtil.toDate("1900-01-01", SQLUtil.FORMAT_SHORT_DATE)){
-//                poJSON.put("result", "error");
-//                poJSON.put("message", "Invalid birth date must not be empty.");
-//                return poJSON;
-//            }
         }
         
         poJSON.put("result", "success");

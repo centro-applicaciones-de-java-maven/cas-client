@@ -86,7 +86,7 @@ public class Client_Master extends Parameter {
                 value,
                 "ID»Name»Birthday»Birth Place",
                 "sClientID»sCompnyNm»dBirthDte»xBirthPlc",
-                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))",
+                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -104,7 +104,7 @@ public class Client_Master extends Parameter {
                 value,
                 "ID»Name»Birthday»Birth Place",
                 "sClientID»sCompnyNm»dBirthDte»xBirthPlc",
-                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))",
+                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -141,7 +141,7 @@ public class Client_Master extends Parameter {
                 value,
                 "ID»Name»Birthday»Birth Place»Client Type",
                 "sClientID»sCompnyNm»dBirthDte»xBirthPlc»cClientTp",
-                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode)))»IF(a.cClientTp = 0, 'Individual', 'Corporate')",
+                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))»IF(a.cClientTp = 0, 'Individual', 'Corporate')",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -351,7 +351,7 @@ public class Client_Master extends Parameter {
                 + ", a.cCPClient"
                 + ", a.cRecdStat"
                 + ", IF(a.cClientTp = '0',CONCAT(a.sLastName, ', ', a.sFrstName,IF(LTRIM(RTRIM(IFNULL(a.sSuffixNm, ''))) = '',' ',CONCAT(' ', LTRIM(RTRIM(a.sSuffixNm)), ' ')),a.sMiddName),a.sCompnyNm) AS xFullName"
-                + ", CONCAT(IF(IFNULL(b.sTownName, '') = '','',CONCAT(b.sTownName, ', ', c.sProvName, ' ', b.sZippCode))) AS xBirthPlc"
+                + ", CONCAT(IF(IFNULL(b.sTownName, '') = '','',CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode))) AS xBirthPlc"
                 + " FROM Client_Master a"
                 + " LEFT JOIN TownCity b ON a.sBirthPlc = b.sTownIDxx"
                 + " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx";

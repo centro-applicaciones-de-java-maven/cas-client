@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
-import org.guanzon.cas.client.ClientInfo;
+import org.guanzon.cas.client.Client;
 
 public class ClientControllers {
     public ClientControllers(GRiderCAS applicationDriver, LogWrapper logWrapper) {
@@ -12,7 +12,7 @@ public class ClientControllers {
         poLogWrapper = logWrapper;
     }
 
-    public ClientInfo Client() throws SQLException, GuanzonException{
+    public Client Client() throws SQLException, GuanzonException{
         if (poGRider == null) {
             poLogWrapper.severe("InvControllers.Inventory: Application driver is not set.");
             return null;
@@ -22,17 +22,12 @@ public class ClientControllers {
             return poClient;
         }
 
-        poClient = new ClientInfo();
-        poClient.setApplicationDriver(poGRider);
-        poClient.setWithParentClass(false);
-        poClient.setLogWrapper(poLogWrapper);
-        poClient.initialize();
-        poClient.newRecord();
+        poClient = new Client(poGRider,"", poLogWrapper);
         return poClient;
     }
 
     private final GRiderCAS poGRider;
     private final LogWrapper poLogWrapper;
 
-    private ClientInfo poClient;
+    private Client poClient;
 }
