@@ -770,7 +770,7 @@ public class Client {
         return poJSON;
     }
 
-    public JSONObject Save() throws SQLException, GuanzonException{
+    public JSONObject Save() throws SQLException, GuanzonException, CloneNotSupportedException{
         int lnCtr;
 
         if (psParent.isEmpty()) {

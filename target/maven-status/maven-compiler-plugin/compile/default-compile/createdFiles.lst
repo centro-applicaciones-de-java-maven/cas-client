@@ -1,4 +1,3 @@
-org\guanzon\cas\client\InstitutionClientType.class
 org\guanzon\cas\client\Client.class
 org\guanzon\cas\client\Client_Mail.class
 org\guanzon\cas\client\model\Model_AR_Client_Ledger.class
@@ -25,5 +24,4 @@ org\guanzon\cas\client\table\models\ModelEmail.class
 org\guanzon\cas\client\table\models\ModelAddress.class
 org\guanzon\cas\client\table\models\ModelMobile.class
 org\guanzon\cas\client\ClientInfo.class
-org\guanzon\cas\client\ClientTypes.class
 org\guanzon\cas\client\model\ClientModels.class

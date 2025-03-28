@@ -6,13 +6,13 @@ import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
+import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.cas.client.model.Model_Client_Master;
 import org.json.simple.JSONObject;
 
 public class Client_Master extends Parameter {
-
     Model_Client_Master poModel;
     String psClientTp;
     int pnEditMode;
@@ -50,7 +50,7 @@ public class Client_Master extends Parameter {
             return poJSON;
         }
 
-        if (poModel.getClientType().equals(ClientTypes.INDIVIDUAL)) {
+        if (poModel.getClientType().equals(ClientType.INDIVIDUAL)) {
             if (poModel.getLastName().isEmpty()) {
                 poJSON.put("result", "error");
                 poJSON.put("message", "Last name must not be empty.");
@@ -86,7 +86,7 @@ public class Client_Master extends Parameter {
                 value,
                 "ID»Name»Birthday»Birth Place",
                 "sClientID»sCompnyNm»dBirthDte»xBirthPlc",
-                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))",
+                "a.sClientID»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -104,7 +104,7 @@ public class Client_Master extends Parameter {
                 value,
                 "ID»Name»Birthday»Birth Place",
                 "sClientID»sCompnyNm»dBirthDte»xBirthPlc",
-                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))",
+                "a.sClientID»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -141,7 +141,7 @@ public class Client_Master extends Parameter {
                 value,
                 "ID»Name»Birthday»Birth Place»Client Type",
                 "sClientID»sCompnyNm»dBirthDte»xBirthPlc»cClientTp",
-                "a.sBrgyIDxx»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))»IF(a.cClientTp = 0, 'Individual', 'Corporate')",
+                "a.sClientID»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))»IF(a.cClientTp = 0, 'Individual', 'Corporate')",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {

@@ -87,8 +87,8 @@ public class ClientModels {
         if (poClientMail == null) {
             poClientMail = new Model_Client_Mail();
             poClientMail.setApplicationDriver(poGRider);
-            poClientMail.setXML("Model_Client_Mail");
-            poClientMail.setTableName("Client_Email_Address");
+            poClientMail.setXML("Model_Client_eMail_Address");
+            poClientMail.setTableName("Client_eMail_Address");
             poClientMail.initialize();
         }
 
