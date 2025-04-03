@@ -49,7 +49,8 @@ public class testClient {
                 Assert.fail((String) loJSON.get("message"));
             }
             
-            loJSON = record.getModel().setClientType(ClientType.INDIVIDUAL);
+            record.setClientType(ClientType.INSTITUTION);
+            loJSON = record.getModel().setCompanyName("MTC Trading Limited");
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }
@@ -89,6 +90,15 @@ public class testClient {
             record.Mail(0).isPrimaryEmail(true);
             
             record.SocMed(0).setAccount("xurpas7");
+            
+            record.Address(0).setHouseNo("027");
+            record.Address(0).setAddress("Pogo grande");
+            record.Address(0).setTownId("0314");
+            
+            record.InstiContact(0).setContactPersonName("Michael Cuison");
+            record.InstiContact(0).setContactPersonPosition("CEO");
+            record.InstiContact(0).setMobileNo("09260375777");
+            record.InstiContact(0).isPrimaryContactPersion(true);
             
             loJSON = record.saveRecord();
             if ("error".equals((String) loJSON.get("result"))) {

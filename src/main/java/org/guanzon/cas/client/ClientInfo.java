@@ -48,6 +48,7 @@ public class ClientInfo extends Parameter{
         poMobile = model.ClientMobile();               
         poMail = model.ClientMail();
         poAddress = model.ClientAddress();
+        poSocMed = model.ClientSocMed();
         poContact = model.ClientInstitutionContact();
         
         psClientTp = ClientType.INDIVIDUAL;
@@ -85,6 +86,12 @@ public class ClientInfo extends Parameter{
         
         return paSocMed.get(row);
     }
+    
+    public Model_Client_Institution_Contact InstiContact(int row){
+        if (row > paContact.size() -1) return null;
+        
+        return paContact.get(row);
+    }
         
     public int getMobileCount(){
         return paMobile.size();
@@ -100,6 +107,10 @@ public class ClientInfo extends Parameter{
     
     public int getSocMedCount(){
         return paSocMed.size();
+    }
+    
+    public int getInstiContactCount(){
+        return paContact.size();
     }
     
     public JSONObject addMobile() throws CloneNotSupportedException{
@@ -120,7 +131,7 @@ public class ClientInfo extends Parameter{
         if (paMobile.size() > 1){
             if (paMobile.get(getMobileCount() - 1).getMobileNo().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Unable to add new mobile record. Last record is still empty.");
+                poJSON.put("message", "Unable to add new mobile record.\n\nLast record is still empty.");
                 return poJSON;
             }
         }
@@ -152,13 +163,13 @@ public class ClientInfo extends Parameter{
         if (paAddress.size() > 1){
             if (paAddress.get(getAddressCount() - 1).getAddress().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Unable to add new address record. Last record's address is still empty.");
+                poJSON.put("message", "Unable to add new address record.\n\nLast record's address is still empty.");
                 return poJSON;
             }
             
             if (paAddress.get(getAddressCount() - 1).getTownId().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Unable to add new address record. Last record's town is still empty.");
+                poJSON.put("message", "Unable to add new address record.\n\nLast record's town is still empty.");
                 return poJSON;
             }
         }
@@ -190,7 +201,7 @@ public class ClientInfo extends Parameter{
         if (paMail.size() > 1){
             if (paMail.get(getMobileCount() - 1).getMailAddress().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Unable to add new email record. Last record is still empty.");
+                poJSON.put("message", "Unable to add new email record.\n\nLast record is still empty.");
                 return poJSON;
             }
         }
@@ -222,7 +233,7 @@ public class ClientInfo extends Parameter{
         if (paSocMed.size() > 1){
             if (paSocMed.get(getMobileCount() - 1).getAccount().isEmpty()){
                 poJSON.put("result", "error");
-                poJSON.put("message", "Unable to add new social media record. Last record is still empty.");
+                poJSON.put("message", "Unable to add new social media record.\n\nLast record is still empty.");
                 return poJSON;
             }
         }
@@ -231,6 +242,44 @@ public class ClientInfo extends Parameter{
         object.newRecord();
 
         paSocMed.add(object);
+        
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
+    public JSONObject addInstiContact() throws CloneNotSupportedException{
+        poJSON = new JSONObject();
+        
+        if (!pbInitRec){
+            poJSON.put("result", "error");
+            poJSON.put("message", "Object is not initialized.");
+            return poJSON;
+        }
+        
+        if (getEditMode() != EditMode.ADDNEW && getEditMode() != EditMode.UPDATE){
+            poJSON.put("result", "error");
+            poJSON.put("message", "Invalid edit mode. Unable to add mobile.");
+            return poJSON;
+        }
+         
+        if (paContact.size() > 1){
+            if (paContact.get(getInstiContactCount()- 1).getContactPersonName().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Unable to add new contact person record.\n\nLast record's name is still empty.");
+                return poJSON;
+            }
+            
+            if (paContact.get(getInstiContactCount()- 1).getMobileNo().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Unable to add new contact person record.\n\nLast record's mobile number is still empty.");
+                return poJSON;
+            }
+        }
+        
+        Model_Client_Institution_Contact object = (Model_Client_Institution_Contact) poContact.clone();
+        object.newRecord();
+
+        paContact.add(object);
         
         poJSON.put("result", "success");
         return poJSON;
@@ -245,21 +294,40 @@ public class ClientInfo extends Parameter{
         } else {
             poJSON = new JSONObject();
             
-            //validate master            
-            if (poClient.getLastName().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "Last name must not be empty.");
-                return poJSON;
-            }
-            
-            if (poClient.getFirstName().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "First name must not be empty.");
-                return poJSON;
-            }
-            
+            //validate master                        
             if (getEditMode() == EditMode.ADDNEW){
                 poJSON = poClient.setClientType(psClientTp);
+                
+                if (poClient.getClientType().equals(ClientType.INDIVIDUAL)){
+                    if (poClient.getLastName().isEmpty()){
+                        poJSON.put("result", "error");
+                        poJSON.put("message", "Last name must not be empty.");
+                        return poJSON;
+                    }
+
+                    if (poClient.getFirstName().isEmpty()){
+                        poJSON.put("result", "error");
+                        poJSON.put("message", "First name must not be empty.");
+                        return poJSON;
+                    }
+                    
+                    String lsName = poClient.getLastName() + ", " + poClient.getFirstName() + " " + poClient.getSuffixName() + " " + poClient.getMiddleName();
+                    lsName = lsName.trim();
+                    
+                    poClient.setCompanyName(lsName);
+                } else {
+                    poClient.setLastName("");
+                    poClient.setFirstName("");
+                    poClient.setMiddleName("");
+                    poClient.setSuffixName("");
+                    
+                    if (poClient.getCompanyName().isEmpty()){
+                        poJSON.put("result", "error");
+                        poJSON.put("message", "Company name must not be empty.");
+                        return poJSON;
+                    }
+                }
+
                 if (!"success".equals((String) poJSON.get("result"))) return poJSON;
                 
                 poClient.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
@@ -279,7 +347,41 @@ public class ClientInfo extends Parameter{
                     return poJSON;
                 }
             }
-        
+            
+            //validate address
+            if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
+                    paAddress.get(paAddress.size() - 1).getTownId().isEmpty()) paAddress.remove(paAddress.size() - 1);
+            
+            switch (paAddress.size()) {
+                case 0:
+                    addAddress();
+                case 1:
+                    if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
+                        paAddress.get(paAddress.size() - 1).getTownId().isEmpty()){
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Address and town must have a value.");
+                    return poJSON;
+                }
+            }
+            
+            //validate contact person
+            if (getModel().getClientType().equals(ClientType.INSTITUTION)){
+                if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() &&
+                        paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) paContact.remove(paContact.size() - 1);
+
+                switch (paContact.size()) {
+                    case 0:
+                        addInstiContact();
+                    case 1:
+                        if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() &&
+                            paContact.get(paContact.size() - 1).getMobileNo().isEmpty()){
+                        poJSON.put("result", "error");
+                        poJSON.put("message", "Contact person name and mobile number must have a value.");
+                        return poJSON;
+                    }
+                }
+            }
+            
         }
         
         poJSON = new JSONObject();
@@ -292,20 +394,32 @@ public class ClientInfo extends Parameter{
         poMobile.initialize();
         poMobile.newRecord();
         
+        poAddress.initialize();
+        poAddress.newRecord();
+        
         poMail.initialize();
         poMail.newRecord();
         
         poSocMed.initialize();
         poSocMed.newRecord();
         
+        poContact.initialize();
+        poContact.newRecord();
+        
         paMobile = new ArrayList<>();
         paMobile.add(poMobile);
+        
+        paAddress = new ArrayList<>();
+        paAddress.add(poAddress);
         
         paMail = new ArrayList<>();
         paMail.add(poMail);
         
         paSocMed = new ArrayList<>();
         paSocMed.add(poSocMed);
+        
+        paContact = new ArrayList<>();
+        paContact.add(poContact);
         
         poJSON = new JSONObject();
         poJSON.put("result", "success");
@@ -318,7 +432,7 @@ public class ClientInfo extends Parameter{
         if (getEditMode() == EditMode.ADDNEW){
             //assign master client id
             poClient.setClientId(MiscUtil.getNextCode(poClient.getTable(), "sClientID", true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode()));
-
+            
             //assign client ids to details
             int lnCtr;
 
@@ -327,7 +441,23 @@ public class ClientInfo extends Parameter{
                 loMobile = paMobile.get(lnCtr);
                 loMobile.setClientId(poClient.getClientId());
                 loMobile.setMobileNetwork(CommonUtils.classifyNetwork(loMobile.getMobileNo()));
+                
+                if (paMobile.size() == 1) loMobile.isPrimaryMobile(true);
                 if (loMobile.getEditMode() == EditMode.ADDNEW) loMobile.setModifiedDate(poGRider.getServerDate());
+            }
+            
+            Model_Client_Address loAddress;
+            for (lnCtr = 0; lnCtr <= paAddress.size() - 1; lnCtr++){
+                loAddress = paAddress.get(lnCtr);
+                
+                if (loAddress.getAddress().isEmpty() && loAddress.getTownId().isEmpty()) {
+                    paMail.remove(lnCtr);
+                    break;
+                }
+                
+                loAddress.setClientId(poClient.getClientId());
+                if (paAddress.size() == 1) loAddress.isPrimaryAddress(true);
+                if (loAddress.getEditMode() == EditMode.ADDNEW) loAddress.setModifiedDate(poGRider.getServerDate());
             }
             
             Model_Client_Mail loMail;
@@ -340,6 +470,7 @@ public class ClientInfo extends Parameter{
                 }
                 
                 loMail.setClientId(poClient.getClientId());
+                if (paMail.size() == 1) loMail.isPrimaryEmail(true);
                 if (loMail.getEditMode() == EditMode.ADDNEW) loMail.setModifiedDate(poGRider.getServerDate());
             }
             
@@ -352,8 +483,24 @@ public class ClientInfo extends Parameter{
                     break;
                 }
                 
-                loSocMed.setClientId(poClient.getClientId());
+                loSocMed.setClientId(poClient.getClientId());                
                 if (loSocMed.getEditMode() == EditMode.ADDNEW) loSocMed.setModifiedDate(poGRider.getServerDate());
+            }
+            
+            if (getModel().getClientType().equals(ClientType.INSTITUTION)){
+                Model_Client_Institution_Contact loContact;
+                for (lnCtr = 0; lnCtr <= paContact.size() - 1; lnCtr++){
+                    loContact = paContact.get(lnCtr);
+
+                    if (loContact.getContactPersonName().isEmpty()) {
+                        paSocMed.remove(lnCtr);
+                        break;
+                    }
+
+                    loContact.setClientId(poClient.getClientId());
+                    if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
+                    if (loContact.getEditMode() == EditMode.ADDNEW) loContact.setModifiedDate(poGRider.getServerDate());
+                }
             }
         }
         
@@ -365,8 +512,10 @@ public class ClientInfo extends Parameter{
     @Override
     protected JSONObject saveOthers() throws SQLException, GuanzonException{     
         Model_Client_Mobile loMobile;
+        Model_Client_Address loAddress;
         Model_Client_Mail loMail;
         Model_Client_Social_Media loSocMed;
+        Model_Client_Institution_Contact loContact;
         
         int lnCtr;
         
@@ -376,6 +525,19 @@ public class ClientInfo extends Parameter{
 
                 if (loMobile.getEditMode() == EditMode.ADDNEW){
                     poJSON = loMobile.saveRecord();
+                    if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+                } else {
+                    //validate if record is modified
+                }
+            }
+        }
+        
+        if (!paAddress.isEmpty()){
+            for (lnCtr = 0; lnCtr <= paAddress.size() - 1; lnCtr++){
+                loAddress = paAddress.get(lnCtr);
+
+                if (loAddress.getEditMode() == EditMode.ADDNEW){
+                    poJSON = loAddress.saveRecord();
                     if (!"success".equals((String) poJSON.get("result"))) return poJSON;
                 } else {
                     //validate if record is modified
@@ -405,6 +567,21 @@ public class ClientInfo extends Parameter{
                     if (!"success".equals((String) poJSON.get("result"))) return poJSON;
                 } else {
                     //validate if record is modified
+                }
+            }
+        }
+        
+        if (getModel().getClientType().equals(ClientType.INSTITUTION)){
+            if (!paContact.isEmpty()){
+                for (lnCtr = 0; lnCtr <= paContact.size() - 1; lnCtr++){
+                    loContact = paContact.get(lnCtr);
+
+                    if (loContact.getEditMode() == EditMode.ADDNEW){
+                        poJSON = loContact.saveRecord();
+                        if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+                    } else {
+                        //validate if record is modified
+                    }
                 }
             }
         }
@@ -488,7 +665,9 @@ public class ClientInfo extends Parameter{
         
         lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);
         
-        if (psClientTp.length() > 1) psClientTp = ClientType.INDIVIDUAL;
+        if (psClientTp.length() > 1) 
+            psClientTp = ClientType.INDIVIDUAL;
+        
         lsCondition = "a.cClientTp = " + SQLUtil.toSQL(psClientTp);
         
         return MiscUtil.addCondition(lsSQL, lsCondition);

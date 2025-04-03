@@ -55,7 +55,7 @@ public class ClientModels {
         if (poClientInstitutionContact == null) {
             poClientInstitutionContact = new Model_Client_Institution_Contact();
             poClientInstitutionContact.setApplicationDriver(poGRider);
-            poClientInstitutionContact.setXML("Model_Client_Institution_Contact");
+            poClientInstitutionContact.setXML("Model_Client_Institution_Contact_Person");
             poClientInstitutionContact.setTableName("Client_Institution_Contact_Person");
             poClientInstitutionContact.initialize();
         }
