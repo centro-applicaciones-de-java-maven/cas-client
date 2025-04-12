@@ -1,5 +1,8 @@
+org\guanzon\cas\client\ClientGUI$1.class
+org\guanzon\cas\client\controller\IndividualNewController.class
 org\guanzon\cas\client\Client.class
 org\guanzon\cas\client\Client_Mail.class
+org\guanzon\cas\client\ClientGUI.class
 org\guanzon\cas\client\model\Model_AR_Client_Ledger.class
 org\guanzon\cas\client\model\Model_Client_Institution_Contact.class
 org\guanzon\cas\client\model\Model_Client_Mail.class
@@ -13,6 +16,7 @@ org\guanzon\cas\client\Client_Master.class
 org\guanzon\cas\client\model\Model_Client_Social_Media.class
 org\guanzon\cas\client\services\ClientModels.class
 org\guanzon\cas\client\Client_Address.class
+org\guanzon\cas\client\ClientGUI$2.class
 org\guanzon\cas\client\model\Model_Account_Client_Accreditation.class
 org\guanzon\cas\client\services\ClientControllers.class
 org\guanzon\cas\client\Client_Social_Media.class

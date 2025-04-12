@@ -17,7 +17,6 @@ import org.junit.runners.MethodSorters;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testClient {
-
     static GRiderCAS instance;
     static ClientInfo record;
     static LogWrapper logWrapper;

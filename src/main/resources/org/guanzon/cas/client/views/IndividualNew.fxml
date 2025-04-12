@@ -150,47 +150,47 @@
                                                                         <RowConstraints minHeight="27.0" prefHeight="27.0" vgrow="SOMETIMES" />
                                                                      </rowConstraints>
                                                                      <children>
-                                                                        <TextField fx:id="personalinfo02" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2">
+                                                                        <TextField fx:id="txtPersonal02" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="personalinfo03" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                        <TextField fx:id="txtPersonal03" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="personalinfo04" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                        <TextField fx:id="txtPersonal04" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="personalinfo05" prefWidth="167.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                                        <TextField fx:id="txtPersonal05" prefWidth="167.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="personalinfo06" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2">
+                                                                        <TextField fx:id="txtPersonal06" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <DatePicker fx:id="personalinfo07" prefWidth="227.0" promptText="YYYY-MM-DD" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                        <DatePicker fx:id="txtPersonal07" prefWidth="227.0" promptText="YYYY-MM-DD" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </DatePicker>
-                                                                        <TextField fx:id="personalinfo08" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="2">
+                                                                        <TextField fx:id="txtPersonal08" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <ComboBox fx:id="personalinfo09" maxWidth="182.0" minWidth="95.0" prefHeight="27.0" prefWidth="95.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                        <ComboBox fx:id="cmbPersonal09" maxWidth="182.0" minWidth="95.0" prefHeight="27.0" prefWidth="95.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </ComboBox>
-                                                                        <ComboBox fx:id="personalinfo10" maxWidth="184.0" minWidth="130.0" prefHeight="27.0" prefWidth="156.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+                                                                        <ComboBox fx:id="cmbPersonal10" maxWidth="184.0" minWidth="130.0" prefHeight="27.0" prefWidth="156.0" style="-fx-min-height: 26;" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -205,12 +205,12 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="personalinfo13" minWidth="89.0" prefWidth="89.0" promptText="XXX-XX-XXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                                        <TextField fx:id="txtPersonal13" minWidth="89.0" prefWidth="89.0" promptText="XXX-XX-XXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="personalinfo15" maxWidth="200.0" minWidth="150.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
+                                                                        <TextField fx:id="txtPersonal15" maxWidth="200.0" minWidth="150.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="9">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -370,37 +370,37 @@
                                                                   <RowConstraints minHeight="25.0" prefHeight="28.0" vgrow="SOMETIMES" />
                                                                </rowConstraints>
                                                                <children>
-                                                                        <TextField fx:id="AddressField03" maxWidth="283.0" minWidth="150.0" prefHeight="30.0" prefWidth="283.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
+                                                                        <TextField fx:id="txtAddress03" maxWidth="283.0" minWidth="150.0" prefHeight="30.0" prefWidth="283.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField04" maxWidth="291.0" minWidth="150.0" prefHeight="30.0" prefWidth="291.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                                  <TextField fx:id="txtAddress04" maxWidth="291.0" minWidth="150.0" prefHeight="30.0" prefWidth="291.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField05" maxWidth="246.0" minWidth="150.0" prefHeight="30.0" prefWidth="246.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                                  <TextField fx:id="txtAddress05" maxWidth="246.0" minWidth="150.0" prefHeight="30.0" prefWidth="246.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField01" minWidth="62.0" prefWidth="62.0" promptText="House #" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                                                  <TextField fx:id="txtAddress01" minWidth="62.0" prefWidth="62.0" promptText="House #" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="3">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField02" maxWidth="406.0" minWidth="-Infinity" prefHeight="30.0" prefWidth="405.0" promptText="Lot No./Building/Floor/Sitio/Purok" styleClass="text-field" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="3">
+                                                                  <TextField fx:id="txtAddress02" maxWidth="406.0" minWidth="-Infinity" prefHeight="30.0" prefWidth="405.0" promptText="Lot No./Building/Floor/Sitio/Purok" styleClass="text-field" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="3">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField06" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                                  <TextField fx:id="txtAddress06" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="AddressField07" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                                  <TextField fx:id="txtAddress07" maxWidth="200.0" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -683,7 +683,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </ComboBox>
-                                                                                    <TextField fx:id="mailFields01" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="219.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                                    <TextField fx:id="txtEmail01" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="219.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
