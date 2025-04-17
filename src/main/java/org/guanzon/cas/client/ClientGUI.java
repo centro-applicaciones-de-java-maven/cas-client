@@ -19,7 +19,10 @@ public class ClientGUI extends Application {
     
     private static GRiderCAS poGRider;
     private static LogWrapper poWrapper;
+    private static ClientInfo poClient;
+    
     private static String psClientId;
+    private static boolean pbCancelled;
     
     public void setGRider(GRiderCAS griderCAS){
         poGRider = griderCAS;
@@ -31,6 +34,14 @@ public class ClientGUI extends Application {
     
     public void setClientId(String clientId){
         psClientId = clientId;
+    }
+    
+    public ClientInfo getClient(){
+        return poClient;
+    }
+    
+    public boolean isCancelled(){
+        return pbCancelled;
     }
     
     @Override
@@ -67,6 +78,9 @@ public class ClientGUI extends Application {
         primaryStage.initModality(Modality.APPLICATION_MODAL);
         primaryStage.setTitle("Client Info");
         primaryStage.showAndWait();
+        
+        pbCancelled = controller.isCancelled();
+        if (!pbCancelled) poClient = controller.getClient();
     }
 
     public static void main(String[] args) {

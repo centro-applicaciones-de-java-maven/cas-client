@@ -28,15 +28,17 @@ public class Model_Client_Master extends Model{
 
             MiscUtil.initRowSet(poEntity);
             
-            //assign default values
+            //assign default valu
+            poEntity.updateObject("cGenderCd", "0");
+            poEntity.updateObject("cCvilStat", "0");
             poEntity.updateObject("cClientTp", ClientType.INDIVIDUAL);
             poEntity.updateObject("dBirthDte", SQLUtil.toDate("1900-01-01", SQLUtil.FORMAT_SHORT_DATE));
-            poEntity.updateString("cLRClient", Logical.NO);
-            poEntity.updateString("cMCClient", Logical.NO);
-            poEntity.updateString("cSCClient", Logical.NO);
-            poEntity.updateString("cSPClient", Logical.NO);
-            poEntity.updateString("cCPClient", Logical.NO);
-            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
+            poEntity.updateObject("cLRClient", Logical.NO);
+            poEntity.updateObject("cMCClient", Logical.NO);
+            poEntity.updateObject("cSCClient", Logical.NO);
+            poEntity.updateObject("cSPClient", Logical.NO);
+            poEntity.updateObject("cCPClient", Logical.NO);
+            poEntity.updateObject("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
 
             poEntity.insertRow();
@@ -278,7 +280,7 @@ public class Model_Client_Master extends Model{
     
     @Override
     public String getNextCode(){
-        return ""; 
+        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), poGRider.getBranchCode()); 
     }
     
     public Model_TownCity BirthTown() throws SQLException, GuanzonException{

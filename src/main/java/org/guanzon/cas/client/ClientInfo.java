@@ -390,7 +390,7 @@ public class ClientInfo extends Parameter{
     }
     
     @Override
-    protected JSONObject initFields() throws SQLException, GuanzonException{
+    protected JSONObject initFields() throws SQLException, GuanzonException{        
         poMobile.initialize();
         poMobile.newRecord();
         

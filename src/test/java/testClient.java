@@ -47,6 +47,7 @@ public class testClient {
             if ("error".equals((String) loJSON.get("result"))) {
                 Assert.fail((String) loJSON.get("message"));
             }
+            System.out.println(record.getModel().getClientId());
             
             record.setClientType(ClientType.INSTITUTION);
             loJSON = record.getModel().setCompanyName("MTC Trading Limited");

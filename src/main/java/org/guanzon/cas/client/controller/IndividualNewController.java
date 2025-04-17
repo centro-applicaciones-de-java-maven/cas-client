@@ -6,29 +6,39 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import static javafx.scene.input.KeyCode.DOWN;
+import static javafx.scene.input.KeyCode.ENTER;
+import static javafx.scene.input.KeyCode.F3;
+import static javafx.scene.input.KeyCode.UP;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import org.guanzon.appdriver.agent.ShowMessageFX;
+import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
+import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.client.ClientInfo;
 import org.guanzon.cas.client.services.ClientControllers;
+import org.json.simple.JSONObject;
 
 public class IndividualNewController implements Initializable {
     @FXML
@@ -66,7 +76,7 @@ public class IndividualNewController implements Initializable {
     @FXML
     private TextField txtPersonal06;
     @FXML
-    private DatePicker txtPersonal07;
+    private TextField txtPersonal07;
     @FXML
     private TextField txtPersonal08;
     @FXML
@@ -74,15 +84,15 @@ public class IndividualNewController implements Initializable {
     @FXML
     private ComboBox cmbPersonal10;
     @FXML
-    private TextField personalinfo11;
+    private TextField txtPersonal11;
     @FXML
-    private TextField personalinfo12;
+    private TextField txtPersonal12;
     @FXML
     private TextField txtPersonal13;
     @FXML
     private TextField txtPersonal15;
     @FXML
-    private TextField personalinfo14;
+    private TextField txtPersonal14;
     @FXML
     private Tab Address;
     @FXML
@@ -162,7 +172,7 @@ public class IndividualNewController implements Initializable {
     @FXML
     private Tab Email;
     @FXML
-    private ComboBox<?> cmbEmail01;
+    private ComboBox cmbEmail01;
     @FXML
     private TextField txtEmail01;
     @FXML
@@ -219,7 +229,12 @@ public class IndividualNewController implements Initializable {
     private int pnEmail;
     private int pnSocmed;
     
+    private JSONObject poJSON;
     private boolean pbLoaded;
+    private boolean pbCancelled;
+    
+    ObservableList<String> gender = FXCollections.observableArrayList("Male", "Female");
+    ObservableList<String> civilstatus = FXCollections.observableArrayList("Single", "Married", "Separated", "Widowed", "Single Parent", "Single Parent w/ Live-in Partner");
     
     public void setGRider(GRiderCAS griderCAS){
         poGRider = griderCAS;
@@ -229,64 +244,92 @@ public class IndividualNewController implements Initializable {
         poWrapper = wrapper;
     }
     
-    public  void setClientId(String clientId){
+    public void setClientId(String clientId){
         psClientID = clientId;
+    }
+    
+    public ClientInfo getClient(){
+        return poClient;
+    }
+    
+    public boolean isCancelled(){
+        return pbCancelled;
     }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {        
         try {
             if (poGRider == null){
-                ShowMessageFX.Warning("Application driver is not set.", "Warning", MODULE);
+                ShowMessageFX.Warning(getStage(), "Application driver is not set.", "Warning", MODULE);
                 System.exit(1);
             }
                         
-            txtPersonal02.focusedProperty().addListener(txtPersonal_Focus);
-            txtPersonal03.focusedProperty().addListener(txtPersonal_Focus);
-            txtPersonal04.focusedProperty().addListener(txtPersonal_Focus);
-            txtPersonal05.focusedProperty().addListener(txtPersonal_Focus);
-            txtPersonal06.focusedProperty().addListener(txtPersonal_Focus);
-            txtPersonal07.focusedProperty().addListener(txtPersonal_Focus);
-            txtPersonal08.focusedProperty().addListener(txtPersonal_Focus);
-            txtPersonal08.focusedProperty().addListener(txtPersonal_Focus);
-            txtPersonal13.focusedProperty().addListener(txtPersonal_Focus);
-            txtPersonal15.focusedProperty().addListener(txtPersonal_Focus);
-            
-            txtAddress01.focusedProperty().addListener(txtAddress_Focus);
-            txtAddress02.focusedProperty().addListener(txtAddress_Focus);
-            txtAddress03.focusedProperty().addListener(txtAddress_Focus);
-            txtAddress04.focusedProperty().addListener(txtAddress_Focus);
-            txtAddress05.focusedProperty().addListener(txtAddress_Focus);
-            txtAddress06.focusedProperty().addListener(txtAddress_Focus);
-            txtAddress07.focusedProperty().addListener(txtAddress_Focus);
-            
-            txtMobile01.focusedProperty().addListener(txtMobile_Focus);
-            txtEmail01.focusedProperty().addListener(txtEmail_Focus);
-            txtSocial01.focusedProperty().addListener(txtSocmed_Focus);
-            txtSocial02.focusedProperty().addListener(txtSocmed_Focus);
-            
-            btnExit.setOnAction(this::cmdButton_Click);
-            
-            tblAddress.setOnMouseClicked(this::address_Clicked);
-                        
+            initFields();
+ 
             poClient = new ClientControllers(poGRider, poWrapper).ClientInfo();
-            
-            pnEditMode = psClientID.isEmpty() ? EditMode.ADDNEW : EditMode.UPDATE;
+            poClient.setClientType(ClientType.INDIVIDUAL);
+            poClient.setRecordStatus("1");
+            loadRecord();
             
             pbLoaded = true;
         } catch (SQLException | GuanzonException e) {
-            ShowMessageFX.Warning(e.getMessage(), "Error", MODULE);
+            ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
             System.exit(1);
         }
     }        
     
     private void cmdButton_Click(ActionEvent event) {
-        
+        switch (((Button)event.getSource()).getId()){
+            case "btnExit":
+            case "btnCancel":
+                pbCancelled = true;
+                getStage().close();
+                break;
+            case "btnSave":
+                pbCancelled = false;
+                getStage().close();
+                break;
+        }
     }
     
     private void address_Clicked(MouseEvent event) {
-        System.err.println("address clicked.");
         pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+    }
+    
+    private void mobile_Clicked(MouseEvent event) {
+        pnMobile = tblMobile.getSelectionModel().getSelectedIndex();
+    }
+    
+    private void email_Clicked(MouseEvent event) {
+        pnEmail = tblEmail.getSelectionModel().getSelectedIndex();
+    }
+    
+    private void socmed_Clicked(MouseEvent event) {
+        pnSocmed = tblSocMed.getSelectionModel().getSelectedIndex();
+    }
+    
+    private void txtPersonal_KeyPressed(KeyEvent event){
+        TextField txtField = (TextField)event.getSource();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(11, 13));
+        
+        String lsValue = txtField.getText();
+        
+        if (event.getCode() == F3){
+            switch (lnIndex){
+                case 1:
+                    return;
+
+            }
+        }
+
+        switch (event.getCode()){
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
+        }
     }
     
     final ChangeListener<? super Boolean> txtPersonal_Focus = (o,ov,nv)->{
@@ -301,7 +344,63 @@ public class IndividualNewController implements Initializable {
             
         if(!nv){//lost focus
             switch(lnIndex){
-            
+                case 2:
+                    poJSON = poClient.getModel().setLastName(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getLastName());
+                    txtField02.setText((poClient.getModel().getLastName() + ", " + poClient.getModel().getFirstName() + " " + poClient.getModel().getSuffixName() + " " + poClient.getModel().getMiddleName()).trim());                    
+                    break;
+                case 3:
+                    poJSON = poClient.getModel().setFirstName(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getFirstName());
+                    txtField02.setText((poClient.getModel().getLastName() + ", " + poClient.getModel().getFirstName() + " " + poClient.getModel().getSuffixName() + " " + poClient.getModel().getMiddleName()).trim());                    
+                    break;
+                case 4:
+                    poJSON = poClient.getModel().setMiddleName(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getMiddleName());
+                    txtField02.setText((poClient.getModel().getLastName() + ", " + poClient.getModel().getFirstName() + " " + poClient.getModel().getSuffixName() + " " + poClient.getModel().getMiddleName()).trim());                    
+                    break;
+                case 5:    
+                    poJSON = poClient.getModel().setSuffixName(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getSuffixName());
+                    txtField02.setText((poClient.getModel().getLastName() + ", " + poClient.getModel().getFirstName() + " " + poClient.getModel().getSuffixName() + " " + poClient.getModel().getMiddleName()).trim());                    
+                    break;
+                case 7:
+                    break;
+                case 12:
+                    break;
+                case 13:
+                    poJSON = poClient.getModel().setTaxIdNumber(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getTaxIdNumber());
+                    break;
+                case 14:
+                    break;
+                case 15:
+                    break;
             }
         } else{//got focus
             txtField.selectAll();
@@ -383,4 +482,114 @@ public class IndividualNewController implements Initializable {
             txtField.selectAll();
         }
     };
+    
+    private void initFields(){
+        txtPersonal02.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal03.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal04.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal05.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal06.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal07.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal08.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal11.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal12.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal13.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal14.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal15.focusedProperty().addListener(txtPersonal_Focus);
+
+        txtPersonal02.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal03.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal04.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal05.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal06.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal07.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal08.setOnKeyPressed(this::txtPersonal_KeyPressed);            
+        txtPersonal11.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal12.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal13.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal14.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal15.setOnKeyPressed(this::txtPersonal_KeyPressed);
+
+        txtAddress01.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress02.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress03.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress04.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress05.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress06.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress07.focusedProperty().addListener(txtAddress_Focus);
+
+        txtMobile01.focusedProperty().addListener(txtMobile_Focus);
+        txtEmail01.focusedProperty().addListener(txtEmail_Focus);
+        txtSocial01.focusedProperty().addListener(txtSocmed_Focus);
+        txtSocial02.focusedProperty().addListener(txtSocmed_Focus);
+
+        btnExit.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
+
+        tblAddress.setOnMouseClicked(this::address_Clicked);
+        tblMobile.setOnMouseClicked(this::mobile_Clicked);
+        tblEmail.setOnMouseClicked(this::email_Clicked);
+        tblSocMed.setOnMouseClicked(this::socmed_Clicked);  
+        
+        cmbPersonal09.setItems(gender);
+        cmbPersonal10.setItems(civilstatus);
+        
+        cmbPersonal09.setOnAction(event -> {            
+            poJSON = poClient.getModel().setGender(String.valueOf(cmbPersonal09.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+        });
+
+        cmbPersonal10.setOnAction(event -> {            
+            poJSON = poClient.getModel().setCivilStatus(String.valueOf(cmbPersonal10.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+        });
+    }
+    
+    private void loadRecord(){
+        try {
+            pnEditMode = psClientID.isEmpty() ? EditMode.ADDNEW : EditMode.UPDATE;
+        
+            if (pnEditMode == EditMode.ADDNEW)
+                poJSON =  poClient.newRecord();
+            else
+                poJSON = poClient.openRecord(psClientID);
+
+            if (!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Error", MODULE);
+                System.exit(1);
+            }
+            
+            txtField01.setText(poClient.getModel().getClientId());            
+            txtField02.setText(poClient.getModel().getCompanyName());
+            txtField03.setText("Set primary adress here");      
+            
+            if (pnEditMode == EditMode.ADDNEW){
+                cmbPersonal09.getSelectionModel().selectFirst();
+                poClient.getModel().setGender(String.valueOf(cmbPersonal09.getSelectionModel().getSelectedIndex()));
+                
+                cmbPersonal10.getSelectionModel().selectFirst();
+                poClient.getModel().setCivilStatus(String.valueOf(cmbPersonal10.getSelectionModel().getSelectedIndex()));
+            } else {
+                cmbPersonal09.getSelectionModel().select(Integer.parseInt(poClient.getModel().getGender()));
+                cmbPersonal10.getSelectionModel().select(Integer.parseInt(poClient.getModel().getCivilStatus()));
+            }
+            
+            txtPersonal02.requestFocus();
+            txtPersonal02.selectAll();
+        } catch (SQLException | GuanzonException e) {
+            ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
+            System.exit(1);
+        }       
+    }
+    
+    public Stage getStage() {
+        return (Stage) AnchorMain.getScene().getWindow();        
+    }
 }

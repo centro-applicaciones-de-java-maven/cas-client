@@ -28,4 +28,5 @@ org\guanzon\cas\client\table\models\ModelEmail.class
 org\guanzon\cas\client\table\models\ModelAddress.class
 org\guanzon\cas\client\table\models\ModelMobile.class
 org\guanzon\cas\client\ClientInfo.class
+org\guanzon\cas\client\controller\IndividualNewController$1.class
 org\guanzon\cas\client\model\ClientModels.class
