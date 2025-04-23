@@ -34,6 +34,7 @@ import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
+import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.client.ClientInfo;
@@ -279,17 +280,32 @@ public class IndividualNewController implements Initializable {
     }        
     
     private void cmdButton_Click(ActionEvent event) {
-        switch (((Button)event.getSource()).getId()){
-            case "btnExit":
-            case "btnCancel":
-                pbCancelled = true;
-                getStage().close();
-                break;
-            case "btnSave":
-                pbCancelled = false;
-                getStage().close();
-                break;
+        try {
+            switch (((Button)event.getSource()).getId()){
+                case "btnExit":
+                case "btnCancel":
+                    psClientID = "";
+                    pbCancelled = true;
+                    getStage().close();
+                    break;
+                case "btnSave":
+                    poJSON = poClient.saveRecord();
+
+                    if (!"succes".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Warning(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                        break;
+                    }
+
+                    psClientID = poClient.getModel().getClientId();
+                    pbCancelled = false;
+                    getStage().close();
+                    break;
+            }
+        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
+            ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
+            System.exit(1);
         }
+        
     }
     
     private void address_Clicked(MouseEvent event) {
@@ -385,8 +401,32 @@ public class IndividualNewController implements Initializable {
                     txtField02.setText((poClient.getModel().getLastName() + ", " + poClient.getModel().getFirstName() + " " + poClient.getModel().getSuffixName() + " " + poClient.getModel().getMiddleName()).trim());                    
                     break;
                 case 7:
+                    if (!CommonUtils.isDate(lsValue, SQLUtil.FORMAT_SHORT_DATE)){
+                        ShowMessageFX.Error(getStage(), "Invalid date input. Please follow yyyy-mm-dd format.", "Warning", MODULE);
+                        
+                        try {
+                            lsValue = SQLUtil.dateFormat(poGRider.getServerDate(), SQLUtil.FORMAT_SHORT_DATE);
+                        } catch (SQLException e) {
+                            lsValue = "1900-01-01";
+                        }
+                    }
+                    
+                    poJSON = poClient.getModel().setBirthDate(SQLUtil.toDate(lsValue, SQLUtil.FORMAT_SHORT_DATE));
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(SQLUtil.dateFormat(poClient.getModel().getBirthDate(), SQLUtil.FORMAT_SHORT_DATE));
                     break;
                 case 12:
+                    poJSON = poClient.getModel().setMothersMaidenName(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getMothersMaidenName());
                     break;
                 case 13:
                     poJSON = poClient.getModel().setTaxIdNumber(lsValue);

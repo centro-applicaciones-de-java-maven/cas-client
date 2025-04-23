@@ -122,13 +122,8 @@ public class Model_AR_Client_Master extends Model{
         return setValue("dCltSince", dateClientSince);
     }
     
-
     public Date getdateClientSince(){
-        Date date = null;
-        if(!getValue("dCltSince").toString().isEmpty()){
-            date = CommonUtils.toDate(getValue("dCltSince").toString());
-        }
-        return date;
+        return (Date) getValue("dCltSince");
     }
     
     public JSONObject setBeginningDate(Date beginningDate){

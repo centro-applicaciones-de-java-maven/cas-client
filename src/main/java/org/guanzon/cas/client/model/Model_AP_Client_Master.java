@@ -6,6 +6,7 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
+import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.cas.client.Client;
@@ -119,13 +120,8 @@ public class Model_AP_Client_Master extends Model{
         return setValue("dCltSince", dateClientSince);
     }
     
-
     public Date getdateClientSince(){
-        Date date = null;
-        if(!getValue("dCltSince").toString().isEmpty()){
-            date = CommonUtils.toDate(getValue("dCltSince").toString());
-        }
-        return date;
+        return (Date) getValue("dCltSince");
     }
     
     public JSONObject setBeginningDate(Date beginningDate){
