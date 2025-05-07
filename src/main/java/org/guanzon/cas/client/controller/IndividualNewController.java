@@ -330,13 +330,32 @@ public class IndividualNewController implements Initializable {
         
         String lsValue = txtField.getText();
         
-        if (event.getCode() == F3){
-            switch (lnIndex){
-                case 1:
-                    return;
+        try {
+            if (event.getCode() == F3){
+                switch (lnIndex){
+                    case 6:
+                        poJSON = poClient.searchCitizenship(lsValue);
+                        
+                        if ("success".equals((String) poJSON.get("result"))){
+                            txtField.setText(poClient.getModel().Citizenship().getDescription());
+                        }
 
+                        break;
+                    case 8:
+                        poJSON = poClient.searchBirthPlace(lsValue);
+                        
+                        if ("success".equals((String) poJSON.get("result"))){
+                            txtField.setText(poClient.getModel().BirthTown().getDescription());
+                        }
+                        
+                        break;
+                }
             }
+        } catch (SQLException | GuanzonException e) {
+            ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
+            System.exit(1);
         }
+        
 
         switch (event.getCode()){
             case ENTER:

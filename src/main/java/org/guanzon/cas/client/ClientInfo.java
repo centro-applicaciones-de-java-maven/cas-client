@@ -19,6 +19,9 @@ import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
 import org.guanzon.cas.client.services.ClientModels;
+import org.guanzon.cas.parameter.Country;
+import org.guanzon.cas.parameter.TownCity;
+import org.guanzon.cas.parameter.services.ParamControllers;
 import org.json.simple.JSONObject;
 
 public class ClientInfo extends Parameter{
@@ -285,6 +288,30 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
 
+    public JSONObject searchBirthPlace(String lsValue) throws SQLException, GuanzonException{
+        TownCity loParam = new ParamControllers(poGRider, logwrapr).TownCity();
+        
+        poJSON = loParam.searchRecord(lsValue, false);
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            poClient.setBirthPlaceId(loParam.getModel().getTownId());
+        }
+        
+        return poJSON;
+    }
+    
+    public JSONObject searchCitizenship(String lsValue) throws SQLException, GuanzonException{
+        Country loParam = new ParamControllers(poGRider, logwrapr).Country();
+        
+        poJSON = loParam.searchRecord(lsValue, false);
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            poClient.setCitizenshipId(loParam.getModel().getCountryId());
+        }
+        
+        return poJSON;
+    }
+    
     @Override
     public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException{        
         if (poGRider.getUserLevel() < UserRight.SYSADMIN){
@@ -334,54 +361,53 @@ public class ClientInfo extends Parameter{
                 poClient.setModifiedDate(poGRider.getServerDate());
             }
             
-            //validate mobile
-            if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) paMobile.remove(paMobile.size() - 1);
-            
-            switch (paMobile.size()) {
-                case 0:
-                    addMobile();
-                case 1:
-                    if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()){
-                    poJSON.put("result", "error");
-                    poJSON.put("message", "Client must have a mobile number.");
-                    return poJSON;
-                }
-            }
-            
-            //validate address
-            if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
-                    paAddress.get(paAddress.size() - 1).getTownId().isEmpty()) paAddress.remove(paAddress.size() - 1);
-            
-            switch (paAddress.size()) {
-                case 0:
-                    addAddress();
-                case 1:
-                    if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
-                        paAddress.get(paAddress.size() - 1).getTownId().isEmpty()){
-                    poJSON.put("result", "error");
-                    poJSON.put("message", "Address and town must have a value.");
-                    return poJSON;
-                }
-            }
-            
-            //validate contact person
-            if (getModel().getClientType().equals(ClientType.INSTITUTION)){
-                if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() &&
-                        paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) paContact.remove(paContact.size() - 1);
-
-                switch (paContact.size()) {
-                    case 0:
-                        addInstiContact();
-                    case 1:
-                        if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() &&
-                            paContact.get(paContact.size() - 1).getMobileNo().isEmpty()){
-                        poJSON.put("result", "error");
-                        poJSON.put("message", "Contact person name and mobile number must have a value.");
-                        return poJSON;
-                    }
-                }
-            }
-            
+//            //validate mobile
+//            if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) paMobile.remove(paMobile.size() - 1);
+//            
+//            switch (paMobile.size()) {
+//                case 0:
+//                    addMobile();
+//                case 1:
+//                    if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()){
+//                    poJSON.put("result", "error");
+//                    poJSON.put("message", "Client must have a mobile number.");
+//                    return poJSON;
+//                }
+//            }
+//            
+//            //validate address
+//            if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
+//                    paAddress.get(paAddress.size() - 1).getTownId().isEmpty()) paAddress.remove(paAddress.size() - 1);
+//            
+//            switch (paAddress.size()) {
+//                case 0:
+//                    addAddress();
+//                case 1:
+//                    if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
+//                        paAddress.get(paAddress.size() - 1).getTownId().isEmpty()){
+//                    poJSON.put("result", "error");
+//                    poJSON.put("message", "Address and town must have a value.");
+//                    return poJSON;
+//                }
+//            }
+//            
+//            //validate contact person
+//            if (getModel().getClientType().equals(ClientType.INSTITUTION)){
+//                if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() &&
+//                        paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) paContact.remove(paContact.size() - 1);
+//
+//                switch (paContact.size()) {
+//                    case 0:
+//                        addInstiContact();
+//                    case 1:
+//                        if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() &&
+//                            paContact.get(paContact.size() - 1).getMobileNo().isEmpty()){
+//                        poJSON.put("result", "error");
+//                        poJSON.put("message", "Contact person name and mobile number must have a value.");
+//                        return poJSON;
+//                    }
+//                }
+//            }
         }
         
         poJSON = new JSONObject();
