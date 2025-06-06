@@ -11,7 +11,6 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
-import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
 import org.guanzon.cas.client.model.Model_Client_Mail;
@@ -314,53 +313,48 @@ public class ClientInfo extends Parameter{
     
     @Override
     public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException{        
-        if (poGRider.getUserLevel() < UserRight.SYSADMIN){
-            poJSON.put("result", "error");
-            poJSON.put("message", "User is not allowed to save record.");
-            return poJSON;
-        } else {
-            poJSON = new JSONObject();
-            
-            //validate master                        
-            if (getEditMode() == EditMode.ADDNEW){
-                poJSON = poClient.setClientType(psClientTp);
-                
-                if (poClient.getClientType().equals(ClientType.INDIVIDUAL)){
-                    if (poClient.getLastName().isEmpty()){
-                        poJSON.put("result", "error");
-                        poJSON.put("message", "Last name must not be empty.");
-                        return poJSON;
-                    }
+        poJSON = new JSONObject();
 
-                    if (poClient.getFirstName().isEmpty()){
-                        poJSON.put("result", "error");
-                        poJSON.put("message", "First name must not be empty.");
-                        return poJSON;
-                    }
-                    
-                    String lsName = poClient.getLastName() + ", " + poClient.getFirstName() + " " + poClient.getSuffixName() + " " + poClient.getMiddleName();
-                    lsName = lsName.trim();
-                    
-                    poClient.setCompanyName(lsName);
-                } else {
-                    poClient.setLastName("");
-                    poClient.setFirstName("");
-                    poClient.setMiddleName("");
-                    poClient.setSuffixName("");
-                    
-                    if (poClient.getCompanyName().isEmpty()){
-                        poJSON.put("result", "error");
-                        poJSON.put("message", "Company name must not be empty.");
-                        return poJSON;
-                    }
+        //validate master                        
+        if (getEditMode() == EditMode.ADDNEW){
+            poJSON = poClient.setClientType(psClientTp);
+
+            if (poClient.getClientType().equals(ClientType.INDIVIDUAL)){
+                if (poClient.getLastName().isEmpty()){
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Last name must not be empty.");
+                    return poJSON;
                 }
 
-                if (!"success".equals((String) poJSON.get("result"))) return poJSON;
-                
-                poClient.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
-                poClient.setModifiedDate(poGRider.getServerDate());
+                if (poClient.getFirstName().isEmpty()){
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "First name must not be empty.");
+                    return poJSON;
+                }
+
+                String lsName = poClient.getLastName() + ", " + poClient.getFirstName() + " " + poClient.getSuffixName() + " " + poClient.getMiddleName();
+                lsName = lsName.trim();
+
+                poClient.setCompanyName(lsName);
+            } else {
+                poClient.setLastName("");
+                poClient.setFirstName("");
+                poClient.setMiddleName("");
+                poClient.setSuffixName("");
+
+                if (poClient.getCompanyName().isEmpty()){
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Company name must not be empty.");
+                    return poJSON;
+                }
             }
-            
+
+            if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+
+            poClient.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
+            poClient.setModifiedDate(poGRider.getServerDate());
+        }
+
 //            //validate mobile
 //            if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) paMobile.remove(paMobile.size() - 1);
 //            
@@ -408,7 +402,6 @@ public class ClientInfo extends Parameter{
 //                    }
 //                }
 //            }
-        }
         
         poJSON = new JSONObject();
         poJSON.put("result", "success");
@@ -465,6 +458,12 @@ public class ClientInfo extends Parameter{
             Model_Client_Mobile loMobile;
             for (lnCtr = 0; lnCtr <= paMobile.size() - 1; lnCtr++){
                 loMobile = paMobile.get(lnCtr);
+                
+                if (loMobile.getMobileNo().isEmpty()) {
+                    paMobile.remove(lnCtr);
+                    break;
+                }
+                                
                 loMobile.setClientId(poClient.getClientId());
                 loMobile.setMobileNetwork(CommonUtils.classifyNetwork(loMobile.getMobileNo()));
                 
@@ -477,7 +476,7 @@ public class ClientInfo extends Parameter{
                 loAddress = paAddress.get(lnCtr);
                 
                 if (loAddress.getAddress().isEmpty() && loAddress.getTownId().isEmpty()) {
-                    paMail.remove(lnCtr);
+                    paAddress.remove(lnCtr);
                     break;
                 }
                 
@@ -519,7 +518,7 @@ public class ClientInfo extends Parameter{
                     loContact = paContact.get(lnCtr);
 
                     if (loContact.getContactPersonName().isEmpty()) {
-                        paSocMed.remove(lnCtr);
+                        paContact.remove(lnCtr);
                         break;
                     }
 

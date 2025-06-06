@@ -291,7 +291,7 @@ public class IndividualNewController implements Initializable {
                 case "btnSave":
                     poJSON = poClient.saveRecord();
 
-                    if (!"succes".equals((String) poJSON.get("result"))){
+                    if (!"success".equals((String) poJSON.get("result"))){
                         ShowMessageFX.Warning(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                         break;
                     }
@@ -331,7 +331,7 @@ public class IndividualNewController implements Initializable {
         String lsValue = txtField.getText();
         
         try {
-            if (event.getCode() == F3){
+            if (event.getCode() == F3 || event.getCode() == ENTER){
                 switch (lnIndex){
                     case 6:
                         poJSON = poClient.searchCitizenship(lsValue);
