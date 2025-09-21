@@ -367,6 +367,49 @@ public class IndividualNewController implements Initializable {
         }
     }
     
+    private void txttxtAddress_KeyPressed(KeyEvent event){
+        TextField txtField = (TextField)event.getSource();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(10, 12));
+        
+        String lsValue = txtField.getText();
+        
+        try {
+            if (event.getCode() == F3 || event.getCode() == ENTER){
+                switch (lnIndex){
+                    case 6:
+                        poJSON = poClient.searchCitizenship(lsValue);
+                        
+                        if ("success".equals((String) poJSON.get("result"))){
+                            txtField.setText(poClient.getModel().Citizenship().getDescription());
+                        }
+
+                        break;
+                    case 8:
+                        poJSON = poClient.searchBirthPlace(lsValue);
+                        
+                        if ("success".equals((String) poJSON.get("result"))){
+                            txtField.setText(poClient.getModel().BirthTown().getDescription());
+                        }
+                        
+                        break;
+                }
+            }
+        } catch (SQLException | GuanzonException e) {
+            ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
+            System.exit(1);
+        }
+        
+
+        switch (event.getCode()){
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
+        }
+    }
+    
     final ChangeListener<? super Boolean> txtPersonal_Focus = (o,ov,nv)->{
         if (!pbLoaded) return;
         
@@ -457,8 +500,22 @@ public class IndividualNewController implements Initializable {
                     txtField.setText(poClient.getModel().getTaxIdNumber());
                     break;
                 case 14:
+                    poJSON = poClient.getModel().setLTOClientId(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getLTOClientId());
                     break;
                 case 15:
+                    poJSON = poClient.getModel().setPhNationalId(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getPhNationalId());
                     break;
             }
         } else{//got focus

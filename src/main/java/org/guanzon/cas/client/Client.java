@@ -76,7 +76,7 @@ public class Client {
         poSocMed = new ArrayList<>();
         poInsContact = new ArrayList<>();
     }
-    public String getMasterAddress(int lnRow) {
+    public String getMasterAddress(int lnRow) throws SQLException, GuanzonException {
         String lsTownId = "";
         String lsHouseNo = "";
         lsTownId = poAddress.get(lnRow).getModel().getTownId();

@@ -19,6 +19,7 @@ import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
 import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.parameter.Country;
+import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.services.ParamControllers;
 import org.json.simple.JSONObject;
@@ -310,6 +311,20 @@ public class ClientInfo extends Parameter{
         
         return poJSON;
     }
+    
+    public JSONObject searchProvince(int lnRow, String lsValue) throws SQLException, GuanzonException{
+        Province loParam = new ParamControllers(poGRider, logwrapr).Province();
+        
+        poJSON = loParam.searchRecord(lsValue, false);
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            paAddress.get(lnRow).Town().setProvinceId(loParam.getModel().getProvinceId());
+        }
+        
+        return poJSON;
+    }
+    
+    
     
     @Override
     public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException{        

@@ -265,7 +265,7 @@ public class Model_Client_Address extends Model{
                 if ("success".equals((String) poJSON.get("result")))
                     return poTownCity;
                 else {
-                    poBarangay.initialize();
+                    poTownCity.initialize();
                     return poTownCity;
                 }
             }
