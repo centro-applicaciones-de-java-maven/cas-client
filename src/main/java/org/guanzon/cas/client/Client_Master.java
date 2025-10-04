@@ -87,7 +87,7 @@ public class Client_Master extends Parameter {
                 "ID»Name»Birthday»Birth Place",
                 "sClientID»sCompnyNm»dBirthDte»xBirthPlc",
                 "a.sClientID»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))",
-                byCode ? 0 : 1);
+                        byCode ? 0 : 1);
 
         if (poJSON != null) {
             return poModel.openRecord((String) poJSON.get("sClientID"));
@@ -98,64 +98,10 @@ public class Client_Master extends Parameter {
             return poJSON;
         }
     }
-    public JSONObject searchRecordClientType(String value, boolean byCode) throws SQLException, GuanzonException{
-        poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
-                value,
-                "ID»Name»Birthday»Birth Place",
-                "sClientID»sCompnyNm»dBirthDte»xBirthPlc",
-                "a.sClientID»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sClientID"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    public JSONObject searchRecordSpouse(String value, boolean byCode) throws SQLException, GuanzonException{
-        poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
-                value,
-                "ID»Name",
-                "sClientID»sCompnyNm",
-                "a.sClientID»a.sCompnyNm",
-                byCode ? 0 : 1);
-        
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sClientID"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-
-    public JSONObject searchRecordWithClientType(String value, boolean byCode) throws SQLException, GuanzonException{
-        poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
-                value,
-                "ID»Name»Birthday»Birth Place»Client Type",
-                "sClientID»sCompnyNm»dBirthDte»xBirthPlc»cClientTp",
-                "a.sClientID»TRIM(IF(a.cClientTp = '0', CONCAT(a.sLastName, ', ', a.sFrstName, IF(TRIM(IFNull(a.sSuffixNm, '')) = '', ' ', CONCAT(' ', a.sSuffixNm, ' ')), a.sMiddName), a.sCompnyNm))»a.dBirthDte»CONCAT(IF(IFNULL(b.sTownName, '') = '', '', CONCAT(b.sTownName, ', ', c.sDescript, ' ', b.sZippCode)))»IF(a.cClientTp = 0, 'Individual', 'Corporate')",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sClientID"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded to update.");
-            return poJSON;
-        }
-    }
-
+    
     public JSONObject searchBirthPlace(String fsValue, boolean fbByCode) {
         JSONObject loJSON;
+        
         if (fbByCode) {
             if (fsValue.equals(getMaster(27))) {
                 loJSON = new JSONObject();
@@ -174,13 +120,13 @@ public class Client_Master extends Parameter {
             }
         }
 
-        String lsSQL = "SELECT"
-                + "  a.sTownIDxx"
-                + ", CONCAT(a.sTownName, ', ', b.sProvName) AS xBrthPlce"
-                + " FROM TownCity a "
-                + " INNER JOIN Province b "
-                + "   ON a.sProvIDxx = b.sProvIDxx "
-                + " WHERE a.cRecdStat = 1 ";
+        String lsSQL = "SELECT" +
+                            "  a.sTownIDxx" +
+                            ", CONCAT(a.sTownName, ', ', b.sDescript) xBrthPlce" +
+                        " FROM TownCity a" +
+                            " LEFT JOIN Province b ON a.sProvIDxx = b.sProvIDxx" +
+                        " WHERE a.cRecdStat = '1'";
+        
         if (fbByCode) {
             lsSQL = MiscUtil.addCondition(lsSQL, "a.sTownIDxx = " + SQLUtil.toSQL(fsValue));
         } else {
@@ -193,24 +139,22 @@ public class Client_Master extends Parameter {
                 fsValue,
                 "Code»Birth Place",
                 "a.sTownIDxx»xBrthPlce",
-                "a.sTownIDxx»CONCAT(a.sTownName, ', ', b.sProvName)",
+                "a.sTownIDxx»CONCAT(a.sTownName, ', ', b.sDescript)",
                 fbByCode ? 0 : 1);
 
         if (loJSON != null) {
-//            setMaster(11, (String) loJSON.get("sTownIDxx"));
-//            setMaster(13, (String) loJSON.get("xBrthPlce"));
             loJSON.put("result", "success");
             loJSON.put("message", "Search birth place success.");
-            return loJSON;
         } else {
             loJSON.put("result", "success");
             loJSON.put("message", "No record selected.");
-            return loJSON;
         }
+        
+        return loJSON;
     }
     public JSONObject searchCitizenship(String fsValue, boolean fbByCode) {
-
         JSONObject loJSON;
+        
         if (fbByCode) {
             if (fsValue.equals(getMaster(28))) {
                 loJSON = new JSONObject();
@@ -228,15 +172,15 @@ public class Client_Master extends Parameter {
                 }
             }
         }
-        String lsSQL = "SELECT"
-                + "  sCntryCde"
-                + ", sNational"
-                + " FROM Country "
-                + " WHERE cRecdStat = '1' "
-                + " AND (sNational IS NOT NULL AND sNational != '') ";
+        String lsSQL = "SELECT" +
+                            "  sCntryIDx" +
+                            ", sNational" +
+                        " FROM Country" +
+                        " WHERE cRecdStat = '1'" +
+                            " AND (sNational IS NOT NULL AND sNational != '')";
 
         if (fbByCode) {
-            lsSQL = MiscUtil.addCondition(lsSQL, "sCntryCde = " + SQLUtil.toSQL(fsValue));
+            lsSQL = MiscUtil.addCondition(lsSQL, "sCntryIDx = " + SQLUtil.toSQL(fsValue));
         } else {
             lsSQL = MiscUtil.addCondition(lsSQL, "sNational LIKE " + SQLUtil.toSQL(fsValue + "%"));
         }
@@ -244,24 +188,22 @@ public class Client_Master extends Parameter {
         System.out.println(lsSQL);
         loJSON = ShowDialogFX.Search(
                 poGRider,
-                lsSQL,
-                fsValue,
+                    lsSQL,
+                        fsValue,
                 "Code»Nationality",
                 "sCntryCde»sNational",
                 "sCntryCde»sNational",
-                fbByCode ? 0 : 1);
+                        fbByCode ? 0 : 1);
 
         if (loJSON != null) {
-//            loJSON.get("sCntryCde");
-//            loJSON.get("sNational");
             loJSON.put("result", "success");
             loJSON.put("message", "Search citizenship success.");
-            return loJSON;
         } else {
             loJSON.put("result", "success");
             loJSON.put("message", "No record selected.");
-            return loJSON;
         }
+        
+        return loJSON;
     }
     
     

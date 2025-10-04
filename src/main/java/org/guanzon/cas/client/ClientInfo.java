@@ -18,6 +18,7 @@ import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
 import org.guanzon.cas.client.services.ClientModels;
+import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.Country;
 import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.TownCity;
@@ -289,42 +290,111 @@ public class ClientInfo extends Parameter{
     }
 
     public JSONObject searchBirthPlace(String lsValue) throws SQLException, GuanzonException{
+        if (lsValue == null) lsValue = "";
+        
         TownCity loParam = new ParamControllers(poGRider, logwrapr).TownCity();
         
         poJSON = loParam.searchRecord(lsValue, false);
         
         if ("success".equals((String) poJSON.get("result"))){
             poClient.setBirthPlaceId(loParam.getModel().getTownId());
+            poClient.BirthTown().setTownId(loParam.getModel().getTownId());
+            poClient.BirthTown().setDescription(loParam.getModel().getDescription());
+        } else {
+            poClient.setBirthPlaceId("");
+            poClient.BirthTown().setTownId("");
+            poClient.BirthTown().setDescription("");
         }
         
+        poJSON = new JSONObject();
+        poJSON.put("result", "success");
         return poJSON;
     }
     
     public JSONObject searchCitizenship(String lsValue) throws SQLException, GuanzonException{
+        if (lsValue == null) lsValue = "";
+        
         Country loParam = new ParamControllers(poGRider, logwrapr).Country();
         
         poJSON = loParam.searchRecord(lsValue, false);
         
         if ("success".equals((String) poJSON.get("result"))){
             poClient.setCitizenshipId(loParam.getModel().getCountryId());
+            poClient.Citizenship().setCountryId(loParam.getModel().getCountryId());
+            poClient.Citizenship().setDescription(loParam.getModel().getDescription());
+        } else {
+            poClient.setCitizenshipId("");
+            poClient.Citizenship().setCountryId("");
+            poClient.Citizenship().setDescription("");
         }
         
+        poJSON = new JSONObject();
+        poJSON.put("result", "success");
         return poJSON;
     }
     
     public JSONObject searchProvince(int lnRow, String lsValue) throws SQLException, GuanzonException{
+        if (lsValue == null) lsValue = "";
+        
         Province loParam = new ParamControllers(poGRider, logwrapr).Province();
         
         poJSON = loParam.searchRecord(lsValue, false);
         
         if ("success".equals((String) poJSON.get("result"))){
             paAddress.get(lnRow).Town().setProvinceId(loParam.getModel().getProvinceId());
+            paAddress.get(lnRow).Town().Province().setProvinceId(loParam.getModel().getProvinceId());
+            paAddress.get(lnRow).Town().Province().setDescription(loParam.getModel().getDescription());
+        } else {
+            paAddress.get(lnRow).Town().setProvinceId("");
+            paAddress.get(lnRow).Town().Province().setProvinceId("");
+            paAddress.get(lnRow).Town().Province().setDescription("");
+        }
+        
+        poJSON = new JSONObject();
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
+    public JSONObject searchTown(int lnRow, String lsValue) throws SQLException, GuanzonException{
+        if (lsValue == null) lsValue = "";
+        
+        
+        TownCity loParam = new ParamControllers(poGRider, logwrapr).TownCity();
+        
+        if (paAddress.get(lnRow).Town().getProvinceId().isEmpty()){
+            poJSON = loParam.searchRecord(lsValue, false);
+        } else {
+            poJSON = loParam.searchRecord(lsValue, false, paAddress.get(lnRow).Town().getProvinceId());
+        }
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            paAddress.get(lnRow).Town().setProvinceId(loParam.getModel().getProvinceId());
+            paAddress.get(lnRow).Town().setTownId(loParam.getModel().getTownId());
+            paAddress.get(lnRow).Town().setDescription(loParam.getModel().getDescription());
         }
         
         return poJSON;
     }
     
-    
+    public JSONObject searchBarangay(int lnRow, String lsValue) throws SQLException, GuanzonException{
+        if (lsValue == null) lsValue = "";
+        
+        Barangay loParam = new ParamControllers(poGRider, logwrapr).Barangay();
+        
+        if (paAddress.get(lnRow).Town().getTownId().isEmpty()){
+            poJSON = loParam.searchRecord(lsValue, false);
+        } else {
+            poJSON = loParam.searchRecord(lsValue, false, paAddress.get(lnRow).Town().getTownId());
+        }
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            paAddress.get(lnRow).Town().setProvinceId(loParam.getModel().Town().getProvinceId());
+            paAddress.get(lnRow).Town().setTownId(loParam.getModel().Town().getTownId());
+            paAddress.get(lnRow).Barangay().setBarangayId(loParam.getModel().getBarangayId());
+        }
+        
+        return poJSON;
+    }
     
     @Override
     public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException{        

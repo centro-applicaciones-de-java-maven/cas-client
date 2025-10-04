@@ -284,44 +284,10 @@ public class Model_Client_Master extends Model{
     }
     
     public Model_TownCity BirthTown() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sBirthPlc"))){
-            if (poTownCity.getEditMode() == EditMode.READY && 
-                poTownCity.getTownId().equals((String) getValue("sBirthPlc")))
-                return poTownCity;
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sBirthPlc"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity;
-                else {
-                    poTownCity.initialize();
-                    return poTownCity;
-                }
-            }
-        } else {
-            poTownCity.initialize();
-            return poTownCity;
-        }
+        return poTownCity;
     }
     
     public Model_Country Citizenship() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sCitizenx"))){
-            if (poCountry.getEditMode() == EditMode.READY && 
-                poCountry.getCountryId().equals((String) getValue("sCitizenx")))
-                return poCountry;
-            else{
-                poJSON = poCountry.openRecord((String) getValue("sCitizenx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poCountry;
-                else {
-                    poTownCity.initialize();
-                    return poCountry;
-                }
-            }
-        } else {
-            poCountry.initialize();
-            return poCountry;
-        }
+        return poCountry;
     }
 }

@@ -333,21 +333,19 @@ public class IndividualNewController implements Initializable {
         try {
             if (event.getCode() == F3 || event.getCode() == ENTER){
                 switch (lnIndex){
-                    case 6:
+                    case 6: //citizenship
                         poJSON = poClient.searchCitizenship(lsValue);
                         
                         if ("success".equals((String) poJSON.get("result"))){
                             txtField.setText(poClient.getModel().Citizenship().getDescription());
                         }
-
                         break;
-                    case 8:
+                    case 8: //birthplace
                         poJSON = poClient.searchBirthPlace(lsValue);
                         
                         if ("success".equals((String) poJSON.get("result"))){
                             txtField.setText(poClient.getModel().BirthTown().getDescription());
                         }
-                        
                         break;
                 }
             }
@@ -367,8 +365,8 @@ public class IndividualNewController implements Initializable {
         }
     }
     
-    private void txttxtAddress_KeyPressed(KeyEvent event){
-        TextField txtField = (TextField)event.getSource();
+    private void txtAddress_KeyPressed(KeyEvent event){
+        TextField txtField = (TextField )event.getSource();
         int lnIndex = Integer.parseInt(txtField.getId().substring(10, 12));
         
         String lsValue = txtField.getText();
@@ -376,22 +374,27 @@ public class IndividualNewController implements Initializable {
         try {
             if (event.getCode() == F3 || event.getCode() == ENTER){
                 switch (lnIndex){
-                    case 6:
-                        poJSON = poClient.searchCitizenship(lsValue);
+                    case 3: //province
+                        poJSON = poClient.searchProvince(0, lsValue);
                         
                         if ("success".equals((String) poJSON.get("result"))){
-                            txtField.setText(poClient.getModel().Citizenship().getDescription());
+                            txtField.setText(poClient.Address(0).Town().Province().getDescription());
                         }
-
                         break;
-                    case 8:
-                        poJSON = poClient.searchBirthPlace(lsValue);
+                    case 4: //town
+                        poJSON = poClient.searchTown(0, lsValue);
                         
                         if ("success".equals((String) poJSON.get("result"))){
-                            txtField.setText(poClient.getModel().BirthTown().getDescription());
+                            txtField.setText(poClient.Address(0).Town().getDescription());
                         }
-                        
                         break;
+                    case 5: //barangay
+                        poJSON = poClient.searchBarangay(0, lsValue);
+                        
+                        if ("success".equals((String) poJSON.get("result"))){
+                            txtField.setText(poClient.Address(0).Barangay().getBarangayName());
+                        }
+                        break;    
                 }
             }
         } catch (SQLException | GuanzonException e) {
@@ -633,6 +636,14 @@ public class IndividualNewController implements Initializable {
         txtAddress05.focusedProperty().addListener(txtAddress_Focus);
         txtAddress06.focusedProperty().addListener(txtAddress_Focus);
         txtAddress07.focusedProperty().addListener(txtAddress_Focus);
+        
+        txtAddress01.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress02.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress03.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress04.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress05.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress06.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress07.setOnKeyPressed(this::txtAddress_KeyPressed);
 
         txtMobile01.focusedProperty().addListener(txtMobile_Focus);
         txtEmail01.focusedProperty().addListener(txtEmail_Focus);

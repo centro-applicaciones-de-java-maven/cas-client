@@ -80,69 +80,7 @@ public class Client_Address  extends Parameter{
             return poJSON;
         }
     }
-    
-    public JSONObject searchRecordbyclient(String value, boolean byCode) throws SQLException, GuanzonException{
-        poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
-                value,
-                "ID»ID»Client Name»Address»Birthday»Primary",
-                "sClientID»sAddrssID»xFullName»xAddressx»dBirthDte»xPrimaryx",
-                "a.sClientID»a.sAddrssID»TRIM(IF(b.cClientTp = '0', CONCAT(b.sLastName, ', ', b.sFrstName, IF(TRIM(IFNull(b.sSuffixNm, '')) = '', ' ', CONCAT(' ', b.sSuffixNm, ' ')), b.sMiddName), b.sCompnyNm))»CONCAT(IF(IFNull(a.sHouseNox, '') = '', '', CONCAT(a.sHouseNox, ' ')), a.sAddressx, IF(IFNull(e.sBrgyName, '') = '', '', CONCAT(' ', e.sBrgyName)), ', ', c.sTownName, ', ', d.sProvName, ' ', c.sZippCode)»b.dBirthDte»IF(a.cPrimaryx = '1', 'Yes', 'No')",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sAddrssID"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-
-    public JSONObject searchRecordWithCondition(String value,  String clientId, boolean isPrimary) throws SQLException, GuanzonException{
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sClientID = " + SQLUtil.toSQL(clientId) +
-                " AND a.cPrimaryx = "+ SQLUtil.toSQL(isPrimary == true ? "1" : "0"));
-        System.out.println(lsSQL);
-            poJSON = ShowDialogFX.Search(poGRider,
-                    lsSQL,
-                    value,
-                    "ID»Client Name»Address»Birthday»Primary",
-                    "sAddrssID»xFullName»xAddressx»dBirthDte»cPrimaryx",
-                    "a.sAddrssID»TRIM(IF(b.cClientTp = '0', CONCAT(b.sLastName, ', ', b.sFrstName, IF(TRIM(IFNull(b.sSuffixNm, '')) = '', ' ', CONCAT(' ', b.sSuffixNm, ' ')), b.sMiddName), b.sCompnyNm))»CONCAT(IF(IFNull(a.sHouseNox, '') = '', '', CONCAT(a.sHouseNox, ' ')), a.sAddressx, IF(IFNull(e.sBrgyName, '') = '', '', CONCAT(' ', e.sBrgyName)), ', ', c.sTownName, ', ', d.sProvName, ' ', c.sZippCode)»b.dBirthDte»IF(a.cPrimaryx = '1', 'Yes', 'No')",
-                    isPrimary ? 0 : 2);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sAddrssID"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
-    public JSONObject searchRecord(String value, boolean byCode, String clientId) throws SQLException, GuanzonException{
-        String lsSQL = MiscUtil.addCondition(getSQ_Browse(), "a.sClientID = " + SQLUtil.toSQL(clientId));
-        
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "ID»Client Name»Address»Birthday»Primary",
-                "sAddrssID»xFullName»xAddressx»dBirthDte»xPrimaryx",
-                "a.sAddrssID»TRIM(IF(b.cClientTp = '0', CONCAT(b.sLastName, ', ', b.sFrstName, IF(TRIM(IFNull(b.sSuffixNm, '')) = '', ' ', CONCAT(' ', b.sSuffixNm, ' ')), b.sMiddName), b.sCompnyNm))»CONCAT(IF(IFNull(a.sHouseNox, '') = '', '', CONCAT(a.sHouseNox, ' ')), a.sAddressx, IF(IFNull(e.sBrgyName, '') = '', '', CONCAT(' ', e.sBrgyName)), ', ', c.sTownName, ', ', d.sProvName, ' ', c.sZippCode)»b.dBirthDte»IF(a.cPrimaryx = '1', 'Yes', 'No')",
-                byCode ? 0 : 2);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sAddrssID"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
+   
     @Override
     public String getSQ_Browse(){
         String lsSQL;
