@@ -341,13 +341,13 @@ public class ClientInfo extends Parameter{
         poJSON = loParam.searchRecord(lsValue, false);
         
         if ("success".equals((String) poJSON.get("result"))){
-            paAddress.get(lnRow).Town().setProvinceId(loParam.getModel().getProvinceId());
             paAddress.get(lnRow).Town().Province().setProvinceId(loParam.getModel().getProvinceId());
             paAddress.get(lnRow).Town().Province().setDescription(loParam.getModel().getDescription());
+            paAddress.get(lnRow).Town().setProvinceId(loParam.getModel().getProvinceId());
         } else {
-            paAddress.get(lnRow).Town().setProvinceId("");
             paAddress.get(lnRow).Town().Province().setProvinceId("");
             paAddress.get(lnRow).Town().Province().setDescription("");
+            paAddress.get(lnRow).Town().setProvinceId("");
         }
         
         poJSON = new JSONObject();
@@ -358,19 +358,22 @@ public class ClientInfo extends Parameter{
     public JSONObject searchTown(int lnRow, String lsValue) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
-        
         TownCity loParam = new ParamControllers(poGRider, logwrapr).TownCity();
         
-        if (paAddress.get(lnRow).Town().getProvinceId().isEmpty()){
+        if (paAddress.get(lnRow).Town().getProvinceId() == null ||
+            paAddress.get(lnRow).Town().getProvinceId().isEmpty()){
             poJSON = loParam.searchRecord(lsValue, false);
         } else {
             poJSON = loParam.searchRecord(lsValue, false, paAddress.get(lnRow).Town().getProvinceId());
         }
         
         if ("success".equals((String) poJSON.get("result"))){
-            paAddress.get(lnRow).Town().setProvinceId(loParam.getModel().getProvinceId());
             paAddress.get(lnRow).Town().setTownId(loParam.getModel().getTownId());
             paAddress.get(lnRow).Town().setDescription(loParam.getModel().getDescription());
+            paAddress.get(lnRow).Town().Province().setProvinceId(loParam.getModel().getProvinceId());
+        } else {
+            paAddress.get(lnRow).Town().setTownId("");
+            paAddress.get(lnRow).Town().setDescription("");
         }
         
         return poJSON;
@@ -381,16 +384,22 @@ public class ClientInfo extends Parameter{
         
         Barangay loParam = new ParamControllers(poGRider, logwrapr).Barangay();
         
-        if (paAddress.get(lnRow).Town().getTownId().isEmpty()){
+        if (paAddress.get(lnRow).Town().getTownId() == null ||
+            paAddress.get(lnRow).Town().getTownId().isEmpty()){
             poJSON = loParam.searchRecord(lsValue, false);
         } else {
             poJSON = loParam.searchRecord(lsValue, false, paAddress.get(lnRow).Town().getTownId());
         }
         
         if ("success".equals((String) poJSON.get("result"))){
-            paAddress.get(lnRow).Town().setProvinceId(loParam.getModel().Town().getProvinceId());
-            paAddress.get(lnRow).Town().setTownId(loParam.getModel().Town().getTownId());
             paAddress.get(lnRow).Barangay().setBarangayId(loParam.getModel().getBarangayId());
+            paAddress.get(lnRow).Barangay().setBarangayName(loParam.getModel().getBarangayName());
+            paAddress.get(lnRow).Barangay().Town().setTownId(loParam.getModel().Town().getTownId());
+            paAddress.get(lnRow).Town().Province().setProvinceId(loParam.getModel().Town().getProvinceId());
+        } else {
+            paAddress.get(lnRow).Barangay().setBarangayId("");
+            paAddress.get(lnRow).Barangay().setBarangayName("");
+            paAddress.get(lnRow).Barangay().Town().setTownId("");
         }
         
         return poJSON;

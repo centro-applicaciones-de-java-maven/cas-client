@@ -338,6 +338,8 @@ public class IndividualNewController implements Initializable {
                         
                         if ("success".equals((String) poJSON.get("result"))){
                             txtField.setText(poClient.getModel().Citizenship().getDescription());
+                            CommonUtils.SetNextFocus(txtField);
+                            event.consume();
                         }
                         break;
                     case 8: //birthplace
@@ -345,6 +347,8 @@ public class IndividualNewController implements Initializable {
                         
                         if ("success".equals((String) poJSON.get("result"))){
                             txtField.setText(poClient.getModel().BirthTown().getDescription());
+                            CommonUtils.SetNextFocus(txtField);
+                            event.consume();
                         }
                         break;
                 }
@@ -379,6 +383,8 @@ public class IndividualNewController implements Initializable {
                         
                         if ("success".equals((String) poJSON.get("result"))){
                             txtField.setText(poClient.Address(0).Town().Province().getDescription());
+                            CommonUtils.SetNextFocus(txtField);
+                            event.consume();
                         }
                         break;
                     case 4: //town
@@ -386,6 +392,9 @@ public class IndividualNewController implements Initializable {
                         
                         if ("success".equals((String) poJSON.get("result"))){
                             txtField.setText(poClient.Address(0).Town().getDescription());
+                            txtAddress03.setText(poClient.Address(0).Town().Province().getDescription());
+                            CommonUtils.SetNextFocus(txtField);
+                            event.consume();
                         }
                         break;
                     case 5: //barangay
@@ -393,6 +402,10 @@ public class IndividualNewController implements Initializable {
                         
                         if ("success".equals((String) poJSON.get("result"))){
                             txtField.setText(poClient.Address(0).Barangay().getBarangayName());
+                            txtAddress04.setText(poClient.Address(0).Town().getDescription());
+                            txtAddress03.setText(poClient.Address(0).Town().Province().getDescription());
+                            CommonUtils.SetNextFocus(txtField);
+                            event.consume();
                         }
                         break;    
                 }
@@ -538,7 +551,21 @@ public class IndividualNewController implements Initializable {
             
         if(!nv){//lost focus
             switch(lnIndex){
-            
+                case 1: //house no
+                    poJSON = poClient.Address(0).setHouseNo(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.Address(0).getHouseNo());
+                    break;
+                case 2: //address
+                    break;
+                case 6: //latitude
+                    break;
+                case 7: //longitude
+                    break;
             }
         } else{//got focus
             txtField.selectAll();
