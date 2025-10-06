@@ -448,6 +448,22 @@ public class ClientInfo extends Parameter{
             poClient.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
             poClient.setModifiedDate(poGRider.getServerDate());
         }
+        
+        //validate address
+        if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
+            paAddress.get(paAddress.size() - 1).getTownId().isEmpty()) paAddress.remove(paAddress.size() - 1);
+
+        switch (paAddress.size()) {
+            case 0:
+                addAddress();
+            case 1:
+                if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
+                    paAddress.get(paAddress.size() - 1).getTownId().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Address and town must have a value.");
+                return poJSON;
+            }
+        }
 
 //            //validate mobile
 //            if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) paMobile.remove(paMobile.size() - 1);
@@ -459,22 +475,6 @@ public class ClientInfo extends Parameter{
 //                    if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()){
 //                    poJSON.put("result", "error");
 //                    poJSON.put("message", "Client must have a mobile number.");
-//                    return poJSON;
-//                }
-//            }
-//            
-//            //validate address
-//            if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
-//                    paAddress.get(paAddress.size() - 1).getTownId().isEmpty()) paAddress.remove(paAddress.size() - 1);
-//            
-//            switch (paAddress.size()) {
-//                case 0:
-//                    addAddress();
-//                case 1:
-//                    if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
-//                        paAddress.get(paAddress.size() - 1).getTownId().isEmpty()){
-//                    poJSON.put("result", "error");
-//                    poJSON.put("message", "Address and town must have a value.");
 //                    return poJSON;
 //                }
 //            }

@@ -561,10 +561,31 @@ public class IndividualNewController implements Initializable {
                     txtField.setText(poClient.Address(0).getHouseNo());
                     break;
                 case 2: //address
+                    poJSON = poClient.Address(0).setAddress(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.Address(0).getAddress());
                     break;
                 case 6: //latitude
+                    poJSON = poClient.Address(0).setLatitude(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(String.valueOf(poClient.Address(0).getLatitude()));
                     break;
                 case 7: //longitude
+                    poJSON = poClient.Address(0).setLongitude(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(String.valueOf(poClient.Address(0).getLongitude()));
                     break;
             }
         } else{//got focus
