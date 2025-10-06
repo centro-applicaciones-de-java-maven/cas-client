@@ -1,11 +1,17 @@
 package org.guanzon.cas.client.controller;
 
+import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
+import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,12 +20,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import static javafx.scene.input.KeyCode.DOWN;
 import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.F3;
@@ -35,11 +43,21 @@ import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.base.SQLUtil;
+import org.guanzon.appdriver.base.StringHelper;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.cas.client.ClientInfo;
 import org.guanzon.cas.client.services.ClientControllers;
+import org.guanzon.cas.client.table.models.ModelAddress;
+import org.guanzon.cas.client.table.models.ModelEmail;
+import org.guanzon.cas.client.table.models.ModelMobile;
+import org.guanzon.cas.client.table.models.ModelSocialMedia;
+import org.guanzon.cas.parameter.Barangay;
+import org.guanzon.cas.parameter.Country;
+import org.guanzon.cas.parameter.Province;
+import org.guanzon.cas.parameter.TownCity;
 import org.json.simple.JSONObject;
+import javafx.util.StringConverter;
 
 public class IndividualNewController implements Initializable {
     @FXML
@@ -77,7 +95,7 @@ public class IndividualNewController implements Initializable {
     @FXML
     private TextField txtPersonal06;
     @FXML
-    private TextField txtPersonal07;
+    private DatePicker txtPersonal07;
     @FXML
     private TextField txtPersonal08;
     @FXML
@@ -230,12 +248,22 @@ public class IndividualNewController implements Initializable {
     private int pnEmail;
     private int pnSocmed;
     
+    private ObservableList<ModelAddress> address_data = FXCollections.observableArrayList();
+    private ObservableList<ModelMobile> mobile_data = FXCollections.observableArrayList();
+    private ObservableList<ModelEmail> email_data = FXCollections.observableArrayList();
+    private ObservableList<ModelSocialMedia> socialmedia_data = FXCollections.observableArrayList();
+    
     private JSONObject poJSON;
     private boolean pbLoaded;
     private boolean pbCancelled;
     
     ObservableList<String> gender = FXCollections.observableArrayList("Male", "Female");
     ObservableList<String> civilstatus = FXCollections.observableArrayList("Single", "Married", "Separated", "Widowed", "Single Parent", "Single Parent w/ Live-in Partner");
+    
+    ObservableList<String> mobileOwn = ModelMobile.mobileOwn;
+    ObservableList<String> mobileType = ModelMobile.mobileType;
+    ObservableList<String> emailOwn = ModelEmail.emailOwn;
+    ObservableList<String> socialTyp = ModelSocialMedia.socialTyp;
     
     public void setGRider(GRiderCAS griderCAS){
         poGRider = griderCAS;
@@ -570,6 +598,8 @@ public class IndividualNewController implements Initializable {
                     txtField.setText(poClient.Address(0).getAddress());
                     break;
                 case 6: //latitude
+                    if (!StringHelper.isNumeric(lsValue)) lsValue = "0.00";
+                    
                     poJSON = poClient.Address(0).setLatitude(lsValue);
                     
                     if (!"success".equals((String) poJSON.get("result"))){
@@ -579,6 +609,8 @@ public class IndividualNewController implements Initializable {
                     txtField.setText(String.valueOf(poClient.Address(0).getLatitude()));
                     break;
                 case 7: //longitude
+                    if (!StringHelper.isNumeric(lsValue)) lsValue = "0.00";
+                    
                     poJSON = poClient.Address(0).setLongitude(lsValue);
                     
                     if (!"success".equals((String) poJSON.get("result"))){
@@ -650,6 +682,91 @@ public class IndividualNewController implements Initializable {
         }
     };
     
+    public void initAddressGrid() {
+        indexAddress01.setStyle("-fx-alignment: CENTER;");
+        indexAddress02.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+        indexAddress03.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+        indexAddress04.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+        indexAddress05.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+
+        indexAddress01.setCellValueFactory(new PropertyValueFactory<>("index01"));
+        indexAddress02.setCellValueFactory(new PropertyValueFactory<>("index02"));
+        indexAddress03.setCellValueFactory(new PropertyValueFactory<>("index03"));
+        indexAddress04.setCellValueFactory(new PropertyValueFactory<>("index04"));
+        indexAddress05.setCellValueFactory(new PropertyValueFactory<>("index05"));
+
+        tblAddress.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblAddress.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+
+        tblAddress.setItems(address_data);
+        tblAddress.getSelectionModel().select(pnAddress + 1);
+        tblAddress.autosize();
+    }
+    
+    private void initMobileGrid() {
+        indexMobileNo01.setStyle("-fx-alignment: CENTER;");
+        indexMobileNo02.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+        indexMobileNo03.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+        indexMobileNo04.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+
+        indexMobileNo01.setCellValueFactory(new PropertyValueFactory<>("index01"));
+        indexMobileNo02.setCellValueFactory(new PropertyValueFactory<>("index02"));
+        indexMobileNo03.setCellValueFactory(new PropertyValueFactory<>("index03"));
+        indexMobileNo04.setCellValueFactory(new PropertyValueFactory<>("index04"));
+
+        tblMobile.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblMobile.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+        tblMobile.setItems(mobile_data);
+        tblMobile.autosize();
+    }
+
+    private void initEmailGrid() {
+        indexEmail01.setStyle("-fx-alignment: CENTER;");
+        indexEmail02.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+        indexEmail03.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+        
+        indexEmail01.setCellValueFactory(new PropertyValueFactory<>("index01"));
+        indexEmail02.setCellValueFactory(new PropertyValueFactory<>("index02"));
+        indexEmail03.setCellValueFactory(new PropertyValueFactory<>("index03"));
+        tblEmail.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblEmail.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+        tblEmail.setItems(email_data);
+        tblEmail.autosize();
+    }
+
+    private void initSocialMediaGrid() {
+        indexSocMed01.setStyle("-fx-alignment: CENTER;");
+        indexSocMed02.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+        indexSocMed03.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+        indexSocMed04.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+
+        indexSocMed01.setCellValueFactory(new PropertyValueFactory<>("index01"));
+        indexSocMed02.setCellValueFactory(new PropertyValueFactory<>("index02"));
+        indexSocMed03.setCellValueFactory(new PropertyValueFactory<>("index03"));
+        indexSocMed04.setCellValueFactory(new PropertyValueFactory<>("index04"));
+        tblSocMed.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
+            TableHeaderRow header = (TableHeaderRow) tblSocMed.lookup("TableHeaderRow");
+            header.reorderingProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+                header.setReordering(false);
+            });
+        });
+        tblSocMed.setItems(socialmedia_data);
+        tblMobile.getSelectionModel().select(pnSocmed + 1);
+        tblSocMed.autosize();
+    }
+    
     private void initFields(){
         txtPersonal02.focusedProperty().addListener(txtPersonal_Focus);
         txtPersonal03.focusedProperty().addListener(txtPersonal_Focus);
@@ -709,6 +826,10 @@ public class IndividualNewController implements Initializable {
         
         cmbPersonal09.setItems(gender);
         cmbPersonal10.setItems(civilstatus);
+        cmbMobile01.setItems(mobileOwn);
+        cmbMobile02.setItems(mobileType);
+        cmbEmail01.setItems(emailOwn);
+        cmbSocMed01.setItems(socialTyp);
         
         cmbPersonal09.setOnAction(event -> {            
             poJSON = poClient.getModel().setGender(String.valueOf(cmbPersonal09.getSelectionModel().getSelectedIndex()));
@@ -725,6 +846,97 @@ public class IndividualNewController implements Initializable {
                 ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
             }
         });
+        
+        cmbMobile01.setOnAction(event -> {            
+            poJSON = poClient.Mobile(pnMobile).setOwnershipType(String.valueOf(cmbMobile01.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+        });
+        
+        cmbEmail01.setOnAction(event -> {            
+            poJSON = poClient.Mail(pnMobile).setOwnershipType(String.valueOf(cmbEmail01.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+        });
+        
+        cmbSocMed01.setOnAction(event -> {            
+            poJSON = poClient.SocMed(pnMobile).setSocMedType(String.valueOf(cmbSocMed01.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+        });
+        
+        cmbMobile02.setOnAction(event -> {            
+            poJSON = poClient.Mobile(pnMobile).setMobileType(String.valueOf(cmbMobile02.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+        });
+        
+        clearfields();
+    }
+    
+    private void clearfields(){
+        txtField01.setText("");
+        txtField02.setText("");
+        txtField03.setText("");
+        
+        txtPersonal02.setText("");
+        txtPersonal03.setText("");
+        txtPersonal04.setText("");
+        txtPersonal05.setText("");
+        txtPersonal06.setText("");
+        txtPersonal07.setValue(LocalDate.now());
+        txtPersonal08.setText("");
+        txtPersonal11.setText("");
+        txtPersonal12.setText("");
+        txtPersonal13.setText("");
+        txtPersonal14.setText("");
+        txtPersonal15.setText("");
+        
+        txtAddress01.setText("");
+        txtAddress02.setText("");
+        txtAddress03.setText("");
+        txtAddress04.setText("");
+        txtAddress05.setText("");
+        txtAddress06.setText("0.00");
+        txtAddress07.setText("0.00");
+        
+        cbAddress01.selectedProperty().set(false);
+        cbAddress02.selectedProperty().set(false);
+        cbAddress03.selectedProperty().set(false);
+        cbAddress04.selectedProperty().set(false);
+        cbAddress05.selectedProperty().set(false);
+        cbAddress06.selectedProperty().set(false);
+        cbAddress07.selectedProperty().set(false);
+        cbAddress08.selectedProperty().set(false);
+        
+        txtMobile01.setText("");
+        cbMobileNo01.selectedProperty().set(false);
+        cbMobileNo02.selectedProperty().set(false);
+        
+        txtEmail01.setText("");
+        cbEmail01.selectedProperty().set(false);
+        cbEmail02.selectedProperty().set(false);
+        
+        txtSocial01.setText("");
+        txtSocial02.setText("");
+        
+        pnAddress = 0;
+        pnMobile = 0;
+        pnEmail = 0;
+        pnSocmed = 0;
+        
+        initAddressGrid();
+        initMobileGrid();
+        initEmailGrid();
+        initSocialMediaGrid();
     }
     
     private void loadRecord(){
@@ -743,7 +955,7 @@ public class IndividualNewController implements Initializable {
             
             txtField01.setText(poClient.getModel().getClientId());            
             txtField02.setText(poClient.getModel().getCompanyName());
-            txtField03.setText("Set primary adress here");      
+            txtField03.setText(""); //todo: put full address here      
             
             if (pnEditMode == EditMode.ADDNEW){
                 cmbPersonal09.getSelectionModel().selectFirst();
@@ -751,6 +963,21 @@ public class IndividualNewController implements Initializable {
                 
                 cmbPersonal10.getSelectionModel().selectFirst();
                 poClient.getModel().setCivilStatus(String.valueOf(cmbPersonal10.getSelectionModel().getSelectedIndex()));
+                
+                cmbMobile01.getSelectionModel().selectFirst();
+                poClient.Mobile(pnMobile).setOwnershipType(String.valueOf(cmbMobile01.getSelectionModel().getSelectedIndex()));
+                
+                cmbMobile02.getSelectionModel().selectFirst();
+                poClient.Mobile(pnMobile).setMobileType(String.valueOf(cmbMobile02.getSelectionModel().getSelectedIndex()));
+                
+                
+                cmbEmail01.getSelectionModel().selectFirst();
+                poClient.Mail(pnEmail).setOwnershipType(String.valueOf(cmbEmail01.getSelectionModel().getSelectedIndex()));
+                
+                cmbSocMed01.getSelectionModel().selectFirst();
+                poClient.SocMed(pnSocmed).setSocMedType(String.valueOf(cmbSocMed01.getSelectionModel().getSelectedIndex()));
+                
+                loadRecordAddress();
             } else {
                 cmbPersonal09.getSelectionModel().select(Integer.parseInt(poClient.getModel().getGender()));
                 cmbPersonal10.getSelectionModel().select(Integer.parseInt(poClient.getModel().getCivilStatus()));
@@ -762,6 +989,344 @@ public class IndividualNewController implements Initializable {
             ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
             System.exit(1);
         }       
+    }
+    
+    private void loadRecordAddress() {
+        try {
+            loadMasterAddress();
+
+            int lnCtr;
+            int lnCtr2 = 0;
+            address_data.clear();
+
+            if (poClient.getAddressCount() >= 0) {
+                for (lnCtr = 0; lnCtr < poClient.getAddressCount(); lnCtr++) {
+                    TownCity loTownCity = new TownCity();
+                    loTownCity.setApplicationDriver(poGRider);
+                    loTownCity.setRecordStatus("1");
+                    loTownCity.initialize();
+                    loTownCity.openRecord(poClient.Address(lnCtr2).getTownId());
+
+                    Barangay loBarangay = new Barangay();
+                    try {
+                        loBarangay.setApplicationDriver(poGRider);
+                        loBarangay.setRecordStatus("1");
+                        loBarangay.initialize();
+                        loBarangay.openRecord(poClient.Address(lnCtr2).getBarangayId());
+                    } catch (SQLException | GuanzonException e) {
+                        e.printStackTrace();
+                    }
+
+                    address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
+                            (String) poClient.Address(lnCtr2).getValue("sHouseNox"),
+                            (String) poClient.Address(lnCtr2).getValue("sAddressx"),
+                            (String) loTownCity.getModel().getDescription(),
+                            (String) loBarangay.getModel().getBarangayName()
+                    ));
+                    
+                    lnCtr2 += 1;
+                }
+            }
+
+            if (pnAddress < 0 || pnAddress
+                    >= address_data.size()) {
+                if (!address_data.isEmpty()) {
+                    /* FOCUS ON FIRST ROW */
+                    tblAddress.getSelectionModel().select(0);
+                    tblAddress.getFocusModel().focus(0);
+                    pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+                    getSelectedAddress();
+                }
+            } else {
+                /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+                tblAddress.getSelectionModel().select(pnAddress);
+                tblAddress.getFocusModel().focus(pnAddress);
+                getSelectedAddress();
+            }
+        } catch (SQLException | GuanzonException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void loadMasterAddress() {
+        boolean primaryAddressExists = false;
+        for (int i = 0; i < poClient.getAddressCount(); i++) {
+            if (poClient.Address(i).isPrimaryAddress()) {
+                txtField03.setText(""); //todo: load primary full address here
+                primaryAddressExists = true; // Mark as found
+                break; // Exit the loop since a primary address is found
+            }
+        }
+        if (!primaryAddressExists) {
+            txtField03.setText("");
+        }
+    }
+    
+    private void getSelectedAddress() {
+        try {
+            if (poClient.getAddressCount() > 0) {
+                txtAddress01.setText(poClient.Address(pnAddress).getHouseNo());
+                txtAddress02.setText(poClient.Address(pnAddress).getAddress());
+
+                Province loProvince = new Province();
+                loProvince.setApplicationDriver(poGRider);
+                loProvince.setRecordStatus("1");
+                loProvince.initialize();
+                loProvince.openRecord(poClient.Address(pnAddress).Town().Province().getProvinceId());
+
+                txtAddress03.setText(loProvince.getModel().getDescription());
+
+                TownCity loTownCity = new TownCity();
+                loTownCity.setApplicationDriver(poGRider);
+                loTownCity.setRecordStatus("1");
+                loTownCity.initialize();
+                loTownCity.openRecord(poClient.Address(pnAddress).getTownId());
+
+                Barangay loBarangay = new Barangay();
+                loBarangay.setApplicationDriver(poGRider);
+                loBarangay.setRecordStatus("1");
+                loBarangay.initialize();
+                loBarangay.openRecord(poClient.Address(pnAddress).getBarangayId());
+
+                txtAddress04.setText((String) loTownCity.getModel().getDescription());
+                txtAddress05.setText(loBarangay.getModel().getBarangayName());
+                txtAddress06.setText(String.valueOf(poClient.Address(pnAddress).getLatitude()));
+                txtAddress07.setText(String.valueOf(poClient.Address(pnAddress).getLongitude()));
+
+                cbAddress01.setSelected(("1".equals((String) poClient.Address(pnAddress).getRecordStatus())));
+                cbAddress02.setSelected(poClient.Address(pnAddress).isPrimaryAddress());
+                cbAddress03.setSelected(poClient.Address(pnAddress).isOfficeAddress());
+                cbAddress04.setSelected(poClient.Address(pnAddress).isProvinceAddress());
+                cbAddress05.setSelected(poClient.Address(pnAddress).isBillingAddress());
+                cbAddress06.setSelected(poClient.Address(pnAddress).isShippingAddress());
+                cbAddress07.setSelected(poClient.Address(pnAddress).isCurrentAddress());
+                cbAddress08.setSelected(poClient.Address(pnAddress).isLTMSAddress());
+            }
+        } catch (SQLException | GuanzonException e) {
+            e.printStackTrace();
+        }
+        
+    }
+    
+    private void loadRecordEmail() {
+        int lnCtr2 = 0;
+        email_data.clear();
+        if (poClient.getMailCount() >= 0) {
+            for (int lnCtr = 0; lnCtr < poClient.getMailCount(); lnCtr++) {
+                email_data.add(new ModelEmail(String.valueOf(lnCtr + 1),
+                        poClient.Mail(lnCtr2).getValue("cOwnerxxx").toString(),
+                        poClient.Mail(lnCtr2).getValue("sEMailAdd").toString()
+                ));
+                lnCtr2 += 1;
+            }
+        }
+        if (pnEmail < 0 || pnEmail
+                >= email_data.size()) {
+            if (!email_data.isEmpty()) {
+                /* FOCUS ON FIRST ROW */
+                tblEmail.getSelectionModel().select(0);
+                tblEmail.getFocusModel().focus(0);
+                pnEmail = tblEmail.getSelectionModel().getSelectedIndex();
+            }
+            getSelectedEmail();
+        } else {
+            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+            tblEmail.getSelectionModel().select(pnEmail);
+            tblEmail.getFocusModel().focus(pnEmail);
+            getSelectedEmail();
+        }
+    }
+    
+    private void getSelectedEmail() {
+        if (poClient.getMailCount() > 0) {
+            txtEmail01.setText(poClient.Mail(pnEmail).getMailAddress());
+
+            int lsOwnerType = 0;
+            lsOwnerType = Integer.parseInt(poClient.Mail(pnEmail).getOwnershipType());
+            cbEmail01.setSelected(("1".equals(poClient.Mail(pnEmail).getRecordStatus())));
+            cbEmail02.setSelected(poClient.Mail(pnEmail).isPrimaryEmail());
+            cmbEmail01.getSelectionModel().select(lsOwnerType);
+            
+        }
+    }
+    
+    private void loadRecordMobile() {
+        int lnCtr2 = 0;
+        mobile_data.clear();
+
+        if (poClient.getMobileCount() >= 0) {
+            for (int lnCtr = 0; lnCtr < poClient.getMobileCount(); lnCtr++) {
+                mobile_data.add(new ModelMobile(String.valueOf(lnCtr + 1),
+                        poClient.Mobile(lnCtr2).getValue("sMobileNo").toString(),
+                        poClient.Mobile(lnCtr2).getValue("cOwnerxxx").toString(),
+                        poClient.Mobile(lnCtr2).getValue("cMobileTp").toString()
+                ));
+                lnCtr2 += 1;
+            }
+
+        }
+
+        if (pnMobile < 0 || pnMobile
+                >= mobile_data.size()) {
+            if (!mobile_data.isEmpty()) {
+                /* FOCUS ON FIRST ROW */
+                tblMobile.getSelectionModel().select(0);
+                tblMobile.getFocusModel().focus(0);
+                pnMobile = 0;
+            }
+            getSelectedMobile();
+        } else {
+            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+            tblMobile.getSelectionModel().select(pnMobile);
+            tblMobile.getFocusModel().focus(pnMobile);
+            getSelectedMobile();
+        }
+    }
+    
+    private void getSelectedMobile() {
+        if (poClient.getMobileCount() > 0) {
+            txtMobile01.setText(poClient.Mobile(pnMobile).getMobileNo());
+            
+            int lsOwnerType = 0;
+            int lsMobileType = 0;
+            
+            try {
+                lsOwnerType = Integer.parseInt(poClient.Mobile(pnMobile).getOwnershipType());
+                lsMobileType = Integer.parseInt(poClient.Mobile(pnMobile).getMobileType());
+            } catch (NumberFormatException e) {
+            }
+            
+            try {
+                cmbMobile01.getSelectionModel().select(lsOwnerType);
+                cmbMobile02.getSelectionModel().select(lsMobileType);
+            } catch (Exception e) {
+            }
+            
+            cbMobileNo01.setSelected(("1".equals((String) poClient.Mobile(pnMobile).getRecordStatus())));
+            cbMobileNo02.setSelected(poClient.Mobile(pnMobile).isPrimaryMobile());
+        }
+    }
+
+    private void loadRecordSocialMedia() {
+        int lnCtr2 = 0;
+        socialmedia_data.clear();
+        if (poClient.getSocMedCount() >= 0) {
+            for (int lnCtr = 0; lnCtr < poClient.getSocMedCount(); lnCtr++) {
+                socialmedia_data.add(new ModelSocialMedia(String.valueOf(lnCtr + 1),
+                        poClient.SocMed(lnCtr2).getAccount(),
+                        poClient.SocMed(lnCtr2).getSocMedType(),
+                        poClient.SocMed(lnCtr2).getRemarks()
+                ));
+                lnCtr2 += 1;
+            }
+        }
+
+        if (pnSocmed < 0 || pnSocmed
+                >= socialmedia_data.size()) {
+            if (!socialmedia_data.isEmpty()) {
+                /* FOCUS ON FIRST ROW */
+                tblSocMed.getSelectionModel().select(0);
+                tblSocMed.getFocusModel().focus(0);
+                pnSocmed = tblSocMed.getSelectionModel().getSelectedIndex();
+            }
+            getSelectedSocialMedia();
+        } else {
+            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+            tblSocMed.getSelectionModel().select(pnSocmed);
+            tblSocMed.getFocusModel().focus(pnSocmed);
+            getSelectedSocialMedia();
+        }
+    }
+    
+    private void getSelectedSocialMedia() {
+        int lsSocMedType = 0;
+        
+        if (poClient.getSocMedCount() > 0) {
+            lsSocMedType = Integer.parseInt(poClient.SocMed(pnSocmed).getSocMedType());
+            cmbSocMed01.getSelectionModel().select(lsSocMedType);
+
+            txtSocial01.setText(poClient.SocMed(pnSocmed).getAccount());
+            txtSocial02.setText(poClient.SocMed(pnSocmed).getRemarks());
+            cbSocMed01.setSelected("1".equals((String) poClient.SocMed(pnSocmed).getRecordStatus()));
+        }
+    }
+    
+    private void loadRecordPersonalInfo() {
+        try {
+            txtPersonal02.setText(poClient.getModel().getLastName());
+            txtPersonal03.setText(poClient.getModel().getFirstName());
+            txtPersonal04.setText(poClient.getModel().getMiddleName());
+            txtPersonal05.setText(poClient.getModel().getSuffixName());
+
+            Country loCountry = new Country();
+            loCountry.setApplicationDriver(poGRider);
+
+            loCountry.setRecordStatus("1");
+            loCountry.initialize();
+            loCountry.openRecord(poClient.getModel().getCitizenshipId());
+            txtPersonal06.setText(loCountry.getModel().getNationality());
+            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            txtPersonal07.setConverter(new StringConverter<LocalDate>() {
+                @Override
+                public String toString(LocalDate date) {
+                    return (date != null) ? date.format(formatter) : "";
+                }
+
+                @Override
+                public LocalDate fromString(String string) {
+                    return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
+                }
+            }
+            );
+
+            if (!poClient.getModel().getBirthDate().equals("")) {
+                Object lobirthdate = poClient.getModel().getBirthDate();
+                if (lobirthdate == null) {
+                    txtPersonal07.setValue(LocalDate.now());
+                } else if (lobirthdate instanceof Timestamp) {
+                    Timestamp timestamp = (Timestamp) lobirthdate;
+                    LocalDate localDate = timestamp.toLocalDateTime().toLocalDate();
+                    txtPersonal07.setValue(localDate);
+                } else if (lobirthdate instanceof Date) {
+                    Date sqlDate = (Date) lobirthdate;
+                    LocalDate localDate = sqlDate.toLocalDate();
+                    txtPersonal07.setValue(localDate);
+                } else {
+                }
+            }
+
+            if (!poClient.getModel().getBirthPlaceId().equals("")) {
+
+                TownCity loTownCity = new TownCity();
+                loTownCity.setApplicationDriver(poGRider);
+                loTownCity.setRecordStatus("1");
+                loTownCity.initialize();
+                loTownCity.openRecord(poClient.getModel().getBirthPlaceId());
+
+                Province loProvince = new Province();
+                loProvince.setApplicationDriver(poGRider);
+                loProvince.setRecordStatus("1");
+                loProvince.initialize();
+                loProvince.openRecord(loTownCity.getModel().getProvinceId());
+
+                txtPersonal08.setText(loTownCity.getModel().getDescription()+ ", " + loProvince.getModel().getDescription());
+            }
+            int lsGender = Integer.parseInt(poClient.getModel().getGender());
+            cmbPersonal09.getSelectionModel().select(lsGender);
+
+            int lsCivilStatus = Integer.parseInt(poClient.getModel().getCivilStatus());
+            cmbPersonal10.getSelectionModel().select(lsCivilStatus);
+
+            txtPersonal11.setText(poClient.getModel().getCompanyName());
+            txtPersonal12.setText(poClient.getModel().getMothersMaidenName());
+            txtPersonal13.setText(poClient.getModel().getTaxIdNumber());
+            txtPersonal14.setText(poClient.getModel().getLTOClientId());
+            txtPersonal15.setText(poClient.getModel().getPhNationalId());
+        } catch (SQLException | GuanzonException e) {
+            e.printStackTrace();
+        }
     }
     
     public Stage getStage() {
