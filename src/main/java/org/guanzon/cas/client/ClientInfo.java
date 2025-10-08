@@ -371,12 +371,11 @@ public class ClientInfo extends Parameter{
             paAddress.get(lnRow).setTownId(loParam.getModel().getTownId());
             paAddress.get(lnRow).Town().setTownId(loParam.getModel().getTownId());
             paAddress.get(lnRow).Town().setDescription(loParam.getModel().getDescription());
-            paAddress.get(lnRow).Town().Province().setProvinceId(loParam.getModel().getProvinceId());
+            paAddress.get(lnRow).Town().setProvinceId(loParam.getModel().getProvinceId());
         } else {
             paAddress.get(lnRow).setTownId("");
             paAddress.get(lnRow).Town().setTownId("");
             paAddress.get(lnRow).Town().setDescription("");
-            paAddress.get(lnRow).Town().Province().setProvinceId("");
         }
         
         return poJSON;
@@ -401,18 +400,11 @@ public class ClientInfo extends Parameter{
             
             paAddress.get(lnRow).setTownId(loParam.getModel().getTownId());
             paAddress.get(lnRow).Town().setTownId(loParam.getModel().getTownId());
-            System.out.println(loParam.getModel().Town().getProvinceId());
-            paAddress.get(lnRow).Town().Province().setProvinceId(loParam.getModel().Town().getProvinceId());            
-            System.out.println(paAddress.get(lnRow).Town().Province().getDescription());
-            
+            paAddress.get(lnRow).Town().setProvinceId(loParam.getModel().Town().getProvinceId());                        
         } else {
             paAddress.get(lnRow).setBarangayId("");
             paAddress.get(lnRow).Barangay().setBarangayId("");
-            paAddress.get(lnRow).Barangay().setBarangayName("");
-            
-            paAddress.get(lnRow).setTownId("");
-            paAddress.get(lnRow).Town().setTownId("");
-            paAddress.get(lnRow).Town().Province().setProvinceId("");            
+            paAddress.get(lnRow).Barangay().setBarangayName("");        
         }
         
         return poJSON;

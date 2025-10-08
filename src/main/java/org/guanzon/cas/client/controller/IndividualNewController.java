@@ -1,5 +1,6 @@
 package org.guanzon.cas.client.controller;
 
+import com.ibm.icu.impl.Assert;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
@@ -328,6 +329,20 @@ public class IndividualNewController implements Initializable {
                     pbCancelled = false;
                     getStage().close();
                     break;
+                case "btnDelAddress":
+                    break;
+                case "btnAddAddress":
+                    JSONObject addObjAddress = poClient.addAddress();
+                    if ("error".equals((String) addObjAddress.get("result"))) {
+                        ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", MODULE);
+                        break;
+                    } else {
+                        poClient.Address(pnAddress).setClientId(poClient.getModel().getClientId());
+                        pnAddress = poClient.getAddressCount() - 1;
+                        tblAddress.getSelectionModel().select(pnAddress + 1);
+                        loadRecordAddress();
+                    }
+                    break;
             }
         } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
             ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
@@ -338,6 +353,8 @@ public class IndividualNewController implements Initializable {
     
     private void address_Clicked(MouseEvent event) {
         pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+        
+        if (pnAddress >= 0) getSelectedAddress();
     }
     
     private void mobile_Clicked(MouseEvent event) {
@@ -407,31 +424,31 @@ public class IndividualNewController implements Initializable {
             if (event.getCode() == F3 || event.getCode() == ENTER){
                 switch (lnIndex){
                     case 3: //province
-                        poJSON = poClient.searchProvince(0, lsValue);
+                        poJSON = poClient.searchProvince(pnAddress, lsValue);
                         
                         if ("success".equals((String) poJSON.get("result"))){
-                            txtField.setText(poClient.Address(0).Town().Province().getDescription());
+                            txtField.setText(poClient.Address(pnAddress).Town().Province().getDescription());
                             CommonUtils.SetNextFocus(txtField);
                             event.consume();
                         }
                         break;
                     case 4: //town
-                        poJSON = poClient.searchTown(0, lsValue);
+                        poJSON = poClient.searchTown(pnAddress, lsValue);
                         
                         if ("success".equals((String) poJSON.get("result"))){
-                            txtField.setText(poClient.Address(0).Town().getDescription());
-                            txtAddress03.setText(poClient.Address(0).Town().Province().getDescription());
+                            txtField.setText(poClient.Address(pnAddress).Town().getDescription());
+                            txtAddress03.setText(poClient.Address(pnAddress).Town().Province().getDescription());
                             CommonUtils.SetNextFocus(txtField);
                             event.consume();
                         }
                         break;
                     case 5: //barangay
-                        poJSON = poClient.searchBarangay(0, lsValue);
+                        poJSON = poClient.searchBarangay(pnAddress, lsValue);
                         
                         if ("success".equals((String) poJSON.get("result"))){
-                            txtField.setText(poClient.Address(0).Barangay().getBarangayName());
-                            txtAddress04.setText(poClient.Address(0).Town().getDescription());
-                            txtAddress03.setText(poClient.Address(0).Town().Province().getDescription());
+                            txtField.setText(poClient.Address(pnAddress).Barangay().getBarangayName());
+                            txtAddress04.setText(poClient.Address(pnAddress).Town().getDescription());
+                            txtAddress03.setText(poClient.Address(pnAddress).Town().Province().getDescription());
                             CommonUtils.SetNextFocus(txtField);
                             event.consume();
                         }
@@ -442,7 +459,6 @@ public class IndividualNewController implements Initializable {
             ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
             System.exit(1);
         }
-        
 
         switch (event.getCode()){
             case ENTER:
@@ -561,44 +577,44 @@ public class IndividualNewController implements Initializable {
         if(!nv){//lost focus
             switch(lnIndex){
                 case 1: //house no
-                    poJSON = poClient.Address(0).setHouseNo(lsValue);
+                    poJSON = poClient.Address(pnAddress).setHouseNo(lsValue);
                     
                     if (!"success".equals((String) poJSON.get("result"))){
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
                     
-                    txtField.setText(poClient.Address(0).getHouseNo());
+                    txtField.setText(poClient.Address(pnAddress).getHouseNo());
                     break;
                 case 2: //address
-                    poJSON = poClient.Address(0).setAddress(lsValue);
+                    poJSON = poClient.Address(pnAddress).setAddress(lsValue);
                     
                     if (!"success".equals((String) poJSON.get("result"))){
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
                     
-                    txtField.setText(poClient.Address(0).getAddress());
+                    txtField.setText(poClient.Address(pnAddress).getAddress());
                     break;
                 case 6: //latitude
                     if (!StringHelper.isNumeric(lsValue)) lsValue = "0.00";
                     
-                    poJSON = poClient.Address(0).setLatitude(lsValue);
+                    poJSON = poClient.Address(pnAddress).setLatitude(lsValue);
                     
                     if (!"success".equals((String) poJSON.get("result"))){
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
                     
-                    txtField.setText(String.valueOf(poClient.Address(0).getLatitude()));
+                    txtField.setText(String.valueOf(poClient.Address(pnAddress).getLatitude()));
                     break;
                 case 7: //longitude
                     if (!StringHelper.isNumeric(lsValue)) lsValue = "0.00";
                     
-                    poJSON = poClient.Address(0).setLongitude(lsValue);
+                    poJSON = poClient.Address(pnAddress).setLongitude(lsValue);
                     
                     if (!"success".equals((String) poJSON.get("result"))){
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
                     
-                    txtField.setText(String.valueOf(poClient.Address(0).getLongitude()));
+                    txtField.setText(String.valueOf(poClient.Address(pnAddress).getLongitude()));
                     break;
             }
             
@@ -799,6 +815,8 @@ public class IndividualNewController implements Initializable {
         btnExit.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
+        btnAddAddress.setOnAction(this::cmdButton_Click);
+        btnDelAddress.setOnAction(this::cmdButton_Click);
 
         tblAddress.setOnMouseClicked(this::address_Clicked);
         tblMobile.setOnMouseClicked(this::mobile_Clicked);
@@ -883,6 +901,8 @@ public class IndividualNewController implements Initializable {
                 txtPersonal07.setValue(localbdate);
             }
         });
+        
+        initAddressCheckbox();
         
         clearfields();
     }
@@ -1001,7 +1021,6 @@ public class IndividualNewController implements Initializable {
             loadMasterAddress();
 
             int lnCtr;
-            int lnCtr2 = 0;
             address_data.clear();
 
             if (poClient.getAddressCount() >= 0) {
@@ -1309,6 +1328,179 @@ public class IndividualNewController implements Initializable {
             txtPersonal15.setText(poClient.getModel().getPhNationalId());
         } catch (SQLException | GuanzonException e) {
             e.printStackTrace();
+        }
+    }
+ 
+    private void clearAddress() {
+        try {
+            if (poClient.getAddressCount() >= 1) {
+                poClient.Address(pnAddress).setRecordStatus("0");
+            }
+        } catch (Exception e) {
+        }
+
+        txtAddress01.clear();
+        txtAddress02.clear();
+        txtAddress03.clear();
+        txtAddress04.clear();
+        txtAddress05.clear();
+
+        cbAddress01.setSelected(true);
+        cbAddress02.setSelected(false);
+        cbAddress03.setSelected(false);
+        cbAddress04.setSelected(false);
+        cbAddress05.setSelected(false);
+        cbAddress06.setSelected(false);
+        cbAddress07.setSelected(false);
+        cbAddress08.setSelected(false);
+    }
+    
+    private void initAddressCheckbox() {
+        CheckBox[] cbAddressCheckboxes = {cbAddress01, cbAddress02, cbAddress03, cbAddress04, cbAddress05, cbAddress06, cbAddress07, cbAddress08};
+
+        for (CheckBox checkbox : cbAddressCheckboxes) {
+            // Capture the current checkbox
+            checkbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (!pbLoaded) return;
+                    
+                    JSONObject loJSON;
+                    String id = checkbox.getId();
+                    String numberPart = id.substring(id.length() - 2);
+                    
+                    try {
+                        int number = Integer.parseInt(numberPart);
+                        switch (number) {
+                            case 1: //
+                                loJSON = poClient.Address(pnAddress).setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                getSelectedAddress();
+                                break;
+                            case 2: // Primary Address || Restricted to 1 Primary Address
+                                for (int in = 0; in < poClient.getAddressCount(); in++) {
+                                    if (in != pnAddress){
+                                        poClient.Address(in).isPrimaryAddress(false);
+                                    } else {
+                                        poClient.Address(in).isPrimaryAddress(true);
+                                    }
+                                }
+                                break;
+                            case 3: //Office
+                                loJSON = poClient.Address(pnAddress).isOfficeAddress(checkbox.isSelected());
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 4: // Province
+                                loJSON = poClient.Address(pnAddress).isProvinceAddress(checkbox.isSelected());
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 5: // Billing
+                                loJSON = poClient.Address(pnAddress).isBillingAddress(checkbox.isSelected());
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 6: // Shipping
+                                loJSON = poClient.Address(pnAddress).isShippingAddress(checkbox.isSelected());
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 7: // Current
+                                loJSON = poClient.Address(pnAddress).isCurrentAddress(checkbox.isSelected());
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 8: // LTMS
+                                loJSON = poClient.Address(pnAddress).isLTMSAddress(checkbox.isSelected());
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            default:
+                                System.out.println("Unknown checkbox selected");
+                                break;
+                        }
+                    } catch (NumberFormatException e) {
+                    }
+                }
+            });
+//            checkbox.setOnMouseClicked(event -> {
+//                JSONObject loJSON;
+//                String id = checkbox.getId();
+//                String numberPart = id.substring(id.length() - 2);
+//
+//                try {
+//                    int number = Integer.parseInt(numberPart);
+//                    switch (number) {
+//                        case 1: //
+//                            loJSON = poClient.Address(pnAddress).setRecordStatus(checkbox.isSelected() ? "1" : "0");
+//                            if ("error".equals((String) loJSON.get("result"))) {
+//                                Assert.fail((String) loJSON.get("message"));
+//                            }
+//                            getSelectedAddress();
+//                            break;
+//                        case 2: // Primary Address || Restricted to 1 Primary Address
+//                            for (int in = 0; in < poClient.getAddressCount(); in++) {
+//                                if (in != pnAddress){
+//                                    poClient.Address(in).isPrimaryAddress(false);
+//                                } else {
+//                                    poClient.Address(in).isPrimaryAddress(true);
+//                                }
+//                            }
+//                            break;
+//                        case 3: //Office
+//                            loJSON = poClient.Address(pnAddress).isOfficeAddress(checkbox.isSelected());
+//                            if ("error".equals((String) loJSON.get("result"))) {
+//                                Assert.fail((String) loJSON.get("message"));
+//                            }
+//                            break;
+//                        case 4: // Province
+//                            loJSON = poClient.Address(pnAddress).isProvinceAddress(checkbox.isSelected());
+//                            if ("error".equals((String) loJSON.get("result"))) {
+//                                Assert.fail((String) loJSON.get("message"));
+//                            }
+//                            break;
+//                        case 5: // Billing
+//                            loJSON = poClient.Address(pnAddress).isBillingAddress(checkbox.isSelected());
+//                            if ("error".equals((String) loJSON.get("result"))) {
+//                                Assert.fail((String) loJSON.get("message"));
+//                            }
+//                            break;
+//                        case 6: // Shipping
+//                            loJSON = poClient.Address(pnAddress).isShippingAddress(checkbox.isSelected());
+//                            if ("error".equals((String) loJSON.get("result"))) {
+//                                Assert.fail((String) loJSON.get("message"));
+//                            }
+//                            break;
+//                        case 7: // Current
+//                            loJSON = poClient.Address(pnAddress).isCurrentAddress(checkbox.isSelected());
+//                            if ("error".equals((String) loJSON.get("result"))) {
+//                                Assert.fail((String) loJSON.get("message"));
+//                            }
+//                            break;
+//                        case 8: // LTMS
+//                            loJSON = poClient.Address(pnAddress).isLTMSAddress(checkbox.isSelected());
+//                            if ("error".equals((String) loJSON.get("result"))) {
+//                                Assert.fail((String) loJSON.get("message"));
+//                            }
+//                            break;
+//                        default:
+//                            System.out.println("Unknown checkbox selected");
+//                            break;
+//                    }
+//                } catch (NumberFormatException e) {
+//                }
+//
+//            }
+//            );
         }
     }
     
