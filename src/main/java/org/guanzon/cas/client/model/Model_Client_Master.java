@@ -280,7 +280,7 @@ public class Model_Client_Master extends Model{
     
     @Override
     public String getNextCode(){
-        return MiscUtil.getNextCode(getTable(), ID, false, poGRider.getGConnection().getConnection(), poGRider.getBranchCode()); 
+        return MiscUtil.getNextCode(getTable(), ID, true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode()); 
     }
     
     public Model_TownCity BirthTown() throws SQLException, GuanzonException{

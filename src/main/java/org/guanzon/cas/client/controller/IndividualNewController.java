@@ -42,7 +42,6 @@ import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
-import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.base.StringHelper;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
@@ -58,6 +57,7 @@ import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.TownCity;
 import org.json.simple.JSONObject;
 import javafx.util.StringConverter;
+import org.guanzon.appdriver.base.SQLUtil;
 
 public class IndividualNewController implements Initializable {
     @FXML
@@ -506,25 +506,6 @@ public class IndividualNewController implements Initializable {
                     txtField.setText(poClient.getModel().getSuffixName());
                     txtField02.setText((poClient.getModel().getLastName() + ", " + poClient.getModel().getFirstName() + " " + poClient.getModel().getSuffixName() + " " + poClient.getModel().getMiddleName()).trim());                    
                     break;
-                case 7:
-                    if (!CommonUtils.isDate(lsValue, SQLUtil.FORMAT_SHORT_DATE)){
-                        ShowMessageFX.Error(getStage(), "Invalid date input. Please follow yyyy-mm-dd format.", "Warning", MODULE);
-                        
-                        try {
-                            lsValue = SQLUtil.dateFormat(poGRider.getServerDate(), SQLUtil.FORMAT_SHORT_DATE);
-                        } catch (SQLException e) {
-                            lsValue = "1900-01-01";
-                        }
-                    }
-                    
-                    poJSON = poClient.getModel().setBirthDate(SQLUtil.toDate(lsValue, SQLUtil.FORMAT_SHORT_DATE));
-                    
-                    if (!"success".equals((String) poJSON.get("result"))){
-                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
-                    }
-                    
-                    txtField.setText(SQLUtil.dateFormat(poClient.getModel().getBirthDate(), SQLUtil.FORMAT_SHORT_DATE));
-                    break;
                 case 12:
                     poJSON = poClient.getModel().setMothersMaidenName(lsValue);
                     
@@ -620,6 +601,8 @@ public class IndividualNewController implements Initializable {
                     txtField.setText(String.valueOf(poClient.Address(0).getLongitude()));
                     break;
             }
+            
+            loadRecordAddress();
         } else{//got focus
             txtField.selectAll();
         }
@@ -773,7 +756,6 @@ public class IndividualNewController implements Initializable {
         txtPersonal04.focusedProperty().addListener(txtPersonal_Focus);
         txtPersonal05.focusedProperty().addListener(txtPersonal_Focus);
         txtPersonal06.focusedProperty().addListener(txtPersonal_Focus);
-        txtPersonal07.focusedProperty().addListener(txtPersonal_Focus);
         txtPersonal08.focusedProperty().addListener(txtPersonal_Focus);
         txtPersonal11.focusedProperty().addListener(txtPersonal_Focus);
         txtPersonal12.focusedProperty().addListener(txtPersonal_Focus);
@@ -786,7 +768,6 @@ public class IndividualNewController implements Initializable {
         txtPersonal04.setOnKeyPressed(this::txtPersonal_KeyPressed);
         txtPersonal05.setOnKeyPressed(this::txtPersonal_KeyPressed);
         txtPersonal06.setOnKeyPressed(this::txtPersonal_KeyPressed);
-        txtPersonal07.setOnKeyPressed(this::txtPersonal_KeyPressed);
         txtPersonal08.setOnKeyPressed(this::txtPersonal_KeyPressed);            
         txtPersonal11.setOnKeyPressed(this::txtPersonal_KeyPressed);
         txtPersonal12.setOnKeyPressed(this::txtPersonal_KeyPressed);
@@ -876,6 +857,30 @@ public class IndividualNewController implements Initializable {
             
             if(!"success".equals((String) poJSON.get("result"))){
                 ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+        });
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        txtPersonal07.setConverter(new StringConverter<LocalDate>() {
+                @Override
+                public String toString(LocalDate date) {
+                    return (date != null) ? date.format(formatter) : "";
+                }
+
+                @Override
+                public LocalDate fromString(String string) {
+                    return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
+                }
+        });
+        
+        txtPersonal07.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) { // Lost focus
+                LocalDate selectedDate = txtPersonal07.getValue();
+                System.out.println("this is date " + selectedDate);
+                LocalDate localbdate = LocalDate.parse(selectedDate.toString(), formatter);
+                String formattedDate = formatter.format(selectedDate);
+                poClient.getModel().setBirthDate((SQLUtil.toDate(formattedDate, "yyyy-MM-dd")));
+                txtPersonal07.setValue(localbdate);
             }
         });
         
@@ -1001,35 +1006,15 @@ public class IndividualNewController implements Initializable {
 
             if (poClient.getAddressCount() >= 0) {
                 for (lnCtr = 0; lnCtr < poClient.getAddressCount(); lnCtr++) {
-                    TownCity loTownCity = new TownCity();
-                    loTownCity.setApplicationDriver(poGRider);
-                    loTownCity.setRecordStatus("1");
-                    loTownCity.initialize();
-                    loTownCity.openRecord(poClient.Address(lnCtr2).getTownId());
-
-                    Barangay loBarangay = new Barangay();
-                    try {
-                        loBarangay.setApplicationDriver(poGRider);
-                        loBarangay.setRecordStatus("1");
-                        loBarangay.initialize();
-                        loBarangay.openRecord(poClient.Address(lnCtr2).getBarangayId());
-                    } catch (SQLException | GuanzonException e) {
-                        e.printStackTrace();
-                    }
-
                     address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
-                            (String) poClient.Address(lnCtr2).getValue("sHouseNox"),
-                            (String) poClient.Address(lnCtr2).getValue("sAddressx"),
-                            (String) loTownCity.getModel().getDescription(),
-                            (String) loBarangay.getModel().getBarangayName()
-                    ));
-                    
-                    lnCtr2 += 1;
+                            (String) poClient.Address(lnCtr).getValue("sHouseNox"),
+                            (String) poClient.Address(lnCtr).getValue("sAddressx"),
+                            (String) poClient.Address(lnCtr).Town().getDescription(),
+                            (String) poClient.Address(lnCtr).Barangay().getBarangayName()));
                 }
             }
 
-            if (pnAddress < 0 || pnAddress
-                    >= address_data.size()) {
+            if (pnAddress < 0 || pnAddress >= address_data.size()) {
                 if (!address_data.isEmpty()) {
                     /* FOCUS ON FIRST ROW */
                     tblAddress.getSelectionModel().select(0);
@@ -1265,21 +1250,19 @@ public class IndividualNewController implements Initializable {
             loCountry.initialize();
             loCountry.openRecord(poClient.getModel().getCitizenshipId());
             txtPersonal06.setText(loCountry.getModel().getNationality());
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            txtPersonal07.setConverter(new StringConverter<LocalDate>() {
-                @Override
-                public String toString(LocalDate date) {
-                    return (date != null) ? date.format(formatter) : "";
-                }
-
-                @Override
-                public LocalDate fromString(String string) {
-                    return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
-                }
-            }
-            );
+//            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//            txtPersonal07.setConverter(new StringConverter<LocalDate>() {
+//                    @Override
+//                    public String toString(LocalDate date) {
+//                        return (date != null) ? date.format(formatter) : "";
+//                    }
+//
+//                    @Override
+//                    public LocalDate fromString(String string) {
+//                        return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
+//                    }
+//            });
 
             if (!poClient.getModel().getBirthDate().equals("")) {
                 Object lobirthdate = poClient.getModel().getBirthDate();

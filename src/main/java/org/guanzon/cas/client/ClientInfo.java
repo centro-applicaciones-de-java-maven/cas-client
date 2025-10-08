@@ -368,12 +368,15 @@ public class ClientInfo extends Parameter{
         }
         
         if ("success".equals((String) poJSON.get("result"))){
+            paAddress.get(lnRow).setTownId(loParam.getModel().getTownId());
             paAddress.get(lnRow).Town().setTownId(loParam.getModel().getTownId());
             paAddress.get(lnRow).Town().setDescription(loParam.getModel().getDescription());
             paAddress.get(lnRow).Town().Province().setProvinceId(loParam.getModel().getProvinceId());
         } else {
+            paAddress.get(lnRow).setTownId("");
             paAddress.get(lnRow).Town().setTownId("");
             paAddress.get(lnRow).Town().setDescription("");
+            paAddress.get(lnRow).Town().Province().setProvinceId("");
         }
         
         return poJSON;
@@ -392,14 +395,24 @@ public class ClientInfo extends Parameter{
         }
         
         if ("success".equals((String) poJSON.get("result"))){
+            paAddress.get(lnRow).setBarangayId(loParam.getModel().getBarangayId());
             paAddress.get(lnRow).Barangay().setBarangayId(loParam.getModel().getBarangayId());
             paAddress.get(lnRow).Barangay().setBarangayName(loParam.getModel().getBarangayName());
-            paAddress.get(lnRow).Barangay().Town().setTownId(loParam.getModel().Town().getTownId());
-            paAddress.get(lnRow).Town().Province().setProvinceId(loParam.getModel().Town().getProvinceId());
+            
+            paAddress.get(lnRow).setTownId(loParam.getModel().getTownId());
+            paAddress.get(lnRow).Town().setTownId(loParam.getModel().getTownId());
+            System.out.println(loParam.getModel().Town().getProvinceId());
+            paAddress.get(lnRow).Town().Province().setProvinceId(loParam.getModel().Town().getProvinceId());            
+            System.out.println(paAddress.get(lnRow).Town().Province().getDescription());
+            
         } else {
+            paAddress.get(lnRow).setBarangayId("");
             paAddress.get(lnRow).Barangay().setBarangayId("");
             paAddress.get(lnRow).Barangay().setBarangayName("");
-            paAddress.get(lnRow).Barangay().Town().setTownId("");
+            
+            paAddress.get(lnRow).setTownId("");
+            paAddress.get(lnRow).Town().setTownId("");
+            paAddress.get(lnRow).Town().Province().setProvinceId("");            
         }
         
         return poJSON;
@@ -450,19 +463,21 @@ public class ClientInfo extends Parameter{
         }
         
         //validate address
-        if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
-            paAddress.get(paAddress.size() - 1).getTownId().isEmpty()) paAddress.remove(paAddress.size() - 1);
-
         switch (paAddress.size()) {
             case 0:
                 addAddress();
             case 1:
-                if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty() &&
-                    paAddress.get(paAddress.size() - 1).getTownId().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "Address and town must have a value.");
-                return poJSON;
-            }
+                if (paAddress.get(paAddress.size() - 1).getTownId().isEmpty()){
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Town must have a value.");
+                    return poJSON;
+                }
+                
+                if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty()){
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Address have a value.");
+                    return poJSON;
+                }
         }
 
 //            //validate mobile

@@ -11,6 +11,7 @@ org\guanzon\cas\client\model\Model_AP_Client_Master.class
 org\guanzon\cas\client\account\GlobalVariables.class
 org\guanzon\cas\client\Client_Institution_Contact.class
 org\guanzon\cas\client\model\Model_Client_Address.class
+org\guanzon\cas\client\controller\IndividualNewController$2.class
 org\guanzon\cas\client\model\Model_Client_Mobile.class
 org\guanzon\cas\client\Client_Master.class
 org\guanzon\cas\client\model\Model_Client_Social_Media.class

@@ -175,6 +175,11 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
+                                                                        <DatePicker fx:id="txtPersonal07" prefHeight="28.0" prefWidth="227.0" promptText="YYYY-MM-DD" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </DatePicker>
                                                                         <TextField fx:id="txtPersonal08" promptText="Press F3 to search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="2">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
@@ -320,11 +325,6 @@
                                                                               <Font size="14.0" />
                                                                            </font>
                                                                         </Text>
-                                                                        <DatePicker fx:id="txtPersonal07" prefHeight="28.0" prefWidth="227.0" promptText="YYYY-MM-DD" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="1">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </DatePicker>
                                                                      </children>
                                                                      <padding>
                                                                         <Insets top="5.0" />
