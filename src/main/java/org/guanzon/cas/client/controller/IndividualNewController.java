@@ -52,7 +52,6 @@ import org.guanzon.cas.client.table.models.ModelAddress;
 import org.guanzon.cas.client.table.models.ModelEmail;
 import org.guanzon.cas.client.table.models.ModelMobile;
 import org.guanzon.cas.client.table.models.ModelSocialMedia;
-import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.Country;
 import org.guanzon.cas.parameter.Province;
 import org.guanzon.cas.parameter.TownCity;
@@ -257,6 +256,7 @@ public class IndividualNewController implements Initializable {
     private JSONObject poJSON;
     private boolean pbLoaded;
     private boolean pbCancelled;
+    private boolean pbLoadingData;
     
     ObservableList<String> gender = FXCollections.observableArrayList("Male", "Female");
     ObservableList<String> civilstatus = FXCollections.observableArrayList("Single", "Married", "Separated", "Widowed", "Single Parent", "Single Parent w/ Live-in Partner");
@@ -334,13 +334,15 @@ public class IndividualNewController implements Initializable {
                 case "btnAddAddress":
                     JSONObject addObjAddress = poClient.addAddress();
                     if ("error".equals((String) addObjAddress.get("result"))) {
-                        ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", MODULE);
+                        ShowMessageFX.Information(getStage(), (String) addObjAddress.get("message"), "Computerized Acounting System", MODULE);
                         break;
                     } else {
                         poClient.Address(pnAddress).setClientId(poClient.getModel().getClientId());
                         pnAddress = poClient.getAddressCount() - 1;
                         tblAddress.getSelectionModel().select(pnAddress + 1);
                         loadRecordAddress();
+                        
+                        txtAddress03.requestFocus();
                     }
                     break;
             }
@@ -634,11 +636,23 @@ public class IndividualNewController implements Initializable {
         
         if (lsValue == null) return;
             
-        if(!nv){//lost focus
+        if(!nv){ //lost focus
             switch(lnIndex){
-            
+                case 1: //mobile
+                    if (!StringHelper.isNumeric(lsValue)) {
+                        ShowMessageFX.Error(getStage(), "Mobile must be numeric.", "Warning", MODULE);
+                        lsValue = "";
+                    }
+                    
+                    poJSON = poClient.Mobile(pnMobile).setMobileNo(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(String.valueOf(poClient.Mobile(pnMobile).getMobileNo()));
             }
-        } else{//got focus
+        } else{ //got focus
             txtField.selectAll();
         }
     };
@@ -848,6 +862,14 @@ public class IndividualNewController implements Initializable {
         
         cmbMobile01.setOnAction(event -> {            
             poJSON = poClient.Mobile(pnMobile).setOwnershipType(String.valueOf(cmbMobile01.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+        });
+        
+        cmbMobile02.setOnAction(event -> {            
+            poJSON = poClient.Mobile(pnMobile).setMobileType(String.valueOf(cmbMobile02.getSelectionModel().getSelectedIndex()));
             
             if(!"success".equals((String) poJSON.get("result"))){
                 ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
@@ -1067,33 +1089,14 @@ public class IndividualNewController implements Initializable {
     }
     
     private void getSelectedAddress() {
+        pbLoadingData = true;
         try {
             if (poClient.getAddressCount() > 0) {
                 txtAddress01.setText(poClient.Address(pnAddress).getHouseNo());
                 txtAddress02.setText(poClient.Address(pnAddress).getAddress());
-
-                Province loProvince = new Province();
-                loProvince.setApplicationDriver(poGRider);
-                loProvince.setRecordStatus("1");
-                loProvince.initialize();
-                loProvince.openRecord(poClient.Address(pnAddress).Town().Province().getProvinceId());
-
-                txtAddress03.setText(loProvince.getModel().getDescription());
-
-                TownCity loTownCity = new TownCity();
-                loTownCity.setApplicationDriver(poGRider);
-                loTownCity.setRecordStatus("1");
-                loTownCity.initialize();
-                loTownCity.openRecord(poClient.Address(pnAddress).getTownId());
-
-                Barangay loBarangay = new Barangay();
-                loBarangay.setApplicationDriver(poGRider);
-                loBarangay.setRecordStatus("1");
-                loBarangay.initialize();
-                loBarangay.openRecord(poClient.Address(pnAddress).getBarangayId());
-
-                txtAddress04.setText((String) loTownCity.getModel().getDescription());
-                txtAddress05.setText(loBarangay.getModel().getBarangayName());
+                txtAddress03.setText(poClient.Address(pnAddress).Town().Province().getDescription());
+                txtAddress04.setText(poClient.Address(pnAddress).Town().getDescription());
+                txtAddress05.setText(poClient.Address(pnAddress).Barangay().getBarangayName());
                 txtAddress06.setText(String.valueOf(poClient.Address(pnAddress).getLatitude()));
                 txtAddress07.setText(String.valueOf(poClient.Address(pnAddress).getLongitude()));
 
@@ -1107,9 +1110,10 @@ public class IndividualNewController implements Initializable {
                 cbAddress08.setSelected(poClient.Address(pnAddress).isLTMSAddress());
             }
         } catch (SQLException | GuanzonException e) {
+            pbLoadingData = false;
             e.printStackTrace();
         }
-        
+        pbLoadingData = false;
     }
     
     private void loadRecordEmail() {
@@ -1366,60 +1370,62 @@ public class IndividualNewController implements Initializable {
                     if (!pbLoaded) return;
                     
                     JSONObject loJSON;
-                    String id = checkbox.getId();
+                    String id = checkbox.getId(); 
                     String numberPart = id.substring(id.length() - 2);
                     
                     try {
                         int number = Integer.parseInt(numberPart);
                         switch (number) {
                             case 1: //
-                                loJSON = poClient.Address(pnAddress).setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                                loJSON = poClient.Address(pnAddress).setRecordStatus(newValue ? "1" : "0");
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
                                 getSelectedAddress();
                                 break;
                             case 2: // Primary Address || Restricted to 1 Primary Address
-                                for (int in = 0; in < poClient.getAddressCount(); in++) {
-                                    if (in != pnAddress){
-                                        poClient.Address(in).isPrimaryAddress(false);
-                                    } else {
-                                        poClient.Address(in).isPrimaryAddress(true);
+                                poClient.Address(pnAddress).isPrimaryAddress(newValue);
+                                
+                                if (!pbLoadingData){
+                                    for (int in = 0; in < poClient.getAddressCount(); in++) {
+                                        if (in != pnAddress){
+                                            poClient.Address(in).isPrimaryAddress(false);
+                                        }
                                     }
-                                }
+                                }                                
                                 break;
                             case 3: //Office
-                                loJSON = poClient.Address(pnAddress).isOfficeAddress(checkbox.isSelected());
+                                loJSON = poClient.Address(pnAddress).isOfficeAddress(newValue);
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
                                 break;
                             case 4: // Province
-                                loJSON = poClient.Address(pnAddress).isProvinceAddress(checkbox.isSelected());
+                                loJSON = poClient.Address(pnAddress).isProvinceAddress(newValue);
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
                                 break;
                             case 5: // Billing
-                                loJSON = poClient.Address(pnAddress).isBillingAddress(checkbox.isSelected());
+                                loJSON = poClient.Address(pnAddress).isBillingAddress(newValue);
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
                                 break;
                             case 6: // Shipping
-                                loJSON = poClient.Address(pnAddress).isShippingAddress(checkbox.isSelected());
+                                loJSON = poClient.Address(pnAddress).isShippingAddress(newValue);
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
                                 break;
                             case 7: // Current
-                                loJSON = poClient.Address(pnAddress).isCurrentAddress(checkbox.isSelected());
+                                loJSON = poClient.Address(pnAddress).isCurrentAddress(newValue);
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
                                 break;
                             case 8: // LTMS
-                                loJSON = poClient.Address(pnAddress).isLTMSAddress(checkbox.isSelected());
+                                loJSON = poClient.Address(pnAddress).isLTMSAddress(newValue);
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
@@ -1432,75 +1438,62 @@ public class IndividualNewController implements Initializable {
                     }
                 }
             });
-//            checkbox.setOnMouseClicked(event -> {
-//                JSONObject loJSON;
-//                String id = checkbox.getId();
-//                String numberPart = id.substring(id.length() - 2);
-//
-//                try {
-//                    int number = Integer.parseInt(numberPart);
-//                    switch (number) {
-//                        case 1: //
-//                            loJSON = poClient.Address(pnAddress).setRecordStatus(checkbox.isSelected() ? "1" : "0");
-//                            if ("error".equals((String) loJSON.get("result"))) {
-//                                Assert.fail((String) loJSON.get("message"));
-//                            }
-//                            getSelectedAddress();
-//                            break;
-//                        case 2: // Primary Address || Restricted to 1 Primary Address
-//                            for (int in = 0; in < poClient.getAddressCount(); in++) {
-//                                if (in != pnAddress){
-//                                    poClient.Address(in).isPrimaryAddress(false);
-//                                } else {
-//                                    poClient.Address(in).isPrimaryAddress(true);
-//                                }
-//                            }
-//                            break;
-//                        case 3: //Office
-//                            loJSON = poClient.Address(pnAddress).isOfficeAddress(checkbox.isSelected());
-//                            if ("error".equals((String) loJSON.get("result"))) {
-//                                Assert.fail((String) loJSON.get("message"));
-//                            }
-//                            break;
-//                        case 4: // Province
-//                            loJSON = poClient.Address(pnAddress).isProvinceAddress(checkbox.isSelected());
-//                            if ("error".equals((String) loJSON.get("result"))) {
-//                                Assert.fail((String) loJSON.get("message"));
-//                            }
-//                            break;
-//                        case 5: // Billing
-//                            loJSON = poClient.Address(pnAddress).isBillingAddress(checkbox.isSelected());
-//                            if ("error".equals((String) loJSON.get("result"))) {
-//                                Assert.fail((String) loJSON.get("message"));
-//                            }
-//                            break;
-//                        case 6: // Shipping
-//                            loJSON = poClient.Address(pnAddress).isShippingAddress(checkbox.isSelected());
-//                            if ("error".equals((String) loJSON.get("result"))) {
-//                                Assert.fail((String) loJSON.get("message"));
-//                            }
-//                            break;
-//                        case 7: // Current
-//                            loJSON = poClient.Address(pnAddress).isCurrentAddress(checkbox.isSelected());
-//                            if ("error".equals((String) loJSON.get("result"))) {
-//                                Assert.fail((String) loJSON.get("message"));
-//                            }
-//                            break;
-//                        case 8: // LTMS
-//                            loJSON = poClient.Address(pnAddress).isLTMSAddress(checkbox.isSelected());
-//                            if ("error".equals((String) loJSON.get("result"))) {
-//                                Assert.fail((String) loJSON.get("message"));
-//                            }
-//                            break;
-//                        default:
-//                            System.out.println("Unknown checkbox selected");
-//                            break;
-//                    }
-//                } catch (NumberFormatException e) {
-//                }
-//
-//            }
-//            );
+        }
+    }
+    
+    private void initMobileCheckbox() {
+        CheckBox[] cbMobileCheckboxes = {cbMobileNo01, cbMobileNo02};
+        for (int i = 0; i < cbMobileCheckboxes.length; i++) {
+            final CheckBox checkbox = cbMobileCheckboxes[i]; // Capture the current checkbox
+            checkbox.setOnMouseClicked(event -> {
+                JSONObject loJSON;
+                String id = checkbox.getId();
+                String numberPart = id.substring(id.length() - 2);
+                try {
+                    int number = Integer.parseInt(numberPart);
+                    switch (number) {
+                        case 1:
+                            loJSON = oTrans.Mobile(pnMobile).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                            if ("error".equals((String) loJSON.get("result"))) {
+                                Assert.fail((String) loJSON.get("message"));
+                            }
+                            break;
+                        case 2: // Primary Mobile
+                            boolean primaryMobileExists = false;
+                            for (int in = 0; in < oTrans.getMobileCount(); in++) {
+                                if (oTrans.Mobile(in).getModel().isPrimaryMobile()) {
+                                    primaryMobileExists = true;
+                                    if (oTrans.Mobile(in).getModel().getMobileId() == oTrans.Mobile(pnMobile).getModel().getMobileId()) {
+                                        if (ShowMessageFX.YesNo("There will be no primary mobile, proceed? \n", "Computerized Acounting System", pxeModuleName)) {
+                                            primaryMobileExists = false;
+                                            oTrans.Mobile(in).getModel().isPrimaryMobile(false);
+                                        }
+                                    } else {
+                                        if (ShowMessageFX.YesNo("Do you want to change the current primary mobile? \n", "Computerized Acounting System", pxeModuleName)) {
+                                            primaryMobileExists = false;
+                                            oTrans.Mobile(in).getModel().isPrimaryMobile(false);
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                            if (!primaryMobileExists) {
+                                loJSON = oTrans.Mobile(pnMobile).getModel().isPrimaryMobile(checkbox.isSelected());
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                            }
+
+                            break;
+                        default:
+                            System.out.println("Unknown checkbox selected");
+                            break;
+                    }
+                    getSelectedMobile();
+
+                } catch (NumberFormatException e) {
+                }
+            });
         }
     }
     

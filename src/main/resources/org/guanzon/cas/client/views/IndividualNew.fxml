@@ -215,7 +215,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="txtPersonal14" maxWidth="213.0" minWidth="150.0" prefWidth="213.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8">
+                                                                        <TextField fx:id="txtPersonal14" maxWidth="213.0" minWidth="150.0" prefWidth="213.0" promptText="XXX-XX-XXXXXX" styleClass="text-field" visible="false" GridPane.columnIndex="6" GridPane.columnSpan="2" GridPane.rowIndex="8">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -320,7 +320,7 @@
                                                                               <Font size="14.0" />
                                                                            </font>
                                                                         </Text>
-                                                                        <Text layoutX="27.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="LTO ID" GridPane.columnIndex="5" GridPane.rowIndex="8">
+                                                                        <Text layoutX="27.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="LTO ID" visible="false" GridPane.columnIndex="5" GridPane.rowIndex="8">
                                                                            <font>
                                                                               <Font size="14.0" />
                                                                            </font>
@@ -421,7 +421,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress03" mnemonicParsing="false" text="Office" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5">
+                                                                  <CheckBox fx:id="cbAddress07" mnemonicParsing="false" prefWidth="81.0" text="Current" GridPane.columnIndex="3" GridPane.rowIndex="5">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -429,7 +429,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress04" mnemonicParsing="false" text="Province" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="5">
+                                                                  <CheckBox fx:id="cbAddress03" mnemonicParsing="false" text="Office" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -437,7 +437,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress05" mnemonicParsing="false" text="Billing" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+                                                                  <CheckBox fx:id="cbAddress04" mnemonicParsing="false" text="Province" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -453,7 +453,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress07" mnemonicParsing="false" prefWidth="81.0" text="Current" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                                                  <CheckBox fx:id="cbAddress05" mnemonicParsing="false" text="Billing" GridPane.columnIndex="3" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="6">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -461,7 +461,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <CheckBox fx:id="cbAddress08" mnemonicParsing="false" text="LTMS" GridPane.columnIndex="4" GridPane.rowIndex="6">
+                                                                  <CheckBox fx:id="cbAddress08" mnemonicParsing="false" prefWidth="89.0" text="LTMS" visible="false" GridPane.columnIndex="4" GridPane.rowIndex="6">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
