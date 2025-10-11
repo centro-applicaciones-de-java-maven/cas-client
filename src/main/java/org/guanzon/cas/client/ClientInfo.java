@@ -1,5 +1,6 @@
 package org.guanzon.cas.client;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import org.guanzon.appdriver.agent.ShowDialogFX;
@@ -117,6 +118,33 @@ public class ClientInfo extends Parameter{
         return paContact.size();
     }
     
+    @Override
+    public JSONObject openRecord(String Id) throws SQLException, GuanzonException {
+        if (!pbInitRec){
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "Object is not initialized.");
+            return poJSON;
+        }
+        
+        poJSON = poClient.openRecord(Id);
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            String lsSQL = "SELECT * FROM Client_Address" +
+                            " WHERE sClientID = " + SQLUtil.toSQL(poClient.getClientId()) +
+                            " ORDER BY sAddrssID";
+            
+            paAddress.clear();
+            ResultSet loRS = poGRider.executeQuery(lsSQL);
+            
+            while (loRS.next()){
+            
+            }
+        }
+        
+        return poJSON;
+    }
+    
     public JSONObject addMobile() throws CloneNotSupportedException{
         poJSON = new JSONObject();
         
@@ -203,7 +231,7 @@ public class ClientInfo extends Parameter{
         }
          
         if (paMail.size() > 1){
-            if (paMail.get(getMobileCount() - 1).getMailAddress().isEmpty()){
+            if (paMail.get(getMailCount()- 1).getMailAddress().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Unable to add new email record.\n\nLast record is still empty.");
                 return poJSON;
@@ -235,7 +263,7 @@ public class ClientInfo extends Parameter{
         }
          
         if (paSocMed.size() > 1){
-            if (paSocMed.get(getMobileCount() - 1).getAccount().isEmpty()){
+            if (paSocMed.get(getSocMedCount()- 1).getAccount().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Unable to add new social media record.\n\nLast record is still empty.");
                 return poJSON;
@@ -472,20 +500,20 @@ public class ClientInfo extends Parameter{
                 }
         }
 
-//            //validate mobile
-//            if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) paMobile.remove(paMobile.size() - 1);
-//            
-//            switch (paMobile.size()) {
-//                case 0:
-//                    addMobile();
-//                case 1:
-//                    if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()){
-//                    poJSON.put("result", "error");
-//                    poJSON.put("message", "Client must have a mobile number.");
-//                    return poJSON;
-//                }
-//            }
-//            
+        //validate mobile
+        if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) paMobile.remove(paMobile.size() - 1);
+
+        switch (paMobile.size()) {
+            case 0:
+                addMobile();
+            case 1:
+                if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Client must have a mobile number.");
+                return poJSON;
+            }
+        }
+            
 //            //validate contact person
 //            if (getModel().getClientType().equals(ClientType.INSTITUTION)){
 //                if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() &&
