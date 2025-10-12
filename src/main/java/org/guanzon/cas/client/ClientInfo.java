@@ -56,7 +56,7 @@ public class ClientInfo extends Parameter{
         poSocMed = model.ClientSocMed();
         poContact = model.ClientInstitutionContact();
         
-        psClientTp = ClientType.INDIVIDUAL;
+        if (psClientTp == null || psClientTp.isEmpty()) psClientTp = ClientType.INDIVIDUAL;
     }
         
     @Override
@@ -138,11 +138,42 @@ public class ClientInfo extends Parameter{
             ResultSet loRS = poGRider.executeQuery(lsSQL);
             
             while (loRS.next()){
-                Model_Client_Address object = (Model_Client_Address) poMobile.clone();
+                Model_Client_Address object = (Model_Client_Address) poAddress.clone();
+                object.newRecord();
+                
                 JSONObject loJSON = object.openRecord(loRS.getString("sAddrssID"));
                 
-                if ("success".equals((String) loJSON.get("result"))) paAddress.add(object);
-                else return loJSON;
+                if ("success".equals((String) loJSON.get("result"))) {
+                    lsSQL = "SELECT sTownIDxx, sTownName, sProvIDxx FROM TownCity WHERE sTownIDxx = " + SQLUtil.toSQL(object.getTownId());
+                    
+                    ResultSet loRx = poGRider.executeQuery(lsSQL);
+                    
+                    if (loRx.next()){
+                        object.Town().setTownId(loRx.getString("sTownIDxx"));
+                        object.Town().setDescription(loRx.getString("sTownName"));
+                        
+                        lsSQL = "SELECT sProvIDxx, sDescript FROM Province WHERE sProvIDxx = " + SQLUtil.toSQL(loRx.getString("sProvIDxx"));
+                    
+                        loRx = poGRider.executeQuery(lsSQL);
+                        
+                        if (loRx.next()){
+                            object.Town().Province().setProvinceId(loRx.getString("sProvIDxx"));
+                            object.Town().Province().setDescription(loRx.getString("sDescript"));
+                        }
+                    }
+                    
+                    lsSQL = "SELECT sBrgyIDxx, sBrgyName FROM Barangay WHERE sBrgyIDxx = " + SQLUtil.toSQL(object.getBarangayId());
+                    
+                    loRx = poGRider.executeQuery(lsSQL);
+
+                    if (loRx.next()){
+                        object.Barangay().setBarangayId(loRx.getString("sBrgyIDxx"));
+                        object.Barangay().setBarangayName(loRx.getString("sBrgyName"));
+                    }
+
+                    paAddress.add(object);                    
+                } else 
+                    return loJSON;
             }
             
             //load mobile nos
@@ -152,12 +183,17 @@ public class ClientInfo extends Parameter{
             
             loRS = poGRider.executeQuery(lsSQL);
             
+            paMobile.clear();
             while (loRS.next()){
                 Model_Client_Mobile object = (Model_Client_Mobile) poMobile.clone();
+                object.newRecord();
+                
                 JSONObject loJSON = object.openRecord(loRS.getString("sMobileID"));
                 
-                if ("success".equals((String) loJSON.get("result"))) paMobile.add(object);
-                else return loJSON;
+                if ("success".equals((String) loJSON.get("result"))) 
+                    paMobile.add(object);
+                else 
+                    return loJSON;
             }
             
             //load email addresses
@@ -167,12 +203,17 @@ public class ClientInfo extends Parameter{
             
             loRS = poGRider.executeQuery(lsSQL);
             
+            paMail.clear();
             while (loRS.next()){
                 Model_Client_Mail object = (Model_Client_Mail) poMail.clone();
+                object.newRecord();
+                
                 JSONObject loJSON = object.openRecord(loRS.getString("sEmailIDx"));
                 
-                if ("success".equals((String) loJSON.get("result"))) paMail.add(object);
-                else return loJSON;
+                if ("success".equals((String) loJSON.get("result"))) 
+                    paMail.add(object);
+                else 
+                    return loJSON;
             }
             
             //load social media accounts
@@ -182,12 +223,17 @@ public class ClientInfo extends Parameter{
             
             loRS = poGRider.executeQuery(lsSQL);
             
+            paSocMed.clear();
             while (loRS.next()){
                 Model_Client_Social_Media object = (Model_Client_Social_Media) poSocMed.clone();
+                object.newRecord();
+                
                 JSONObject loJSON = object.openRecord(loRS.getString("sSocialID"));
                 
-                if ("success".equals((String) loJSON.get("result"))) paSocMed.add(object);
-                else return loJSON;
+                if ("success".equals((String) loJSON.get("result"))) 
+                    paSocMed.add(object);
+                else 
+                    return loJSON;
             }
         }
         
@@ -410,12 +456,12 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
     
-    public JSONObject searchProvince(int lnRow, String lsValue) throws SQLException, GuanzonException{
+    public JSONObject searchProvince(int lnRow, String lsValue, boolean lbByCode) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
         Province loParam = new ParamControllers(poGRider, logwrapr).Province();
         
-        poJSON = loParam.searchRecord(lsValue, false);
+        poJSON = loParam.searchRecord(lsValue, lbByCode);
         
         if ("success".equals((String) poJSON.get("result"))){
             paAddress.get(lnRow).Town().Province().setProvinceId(loParam.getModel().getProvinceId());
@@ -432,16 +478,16 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
     
-    public JSONObject searchTown(int lnRow, String lsValue) throws SQLException, GuanzonException{
+    public JSONObject searchTown(int lnRow, String lsValue, boolean lbByCode) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
         TownCity loParam = new ParamControllers(poGRider, logwrapr).TownCity();
         
         if (paAddress.get(lnRow).Town().getProvinceId() == null ||
             paAddress.get(lnRow).Town().getProvinceId().isEmpty()){
-            poJSON = loParam.searchRecord(lsValue, false);
+            poJSON = loParam.searchRecord(lsValue, lbByCode);
         } else {
-            poJSON = loParam.searchRecord(lsValue, false, paAddress.get(lnRow).Town().getProvinceId());
+            poJSON = loParam.searchRecord(lsValue, lbByCode, paAddress.get(lnRow).Town().getProvinceId());
         }
         
         if ("success".equals((String) poJSON.get("result"))){
@@ -458,16 +504,16 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
     
-    public JSONObject searchBarangay(int lnRow, String lsValue) throws SQLException, GuanzonException{
+    public JSONObject searchBarangay(int lnRow, String lsValue, boolean lbByCode) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
         Barangay loParam = new ParamControllers(poGRider, logwrapr).Barangay();
         
         if (paAddress.get(lnRow).Town().getTownId() == null ||
             paAddress.get(lnRow).Town().getTownId().isEmpty()){
-            poJSON = loParam.searchRecord(lsValue, false);
+            poJSON = loParam.searchRecord(lsValue, lbByCode);
         } else {
-            poJSON = loParam.searchRecord(lsValue, false, paAddress.get(lnRow).Town().getTownId());
+            poJSON = loParam.searchRecord(lsValue, lbByCode, paAddress.get(lnRow).Town().getTownId());
         }
         
         if ("success".equals((String) poJSON.get("result"))){
@@ -838,7 +884,7 @@ public class ClientInfo extends Parameter{
                             ", a.sMiddName" +
                             ", a.sSuffixNm" +
                             ", a.sMaidenNm" +
-                            ", a.sCompnyNm" +
+                            ", a.sCompnyNm xFullName" +
                             ", a.cGenderCd" +
                             ", a.cCvilStat" +
                             ", a.sCitizenx" +
@@ -868,10 +914,17 @@ public class ClientInfo extends Parameter{
         
         lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);
         
-        if (psClientTp.length() > 1) 
-            psClientTp = ClientType.INDIVIDUAL;
+        if (psClientTp.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psClientTp.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psClientTp.charAt(lnCtr)));
+            }
+
+            lsCondition = "a.cClientTp IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "a.cClientTp = " + SQLUtil.toSQL(psClientTp);
+        }      
         
-        lsCondition = "a.cClientTp = " + SQLUtil.toSQL(psClientTp);
+        lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);
         
         return MiscUtil.addCondition(lsSQL, lsCondition);
     }

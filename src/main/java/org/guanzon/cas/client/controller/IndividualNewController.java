@@ -36,6 +36,7 @@ import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.guanzon.appdriver.agent.ShowMessageFX;
@@ -124,6 +125,14 @@ public class IndividualNewController implements Initializable {
     private AnchorPane anchorEmail;
     @FXML
     private AnchorPane anchorSocMed;
+    @FXML
+    private GridPane gridAddress;
+    @FXML
+    private GridPane gridMobile;
+    @FXML
+    private GridPane gridEmail;
+    @FXML
+    private GridPane gridSocMed;
     @FXML
     private TableView tblAddress;
     @FXML
@@ -326,13 +335,15 @@ public class IndividualNewController implements Initializable {
                     getStage().close();
                     break;
                 case "btnSave":
-                    poJSON = poClient.saveRecord();
+                    if (pnEditMode == EditMode.ADDNEW) {
+                        poJSON = poClient.saveRecord();
 
-                    if (!"success".equals((String) poJSON.get("result"))){
-                        ShowMessageFX.Warning(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
-                        break;
+                        if (!"success".equals((String) poJSON.get("result"))){
+                            ShowMessageFX.Warning(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                            break;
+                        }
                     }
-
+                    
                     psClientID = poClient.getModel().getClientId();
                     pbCancelled = false;
                     getStage().close();
@@ -490,7 +501,7 @@ public class IndividualNewController implements Initializable {
             if (event.getCode() == F3 || event.getCode() == ENTER){
                 switch (lnIndex){
                     case 3: //province
-                        poJSON = poClient.searchProvince(pnAddress, lsValue);
+                        poJSON = poClient.searchProvince(pnAddress, lsValue, false);
                         
                         if ("success".equals((String) poJSON.get("result"))){
                             txtField.setText(poClient.Address(pnAddress).Town().Province().getDescription());
@@ -499,7 +510,7 @@ public class IndividualNewController implements Initializable {
                         }
                         break;
                     case 4: //town
-                        poJSON = poClient.searchTown(pnAddress, lsValue);
+                        poJSON = poClient.searchTown(pnAddress, lsValue, false);
                         
                         if ("success".equals((String) poJSON.get("result"))){
                             txtField.setText(poClient.Address(pnAddress).Town().getDescription());
@@ -509,7 +520,7 @@ public class IndividualNewController implements Initializable {
                         }
                         break;
                     case 5: //barangay
-                        poJSON = poClient.searchBarangay(pnAddress, lsValue);
+                        poJSON = poClient.searchBarangay(pnAddress, lsValue, false);
                         
                         if ("success".equals((String) poJSON.get("result"))){
                             txtField.setText(poClient.Address(pnAddress).Barangay().getBarangayName());
@@ -1189,18 +1200,18 @@ public class IndividualNewController implements Initializable {
                 poJSON =  poClient.newRecord();
                 
                 anchorPersonal.setDisable(false);
-                anchorAddress.setDisable(false);
-                anchorMobile.setDisable(false);
-                anchorEmail.setDisable(false);
-                anchorSocMed.setDisable(false);
+                gridAddress.setDisable(false);
+                gridMobile.setDisable(false);
+                gridEmail.setDisable(false);
+                gridSocMed.setDisable(false);
             } else {
                 poJSON = poClient.openClientRecord(psClientID);
                 
                 anchorPersonal.setDisable(true);
-                anchorAddress.setDisable(true);
-                anchorMobile.setDisable(true);
-                anchorEmail.setDisable(true);
-                anchorSocMed.setDisable(true);
+                gridAddress.setDisable(true);
+                gridMobile.setDisable(true);
+                gridEmail.setDisable(true);
+                gridSocMed.setDisable(true);
             }
                 
             if (!"success".equals((String) poJSON.get("result"))){
@@ -1243,6 +1254,7 @@ public class IndividualNewController implements Initializable {
                 btnSave.requestFocus();
             }
         } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
+            e.printStackTrace();
             ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
             System.exit(1);
         }       
@@ -1264,8 +1276,6 @@ public class IndividualNewController implements Initializable {
                             (String) poClient.Address(lnCtr).Barangay().getBarangayName()));
                 }
             }
-            
-            pnAddress = address_data.size();
 
             if (pnAddress < 0 || pnAddress >= address_data.size()) {
                 if (!address_data.isEmpty()) {
