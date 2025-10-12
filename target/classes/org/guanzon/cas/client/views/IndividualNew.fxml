@@ -91,16 +91,16 @@
                                                                             <Font size="14.0" />
                                                                         </font>
                                                                     </Text>
-                                                <Text fill="#00a43c" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label-new" text="*New" GridPane.columnIndex="3">
-                                                   <GridPane.margin>
-                                                      <Insets left="5.0" />
-                                                   </GridPane.margin>
-                                                </Text>
-                                                <TextArea fx:id="txtField03" disable="true" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" styleClass="text-area" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3">
+                                                <TextArea fx:id="txtField03" disable="true" editable="false" focusTraversable="false" prefHeight="200.0" prefWidth="200.0" styleClass="text-area" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="4" GridPane.rowIndex="3">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" />
                                                    </GridPane.margin>
                                                 </TextArea>
+                                                <Label fx:id="lblClientStatus" text="***NEW CUSTOMER" GridPane.columnIndex="3" GridPane.columnSpan="2">
+                                                   <GridPane.margin>
+                                                      <Insets left="5.0" />
+                                                   </GridPane.margin>
+                                                </Label>
                                                                 </children>
                                                                 <padding>
                                                                     <Insets top="5.0" />

@@ -22,6 +22,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -113,6 +114,8 @@ public class IndividualNewController implements Initializable {
     private TextField txtPersonal15;
     @FXML
     private TextField txtPersonal14;
+    @FXML
+    private Label lblClientStatus;
     @FXML
     private Tab Address;
     @FXML
@@ -1204,6 +1207,8 @@ public class IndividualNewController implements Initializable {
                 gridMobile.setDisable(false);
                 gridEmail.setDisable(false);
                 gridSocMed.setDisable(false);
+                
+                lblClientStatus.setText("***NEW CUSTOMER");
             } else {
                 poJSON = poClient.openClientRecord(psClientID);
                 
@@ -1212,6 +1217,8 @@ public class IndividualNewController implements Initializable {
                 gridMobile.setDisable(true);
                 gridEmail.setDisable(true);
                 gridSocMed.setDisable(true);
+                
+                lblClientStatus.setText("***REPEAT CUSTOMER");
             }
                 
             if (!"success".equals((String) poJSON.get("result"))){
@@ -1296,12 +1303,20 @@ public class IndividualNewController implements Initializable {
         }
     }
     
-    public void loadMasterAddress() {
+    public void loadMasterAddress() throws SQLException, GuanzonException{
+        String address;
         boolean primaryAddressExists = false;
+        
         
         for (int i = 0; i < poClient.getAddressCount(); i++) {
             if (poClient.Address(i).isPrimaryAddress()) {
-                txtField03.setText(""); //todo: load primary full address here
+                address = poClient.Address(i).getHouseNo() + " " + 
+                            poClient.Address(i).getAddress() + " " +
+                            poClient.Address(i).Barangay().getBarangayName() + " " +
+                            poClient.Address(i).Town().getDescription() + ", " +
+                            poClient.Address(i).Town().Province().getDescription();
+                            
+                txtField03.setText(address.trim());
                 primaryAddressExists = true; // Mark as found
                 break; // Exit the loop since a primary address is found
             }
