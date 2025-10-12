@@ -117,9 +117,8 @@ public class ClientInfo extends Parameter{
     public int getInstiContactCount(){
         return paContact.size();
     }
-    
-    @Override
-    public JSONObject openRecord(String Id) throws SQLException, GuanzonException {
+
+    public JSONObject openClientRecord(String Id) throws SQLException, GuanzonException, CloneNotSupportedException {
         if (!pbInitRec){
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -130,6 +129,7 @@ public class ClientInfo extends Parameter{
         poJSON = poClient.openRecord(Id);
         
         if ("success".equals((String) poJSON.get("result"))){
+            //load addresses
             String lsSQL = "SELECT * FROM Client_Address" +
                             " WHERE sClientID = " + SQLUtil.toSQL(poClient.getClientId()) +
                             " ORDER BY sAddrssID";
@@ -138,7 +138,56 @@ public class ClientInfo extends Parameter{
             ResultSet loRS = poGRider.executeQuery(lsSQL);
             
             while (loRS.next()){
+                Model_Client_Address object = (Model_Client_Address) poMobile.clone();
+                JSONObject loJSON = object.openRecord(loRS.getString("sAddrssID"));
+                
+                if ("success".equals((String) loJSON.get("result"))) paAddress.add(object);
+                else return loJSON;
+            }
             
+            //load mobile nos
+            lsSQL = "SELECT * FROM Client_Mobile" +
+                            " WHERE sClientID = " + SQLUtil.toSQL(poClient.getClientId()) +
+                            " ORDER BY sMobileID";
+            
+            loRS = poGRider.executeQuery(lsSQL);
+            
+            while (loRS.next()){
+                Model_Client_Mobile object = (Model_Client_Mobile) poMobile.clone();
+                JSONObject loJSON = object.openRecord(loRS.getString("sMobileID"));
+                
+                if ("success".equals((String) loJSON.get("result"))) paMobile.add(object);
+                else return loJSON;
+            }
+            
+            //load email addresses
+            lsSQL = "SELECT * FROM Client_eMail_Address" +
+                            " WHERE sClientID = " + SQLUtil.toSQL(poClient.getClientId()) +
+                            " ORDER BY sEmailIDx";
+            
+            loRS = poGRider.executeQuery(lsSQL);
+            
+            while (loRS.next()){
+                Model_Client_Mail object = (Model_Client_Mail) poMail.clone();
+                JSONObject loJSON = object.openRecord(loRS.getString("sEmailIDx"));
+                
+                if ("success".equals((String) loJSON.get("result"))) paMail.add(object);
+                else return loJSON;
+            }
+            
+            //load social media accounts
+            lsSQL = "SELECT * FROM Client_Social_Media" +
+                            " WHERE sClientID = " + SQLUtil.toSQL(poClient.getClientId()) +
+                            " ORDER BY sSocialID";
+            
+            loRS = poGRider.executeQuery(lsSQL);
+            
+            while (loRS.next()){
+                Model_Client_Social_Media object = (Model_Client_Social_Media) poSocMed.clone();
+                JSONObject loJSON = object.openRecord(loRS.getString("sSocialID"));
+                
+                if ("success".equals((String) loJSON.get("result"))) paSocMed.add(object);
+                else return loJSON;
             }
         }
         

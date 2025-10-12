@@ -1194,7 +1194,7 @@ public class IndividualNewController implements Initializable {
                 anchorEmail.setDisable(false);
                 anchorSocMed.setDisable(false);
             } else {
-                poJSON = poClient.openRecord(psClientID);
+                poJSON = poClient.openClientRecord(psClientID);
                 
                 anchorPersonal.setDisable(true);
                 anchorAddress.setDisable(true);
@@ -1242,7 +1242,7 @@ public class IndividualNewController implements Initializable {
             } else {
                 btnSave.requestFocus();
             }
-        } catch (SQLException | GuanzonException e) {
+        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
             ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
             System.exit(1);
         }       
