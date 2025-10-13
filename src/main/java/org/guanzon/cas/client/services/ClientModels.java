@@ -1,6 +1,8 @@
 package org.guanzon.cas.client.services;
 
 import org.guanzon.appdriver.base.GRiderCAS;
+import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
+import org.guanzon.cas.client.model.Model_AP_Client_Master;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
 import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
@@ -131,6 +133,40 @@ public class ClientModels {
 
         return poClientAccreditation;
     }   
+    
+    public Model_AP_Client_Master APClientMaster() {
+        if (poGRider == null) {
+            System.err.println("ClientModel.APClientMaster: Application driver is not set.");
+            return null;
+        }
+
+        if (poAPClientMaster == null) {
+            poAPClientMaster = new Model_AP_Client_Master();
+            poAPClientMaster.setApplicationDriver(poGRider);
+            poAPClientMaster.setXML("Model_AP_Client_Master");
+            poAPClientMaster.setTableName("AP_Client_Master");
+            poAPClientMaster.initialize();
+        }
+
+        return poAPClientMaster;
+    }
+    
+    public Model_AP_Client_Ledger APClientLedger() {
+        if (poGRider == null) {
+            System.err.println("ClientModel.APClientLedger: Application driver is not set.");
+            return null;
+        }
+
+        if (poAPClientLedger == null) {
+            poAPClientLedger = new Model_AP_Client_Ledger();
+            poAPClientLedger.setApplicationDriver(poGRider);
+            poAPClientLedger.setXML("Model_AP_Client_Ledger");
+            poAPClientLedger.setTableName("AP_Client_Ledger");
+            poAPClientLedger.initialize();
+        }
+
+        return poAPClientLedger;
+    }
         
     private final GRiderCAS poGRider;
 
@@ -141,5 +177,6 @@ public class ClientModels {
     private Model_Client_Social_Media poClientSocmed;
     private Model_Client_Institution_Contact poClientInstitutionContact;
     private Model_Account_Client_Accreditation poClientAccreditation;
-
+    private Model_AP_Client_Master poAPClientMaster;
+    private Model_AP_Client_Ledger poAPClientLedger;
 }

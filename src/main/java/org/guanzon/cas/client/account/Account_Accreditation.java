@@ -40,7 +40,7 @@ public class Account_Accreditation extends Parameter{
             return poJSON;
         }
 
-        if (poModel.getContatId().isEmpty()){
+        if (poModel.getContactId().isEmpty()){
             poJSON.put("result", "error");
             poJSON.put("message", "Contact must not be empty.");
             return poJSON;
@@ -60,8 +60,10 @@ public class Account_Accreditation extends Parameter{
  
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
+        String lsSQL = getSQ_Browse();
+        
         poJSON = ShowDialogFX.Search(poGRider,
-                getSQ_Browse(),
+                lsSQL,
                 value,
                 "Transaction No»Date»Name",
                 "sTransNox»dTransact»sCompnyNm",
@@ -94,28 +96,28 @@ public class Account_Accreditation extends Parameter{
         }
         
         lsSQL = " SELECT " +
-                        " a.sTransNox, " +
-                        " a.cAcctType, " +
-                        " a.sClientID, " +
-                        " a.sAddrssID, " +
-                        " a.sContctID, " +
-                        " a.dTransact, " +
-                        " a.cAcctType, " +
-                        " a.sRemarksx, " +
-                        " a.cTranType, " +
-                        " a.sCategrCd, " +
-                        " a.cTranStat, " +
-                        " b.sCompnyNm, " +
-                        " c.sAddrssID, " +
-                        " d.sMobileNo, " +
-                        " CONCAT(c.sHouseNox, ', ', c.sAddressx, ', ', c.sBrgyIDxx, ', ', c.sTownIDxx) AS sFllAddrs " +
-                      " FROM Account_Client_Accreditation a " +
-                        " LEFT JOIN Client_Master b " +
-                          " on a.sClientID = b.sClientID " +
-                        " LEFT JOIN Client_Address c " +
-                          " on a.sClientID = c.sClientID " +
-                        " LEFT JOIN Client_Institution_Contact_Person d " +
-                          " on d.sClientID = a.sClientID " ;
+                    " a.sTransNox, " +
+                    " a.cAcctType, " +
+                    " a.sClientID, " +
+                    " a.sAddrssID, " +
+                    " a.sContctID, " +
+                    " a.dTransact, " +
+                    " a.cAcctType, " +
+                    " a.sRemarksx, " +
+                    " a.cTranType, " +
+                    " a.sCategrCd, " +
+                    " a.cTranStat, " +
+                    " b.sCompnyNm, " +
+                    " c.sAddrssID, " +
+                    " d.sMobileNo, " +
+                    " IFNULL(CONCAT(c.sHouseNox, ', ', c.sAddressx, ', ', c.sBrgyIDxx, ', ', c.sTownIDxx), '') xAddressx" +
+                " FROM Account_Client_Accreditation a " +
+                    " LEFT JOIN Client_Master b " +
+                      " ON a.sClientID = b.sClientID " +
+                    " LEFT JOIN Client_Address c " +
+                      " ON a.sAddrssID = c.sAddrssID " +
+                    " LEFT JOIN Client_Institution_Contact_Person d " +
+                      " ON a.sContctID = d.sContctID " ;
         
         if (!lsCondition.isEmpty()) lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);
         

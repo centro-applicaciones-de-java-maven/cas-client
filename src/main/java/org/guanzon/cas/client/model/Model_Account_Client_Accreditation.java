@@ -102,7 +102,7 @@ public class Model_Account_Client_Accreditation extends Model {
         return setValue("sContctID", contactId);
     }
 
-    public String getContatId() {
+    public String getContactId() {
         return (String) getValue("sContctID");
     }
     

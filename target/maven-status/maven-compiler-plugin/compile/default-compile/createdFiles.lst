@@ -2,6 +2,7 @@ org\guanzon\cas\client\Client.class
 org\guanzon\cas\client\model\Model_AR_Client_Ledger.class
 org\guanzon\cas\client\model\Model_AP_Client_Master.class
 org\guanzon\cas\client\controller\IndividualNewController$2.class
+org\guanzon\cas\client\account\AP_Client_Master.class
 org\guanzon\cas\client\controller\IndividualNewController$5.class
 org\guanzon\cas\client\Client_Address.class
 org\guanzon\cas\client\ClientGUI$2.class
@@ -34,4 +35,5 @@ org\guanzon\cas\client\Client_Social_Media.class
 org\guanzon\cas\client\model\Model_Client_Master.class
 org\guanzon\cas\client\Client_Mobile.class
 org\guanzon\cas\client\model\Model_AP_Client_Ledger.class
+org\guanzon\cas\client\account\Account_Accreditation.class
 org\guanzon\cas\client\model\ClientModels.class

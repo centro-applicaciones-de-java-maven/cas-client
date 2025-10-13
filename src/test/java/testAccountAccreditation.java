@@ -4,6 +4,7 @@ import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.cas.client.account.Account_Accreditation;
+import org.guanzon.cas.client.services.ClientControllers;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -24,17 +25,13 @@ public class testAccountAccreditation {
         instance = MiscUtil.Connect();
         
         try {
-            record = new Account_Accreditation();
-            record.setApplicationDriver(instance);
-            record.setWithParentClass(false);
-            record.initialize();
+            record = new ClientControllers(instance, null).AccountAccreditation();
         } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }
-        
     }
 
-    //@Test
+    @Test
     public void testNewRecord() {
         try {
             JSONObject loJSON;
@@ -108,7 +105,7 @@ public class testAccountAccreditation {
         }
     }
    
-    @Test
+    //@Test
     public void testUpdateRecord() {
         try {
             JSONObject loJSON;

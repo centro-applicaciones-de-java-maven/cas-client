@@ -176,6 +176,14 @@ public class Model_AP_Client_Master extends Model{
         return (String) getValue("cVatablex");
     }
     
+    public JSONObject setAutoHold(String autoHold){
+        return setValue("cAutoHold", autoHold);
+    }
+    
+    public String getAutoHold(){
+        return (String) getValue("cAutoHold");
+    }
+    
     public JSONObject setRecordStatus(String recordStatus){
         return setValue("cRecdStat", recordStatus);
     }
