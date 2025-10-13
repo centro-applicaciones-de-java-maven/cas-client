@@ -9,7 +9,6 @@ D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\clien
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\controller\AccountAccreditationController.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Mail.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\account\Account_Accreditation.java
-D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\account\Account_Accreditations.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\account\GlobalVariables.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Account_Client_Accreditation.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelAddress.java
@@ -30,7 +29,6 @@ D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\clien
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\controller\IndividualNewController.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\services\ClientControllers.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\account\AP_Client_Master.java
-D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\account\Account_Accreditation_backup.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Mobile.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\account\ARClients.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AR_Client_Master.java
@@ -44,5 +42,4 @@ D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\clien
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\account\AR_Client_Master.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\model\ClientModels.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\Client_Institution_Contact.java
-D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\account\Account_Accreditationx.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelEmail.java

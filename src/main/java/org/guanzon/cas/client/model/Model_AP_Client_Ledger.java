@@ -6,6 +6,8 @@ import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.constant.Logical;
+import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
 public class Model_AP_Client_Ledger extends Model {
@@ -20,8 +22,12 @@ public class Model_AP_Client_Ledger extends Model {
             poEntity.moveToInsertRow();
 
             MiscUtil.initRowSet(poEntity);
-
-            //assign default values
+            
+            //assign default values  
+            poEntity.updateNull("dTransact");
+            poEntity.updateNull("dPostedxx");
+            poEntity.updateObject("nAmountIn", 0.00);
+            poEntity.updateObject("nAmountOt", 0.00);
             //end - assign default values
             
             poEntity.insertRow();

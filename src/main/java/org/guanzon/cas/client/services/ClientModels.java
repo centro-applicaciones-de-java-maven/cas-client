@@ -1,6 +1,7 @@
 package org.guanzon.cas.client.services;
 
 import org.guanzon.appdriver.base.GRiderCAS;
+import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
 import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
 import org.guanzon.cas.client.model.Model_Client_Mail;
@@ -46,7 +47,7 @@ public class ClientModels {
         return poClientAddress;
     }
 
-        public Model_Client_Institution_Contact ClientInstitutionContact() {
+    public Model_Client_Institution_Contact ClientInstitutionContact() {
         if (poGRider == null) {
             System.err.println("ClientModel.ClientInstitutionContact: Application driver is not set.");
             return null;
@@ -62,7 +63,8 @@ public class ClientModels {
 
         return poClientInstitutionContact;
     }
-        public Model_Client_Mobile ClientMobile() {
+        
+    public Model_Client_Mobile ClientMobile() {
         if (poGRider == null) {
             System.err.println("ClientModel.ClientMobile: Application driver is not set.");
             return null;
@@ -78,7 +80,8 @@ public class ClientModels {
 
         return poClientMobile;
     }
-        public Model_Client_Mail ClientMail() {
+        
+    public Model_Client_Mail ClientMail() {
         if (poGRider == null) {
             System.err.println("ClientModel.ClientMail: Application driver is not set.");
             return null;
@@ -94,6 +97,7 @@ public class ClientModels {
 
         return poClientMail;
     }
+        
     public Model_Client_Social_Media ClientSocMed() {
         if (poGRider == null) {
             System.err.println("ClientModel.ClientSocialMedia: Application driver is not set.");
@@ -110,6 +114,23 @@ public class ClientModels {
 
         return poClientSocmed;
     }    
+    
+    public Model_Account_Client_Accreditation ClientAccreditation() {
+        if (poGRider == null) {
+            System.err.println("ClientModel.ClientAccreditation: Application driver is not set.");
+            return null;
+        }
+
+        if (poClientAccreditation == null) {
+            poClientAccreditation = new Model_Account_Client_Accreditation();
+            poClientAccreditation.setApplicationDriver(poGRider);
+            poClientAccreditation.setXML("Model_Account_Client_Accreditation");
+            poClientAccreditation.setTableName("Account_Client_Accreditation");
+            poClientAccreditation.initialize();
+        }
+
+        return poClientAccreditation;
+    }   
         
     private final GRiderCAS poGRider;
 
@@ -119,6 +140,6 @@ public class ClientModels {
     private Model_Client_Mail poClientMail;
     private Model_Client_Social_Media poClientSocmed;
     private Model_Client_Institution_Contact poClientInstitutionContact;
-    
+    private Model_Account_Client_Accreditation poClientAccreditation;
 
 }

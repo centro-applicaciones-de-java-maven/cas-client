@@ -13,10 +13,8 @@ import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_Account_Client_Accreditation extends Model {
-
     private Model_Category poCategory;
     private Model_Client_Master poClientMaster;
-    private Model_Client_Mobile poClientMobile;
     private Model_Client_Address poClientAddress;    
     private Model_Client_Institution_Contact poClientInstitutionContact;
 
@@ -31,7 +29,9 @@ public class Model_Account_Client_Accreditation extends Model {
             MiscUtil.initRowSet(poEntity);
 
             //assign default values
-            poEntity.updateString("dApproved", "0000-00-00");
+            poEntity.updateString("cAcctType", "0"); //0 - AP; 1 - AR;
+            poEntity.updateString("cTranType", "0"); //0 - Accreditation; 1 - Blacklisting;
+            poEntity.updateNull("dApproved");
             poEntity.updateString("cTranStat", RecordStatus.INACTIVE);
             //end - assign default values
 
@@ -40,7 +40,7 @@ public class Model_Account_Client_Accreditation extends Model {
 
             poEntity.absolute(1);
 
-            ID = ("sTransNox");
+            ID = "sTransNox";
 
             //initialize other connections
             ParamModels model = new ParamModels(poGRider);
@@ -50,7 +50,6 @@ public class Model_Account_Client_Accreditation extends Model {
             poClientMaster = clientmodel.ClientMaster();
             poClientAddress = clientmodel.ClientAddress();
             poClientInstitutionContact = clientmodel.ClientInstitutionContact();            
-            poClientMobile = clientmodel.ClientMobile();
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -177,114 +176,18 @@ public class Model_Account_Client_Accreditation extends Model {
     }
     
     public Model_Category Category() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sCategrCd"))) {
-            if (poCategory.getEditMode() == EditMode.READY
-                    && poCategory.getCategoryId().equals((String) getValue("sCategrCd"))) {
-                return poCategory;
-            } else {
-                poJSON = poCategory.openRecord((String) getValue("sCategrCd"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poCategory;
-                } else {
-                    poCategory.initialize();
-                    return poCategory;
-                }
-            }
-        } else {
-            poCategory.initialize();
-            return poCategory;
-        }
+        return poCategory;
     }
     
     public Model_Client_Master Client() throws SQLException, GuanzonException{
-        System.out.println("Model_Client_Master == " + (String) getValue("sClientID"));
-        if (!"".equals((String) getValue("sClientID"))) {
-            if (poClientMaster.getEditMode() == EditMode.READY
-                    && poClientMaster.getClientId().equals((String) getValue("sClientID"))) {
-                return poClientMaster;
-            } else {
-                poJSON = poClientMaster.openRecord((String) getValue("sClientID"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poClientMaster;
-                } else {
-                    poClientMaster.initialize();
-                    return poClientMaster;
-                }
-            }
-        } else {
-            poClientMaster.initialize();
-            return poClientMaster;
-        }
+        return poClientMaster;
     }
     
     public Model_Client_Address ClientAddress() throws SQLException, GuanzonException{
-         System.out.println("Model_Client_Address == " + (String) getValue("sClientID"));
-        if (!"".equals((String) getValue("sClientID"))) {
-            if (poClientAddress.getEditMode() == EditMode.READY
-                    && poClientAddress.getClientId().equals((String) getValue("sAddrssID"))) {
-                return poClientAddress;
-            } else {
-                
-                System.out.println("before = " + (String) poJSON.get("result"));
-                poJSON = poClientAddress.openRecord((String) getValue("sAddrssID"));
-                
-                System.out.println("after = " + (String) poJSON.get("result"));
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poClientAddress;
-                } else {
-                    poClientAddress.initialize();
-                    return poClientAddress;
-                }
-            }
-        } else {
-            poClientAddress.initialize();
-            return poClientAddress;
-        }
+        return poClientAddress;
     }
     
-    
-    
-        public Model_Client_Institution_Contact ClientInstitutionContact() throws SQLException, GuanzonException{
-         System.out.println("Model_Client_Institution_Contact == " + (String) getValue("sClientID"));            
-        if (!"".equals((String) getValue("sClientID"))) {
-            if (poClientInstitutionContact.getEditMode() == EditMode.READY
-                    && poClientInstitutionContact.getClientId().equals((String) getValue("sContctID"))) {
-                return poClientInstitutionContact;
-            } else {
-                poJSON = poClientInstitutionContact.openRecord((String) getValue("sContctID"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poClientInstitutionContact;
-                } else {
-                    poClientInstitutionContact.initialize();
-                    return poClientInstitutionContact;
-                }
-            }
-        } else {
-            poClientInstitutionContact.initialize();
-            return poClientInstitutionContact;
-        }
-    }
-        public Model_Client_Mobile ClientMobile() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sClientID"))) {
-            if (poClientMobile.getEditMode() == EditMode.READY
-                    && poClientMobile.getClientId().equals((String) getValue("sContctID"))) {
-                return poClientMobile;
-            } else {
-                poJSON = poClientMobile.openRecord((String) getValue("sContctID"));
-
-                if ("success".equals((String) poJSON.get("result"))) {
-                    return poClientMobile;
-                } else {
-                    poClientMobile.initialize();
-                    return poClientMobile;
-                }
-            }
-        } else {
-            poClientMobile.initialize();
-            return poClientMobile;
-        }
+    public Model_Client_Institution_Contact ClientInstitutionContact() throws SQLException, GuanzonException{
+        return poClientInstitutionContact;
     }
 }
