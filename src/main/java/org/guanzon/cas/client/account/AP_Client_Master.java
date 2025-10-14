@@ -118,36 +118,36 @@ public class AP_Client_Master extends Parameter {
             lsCondition = "a.cRecdStat = " + SQLUtil.toSQL(psRecdStat);
         }
 
-        lsSQL = "SELECT"
-                + "  a.sClientID"
-                + ", a.sAddrssID"
-                + ", a.sContctID"
-                + ", a.sCategrCd"
-                + ", a.dCltSince"
-                + ", a.dBegDatex"
-                + ", a.nBegBalxx"
-                + ", a.sTermIDxx"
-                + ", a.nDiscount"
-                + ", a.nCredLimt"
-                + ", a.nABalance"
-                + ", a.nOBalance"
-                + ", a.nLedgerNo"
-                + ", a.cVatablex"
-                + ", a.cHoldAcct"
-                + ", a.cAutoHold"
-                + ", a.cRecdStat"
-                + ", b.sCompnyNm"
-                + ", c.sAddrssID"
-                + ", d.sMobileNo"
-                + ", TRIM(CONCAT(c.sHouseNox, ', ', c.sAddressx, ', ', c.sBrgyIDxx, ', ', c.sTownIDxx)) xAddressx"
-                + ", d.sCPerson1 xContactP"
-                + " FROM AP_Client_Master a"
-                + " LEFT JOIN Client_Master b"
-                + " ON a.sClientID = b.sClientID"
-                + " LEFT JOIN Client_Address c"
-                + " ON a.sAddrssID = c.sAddrssID"
-                + " LEFT JOIN Client_Institution_Contact_Person d"
-                + " ON a.sContctID = d.sContctID";
+        lsSQL = "SELECT" +
+                    "  a.sClientID" +
+                    ", a.sAddrssID" +
+                    ", a.sContctID" +
+                    ", a.sCategrCd" +
+                    ", a.dCltSince" +
+                    ", a.dBegDatex" +
+                    ", a.nBegBalxx" +
+                    ", a.sTermIDxx" +
+                    ", a.nDiscount" +
+                    ", a.nCredLimt" +
+                    ", a.nABalance" +
+                    ", a.nOBalance" +
+                    ", a.nLedgerNo" +
+                    ", a.cVatablex" +
+                    ", a.cHoldAcct" +
+                    ", a.cAutoHold" +
+                    ", a.cRecdStat" +
+                    ", b.sCompnyNm" +
+                    ", c.sAddrssID" +
+                    ", d.sMobileNo" +
+                    ", TRIM(CONCAT(c.sHouseNox, ', ', c.sAddressx, ', ', c.sBrgyIDxx, ', ', c.sTownIDxx)) xAddressx" +
+                    ", d.sCPerson1 xContactP" +
+                " FROM AP_Client_Master a" +
+                    " LEFT JOIN Client_Master b" +
+                        " ON a.sClientID = b.sClientID" +
+                    " LEFT JOIN Client_Address c" +
+                        " ON a.sAddrssID = c.sAddrssID" +
+                    " LEFT JOIN Client_Institution_Contact_Person d" +
+                        " ON a.sContctID = d.sContctID";
 
         if (!lsCondition.isEmpty()) {
             lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);
@@ -181,9 +181,9 @@ public class AP_Client_Master extends Parameter {
                 + " , b.sAddrssID"
                 + " , TRIM(CONCAT (IFNULL(b.sHouseNox,''),', ',IFNULL(b.sAddressx,''),', ',IFNULL(b.sBrgyIDxx,''),', ',IFNULL(b.sTownIDxx,''))) xAddressx"
                 + "     FROM Client_Master a "
-                + " LEFT JOIN Client_Address b ON a.sClientID = b.sClientID"
-                + " WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
-                + " AND a.cClientTp = " + SQLUtil.toSQL(Logical.YES);
+                + "      LEFT JOIN Client_Address b ON a.sClientID = b.sClientID"
+                + "     WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
+                + "         AND a.cClientTp = " + SQLUtil.toSQL(Logical.YES);
 
         if (fbByCode) {
             lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID = " + SQLUtil.toSQL(fsValue));
@@ -216,10 +216,9 @@ public class AP_Client_Master extends Parameter {
         JSONObject loJSON;
 
         String lsSQL = "SELECT"
-                + "      sTermCode"
-                + "     , sDescript"
-                + "     FROM Term "
-                + " WHERE cRecdStat = '1'";
+                + " sTermCode"
+                + " , sDescript"
+                + " FROM Term WHERE cRecdStat = '1'";
 
         if (fbByCode) {
             lsSQL = MiscUtil.addCondition(lsSQL, "sTermCode = " + SQLUtil.toSQL(fsValue));
@@ -251,10 +250,9 @@ public class AP_Client_Master extends Parameter {
         JSONObject loJSON;
 
         String lsSQL = "SELECT"
-                + "      sCategrCd"
-                + "     , sDescript"
-                + "     FROM Category "
-                + " WHERE cRecdStat = '1'";
+                + " sCategrCd"
+                + ", sDescript"
+                + " FROM Category  WHERE cRecdStat = '1'";
 
         if (fbByCode) {
             lsSQL = MiscUtil.addCondition(lsSQL, "sCategrCd = " + SQLUtil.toSQL(fsValue));
