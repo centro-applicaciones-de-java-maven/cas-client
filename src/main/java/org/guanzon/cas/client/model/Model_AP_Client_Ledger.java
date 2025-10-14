@@ -6,8 +6,6 @@ import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.appdriver.constant.Logical;
-import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
 public class Model_AP_Client_Ledger extends Model {
@@ -22,27 +20,28 @@ public class Model_AP_Client_Ledger extends Model {
             poEntity.moveToInsertRow();
 
             MiscUtil.initRowSet(poEntity);
-            
-            //assign default values  
-            poEntity.updateNull("dTransact");
-            poEntity.updateNull("dPostedxx");
-            poEntity.updateObject("nAmountIn", 0.00);
-            poEntity.updateObject("nAmountOt", 0.00);
-            //end - assign default values
-            
+
             poEntity.insertRow();
             poEntity.moveToCurrentRow();
 
             poEntity.absolute(1);
 
+            //assign default values  
+            poEntity.updateNull("dTransact");
+            poEntity.updateNull("dPostedxx");
+            poEntity.updateObject("nLedgerNo", "0");
+            poEntity.updateObject("nAmountIn", 0.00d);
+            poEntity.updateObject("nAmountOt", 0.00d);
+            poEntity.updateObject("dModified", poGRider.getServerDate());
+            //end - assign default values
+
             ID = "sClientID";
-            ID2 = "dTransact";
+            ID2 = "nLedgerNo";
             ID3 = "sSourceCd";
             ID4 = "sSourceNo";
-            
+
             //initialize reference objects
             //end - initialize reference objects
-            
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -140,14 +139,6 @@ public class Model_AP_Client_Ledger extends Model {
         return (Date) getValue("dPostedxx");
     }
 
-    public JSONObject setAccountBalance(Double accountBalance) {
-        return setValue("nABalance", accountBalance);
-    }
-
-    public Double getAccountBalance() {
-        return (Double) getValue("nABalance");
-    }
-
     public JSONObject setModifiedDate(Date modifiedDate) {
         return setValue("dModified", modifiedDate);
     }
@@ -169,14 +160,13 @@ public class Model_AP_Client_Ledger extends Model {
         return loJSON;
     }
 
-    @Override
-    public JSONObject openRecord(String Id1, Object Id2) {
-        JSONObject loJSON = new JSONObject();
-        loJSON.put("result", "error");
-        loJSON.put("message", "This feature is not supported.");
-        return loJSON;
-    }
-
+//    @Override
+//    public JSONObject openRecord(String Id1, Object Id2) {
+//        JSONObject loJSON = new JSONObject();
+//        loJSON.put("result", "error");
+//        loJSON.put("message", "This feature is not supported.");
+//        return loJSON;
+//    }
     @Override
     public JSONObject openRecord(String Id1, Object Id2, Object Id3) {
         JSONObject loJSON = new JSONObject();
