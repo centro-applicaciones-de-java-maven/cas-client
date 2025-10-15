@@ -47,6 +47,8 @@ public class Model_AP_Client_Master extends Model {
             poEntity.updateObject("nOBalance", 0.00d);
             poEntity.updateObject("nBegBalxx", 0.00d);
             poEntity.updateObject("nLedgerNo", 0);
+            poEntity.updateObject("cAutoHold", Logical.NO);
+            poEntity.updateObject("cHoldAcct", Logical.NO);
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
             poEntity.updateObject("dModified", poGRider.getServerDate());
             //end - assign default values

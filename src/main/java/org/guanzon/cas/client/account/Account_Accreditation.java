@@ -6,11 +6,13 @@ import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
+import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
+import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.services.ClientModels;
 import org.json.simple.JSONObject;
 
@@ -288,6 +290,47 @@ public class Account_Accreditation extends Parameter {
 
         poGRider.beginTrans("UPDATE STATUS", "ConfirmTransaction", SOURCE_CODE, getModel().getTransactionNo());
 
+        //if Accreditation 
+        if (getModel().getAccountType().equals("0")) {
+            //initialize AP_Client_Object
+            AP_Client_Master loObject = getAPClientMaster(getModel().getClientId());
+
+            //check editmode if new or update
+            if (loObject.getEditMode() == EditMode.ADDNEW) {
+                loObject.getModel().setClientId(poModel.getClientId());
+                loObject.getModel().setAddressId(poModel.getAddressId());
+                loObject.getModel().setContactId(poModel.getContactId());
+                loObject.getModel().setCategoryCode(poModel.getCategoryCode());
+                //if blacklisting set  Inactive record 
+                loObject.getModel().setRecordStatus(getModel().getTransactionType().equals("1") ? "0" : "1");
+                poJSON = loObject.saveRecord();
+                if ("error".equals((String) poJSON.get("result"))) {
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Unable to save AP Client");
+                    return poJSON;
+                }
+            } else {
+                //make sure its onready mode
+                if (loObject.getEditMode() == EditMode.READY) {
+                    //enter to update
+                    loObject.updateRecord();
+                    loObject.getModel().setClientId(poModel.getClientId());
+                    loObject.getModel().setAddressId(poModel.getAddressId());
+                    loObject.getModel().setContactId(poModel.getContactId());
+                    loObject.getModel().setCategoryCode(poModel.getCategoryCode());
+                    //if blacklisting set  Inactive record 
+                    loObject.getModel().setRecordStatus(getModel().getTransactionType().equals("1") ? "0" : "1");
+                    poJSON = loObject.saveRecord();
+                    if ("error".equals((String) poJSON.get("result"))) {
+                        poJSON.put("result", "error");
+                        poJSON.put("message", "Unable to save AP Client");
+                        return poJSON;
+                    }
+                }
+
+            }
+        }//add here for other type
+
         String lsSQL = "UPDATE "
                 + poModel.getTable()
                 + " SET   cTranStat = " + SQLUtil.toSQL("1")
@@ -322,9 +365,9 @@ public class Account_Accreditation extends Parameter {
             poJSON.put("result", "error");
             poJSON.put("message", "Transaction was already voided.");
             return poJSON;
-        }else if ("3".equals((String) poModel.getValue("cTranStat"))) {
+        } else if ("1".equals((String) poModel.getValue("cTranStat"))) {
             poJSON.put("result", "error");
-            poJSON.put("message", "Transaction was already cancelled.");
+            poJSON.put("message", "Transaction was already confirmed.");
             return poJSON;
         }
 
@@ -337,7 +380,7 @@ public class Account_Accreditation extends Parameter {
 
         String lsSQL = "UPDATE "
                 + poModel.getTable()
-                + " SET   cTranStat = " + SQLUtil.toSQL("4")
+                + " SET cTranStat = " + SQLUtil.toSQL("4")
                 + " WHERE sTransNox = " + SQLUtil.toSQL(getModel().getTransactionNo());
 
         Long lnResult = poGRider.executeQuery(lsSQL,
@@ -362,59 +405,14 @@ public class Account_Accreditation extends Parameter {
         return poJSON;
     }
 
-    public JSONObject CancelTransaction() throws SQLException, GuanzonException, CloneNotSupportedException {
-        poJSON = new JSONObject();
-
-        if ("3".equals((String) poModel.getValue("cTranStat"))) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Transaction was already cancelled.");
-            return poJSON;
-        }
-
-        if (poGRider.getUserLevel() <= UserRight.ENCODER) {
-            poJSON = ShowDialogFX.getUserApproval(poGRider);
-            if ("error".equals((String) poJSON.get("result"))) {
-                return poJSON;
-            } else {
-                if (Integer.parseInt(poJSON.get("nUserLevl").toString()) <= UserRight.ENCODER) {
-                    poJSON.put("result", "error");
-                    poJSON.put("message", "User is not an authorized approving officer.");
-                    return poJSON;
-                }
-            }
-        }
-        //validator
-        poJSON = isEntryOkay();
+    public AP_Client_Master getAPClientMaster(String foClientID)
+            throws GuanzonException, SQLException {
+        AP_Client_Master loObject = new ClientControllers(poGRider, null).APClientMaster();
+        poJSON = loObject.openRecord(foClientID);
         if ("error".equals((String) poJSON.get("result"))) {
-            return poJSON;
+            loObject.newRecord();
         }
-        poGRider.beginTrans("UPDATE STATUS", "CancelTransaction", SOURCE_CODE, getModel().getTransactionNo());
-
-        String lsSQL = "UPDATE "
-                + poModel.getTable()
-                + " SET   cTranStat = " + SQLUtil.toSQL("3")
-                + " WHERE sTransNox = " + SQLUtil.toSQL(getModel().getTransactionNo());
-
-        Long lnResult = poGRider.executeQuery(lsSQL,
-                getModel().getTable(),
-                poGRider.getBranchCode(), "", "");
-        if (lnResult <= 0L) {
-            poGRider.rollbackTrans();
-
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "Error updating the transaction status.");
-            return poJSON;
-        }
-
-        poGRider.commitTrans();
-
-        openRecord(getModel().getTransactionNo());
-        poJSON = new JSONObject();
-        poJSON.put("result", "success");
-        poJSON.put("message", "Transaction cancelled successfully.");
-
-        return poJSON;
+        loObject.setWithParentClass(true);
+        return loObject;
     }
-
 }

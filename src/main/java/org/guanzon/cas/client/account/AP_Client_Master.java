@@ -155,62 +155,62 @@ public class AP_Client_Master extends Parameter {
 
         return lsSQL;
     }
-
-    public JSONObject searchClient(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
-        JSONObject loJSON;
-
-        if (fbByCode) {
-            if (fsValue.equals(getModel().getClientId())) {
-                loJSON = new JSONObject();
-                loJSON.put("result", "success");
-                return loJSON;
-            }
-        } else {
-            if (getModel().Client().getCompanyName() != null && !getModel().Client().getCompanyName().isEmpty()) {
-                if (fsValue.equals(getModel().Client().getCompanyName())) {
-                    loJSON = new JSONObject();
-                    loJSON.put("result", "success");
-                    return loJSON;
-                }
-            }
-        }
-
-        String lsSQL = "SELECT"
-                + " a.sClientID"
-                + " , a.sCompnyNm"
-                + " , b.sAddrssID"
-                + " , TRIM(CONCAT (IFNULL(b.sHouseNox,''),', ',IFNULL(b.sAddressx,''),', ',IFNULL(b.sBrgyIDxx,''),', ',IFNULL(b.sTownIDxx,''))) xAddressx"
-                + "     FROM Client_Master a "
-                + "      LEFT JOIN Client_Address b ON a.sClientID = b.sClientID"
-                + "     WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
-                + "         AND a.cClientTp = " + SQLUtil.toSQL(Logical.YES);
-
-        if (fbByCode) {
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID = " + SQLUtil.toSQL(fsValue));
-        } else {
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sCompnyNm LIKE " + SQLUtil.toSQL(fsValue + "%"));
-        }
-        System.out.println("ClientSearch = " + lsSQL);
-        loJSON = ShowDialogFX.Search(
-                poGRider,
-                lsSQL,
-                fsValue,
-                "ID»Company»Address",
-                "sClientID»sCompnyNm»xAddressx",
-                "a.sClientID»a.sCompnyNm»TRIM(CONCAT(b.sHouseNox, ', ', b.sAddressx, ', ', b.sBrgyIDxx, ', ', b.sTownIDxx))",
-                fbByCode ? 0 : 1);
-
-        if (loJSON != null) {
-            loJSON.put("result", "success");
-            getModel().setClientId((String) loJSON.get("sClientID"));
-            getModel().setAddressId(loJSON.get("sAddrssID") != null ? (String) loJSON.get("sAddrssID") : "");
-        } else {
-            loJSON.put("result", "success");
-            loJSON.put("message", "No record selected.");
-        }
-
-        return loJSON;
-    }
+//
+//    public JSONObject searchClient(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
+//        JSONObject loJSON;
+//
+//        if (fbByCode) {
+//            if (fsValue.equals(getModel().getClientId())) {
+//                loJSON = new JSONObject();
+//                loJSON.put("result", "success");
+//                return loJSON;
+//            }
+//        } else {
+//            if (getModel().Client().getCompanyName() != null && !getModel().Client().getCompanyName().isEmpty()) {
+//                if (fsValue.equals(getModel().Client().getCompanyName())) {
+//                    loJSON = new JSONObject();
+//                    loJSON.put("result", "success");
+//                    return loJSON;
+//                }
+//            }
+//        }
+//
+//        String lsSQL = "SELECT"
+//                + " a.sClientID"
+//                + " , a.sCompnyNm"
+//                + " , b.sAddrssID"
+//                + " , TRIM(CONCAT (IFNULL(b.sHouseNox,''),', ',IFNULL(b.sAddressx,''),', ',IFNULL(b.sBrgyIDxx,''),', ',IFNULL(b.sTownIDxx,''))) xAddressx"
+//                + "     FROM Client_Master a "
+//                + "      LEFT JOIN Client_Address b ON a.sClientID = b.sClientID"
+//                + "     WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
+//                + "         AND a.cClientTp = " + SQLUtil.toSQL(Logical.YES);
+//
+//        if (fbByCode) {
+//            lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID = " + SQLUtil.toSQL(fsValue));
+//        } else {
+//            lsSQL = MiscUtil.addCondition(lsSQL, "a.sCompnyNm LIKE " + SQLUtil.toSQL(fsValue + "%"));
+//        }
+//        System.out.println("ClientSearch = " + lsSQL);
+//        loJSON = ShowDialogFX.Search(
+//                poGRider,
+//                lsSQL,
+//                fsValue,
+//                "ID»Company»Address",
+//                "sClientID»sCompnyNm»xAddressx",
+//                "a.sClientID»a.sCompnyNm»TRIM(CONCAT(b.sHouseNox, ', ', b.sAddressx, ', ', b.sBrgyIDxx, ', ', b.sTownIDxx))",
+//                fbByCode ? 0 : 1);
+//
+//        if (loJSON != null) {
+//            loJSON.put("result", "success");
+//            getModel().setClientId((String) loJSON.get("sClientID"));
+//            getModel().setAddressId(loJSON.get("sAddrssID") != null ? (String) loJSON.get("sAddrssID") : "");
+//        } else {
+//            loJSON.put("result", "success");
+//            loJSON.put("message", "No record selected.");
+//        }
+//
+//        return loJSON;
+//    }
 
     public JSONObject searchTerm(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
         JSONObject loJSON;

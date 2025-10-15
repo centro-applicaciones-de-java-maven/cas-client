@@ -77,7 +77,7 @@ public class ClientControllers {
         poAPClientMaster.setWithParentClass(false);
         poAPClientMaster.setLogWrapper(poLogWrapper);
         poAPClientMaster.initialize();
-        poAPClientMaster.newRecord();
+//        poAPClientMaster.newRecord();
         
         return poAPClientMaster;       
     }
