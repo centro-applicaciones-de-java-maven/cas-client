@@ -167,7 +167,7 @@ public class AP_Client_Master extends Parameter {
             }
         } else {
             if (getModel().Client().getCompanyName() != null && !getModel().Client().getCompanyName().isEmpty()) {
-                if (fsValue.equals(getModel().Term().getDescription())) {
+                if (fsValue.equals(getModel().Client().getCompanyName())) {
                     loJSON = new JSONObject();
                     loJSON.put("result", "success");
                     return loJSON;

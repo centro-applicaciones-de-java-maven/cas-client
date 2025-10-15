@@ -59,7 +59,7 @@ public class ClientControllers {
         poAccountAccreditation.setWithParentClass(false);
         poAccountAccreditation.setLogWrapper(poLogWrapper);
         poAccountAccreditation.initialize();
-        poAccountAccreditation.newRecord();
+//        poAccountAccreditation.newRecord();
         
         return poAccountAccreditation;       
     }
