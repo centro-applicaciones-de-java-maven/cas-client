@@ -170,8 +170,14 @@ public class ClientGUI extends Application {
                 byCode ? 0 : 1);
 
         if (loJSON != null) {
+
             lsSQL = (String) loJSON.get("sClientID");
-            
+            if (lsSQL == null) {
+                loJSON = new JSONObject();
+                loJSON.put("result", "error");
+                loJSON.put("message", "No record loaded.");
+                return loJSON;
+            }
             loJSON = new JSONObject();
             loJSON.put("result", "success");
             loJSON.put("clientId", lsSQL);

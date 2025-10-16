@@ -676,6 +676,8 @@ public class InstitutionNewController implements Initializable {
                 anchorSocMed.setDisable(false);
                 gridSocMed.setDisable(false);
                 poClient.getModel().setCompanyName(psClientID);
+                txtField02.setText(psClientID);
+                txtAddress00.setText(psClientID);
                 lblClientStatus.setText("***NEW INSTITUTION");
             } else {
                 poJSON = poClient.openClientRecord(psClientID);
