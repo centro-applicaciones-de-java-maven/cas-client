@@ -19,6 +19,7 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.cas.client.controller.IndividualNewController;
+import org.guanzon.cas.client.controller.InstitutionNewController;
 import org.json.simple.JSONObject;
 
 public class ClientGUI extends Application {
@@ -30,6 +31,7 @@ public class ClientGUI extends Application {
     private static ClientInfo poClient;
     
     private static String psClientId;
+    private static boolean pbByCode;
     private static String psClientTp;
     private static boolean pbCancelled;
     
@@ -45,6 +47,9 @@ public class ClientGUI extends Application {
         psClientId = clientId;
     }
     
+    public void setByCode(boolean byCode){
+        pbByCode = byCode;
+    }
     public void setClientType(String clientType){
         psClientTp = clientType;
     }
@@ -59,13 +64,21 @@ public class ClientGUI extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        if (psClientId.isEmpty()){
-            JSONObject loJSON = searchRecord("", false);
-            
-            if ("success".equals((String) loJSON.get("result"))) psClientId = (String) loJSON.get("clientId");
+        if (pbByCode) {
+            JSONObject loJSON = searchRecord(psClientId != null ? psClientId : "", true);
+
+            if ("success".equals((String) loJSON.get("result"))) {
+                psClientId = (String) loJSON.get("clientId") != null ? (String) loJSON.get("clientId") : "";
+            }
+        } else {
+            JSONObject loJSON = searchRecord(psClientId != null ? psClientId : "", false);
+            if ("success".equals((String) loJSON.get("result"))) {
+                psClientId = (String) loJSON.get("clientId") != null ? (String) loJSON.get("clientId") : "";
+            }
+
         }
-        
-        if (psClientTp.equals(ClientType.INDIVIDUAL)){
+
+        if (psClientTp.equals(ClientType.INDIVIDUAL)) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/IndividualNew.fxml"));
 
             IndividualNewController controller = new IndividualNewController();
@@ -74,9 +87,9 @@ public class ClientGUI extends Application {
             controller.setClientId(psClientId);
 
             loader.setController(controller);
-            
+
             Parent parent = loader.load();
-        
+
             parent.setOnMousePressed(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
@@ -100,12 +113,51 @@ public class ClientGUI extends Application {
             primaryStage.showAndWait();
 
             pbCancelled = controller.isCancelled();
-            if (!pbCancelled) poClient = controller.getClient();
+            if (!pbCancelled) {
+                poClient = controller.getClient();
+            }
+        } else {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/InstitutionNew.fxml"));
+
+            InstitutionNewController controller = new InstitutionNewController();
+            controller.setGRider(poGRider);
+            controller.setLogWrapper(poWrapper);
+            controller.setClientId(psClientId);
+
+            loader.setController(controller);
+
+            Parent parent = loader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    primaryStage.setX(event.getScreenX() - xOffset);
+                    primaryStage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            Scene scene = new Scene(parent);
+            primaryStage.setScene(scene);
+            primaryStage.initStyle(StageStyle.TRANSPARENT);
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
+            primaryStage.setTitle("Institution Info");
+            primaryStage.showAndWait();
+
+            pbCancelled = controller.isCancelled();
+            if (!pbCancelled) {
+                poClient = controller.getClient();
+            }
         }
-        
-        
+
     }
-    
+
     private JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsSQL = getSQ_Browse();
         

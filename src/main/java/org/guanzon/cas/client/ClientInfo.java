@@ -235,8 +235,29 @@ public class ClientInfo extends Parameter{
                 else 
                     return loJSON;
             }
+         
+            //load institution contact person
+            lsSQL = "SELECT * FROM Client_Institution_Contact_Person"
+                    + " WHERE sClientID = " + SQLUtil.toSQL(poClient.getClientId())
+                    + " ORDER BY sContctID";
+
+            loRS = poGRider.executeQuery(lsSQL);
+
+            paContact.clear();
+            while (loRS.next()) {
+                Model_Client_Institution_Contact object = (Model_Client_Institution_Contact) poContact.clone();
+                object.newRecord();
+
+                JSONObject loJSON = object.openRecord(loRS.getString("sContctID"));
+
+                if ("success".equals((String) loJSON.get("result"))) {
+                    paContact.add(object);
+                } else {
+                    return loJSON;
+                }
+            }
         }
-        
+
         return poJSON;
     }
     
@@ -532,23 +553,23 @@ public class ClientInfo extends Parameter{
         
         return poJSON;
     }
-    
+
     @Override
-    public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException{        
+    public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
 
         //validate master                        
-        if (getEditMode() == EditMode.ADDNEW){
+        if (getEditMode() == EditMode.ADDNEW) {
             poJSON = poClient.setClientType(psClientTp);
 
-            if (poClient.getClientType().equals(ClientType.INDIVIDUAL)){
-                if (poClient.getLastName().isEmpty()){
+            if (poClient.getClientType().equals(ClientType.INDIVIDUAL)) {
+                if (poClient.getLastName().isEmpty()) {
                     poJSON.put("result", "error");
                     poJSON.put("message", "Last name must not be empty.");
                     return poJSON;
                 }
 
-                if (poClient.getFirstName().isEmpty()){
+                if (poClient.getFirstName().isEmpty()) {
                     poJSON.put("result", "error");
                     poJSON.put("message", "First name must not be empty.");
                     return poJSON;
@@ -564,31 +585,33 @@ public class ClientInfo extends Parameter{
                 poClient.setMiddleName("");
                 poClient.setSuffixName("");
 
-                if (poClient.getCompanyName().isEmpty()){
+                if (poClient.getCompanyName().isEmpty()) {
                     poJSON.put("result", "error");
                     poJSON.put("message", "Company name must not be empty.");
                     return poJSON;
                 }
             }
 
-            if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+            if (!"success".equals((String) poJSON.get("result"))) {
+                return poJSON;
+            }
 
             poClient.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
             poClient.setModifiedDate(poGRider.getServerDate());
         }
-        
+
         //validate address
         switch (paAddress.size()) {
             case 0:
                 addAddress();
             case 1:
-                if (paAddress.get(paAddress.size() - 1).getTownId().isEmpty()){
+                if (paAddress.get(paAddress.size() - 1).getTownId().isEmpty()) {
                     poJSON.put("result", "error");
                     poJSON.put("message", "Town must have a value.");
                     return poJSON;
                 }
-                
-                if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty()){
+
+                if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty()) {
                     poJSON.put("result", "error");
                     poJSON.put("message", "Address have a value.");
                     return poJSON;
@@ -596,42 +619,48 @@ public class ClientInfo extends Parameter{
         }
 
         //validate mobile
-        if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) paMobile.remove(paMobile.size() - 1);
+        if (poClient.getClientType().equals(ClientType.INDIVIDUAL)) {
+            if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) {
+                paMobile.remove(paMobile.size() - 1);
+            }
 
-        switch (paMobile.size()) {
-            case 0:
-                addMobile();
-            case 1:
-                if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()){
-                poJSON.put("result", "error");
-                poJSON.put("message", "Client must have a mobile number.");
-                return poJSON;
+            switch (paMobile.size()) {
+                case 0:
+                    addMobile();
+                case 1:
+                    if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) {
+                        poJSON.put("result", "error");
+                        poJSON.put("message", "Client must have a mobile number.");
+                        return poJSON;
+                    }
             }
         }
-            
-//            //validate contact person
-//            if (getModel().getClientType().equals(ClientType.INSTITUTION)){
-//                if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() &&
-//                        paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) paContact.remove(paContact.size() - 1);
-//
-//                switch (paContact.size()) {
-//                    case 0:
-//                        addInstiContact();
-//                    case 1:
-//                        if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() &&
-//                            paContact.get(paContact.size() - 1).getMobileNo().isEmpty()){
-//                        poJSON.put("result", "error");
-//                        poJSON.put("message", "Contact person name and mobile number must have a value.");
-//                        return poJSON;
-//                    }
-//                }
-//            }
-        
+
+        //validate contact person
+        if (getModel().getClientType().equals(ClientType.INSTITUTION)) {
+            if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty()
+                    && paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) {
+                paContact.remove(paContact.size() - 1);
+            }
+
+            switch (paContact.size()) {
+                case 0:
+                    addInstiContact();
+                case 1:
+                    if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty()
+                            && paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) {
+                        poJSON.put("result", "error");
+                        poJSON.put("message", "Contact person name and mobile number must have a value.");
+                        return poJSON;
+                    }
+            }
+        }
+
         poJSON = new JSONObject();
         poJSON.put("result", "success");
         return poJSON;
     }
-    
+
     @Override
     protected JSONObject initFields() throws SQLException, GuanzonException{        
         poMobile.initialize();

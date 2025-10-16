@@ -3,14 +3,17 @@ package org.guanzon.cas.client.account;
 import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
+import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.constant.UserRight;
+import org.guanzon.cas.client.ClientGUI;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
 import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.services.ClientModels;
@@ -120,7 +123,7 @@ public class Account_Accreditation extends Parameter {
         return loJSON;
     }
 
-    public JSONObject searchClient(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
+    public JSONObject searchClient(String fsValue, boolean fbByCode) throws SQLException, GuanzonException, Exception {
         JSONObject loJSON;
 
         if (fbByCode) {
@@ -138,38 +141,34 @@ public class Account_Accreditation extends Parameter {
                 }
             }
         }
+        //initialize Client GUI
+        ClientGUI loClient = new ClientGUI();
 
-        String lsSQL = "SELECT"
-                + " a.sClientID"
-                + " , a.sCompnyNm"
-                + " , b.sAddrssID"
-                + " , TRIM(CONCAT (IFNULL(b.sHouseNox,''),', ',IFNULL(b.sAddressx,''),', ',IFNULL(b.sBrgyIDxx,''),', ',IFNULL(b.sTownIDxx,''))) xAddressx"
-                + "     FROM Client_Master a "
-                + "      LEFT JOIN Client_Address b ON a.sClientID = b.sClientID"
-                + "     WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
-                + "         AND a.cClientTp = " + SQLUtil.toSQL(Logical.YES);
+        loClient.setGRider(poGRider);
+        loClient.setLogWrapper(null);
+        //filter client type 
+        loClient.setClientType(ClientType.INSTITUTION);
+        //searchRecord(fsValue,fbByCode) will run make sure to set client and bycode
+        //bycode true client id
+        //bycode false company
+        loClient.setClientId(fsValue);
+        loClient.setByCode(fbByCode);
 
-        if (fbByCode) {
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID = " + SQLUtil.toSQL(fsValue));
-        } else {
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sCompnyNm LIKE " + SQLUtil.toSQL(fsValue + "%"));
-        }
-        System.out.println("ClientSearch = " + lsSQL);
-        loJSON = ShowDialogFX.Search(
-                poGRider,
-                lsSQL,
-                fsValue,
-                "ID»Company»Address",
-                "sClientID»sCompnyNm»xAddressx",
-                "a.sClientID»a.sCompnyNm»TRIM(CONCAT(b.sHouseNox, ', ', b.sAddressx, ', ', b.sBrgyIDxx, ', ', b.sTownIDxx))",
-                fbByCode ? 0 : 1);
+        CommonUtils.showModal(loClient);
 
-        if (loJSON != null) {
+        if (!loClient.isCancelled()) {
+            System.out.println("Client Id: " + loClient.getClient().getModel().getClientId());
+            System.out.println("address Id: " + loClient.getClient().Address(0).getClientId());
+            System.out.println("contact person Id: " + loClient.getClient().InstiContact(0).getClientId());
+
+            getModel().setClientId(loClient.getClient().getModel().getClientId());
+            getModel().setAddressId(loClient.getClient().Address(0).getClientId() != null ? loClient.getClient().Address(0).getClientId() : "");
+            getModel().setContactId(loClient.getClient().InstiContact(0).getClientId() != null ? loClient.getClient().InstiContact(0).getClientId() : "");
+            loJSON = new JSONObject();
             loJSON.put("result", "success");
-            getModel().setClientId((String) loJSON.get("sClientID"));
-            getModel().setAddressId(loJSON.get("sAddrssID") != null ? (String) loJSON.get("sAddrssID") : "");
         } else {
-            loJSON.put("result", "success");
+            loJSON = new JSONObject();
+            loJSON.put("result", "error");
             loJSON.put("message", "No record selected.");
         }
 
@@ -231,29 +230,29 @@ public class Account_Accreditation extends Parameter {
             lsCondition = "a.cTranStat = " + SQLUtil.toSQL(psRecdStat);
         }
 
-        lsSQL = " SELECT " +
-                    " a.sTransNox, " +
-                    " a.cAcctType, " +
-                    " a.sClientID, " +
-                    " a.sAddrssID, " +
-                    " a.sContctID, " +
-                    " a.dTransact, " +
-                    " a.cAcctType, " +
-                    " a.sRemarksx, " +
-                    " a.cTranType, " +
-                    " a.sCategrCd, " +
-                    " a.cTranStat, " +
-                    " b.sCompnyNm, " +
-                    " c.sAddrssID, " +
-                    " d.sMobileNo, " +
-                    " IFNULL(CONCAT(c.sHouseNox, ', ', c.sAddressx, ', ', c.sBrgyIDxx, ', ', c.sTownIDxx), '') xAddressx" +
-                " FROM Account_Client_Accreditation a " +
-                    " LEFT JOIN Client_Master b " +
-                      " ON a.sClientID = b.sClientID " +
-                    " LEFT JOIN Client_Address c " +
-                      " ON a.sAddrssID = c.sAddrssID " +
-                    " LEFT JOIN Client_Institution_Contact_Person d " +
-                      " ON a.sContctID = d.sContctID " ;
+        lsSQL = " SELECT "
+                + " a.sTransNox, "
+                + " a.cAcctType, "
+                + " a.sClientID, "
+                + " a.sAddrssID, "
+                + " a.sContctID, "
+                + " a.dTransact, "
+                + " a.cAcctType, "
+                + " a.sRemarksx, "
+                + " a.cTranType, "
+                + " a.sCategrCd, "
+                + " a.cTranStat, "
+                + " b.sCompnyNm, "
+                + " c.sAddrssID, "
+                + " d.sMobileNo, "
+                + " IFNULL(CONCAT(c.sHouseNox, ', ', c.sAddressx, ', ', c.sBrgyIDxx, ', ', c.sTownIDxx), '') xAddressx"
+                + " FROM Account_Client_Accreditation a "
+                + " LEFT JOIN Client_Master b "
+                + " ON a.sClientID = b.sClientID "
+                + " LEFT JOIN Client_Address c "
+                + " ON a.sAddrssID = c.sAddrssID "
+                + " LEFT JOIN Client_Institution_Contact_Person d "
+                + " ON a.sContctID = d.sContctID ";
 
         if (!lsCondition.isEmpty()) {
             lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);

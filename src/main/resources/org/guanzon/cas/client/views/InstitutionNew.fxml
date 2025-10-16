@@ -26,7 +26,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="AnchorMain" maxWidth="2500.0" minWidth="688.0" prefHeight="624.0" prefWidth="688.0" stylesheets="@Client.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="AnchorMain" maxWidth="2500.0" minWidth="688.0" prefHeight="624.0" prefWidth="688.0" stylesheets="@Client.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1">
 
     <children>
       <StackPane AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -93,7 +93,7 @@
                                                       <Insets left="5.0" />
                                                    </GridPane.margin>
                                                 </TextArea>
-                                                <Label prefHeight="15.0" prefWidth="194.0" text="***NEW CUSTOMER" GridPane.columnIndex="3" GridPane.columnSpan="2">
+                                                <Label fx:id="lblClientStatus" prefHeight="15.0" prefWidth="194.0" text="***NEW INSTITUTION" GridPane.columnIndex="3" GridPane.columnSpan="2">
                                                    <GridPane.margin>
                                                       <Insets left="5.0" />
                                                    </GridPane.margin>
@@ -127,7 +127,7 @@
                                                                   <TableColumn fx:id="indexAddress05" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="213.0" text="Barangay" />
                                                                </columns>
                                                             </TableView>
-                                                            <GridPane hgap="2.0" layoutX="14.0" layoutY="233.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                            <GridPane fx:id="gridAddress" hgap="2.0" layoutX="14.0" layoutY="233.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                <columnConstraints>
                                                                   <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
@@ -247,7 +247,7 @@
                                                                               <Font size="14.0" />
                                                                            </font>
                                                                         </Text>
-                                                                        <TextField fx:id="txtAddress00" maxWidth="501.0" minWidth="150.0" prefHeight="30.0" prefWidth="501.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="7">
+                                                                        <TextField fx:id="txtAddress00" maxWidth="501.0" minWidth="150.0" prefHeight="30.0" prefWidth="501.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="7">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -272,7 +272,7 @@
                                                                               <Insets bottom="5.0" top="10.0" />
                                                                            </padding>
                                                                            <children>
-                                                                              <GridPane hgap="2.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-10.0">
+                                                                              <GridPane fx:id="gridSocMed" hgap="2.0" vgap="2.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="-10.0">
                                                                                  <columnConstraints>
                                                                                     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="60.0" prefWidth="60.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
@@ -472,7 +472,7 @@
                   <AnchorPane id="anchorHeader" fx:id="draggablePane" prefHeight="30.0" BorderPane.alignment="CENTER">
                      <children>
                         <FontAwesomeIconView fill="WHITE" glyphName="USERS" size="20" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="5.0" />
-                        <Label styleClass="label-header" text="Client Information" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="5.0" />
+                        <Label styleClass="label-header" text="Institution Information" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="35.0" AnchorPane.topAnchor="5.0" />
                         <Button fx:id="btnExit" mnemonicParsing="false" prefHeight="17.0" prefWidth="21.0" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font name="System Bold" size="8.0" />
