@@ -1,0 +1,101 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package org.guanzon.cas.client.validator;
+
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.guanzon.appdriver.base.GRiderCAS;
+import org.guanzon.appdriver.iface.GValidator;
+import org.guanzon.cas.client.model.Model_AP_Client_Master;
+import org.json.simple.JSONObject;
+
+/**
+ *
+ * @author User
+ */
+public class APClient_General implements GValidator{
+
+    private GRiderCAS poGRider;
+    private JSONObject poJSON;
+
+    Model_AP_Client_Master poMaster;
+
+    @Override
+    public void setApplicationDriver(Object applicationDriver) {
+        poGRider = (GRiderCAS) applicationDriver;
+    }
+
+    @Override
+    public void setTransactionStatus(String transactionStatus) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setMaster(Object value) {
+        poMaster = (Model_AP_Client_Master) value;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void setDetail(ArrayList<Object> value) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setOthers(ArrayList<Object> value) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public JSONObject validate() {
+        
+        try {
+            
+            //validate industry
+            if (poGRider.getIndustry()== null || poGRider.getIndustry().isEmpty()) {
+                poJSON.put("result", "error");
+                poJSON.put("message", "Company is not set.");
+                return poJSON;
+            }
+        
+            //validate client id
+            if (poMaster.getClientId().isEmpty()) {
+                poJSON.put("result", "error");
+                poJSON.put("message", "Client must not be empty.");
+                return poJSON;
+            }
+
+            //validate contact id
+            if (poMaster.getContactId().isEmpty()) {
+                poJSON.put("result", "error");
+                poJSON.put("message", "Contact person not be empty.");
+                return poJSON;
+            }
+
+            //validate category code
+            if (poMaster.getCategoryCode().isEmpty()) {
+                poJSON.put("result", "error");
+                poJSON.put("message", "Category not be empty.");
+                return poJSON;
+            }
+            
+            poJSON.put("result", "success");
+
+            return poJSON;
+
+        } catch (Exception e) {
+            
+            Logger.getLogger(APClient_General.class.getName()).log(Level.SEVERE, null, e);
+            
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+            
+            return poJSON;
+        }
+    }
+    
+}

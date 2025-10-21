@@ -1,7 +1,9 @@
 package org.guanzon.cas.client.account;
 
 import java.sql.SQLException;
+import javafx.application.Platform;
 import org.guanzon.appdriver.agent.ShowDialogFX;
+import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GuanzonException;
@@ -13,15 +15,18 @@ import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.constant.UserRight;
+import org.guanzon.appdriver.iface.GValidator;
 import org.guanzon.cas.client.ClientGUI;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
 import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.services.ClientModels;
+import org.guanzon.cas.client.validator.ClientAccreditationValidatorFactory;
 import org.json.simple.JSONObject;
 
 public class Account_Accreditation extends Parameter {
 
-    Model_Account_Client_Accreditation poModel;
+    private Model_Account_Client_Accreditation poModel;
+    private String psApprovalUser = "";
 
     @Override
     public void initialize() throws SQLException, GuanzonException {
@@ -36,26 +41,43 @@ public class Account_Accreditation extends Parameter {
     @Override
     public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
-
-        if (poModel.getAccountType().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Account type must not be empty.");
+        
+        //initialize validator
+        GValidator loValidator = ClientAccreditationValidatorFactory.make(poGRider.getIndustry());
+        
+        //initialize params for app validator
+        loValidator.setApplicationDriver(poGRider);
+        loValidator.setTransactionStatus(poModel.getRecordStatus());
+        loValidator.setMaster(poModel);
+        
+        //validate
+        poJSON = loValidator.validate();
+        
+        //if validation not success
+        if (!isJSONSuccess(poJSON, "Account Accreditation", "Save Account Accreditation")) {
             return poJSON;
         }
-
-        if (poModel.getClientId().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Client must not be empty.");
-            return poJSON;
+        
+        //if validator requires approval
+        if (poJSON.containsKey("isRequiredApproval") && Boolean.TRUE.equals(poJSON.get("isRequiredApproval"))) {
+            
+            //get approval from approving officer
+            poJSON = ShowDialogFX.getUserApproval(poGRider);
+            if ("error".equals((String) poJSON.get("result"))) {
+                return poJSON;
+            }
+            
+            //if success, return approving officer user id
+            psApprovalUser = poJSON.get("sUserIDxx") != null
+                    ? poJSON.get("sUserIDxx").toString()
+                    : poGRider.getUserID();
+            
+            //add approver's id to result
+            poJSON.put("sApproved", psApprovalUser);
         }
 
-        if (poModel.getContactId().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Contact must not be empty.");
-            return poJSON;
-        }
-
-        poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
+        //initialize model date modified and modifier
+        poModel.setModifyingId((poGRider.getUserID()));
         poModel.setModifiedDate(poGRider.getServerDate());
 
         poJSON.put("result", "success");
@@ -87,6 +109,52 @@ public class Account_Accreditation extends Parameter {
             poJSON.put("message", "No record loaded.");
             return poJSON;
         }
+    }
+    
+      @Override
+    public String getSQ_Browse() {
+        String lsSQL;
+        String lsCondition = "";
+
+        if (psRecdStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+            }
+
+            lsCondition = "a.cTranStat IN (" + lsCondition.substring(2) + ")";
+        } else {
+            lsCondition = "a.cTranStat = " + SQLUtil.toSQL(psRecdStat);
+        }
+
+        lsSQL = " SELECT "
+                + " a.sTransNox, "
+                + " a.cAcctType, "
+                + " a.sClientID, "
+                + " a.sAddrssID, "
+                + " a.sContctID, "
+                + " a.dTransact, "
+                + " a.cAcctType, "
+                + " a.sRemarksx, "
+                + " a.cTranType, "
+                + " a.sCategrCd, "
+                + " a.cTranStat, "
+                + " b.sCompnyNm, "
+                + " c.sAddrssID, "
+                + " d.sMobileNo, "
+                + " IFNULL(CONCAT(c.sHouseNox, ', ', c.sAddressx, ', ', c.sBrgyIDxx, ', ', c.sTownIDxx), '') xAddressx"
+                + " FROM Account_Client_Accreditation a "
+                + " LEFT JOIN Client_Master b "
+                + " ON a.sClientID = b.sClientID "
+                + " LEFT JOIN Client_Address c "
+                + " ON a.sAddrssID = c.sAddrssID "
+                + " LEFT JOIN Client_Institution_Contact_Person d "
+                + " ON a.sContctID = d.sContctID ";
+
+        if (!lsCondition.isEmpty()) {
+            lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);
+        }
+
+        return lsSQL;
     }
 
     public JSONObject searchCategory(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
@@ -215,73 +283,10 @@ public class Account_Accreditation extends Parameter {
         return loJSON;
     }
 
-    @Override
-    public String getSQ_Browse() {
-        String lsSQL;
-        String lsCondition = "";
-
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
-            }
-
-            lsCondition = "a.cTranStat IN (" + lsCondition.substring(2) + ")";
-        } else {
-            lsCondition = "a.cTranStat = " + SQLUtil.toSQL(psRecdStat);
-        }
-
-        lsSQL = " SELECT "
-                + " a.sTransNox, "
-                + " a.cAcctType, "
-                + " a.sClientID, "
-                + " a.sAddrssID, "
-                + " a.sContctID, "
-                + " a.dTransact, "
-                + " a.cAcctType, "
-                + " a.sRemarksx, "
-                + " a.cTranType, "
-                + " a.sCategrCd, "
-                + " a.cTranStat, "
-                + " b.sCompnyNm, "
-                + " c.sAddrssID, "
-                + " d.sMobileNo, "
-                + " IFNULL(CONCAT(c.sHouseNox, ', ', c.sAddressx, ', ', c.sBrgyIDxx, ', ', c.sTownIDxx), '') xAddressx"
-                + " FROM Account_Client_Accreditation a "
-                + " LEFT JOIN Client_Master b "
-                + " ON a.sClientID = b.sClientID "
-                + " LEFT JOIN Client_Address c "
-                + " ON a.sAddrssID = c.sAddrssID "
-                + " LEFT JOIN Client_Institution_Contact_Person d "
-                + " ON a.sContctID = d.sContctID ";
-
-        if (!lsCondition.isEmpty()) {
-            lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);
-        }
-
-        return lsSQL;
-    }
-
     public JSONObject CloseTransaction() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
-
-        if ("1".equals((String) poModel.getValue("cTranStat"))) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Transaction was already confirmed.");
-            return poJSON;
-        }
-        if (poGRider.getUserLevel() <= UserRight.ENCODER) {
-            poJSON = ShowDialogFX.getUserApproval(poGRider);
-            if ("error".equals((String) poJSON.get("result"))) {
-                return poJSON;
-            } else {
-                if (Integer.parseInt(poJSON.get("nUserLevl").toString()) <= UserRight.ENCODER) {
-                    poJSON.put("result", "error");
-                    poJSON.put("message", "User is not an authorized approving officer.");
-                    return poJSON;
-                }
-            }
-        }
-        //validator
+        
+        //initialize validator
         poJSON = isEntryOkay();
         if ("error".equals((String) poJSON.get("result"))) {
             return poJSON;
@@ -291,35 +296,43 @@ public class Account_Accreditation extends Parameter {
 
         //if Accreditation 
         if (getModel().getAccountType().equals("0")) {
+            
             //initialize AP_Client_Object
             AP_Client_Master loObject = getAPClientMaster(getModel().getClientId());
 
             //check editmode if new or update
             if (loObject.getEditMode() == EditMode.ADDNEW) {
+                
                 loObject.getModel().setClientId(poModel.getClientId());
                 loObject.getModel().setAddressId(poModel.getAddressId());
                 loObject.getModel().setContactId(poModel.getContactId());
                 loObject.getModel().setCategoryCode(poModel.getCategoryCode());
+                
                 //if blacklisting set  Inactive record 
                 loObject.getModel().setRecordStatus(getModel().getTransactionType().equals("1") ? "0" : "1");
                 poJSON = loObject.saveRecord();
+                
                 if ("error".equals((String) poJSON.get("result"))) {
                     poJSON.put("result", "error");
                     poJSON.put("message", "Unable to save AP Client");
                     return poJSON;
                 }
             } else {
+                
                 //make sure its onready mode
                 if (loObject.getEditMode() == EditMode.READY) {
+                    
                     //enter to update
                     loObject.updateRecord();
                     loObject.getModel().setClientId(poModel.getClientId());
                     loObject.getModel().setAddressId(poModel.getAddressId());
                     loObject.getModel().setContactId(poModel.getContactId());
                     loObject.getModel().setCategoryCode(poModel.getCategoryCode());
+                    
                     //if blacklisting set  Inactive record 
                     loObject.getModel().setRecordStatus(getModel().getTransactionType().equals("1") ? "0" : "1");
                     poJSON = loObject.saveRecord();
+                    
                     if ("error".equals((String) poJSON.get("result"))) {
                         poJSON.put("result", "error");
                         poJSON.put("message", "Unable to save AP Client");
@@ -350,6 +363,7 @@ public class Account_Accreditation extends Parameter {
         poGRider.commitTrans();
 
         openRecord(getModel().getTransactionNo());
+        
         poJSON = new JSONObject();
         poJSON.put("result", "success");
         poJSON.put("message", "Transaction confirmed successfully.");
@@ -360,17 +374,7 @@ public class Account_Accreditation extends Parameter {
     public JSONObject VoidTransaction() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
 
-        if ("4".equals((String) poModel.getValue("cTranStat"))) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Transaction was already voided.");
-            return poJSON;
-        } else if ("1".equals((String) poModel.getValue("cTranStat"))) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Transaction was already confirmed.");
-            return poJSON;
-        }
-
-        //validator
+        //initialize validator
         poJSON = isEntryOkay();
         if ("error".equals((String) poJSON.get("result"))) {
             return poJSON;
@@ -413,5 +417,27 @@ public class Account_Accreditation extends Parameter {
         }
         loObject.setWithParentClass(true);
         return loObject;
+    }
+    
+    private boolean isJSONSuccess(JSONObject loJSON, String module, String fsModule) {
+        String result = (String) loJSON.get("result");
+        if ("error".equals(result)) {
+            String message = (String) loJSON.get("message");
+            Platform.runLater(() -> {
+                if (message != null) {
+                    ShowMessageFX.Warning(null, module, fsModule + ": " + message);
+                }
+            });
+            return false;
+        }
+        String message = (String) loJSON.get("message");
+
+        Platform.runLater(() -> {
+            if (message != null) {
+                ShowMessageFX.Information(null, module, fsModule + ": " + message);
+            }
+        });
+        return true;
+
     }
 }

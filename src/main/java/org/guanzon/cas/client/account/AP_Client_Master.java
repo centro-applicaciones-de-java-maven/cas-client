@@ -4,7 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.application.Platform;
 import org.guanzon.appdriver.agent.ShowDialogFX;
+import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
@@ -12,9 +14,12 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
+import org.guanzon.appdriver.iface.GValidator;
 import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
 import org.guanzon.cas.client.model.Model_AP_Client_Master;
 import org.guanzon.cas.client.services.ClientModels;
+import org.guanzon.cas.client.validator.APClientValidatorFactory;
+import org.guanzon.cas.client.validator.ClientAccreditationValidatorFactory;
 import org.json.simple.JSONObject;
 
 public class AP_Client_Master extends Parameter {
@@ -43,29 +48,23 @@ public class AP_Client_Master extends Parameter {
     public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
 
-        if (poModel.getClientId().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Client must not be empty.");
+        //initialize validator
+        GValidator loValidator = APClientValidatorFactory.make(poGRider.getIndustry());
+        
+        //initialize params for app validator
+        loValidator.setApplicationDriver(poGRider);
+        loValidator.setTransactionStatus(poModel.getRecordStatus());
+        loValidator.setMaster(poModel);
+        
+        //validate
+        poJSON = loValidator.validate();
+        
+        //if validation not success
+        if (!isJSONSuccess(poJSON, "Account Accreditation", "Save Account Accreditation")) {
             return poJSON;
         }
 
-//        if (poModel.getAddressId().isEmpty()) {
-//            poJSON.put("result", "error");
-//            poJSON.put("message", "Client address not be empty.");
-//            return poJSON;
-//        }
-        if (poModel.getContactId().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Contact person not be empty.");
-            return poJSON;
-        }
-
-        if (poModel.getCategoryCode().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Category not be empty.");
-            return poJSON;
-        }
-
+        //set modified date and id
         poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
         poModel.setModifiedDate(poGRider.getServerDate());
 
@@ -363,5 +362,27 @@ public class AP_Client_Master extends Parameter {
         poJSON = new JSONObject();
         poJSON.put("result", "success");
         return poJSON;
+    }
+    
+    private boolean isJSONSuccess(JSONObject loJSON, String module, String fsModule) {
+        String result = (String) loJSON.get("result");
+        if ("error".equals(result)) {
+            String message = (String) loJSON.get("message");
+            Platform.runLater(() -> {
+                if (message != null) {
+                    ShowMessageFX.Warning(null, module, fsModule + ": " + message);
+                }
+            });
+            return false;
+        }
+        String message = (String) loJSON.get("message");
+
+        Platform.runLater(() -> {
+            if (message != null) {
+                ShowMessageFX.Information(null, module, fsModule + ": " + message);
+            }
+        });
+        return true;
+
     }
 }
