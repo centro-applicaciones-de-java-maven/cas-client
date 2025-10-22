@@ -5,6 +5,10 @@
 package org.guanzon.cas.client.validator;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -27,7 +31,7 @@ public class ClientAccreditation_MP implements GValidator{
     private boolean isRequiredApproval;
     private String psTranStat;
 
-    Model_Account_Client_Accreditation poMaster;
+    private Model_Account_Client_Accreditation poMaster;
 
     @Override
     public void setApplicationDriver(Object applicationDriver) {
@@ -100,15 +104,19 @@ public class ClientAccreditation_MP implements GValidator{
             }
             
             //validate category code
-            if (poMaster.getCategoryCode().isEmpty()) {
+            if (poMaster.getCategoryCode() == null || poMaster.getCategoryCode().isEmpty()) {
                 poJSON.put("result", "error");
                 poJSON.put("message", "Category not be empty.");
                 return poJSON;
             }
             
-            //change transaction date 
-            if (poMaster.getDateTransact().after((Date) poGRider.getServerDate())
-                    && poMaster.getDateTransact().before((Date) poGRider.getServerDate())) {
+            //change transaction date , should be same day, else need approval
+            String lsTransDate = new SimpleDateFormat("yyyy-MM-dd").format(poMaster.getDateTransact());
+
+            LocalDate transDate = LocalDate.parse(lsTransDate, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate dateToday = poGRider.getServerDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            
+            if (transDate.isAfter(dateToday) || transDate.isBefore(dateToday)) {
                 poJSON.put("message", "Change of transaction date are not allowed.! Approval is Required");
                 isRequiredApproval = true;
             }

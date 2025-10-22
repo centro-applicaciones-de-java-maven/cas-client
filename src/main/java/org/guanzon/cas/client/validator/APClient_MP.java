@@ -20,8 +20,8 @@ public class APClient_MP implements GValidator{
 
     private GRiderCAS poGRider;
     private JSONObject poJSON;
-
-    Model_AP_Client_Master poMaster;
+    private String psTranStat;
+    private Model_AP_Client_Master poMaster;
 
     @Override
     public void setApplicationDriver(Object applicationDriver) {
@@ -53,6 +53,7 @@ public class APClient_MP implements GValidator{
     public JSONObject validate() {
         
         try {
+            poJSON = new JSONObject();
             
             //validate industry
             if (poGRider.getIndustry()== null || poGRider.getIndustry().isEmpty()) {
@@ -62,21 +63,21 @@ public class APClient_MP implements GValidator{
             }
         
             //validate client id
-            if (poMaster.getClientId().isEmpty()) {
+            if (poMaster.getClientId() == null || poMaster.getClientId().isEmpty()) {
                 poJSON.put("result", "error");
                 poJSON.put("message", "Client must not be empty.");
                 return poJSON;
             }
 
             //validate contact id
-            if (poMaster.getContactId().isEmpty()) {
+            if (poMaster.getContactId() == null || poMaster.getContactId().isEmpty()) {
                 poJSON.put("result", "error");
                 poJSON.put("message", "Contact person not be empty.");
                 return poJSON;
             }
 
             //validate category code
-            if (poMaster.getCategoryCode().isEmpty()) {
+            if (poMaster.getCategoryCode() == null || poMaster.getCategoryCode().isEmpty()) {
                 poJSON.put("result", "error");
                 poJSON.put("message", "Category not be empty.");
                 return poJSON;
@@ -88,7 +89,7 @@ public class APClient_MP implements GValidator{
 
         } catch (Exception e) {
             
-            Logger.getLogger(APClient_MP.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(APClient_MC.class.getName()).log(Level.SEVERE, null, e);
             
             poJSON = new JSONObject();
             poJSON.put("result", "error");

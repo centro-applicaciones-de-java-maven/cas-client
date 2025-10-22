@@ -54,7 +54,7 @@ public class Account_Accreditation extends Parameter {
         poJSON = loValidator.validate();
         
         //if validation not success
-        if (!isJSONSuccess(poJSON, "Account Accreditation", "Save Account Accreditation")) {
+        if ("error".equals((String) poJSON.get("result"))) {
             return poJSON;
         }
         
@@ -285,13 +285,12 @@ public class Account_Accreditation extends Parameter {
 
     public JSONObject CloseTransaction() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
-        
+
         //initialize validator
         poJSON = isEntryOkay();
         if ("error".equals((String) poJSON.get("result"))) {
             return poJSON;
         }
-
         poGRider.beginTrans("UPDATE STATUS", "ConfirmTransaction", SOURCE_CODE, getModel().getTransactionNo());
 
         //if Accreditation 
@@ -310,11 +309,10 @@ public class Account_Accreditation extends Parameter {
                 
                 //if blacklisting set  Inactive record 
                 loObject.getModel().setRecordStatus(getModel().getTransactionType().equals("1") ? "0" : "1");
+                
                 poJSON = loObject.saveRecord();
                 
                 if ("error".equals((String) poJSON.get("result"))) {
-                    poJSON.put("result", "error");
-                    poJSON.put("message", "Unable to save AP Client");
                     return poJSON;
                 }
             } else {
@@ -334,8 +332,6 @@ public class Account_Accreditation extends Parameter {
                     poJSON = loObject.saveRecord();
                     
                     if ("error".equals((String) poJSON.get("result"))) {
-                        poJSON.put("result", "error");
-                        poJSON.put("message", "Unable to save AP Client");
                         return poJSON;
                     }
                 }
@@ -417,27 +413,5 @@ public class Account_Accreditation extends Parameter {
         }
         loObject.setWithParentClass(true);
         return loObject;
-    }
-    
-    private boolean isJSONSuccess(JSONObject loJSON, String module, String fsModule) {
-        String result = (String) loJSON.get("result");
-        if ("error".equals(result)) {
-            String message = (String) loJSON.get("message");
-            Platform.runLater(() -> {
-                if (message != null) {
-                    ShowMessageFX.Warning(null, module, fsModule + ": " + message);
-                }
-            });
-            return false;
-        }
-        String message = (String) loJSON.get("message");
-
-        Platform.runLater(() -> {
-            if (message != null) {
-                ShowMessageFX.Information(null, module, fsModule + ": " + message);
-            }
-        });
-        return true;
-
     }
 }
