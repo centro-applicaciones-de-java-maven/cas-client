@@ -4,9 +4,9 @@ import com.ibm.icu.impl.Assert;
 import com.sun.javafx.scene.control.skin.TableHeaderRow;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
-import java.sql.Timestamp;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
@@ -15,12 +15,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
@@ -33,1943 +35,855 @@ import static javafx.scene.input.KeyCode.ENTER;
 import static javafx.scene.input.KeyCode.F3;
 import static javafx.scene.input.KeyCode.UP;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import javafx.util.StringConverter;
 import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
-import org.guanzon.appdriver.base.MiscUtil;
-import org.guanzon.appdriver.base.SQLUtil;
+import org.guanzon.appdriver.base.StringHelper;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.appdriver.constant.MobileNetwork;
-import org.guanzon.cas.client.Client;
+import org.guanzon.cas.client.ClientInfo;
+import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.table.models.ModelAddress;
 import org.guanzon.cas.client.table.models.ModelEmail;
 import org.guanzon.cas.client.table.models.ModelMobile;
 import org.guanzon.cas.client.table.models.ModelSocialMedia;
-import org.guanzon.cas.parameter.Barangay;
-import org.guanzon.cas.parameter.TownCity;
 import org.guanzon.cas.parameter.Country;
 import org.guanzon.cas.parameter.Province;
+import org.guanzon.cas.parameter.TownCity;
 import org.json.simple.JSONObject;
+import javafx.util.StringConverter;
+import org.guanzon.appdriver.base.SQLUtil;
 
 public class IndividualNewController implements Initializable {
-    private final String pxeModuleName = "Individual New";
-    private GRiderCAS oApp;
-    private Client oTrans;
-    public int pnEditMode;
-    public String lsID;
+    @FXML
+    private AnchorPane AnchorMain;
+    @FXML
+    private AnchorPane draggablePane;
+    @FXML
+    private Button btnExit;
+    @FXML
+    private FontAwesomeIconView glyphExit;
+    @FXML
+    private HBox hbButtons;
+    @FXML
+    private Button btnSave;
+    @FXML
+    private Button btnCancel;
+    @FXML
+    private TextField txtField01;
+    @FXML
+    private TextField txtField02;
+    @FXML
+    private TextArea txtField03;
+    @FXML
+    private TabPane TabPane;
+    @FXML
+    private Tab PersonalInfo;
+    @FXML
+    private TextField txtPersonal02;
+    @FXML
+    private TextField txtPersonal03;
+    @FXML
+    private TextField txtPersonal04;
+    @FXML
+    private TextField txtPersonal05;
+    @FXML
+    private TextField txtPersonal06;
+    @FXML
+    private DatePicker txtPersonal07;
+    @FXML
+    private TextField txtPersonal08;
+    @FXML
+    private ComboBox cmbPersonal09;
+    @FXML
+    private ComboBox cmbPersonal10;
+    @FXML
+    private TextField txtPersonal11;
+    @FXML
+    private TextField txtPersonal12;
+    @FXML
+    private TextField txtPersonal13;
+    @FXML
+    private TextField txtPersonal15;
+    @FXML
+    private TextField txtPersonal14;
+    @FXML
+    private Label lblClientStatus;
+    @FXML
+    private Tab Address;
+    @FXML
+    private AnchorPane anchorPersonal;
+    @FXML
+    private AnchorPane anchorAddress;
+    @FXML
+    private AnchorPane anchorMobile;
+    @FXML
+    private AnchorPane anchorEmail;
+    @FXML
+    private AnchorPane anchorSocMed;
+    @FXML
+    private GridPane gridAddress;
+    @FXML
+    private GridPane gridMobile;
+    @FXML
+    private GridPane gridEmail;
+    @FXML
+    private GridPane gridSocMed;
+    @FXML
+    private TableView tblAddress;
+    @FXML
+    private TableColumn indexAddress01;
+    @FXML
+    private TableColumn indexAddress02;
+    @FXML
+    private TableColumn indexAddress03;
+    @FXML
+    private TableColumn indexAddress04;
+    @FXML
+    private TableColumn indexAddress05;
+    @FXML
+    private TextField txtAddress03;
+    @FXML
+    private TextField txtAddress04;
+    @FXML
+    private TextField txtAddress05;
+    @FXML
+    private TextField txtAddress01;
+    @FXML
+    private TextField txtAddress02;
+    @FXML
+    private TextField txtAddress06;
+    @FXML
+    private TextField txtAddress07;
+    @FXML
+    private CheckBox cbAddress01;
+    @FXML
+    private CheckBox cbAddress02;
+    @FXML
+    private CheckBox cbAddress03;
+    @FXML
+    private CheckBox cbAddress04;
+    @FXML
+    private CheckBox cbAddress05;
+    @FXML
+    private CheckBox cbAddress06;
+    @FXML
+    private CheckBox cbAddress07;
+    @FXML
+    private CheckBox cbAddress08;
+    @FXML
+    private Button btnAddAddress;
+    @FXML
+    private Button btnDelAddress;
+    @FXML
+    private Tab Mobile;
+    @FXML
+    private ComboBox cmbMobile01;
+    @FXML
+    private ComboBox  cmbMobile02;
+    @FXML
+    private TextField txtMobile01;
+    @FXML
+    private CheckBox cbMobileNo01;
+    @FXML
+    private CheckBox cbMobileNo02;
+    @FXML
+    private Button btnAddMobile;
+    @FXML
+    private Button btnDelMobile;
+    @FXML
+    private TableView tblMobile;
+    @FXML
+    private TableColumn indexMobileNo01;
+    @FXML
+    private TableColumn indexMobileNo02;
+    @FXML
+    private TableColumn indexMobileNo03;
+    @FXML
+    private TableColumn indexMobileNo04;
+    @FXML
+    private Tab Email;
+    @FXML
+    private ComboBox cmbEmail01;
+    @FXML
+    private TextField txtEmail01;
+    @FXML
+    private CheckBox cbEmail01;
+    @FXML
+    private CheckBox cbEmail02;
+    @FXML
+    private Button btnAddEmail;
+    @FXML
+    private Button btnDelEmail;
+    @FXML
+    private TableView tblEmail;
+    @FXML
+    private TableColumn indexEmail01;
+    @FXML
+    private TableColumn indexEmail02;
+    @FXML
+    private TableColumn indexEmail03;
+    @FXML
+    private Tab SocialMedia;
+    @FXML
+    private ComboBox cmbSocMed01;
+    @FXML
+    private TextField txtSocial01;
+    @FXML
+    private TextArea txtSocial02;
+    @FXML
+    private CheckBox cbSocMed01;
+    @FXML
+    private Button btnAddSocMed;
+    @FXML
+    private Button btnDelSocMed;
+    @FXML
+    private TableView tblSocMed;
+    @FXML
+    private TableColumn indexSocMed01;
+    @FXML
+    private TableColumn indexSocMed02;
+    @FXML
+    private TableColumn indexSocMed03;
+    @FXML
+    private TableColumn indexSocMed04;
+    
+    private final String MODULE = "Client Controller";
+    private GRiderCAS poGRider;
+    private LogWrapper poWrapper;
+    
+    private ClientInfo poClient;
+    private String psClientID;
 
-    static LogWrapper logWrapper;
-    private String oTransnox = "";
-
-    private boolean pbLoaded = false;
-
+    private int pnEditMode;
+    private int pnAddress;
+    private int pnMobile;
+    private int pnEmail;
+    private int pnSocmed;
+    
     private ObservableList<ModelAddress> address_data = FXCollections.observableArrayList();
     private ObservableList<ModelMobile> mobile_data = FXCollections.observableArrayList();
     private ObservableList<ModelEmail> email_data = FXCollections.observableArrayList();
     private ObservableList<ModelSocialMedia> socialmedia_data = FXCollections.observableArrayList();
-
-    ObservableList<String> gender = FXCollections.observableArrayList("Male", "Female", "Others");
-    ObservableList<String> civilstatus = FXCollections.observableArrayList("Single", "Married", "Divorced", "Widowed");
-
+    
+    private JSONObject poJSON;
+    private boolean pbLoaded;
+    private boolean pbCancelled;
+    private boolean pbLoadingData;
+    
+    ObservableList<String> gender = FXCollections.observableArrayList("Male", "Female");
+    ObservableList<String> civilstatus = FXCollections.observableArrayList("Single", "Married", "Separated", "Widowed", "Single Parent", "Single Parent w/ Live-in Partner");
+    
     ObservableList<String> mobileOwn = ModelMobile.mobileOwn;
     ObservableList<String> mobileType = ModelMobile.mobileType;
     ObservableList<String> emailOwn = ModelEmail.emailOwn;
     ObservableList<String> socialTyp = ModelSocialMedia.socialTyp;
-
-    int pnPersonalInfo = 0;
-    int pnAddress = 0;
-    int pnMobile = 0;
-    int pnEmail = 0;
-    int pnSocialMedia = 0;
-
-    @FXML
-    private AnchorPane AnchorMain;
-
-    @FXML
-    private TextField txtField02;
-
-    @FXML
-    private TextField txtField01;
-
-    @FXML
-    private TextArea txtField03;
-
-    @FXML
-    private TabPane TabPane;
-
-    @FXML
-    private Tab PersonalInfo;
-
-    @FXML
-    private TextField personalinfo02;
-
-    @FXML
-    private TextField personalinfo03;
-
-    @FXML
-    private TextField personalinfo04;
-
-    @FXML
-    private TextField personalinfo05;
-
-    @FXML
-    private TextField personalinfo12;
-
-    @FXML
-    private ComboBox personalinfo09;
-
-    @FXML
-    private ComboBox personalinfo10;
-
-    @FXML
-    private TextField personalinfo06;
-
-    @FXML
-    private DatePicker personalinfo07;
-
-    @FXML
-    private TextField personalinfo08;
-
-    @FXML
-    private TextField personalinfo11;
-
-    @FXML
-    private TextField personalinfo13;
-
-    @FXML
-    private TextField personalinfo14;
-
-    @FXML
-    private TextField personalinfo15;
-
-    @FXML
-    private Tab Address;
-
-    @FXML
-    private AnchorPane anchorAddress;
-
-    @FXML
-    private TableView tblAddress;
-
-    @FXML
-    private TableColumn indexAddress01;
-
-    @FXML
-    private TableColumn indexAddress02;
-
-    @FXML
-    private TableColumn indexAddress03;
-
-    @FXML
-    private TableColumn indexAddress04;
-
-    @FXML
-    private TableColumn indexAddress05;
-
-    @FXML
-    private TextField AddressField01;
-
-    @FXML
-    private TextField AddressField02;
-
-    @FXML
-    private TextField AddressField04;
-
-    @FXML
-    private TextField AddressField05;
-
-    @FXML
-    private TextField AddressField06;
-
-    @FXML
-    private TextField AddressField07;
-
-    @FXML
-    private CheckBox cbAddress03;
-
-    @FXML
-    private CheckBox cbAddress05;
-
-    @FXML
-    private CheckBox cbAddress06;
-
-    @FXML
-    private CheckBox cbAddress04;
-
-    @FXML
-    private CheckBox cbAddress07;
-
-    @FXML
-    private CheckBox cbAddress08;
-
-    @FXML
-    private CheckBox cbAddress01;
-
-    @FXML
-    private CheckBox cbAddress02;
-
-    @FXML
-    private Button btnAddAddress;
-
-    @FXML
-    private Button btnDelAddress;
-
-    @FXML
-    private TextField AddressField03;
-
-    @FXML
-    private Tab Mobile;
-
-    @FXML
-    private ComboBox cmbMobile01;
-
-    @FXML
-    private ComboBox cmbMobile02;
-
-    @FXML
-    private TextField txtMobile01;
-
-    @FXML
-    private CheckBox cbMobileNo01;
-
-    @FXML
-    private CheckBox cbMobileNo02;
-
-    @FXML
-    private Button btnAddMobile;
-
-    @FXML
-    private Button btnDelMobile;
-
-    @FXML
-    private TableView tblMobile;
-
-    @FXML
-    private TableColumn indexMobileNo01;
-
-    @FXML
-    private TableColumn indexMobileNo02;
-
-    @FXML
-    private TableColumn indexMobileNo03;
-
-    @FXML
-    private TableColumn indexMobileNo04;
-
-    @FXML
-    private Tab Email;
-
-    @FXML
-    private ComboBox cmbEmail01;
-
-    @FXML
-    private TextField mailFields01;
-
-    @FXML
-    private CheckBox cbEmail02;
-
-    @FXML
-    private CheckBox cbEmail01;
-
-    @FXML
-    private Button btnAddEmail;
-
-    @FXML
-    private Button btnDelEmail;
-
-    @FXML
-    private TableView tblEmail;
-
-    @FXML
-    private TableColumn indexEmail01;
-
-    @FXML
-    private TableColumn indexEmail02;
-
-    @FXML
-    private TableColumn indexEmail03;
-
-    @FXML
-    private Tab SocialMedia;
-
-    @FXML
-    private ComboBox cmbSocMed01;
-
-    @FXML
-    private TextField txtSocial01;
-
-    @FXML
-    private TextArea txtSocial02;
-
-    @FXML
-    private CheckBox cbSocMed01;
-
-    @FXML
-    private Button btnAddSocMed;
-
-    @FXML
-    private Button btnDelSocMed;
-
-    @FXML
-    private TableView tblSocMed;
-
-    @FXML
-    private TableColumn indexSocMed01;
-
-    @FXML
-    private TableColumn indexSocMed02;
-
-    @FXML
-    private TableColumn indexSocMed03;
-
-    @FXML
-    private TableColumn indexSocMed04;
-
-    @FXML
-    private HBox hbButtons;
-
-    @FXML
-    private Button btnSave;
-
-    @FXML
-    private Button btnCancel;
-
-    @FXML
-    private AnchorPane draggablePane;
-
-    @FXML
-    private Button btnExit;
-
-    @FXML
-    private FontAwesomeIconView glyphExit;
-//
-//
-//     @Override
-//    public void setGRider(GRider foValue) {
-//        oApp = foValue;
-//    }
-
-    private void closeForm(javafx.event.ActionEvent event) {
-        Stage stage = (Stage) btnExit.getScene().getWindow();
-        stage.close();
+    
+    public void setGRider(GRiderCAS griderCAS){
+        poGRider = griderCAS;
+    }
+    
+    public void setLogWrapper(LogWrapper wrapper){
+        poWrapper = wrapper;
+    }
+    
+    public void setClientId(String clientId){
+        psClientID = clientId;
+    }
+    
+    public ClientInfo getClient(){
+        return poClient;
+    }
+    
+    public boolean isCancelled(){
+        return pbCancelled;
     }
 
-    private void clearAddress() {
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {        
         try {
-            if (oTrans.getAddressCount() >= 1) {
-                oTrans.Address(pnAddress).getModel().setRecordStatus("0");
+            if (poGRider == null){
+                ShowMessageFX.Warning(getStage(), "Application driver is not set.", "Warning", MODULE);
+                System.exit(1);
             }
-        } catch (Exception e) {
-
+                        
+            initFields();
+ 
+            poClient = new ClientControllers(poGRider, poWrapper).ClientInfo();
+            poClient.setClientType(ClientType.INDIVIDUAL);
+            poClient.setRecordStatus("1");
+            loadRecord();
+            
+            pbLoaded = true;
+        } catch (SQLException | GuanzonException e) {
+            ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
+            System.exit(1);
         }
-
-        AddressField01.clear();
-        AddressField02.clear();
-        AddressField03.clear();
-        AddressField04.clear();
-        AddressField05.clear();
-
-        cbAddress01.setSelected(true);
-        cbAddress02.setSelected(false);
-        cbAddress03.setSelected(false);
-        cbAddress04.setSelected(false);
-        cbAddress05.setSelected(false);
-        cbAddress06.setSelected(false);
-        cbAddress07.setSelected(false);
-        cbAddress08.setSelected(false);
-    }
-
-    private void clearMaster() {
-        txtField01.clear();
-        txtField02.clear();
-        txtField03.clear();
-    }
-
-    private void clearMobile() {
+    }        
+    
+    private void cmdButton_Click(ActionEvent event) {
         try {
-            if (oTrans.getMobileCount() >= 1) {
-                oTrans.Mobile(pnMobile).getModel().setRecordStatus("0");
-            }
-        } catch (Exception e) {
-        }
-        txtMobile01.clear();
-        cmbMobile01.setItems(mobileOwn);
-        cmbMobile01.getSelectionModel().select(0);
-
-        cmbMobile02.setItems(mobileType);
-        cmbMobile02.getSelectionModel().select(0);
-
-        cbMobileNo01.setSelected(true);
-        cbMobileNo02.setSelected(false);
-
-    }
-
-    private void clearEmail() {
-        mailFields01.clear();
-        try {
-            if (oTrans.getMailCount() >= 1) {
-                oTrans.Mail(pnEmail).getModel().setRecordStatus("0");
-            }
-        } catch (Exception e) {
-
-        }
-        cmbEmail01.setItems(emailOwn);
-        cmbEmail01.getSelectionModel().select(0);
-        cbEmail01.setSelected(true);
-        cbEmail02.setSelected(false);
-    }
-
-    private void clearSocMed() {
-        try {
-            if (oTrans.getSocMedCount() >= 1) {
-                oTrans.SocialMedia(pnSocialMedia).getModel().setRecordStatus("0");
-            }
-        } catch (Exception e) {
-
-        }
-
-        txtSocial01.clear();
-        txtSocial02.clear();
-        cmbSocMed01.setItems(socialTyp);
-        cmbSocMed01.getSelectionModel().select(0);
-        cbSocMed01.setSelected(true);
-    }
-
-    private void initButton() {
-        btnSave.setOnAction(this::handleButtonAction);
-        btnCancel.setOnAction(this::handleButtonAction);
-        btnExit.setOnAction(this::closeForm);
-
-        btnAddAddress.setOnAction(this::handleButtonAction);
-        btnDelAddress.setOnAction(this::handleButtonAction);
-
-        btnAddEmail.setOnAction(this::handleButtonAction);
-        btnDelEmail.setOnAction(this::handleButtonAction);
-
-        btnAddMobile.setOnAction(this::handleButtonAction);
-        btnDelMobile.setOnAction(this::handleButtonAction);
-
-        btnAddSocMed.setOnAction(this::handleButtonAction);
-        btnDelSocMed.setOnAction(this::handleButtonAction);
-    }
-
-    private void handleButtonAction(javafx.event.ActionEvent event) {
-        JSONObject loJson = new JSONObject();
-        String tabText = "";
-        Tab selectedTab = TabPane.getSelectionModel().getSelectedItem();
-        if (selectedTab != null) {
-            tabText = selectedTab.getId();
-        }
-
-        Object source = event.getSource();
-        if (source instanceof Button) {
-            Button clickedButton = (Button) source;
-            switch (clickedButton.getId()) {
-
+            switch (((Button)event.getSource()).getId()){
+                case "btnExit":
+                case "btnCancel":
+                    psClientID = "";
+                    pbCancelled = true;
+                    getStage().close();
+                    break;
                 case "btnSave":
-                    try {
-                        JSONObject loJSON;
-                        oTrans.Master().getModel().setCompanyName(oTrans.Master().getModel().getCompanyName());
+                    if (pnEditMode == EditMode.ADDNEW) {
+                        poJSON = poClient.saveRecord();
 
-                        loJSON = oTrans.Master().isEntryOkay();
-                        if ("error".equals((String) loJSON.get("result"))) {
-                            ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
+                        if (!"success".equals((String) poJSON.get("result"))){
+                            ShowMessageFX.Warning(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                             break;
                         }
-                        if (pnEditMode == EditMode.UPDATE) {
-                            oTrans.Update();
-                        }
-
-                        loJSON = oTrans.Save();
-
-                        if ("error".equals((String) loJSON.get("result"))) {
-                            ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        } else {
-                            ShowMessageFX.OkayCancel((String) loJSON.get("message"), "", "Successfully saved!");
-                        }
-                    } catch (SQLException | GuanzonException e) {
-                        ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
                     }
                     
-                    break;
-                case "btnCancel":
-                    if (ShowMessageFX.YesNo("Do you really want to cancel this record? \nAny data collected will not be kept.", "Computerized Acounting System", pxeModuleName)) {
-                        clearMaster();
-                        clearAddress();
-                        clearEmail();
-                        clearMobile();
-                        clearSocMed();
-
-                        // Initialize the Client_Master transaction
-                        oTrans.Master().getModel().setClientType(ClientType.INDIVIDUAL);
-                        pnEditMode = EditMode.UNKNOWN;
-                        Stage stage = (Stage) txtField01.getScene().getWindow();
-                        stage.close();
-
-                    }
-                    break;
-                case "btnAddAddress":
-                    try {
-                        if (oTrans.getAddressCount() > 1) {
-                            JSONObject addObj = oTrans.Address(pnAddress - 1).isEntryOkay();
-                            if ("error".equals((String) addObj.get("result"))) {
-                                ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
-                                break;
-                            } else {
-                                clearAddress();
-                                try {
-                                    oTrans.Address(pnAddress).getModel().setLatitude("0.0");
-                                    oTrans.Address(pnAddress).getModel().setLongitude("0.0");
-                                } catch (Exception e) {
-                                }
-                            }
-                        }
-                        JSONObject addObjAddress = oTrans.addAddress();
-                        System.out.println("THE ADDRESS ID " + oTrans.Address(pnAddress).getModel().getAddressId() + " and number " + String.valueOf(pnAddress));
-                        if ("error".equals((String) addObjAddress.get("result"))) {
-                            ShowMessageFX.Information((String) addObjAddress.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        } else {
-                            oTrans.Address(pnAddress).getModel().setClientId(oTrans.Master().getModel().getClientId());
-                            pnAddress = oTrans.getAddressCount() - 1;
-                            tblAddress.getSelectionModel().select(pnAddress + 1);
-                            loadRecordAddress();
-                        }
-                    } catch (SQLException | GuanzonException e) {
-                        ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
-                    }
-                    break;
-                case "btnAddEmail":
-                    if (oTrans.getMailCount() > 1) {
-                        JSONObject addObjMail = oTrans.Mail(pnEmail - 1).isEntryOkay();
-                        if ("error".equals((String) addObjMail.get("result"))) {
-                            ShowMessageFX.Information((String) addObjMail.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        } else {
-                            try {
-                                oTrans.Mail(pnEmail).getModel().setClientId(oTrans.Master().getModel().getClientId());
-                            } catch (Exception e) {
-                            }
-                        }
-                    }
-
-                    JSONObject addObjMail = oTrans.addMail();
-                    System.out.println((String) addObjMail.get("message"));
-                    if ("error".equals((String) addObjMail.get("result"))) {
-                        ShowMessageFX.Information((String) addObjMail.get("message"), "Computerized Acounting System", pxeModuleName);
-                        break;
-                    } else {
-                        oTrans.Mail(pnEmail).getModel().setClientId(oTrans.Master().getModel().getClientId());
-                        mailFields01.clear();
-                        pnEmail = oTrans.getMailCount() - 1;
-                        tblEmail.getSelectionModel().select(pnEmail + 1);
-                        loadRecordEmail();
-                    }
-
-                    break;
-                case "btnAddMobile":
-                    if (oTrans.getMobileCount() > 1) {
-                        JSONObject addObjMobile = oTrans.Mobile(pnMobile - 1).isEntryOkay();
-                        if ("error".equals((String) addObjMobile.get("result"))) {
-                            ShowMessageFX.Information((String) addObjMobile.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        }
-                    }
-
-                    JSONObject addObj = oTrans.addMobile();
-                    System.out.println((String) addObj.get("message"));
-                    if ("error".equals((String) addObj.get("result"))) {
-                        ShowMessageFX.Information((String) addObj.get("message"), "Computerized Acounting System", pxeModuleName);
-                        break;
-                    } else {
-                        oTrans.Mobile(pnMobile).getModel().setClientId(oTrans.Master().getModel().getClientId());
-                        txtMobile01.clear();
-                        pnMobile = oTrans.getMobileCount() - 1;
-                        tblMobile.getSelectionModel().select(pnMobile + 1);
-                        loadRecordMobile();
-                    }
-
-                    break;
-                case "btnAddSocMed":
-                    if (oTrans.getSocMedCount() > 1) {
-                        JSONObject addObjSocMed = oTrans.SocialMedia(pnSocialMedia - 1).isEntryOkay();
-                        if ("error".equals((String) addObjSocMed.get("result"))) {
-                            ShowMessageFX.Information((String) addObjSocMed.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        }
-                    }
-                    JSONObject addSocMed = oTrans.addSocialMedia();
-                    System.out.println((String) addSocMed.get("message"));
-                    if ("error".equals((String) addSocMed.get("result"))) {
-                        ShowMessageFX.Information((String) addSocMed.get("message"), "Computerized Acounting System", pxeModuleName);
-                        break;
-                    } else {
-                        oTrans.SocialMedia(pnSocialMedia).getModel().setClientId(oTrans.Master().getModel().getClientId());
-                        txtSocial01.clear();
-                        txtSocial02.clear();
-                        pnSocialMedia = oTrans.getSocMedCount() - 1;
-
-                        tblSocMed.getSelectionModel().select(pnSocialMedia + 1);
-                        loadRecordSocialMedia();
-
-                    }
+                    psClientID = poClient.getModel().getClientId();
+                    pbCancelled = false;
+                    getStage().close();
                     break;
                 case "btnDelAddress":
-                    if (oTrans.getAddressCount() == 0) {
-                        loJson.put("result", "error");
-                        loJson.put("message", "No Record.");
-                        ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                    break;
+                case "btnAddAddress":
+                    JSONObject addObjAddress = poClient.addAddress();
+                    if ("error".equals((String) addObjAddress.get("result"))) {
+                        ShowMessageFX.Information(getStage(), (String) addObjAddress.get("message"), "Computerized Acounting System", MODULE);
                         break;
-                    }
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        loJson = oTrans.deleteAddress(pnAddress);
-                        if ("error".equals((String) loJson.get("result"))) {
-                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        }
-                        clearAddress();
-                        if (oTrans.getAddressCount() <= 0) {
-                            pnAddress = oTrans.getAddressCount();
-                        } else {
-                            pnAddress = oTrans.getAddressCount() - 1;
-                        }
+                    } else {
+                        poClient.Address(pnAddress).setClientId(poClient.getModel().getClientId());
+                        pnAddress = poClient.getAddressCount() - 1;
+                        tblAddress.getSelectionModel().select(pnAddress + 1);
                         loadRecordAddress();
-                        AddressField01.requestFocus();
+                        
+                        txtAddress03.requestFocus();
                     }
                     break;
                 case "btnDelMobile":
-                    if (oTrans.getMobileCount() == 0) {
-                        loJson.put("result", "error");
-                        loJson.put("message", "No Record.");
-                        ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                    break;
+                case "btnAddMobile":
+                    JSONObject addObj = poClient.addMobile();
+                    if ("error".equals((String) addObj.get("result"))) {
+                        ShowMessageFX.Information(getStage(), (String) addObj.get("message"), "Computerized Acounting System", MODULE);
                         break;
-                    }
-
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        loJson = oTrans.deleteMobile(pnMobile);
-                        if ("error".equals((String) loJson.get("result"))) {
-                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        }
-                        clearMobile();
-                        if (oTrans.getMobileCount() <= 0) {
-                            pnMobile = oTrans.getMobileCount();
-                        } else {
-                            //this is where should be getting table get selected then minus one if it is not equal to 
-                            pnMobile = oTrans.getMobileCount() - 1;
-                        }
-
+                    } else {
+                        poClient.Mobile(pnMobile).setClientId(poClient.getModel().getClientId());
+                        pnMobile = poClient.getMobileCount() - 1;
+                        tblMobile.getSelectionModel().select(pnMobile + 1);
                         loadRecordMobile();
+                        
+                        txtMobile01.requestFocus();
                     }
                     break;
                 case "btnDelEmail":
-                    if (oTrans.getMailCount() == 0) {
-                        loJson.put("result", "error");
-                        loJson.put("message", "No Record.");
-                        ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                    break;
+                case "btnAddEmail":
+                    JSONObject addObjMail = poClient.addMail();
+                    
+                    if ("error".equals((String) addObjMail.get("result"))) {
+                        ShowMessageFX.Information(getStage(), (String) addObjMail.get("message"), "Computerized Acounting System", MODULE);
                         break;
-                    }
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        loJson = oTrans.deleteEmail(pnEmail);
-                        if ("error".equals((String) loJson.get("result"))) {
-                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        }
-                        clearEmail();
-                        if (oTrans.getMailCount() <= 0) {
-                            pnEmail = oTrans.getMailCount();
-                        } else {
-                            pnEmail = oTrans.getMailCount() - 1;
-                        }
+                    } else {
+                        poClient.Mail(pnEmail).setClientId(poClient.getModel().getClientId());
+                        pnEmail = poClient.getMailCount() - 1;
+                        tblEmail.getSelectionModel().select(pnEmail + 1);
                         loadRecordEmail();
-
+                        
+                        txtEmail01.requestFocus();
                     }
-
                     break;
-                case "btnDelSocMed":
-                    if (oTrans.getSocMedCount() == 0) {
-                        loJson.put("result", "error");
-                        loJson.put("message", "No Record.");
-                        ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
+                case "btnDelSocMed":    
+                    break;
+                case "btnAddSocMed":
+                    JSONObject addSocMed = poClient.addSocMed();
+                    
+                    if ("error".equals((String) addSocMed.get("result"))) {
+                        ShowMessageFX.Information((String) addSocMed.get("message"), "Computerized Acounting System", MODULE);
                         break;
-                    }
+                    } else {
+                        poClient.SocMed(pnSocmed).setClientId(poClient.getModel().getClientId());
+                        pnSocmed = poClient.getSocMedCount() - 1;
 
-                    if (ShowMessageFX.OkayCancel(null, pxeModuleName, "Do you want to remove these details? ") == true) {
-                        loJson = oTrans.deleteSocialMedia(pnSocialMedia);
-                        if ("error".equals((String) loJson.get("result"))) {
-                            ShowMessageFX.Information((String) loJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            break;
-                        }
-
-                        clearSocMed();
-                        if (oTrans.getSocMedCount() <= 0) {
-                            pnSocialMedia = oTrans.getSocMedCount();
-                        } else {
-                            pnSocialMedia = oTrans.getSocMedCount() - 1;
-                        }
+                        tblSocMed.getSelectionModel().select(pnSocmed + 1);
                         loadRecordSocialMedia();
+
+                        txtSocial01.requestFocus();
                     }
                     break;
-                default:
-                    break;
             }
+        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
+            ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
+            System.exit(1);
         }
     }
-
-    private String autoCapitalize(String lsValue) {
-        String[] words = lsValue.split("\\s+");
-        StringBuilder lscapitalized = new StringBuilder();
-        for (String word : words) {
-            if (!word.isEmpty()) {
-                // Capitalize the first letter and convert the rest to lowercase
-                lscapitalized.append(Character.toUpperCase(word.charAt(0)))
-                        .append(word.substring(1).toLowerCase())
-                        .append(" ");
-            }
-        }
-        return lscapitalized.toString().trim();
+    
+    private void address_Clicked(MouseEvent event) {
+        pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+        
+        if (pnAddress >= 0) getSelectedAddress();
     }
-
-    private void personalinfo_KeyPressed(KeyEvent event) {
-        TextField personalinfo = (TextField) event.getSource();
-        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(12, 14));
-        String lsValue = (personalinfo.getText() == null ? "" : personalinfo.getText());
-        JSONObject poJson;
-
-        switch (event.getCode()) {
-            case F3:
-                switch (lnIndex) {
-                    case 6:
-                        /*search country for citizenship*/
-                        poJson = new JSONObject();
-//                        poJson = oTrans.Master().searchCitizenship(lsValue, false);
-
-//                        Country loCountry = new Country(oApp, true);
-//                        loCountry.setRecordStatus("1");
-//                        poJson = loCountry.searchRecord(lsValue, false);
-                        poJson = oTrans.Master().searchCitizenship(lsValue, false);
-                        if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
-                            ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            personalinfo06.clear();
-                        } else {
-//                            personalinfo06.setText((String) loCountry.getModel().getNational());
-//                            oTrans.Master().getModel().setCitizenshipId((String) loCountry.getModel().getCountryCode());
-                            personalinfo06.setText((String) poJson.get("sNational"));
-                            oTrans.Master().getModel().setCitizenshipId((String) poJson.get("sCntryCde"));
-
+    
+    private void mobile_Clicked(MouseEvent event) {
+        pnMobile = tblMobile.getSelectionModel().getSelectedIndex();
+        
+        if (pnMobile >= 0) getSelectedMobile();
+    }
+    
+    private void email_Clicked(MouseEvent event) {
+        pnEmail = tblEmail.getSelectionModel().getSelectedIndex();
+        
+        if (pnEmail >= 0) getSelectedEmail();
+    }
+    
+    private void socmed_Clicked(MouseEvent event) {
+        pnSocmed = tblSocMed.getSelectionModel().getSelectedIndex();
+        
+        if (pnSocmed >= 0) getSelectedSocialMedia();
+    }
+    
+    private void txtPersonal_KeyPressed(KeyEvent event){
+        TextField txtField = (TextField)event.getSource();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(11, 13));
+        
+        String lsValue = txtField.getText();
+        
+        try {
+            if (event.getCode() == F3 || event.getCode() == ENTER){
+                switch (lnIndex){
+                    case 6: //citizenship
+                        poJSON = poClient.searchCitizenship(lsValue);
+                        
+                        if ("success".equals((String) poJSON.get("result"))){
+                            txtField.setText(poClient.getModel().Citizenship().getDescription());
+                            CommonUtils.SetNextFocus(txtField);
+                            event.consume();
                         }
                         break;
-                    case 8:
-                        /*search birthplace*/
-                        poJson = new JSONObject();
-                        poJson = oTrans.Master().searchBirthPlace(lsValue, false);
-                        if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
-                            ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                            personalinfo08.clear();
-                        } else {
-                            personalinfo08.setText((String) poJson.get("xBrthPlce"));
-                            oTrans.Master().getModel().setBirthPlaceId((String) poJson.get("sTownIDxx"));
+                    case 8: //birthplace
+                        poJSON = poClient.searchBirthPlace(lsValue);
+                        
+                        if ("success".equals((String) poJSON.get("result"))){
+                            txtField.setText(poClient.getModel().BirthTown().getDescription());
+                            CommonUtils.SetNextFocus(txtField);
+                            event.consume();
                         }
-
-                        poJson = new JSONObject();
-
                         break;
                 }
-        }
-        switch (event.getCode()) {
-            case ENTER:
-                CommonUtils.SetNextFocus(personalinfo);
-            case DOWN:
-                CommonUtils.SetNextFocus(personalinfo);
-                break;
-            case UP:
-                CommonUtils.SetPreviousFocus(personalinfo);
-        }
-    }
-
-    final ChangeListener<? super Boolean> personalinfo_Focus = (o, ov, nv) -> {
-        if (!pbLoaded) {
-            return;
-        }
-        TextField txtPersonalInfo = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(txtPersonalInfo.getId().substring(12, 14));
-        String lsValue = (txtPersonalInfo.getText() == null ? "" : txtPersonalInfo.getText());
-
-        if (lsValue == null) {
-            return;
-        }
-        if (!nv) {
-            /*Lost Focus*/
-            lsValue = lsValue.trim();
-            switch (lnIndex) {
-                case 2:
-                    /*Last name*/
-
-                    // Remove the trailing space and return the result
-                    lsValue = autoCapitalize(lsValue);
-                    oTrans.Master().getModel().setLastName(lsValue);
-                    break;
-                case 3:
-                    /*First name*/
-                    lsValue = autoCapitalize(lsValue);
-                    oTrans.Master().getModel().setFirstName(lsValue);
-                    break;
-                case 4:
-                    /*Middle name*/
-                    lsValue = autoCapitalize(lsValue);
-                    oTrans.Master().getModel().setMiddleName(lsValue);
-                    break;
-                case 5:
-                    /*Suffix*/
-                    oTrans.Master().getModel().setSuffixName(lsValue);
-                    break;
-                case 6:
-                    /*Citizenship*/
-
-                    break;
-                case 7:
-                    /*Birth Date*/ // DATE TIME
-                    break;
-                case 8:
-                    /*Birth Place*/
-                    oTrans.Master().getModel().setBirthPlaceId(lsValue);
-                case 9:
-                    /*Gender*/ //COMBOBOX
-                    break;
-                case 10:
-                    /*Civil Status*/
-                    break;
-                case 11:
-                    /*Spouse*/
-                    oTrans.Master().getModel().setSpouseId(lsValue);
-                    break;
-                case 12:
-                    /*Mother's Maiden Name*/
-                    lsValue = autoCapitalize(lsValue);
-                    oTrans.Master().getModel().setMothersMaidenName(lsValue);
-                    break;
-                case 13:
-                    /*TIN No*/ //ADD VALIDATIONS
-                    if (!lsValue.equals("")) {
-                        lsValue = lsValue.replace("-", "");
-                        if (lsValue.length() == 9 && lsValue.matches("\\d+")) {
-                            String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 9);
-                            oTrans.Master().getModel().setTaxIdNumber(lsformattedValue);
-                        } else {
-                            // Input is invalid
-                            oTrans.Master().getModel().setTaxIdNumber("");
-                            ShowMessageFX.Information("Input must be 9 digits and contain numbers only.", "Computerized Acounting System", pxeModuleName);
-                        }
-                    } else {
-                        oTrans.Master().getModel().setTaxIdNumber("");
-                    }
-                    break;
-                case 14:
-                    /*LTO ID*/
-
-                    if (!lsValue.equals("")) {
-                        lsValue = lsValue.replace("-", "");
-                        if (lsValue.length() == 11 && lsValue.matches("\\d+")) {
-                            // Format the input
-                            String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 11);
-                            oTrans.Master().getModel().setLTOClientId(lsformattedValue);
-                        } else {
-                            // Input is invalid
-                            oTrans.Master().getModel().setLTOClientId("");
-                            ShowMessageFX.Information("Input must be 11 digits and contain numbers only.", "Computerized Acounting System", pxeModuleName);
-                        }
-                    } else {
-                        oTrans.Master().getModel().setLTOClientId("");
-                    }
-                    break;
-                case 15:
-                    /*National ID */
-                    if (!lsValue.equals("")) {
-                        lsValue = lsValue.replace("-", "");
-                        if (lsValue.length() == 11 && lsValue.matches("\\d+")) {
-                            // Format the input
-                            String lsformattedValue = lsValue.substring(0, 3) + "-" + lsValue.substring(3, 5) + "-" + lsValue.substring(5, 11);
-                            oTrans.Master().getModel().setPhNationalId(lsformattedValue);
-
-                        } else {
-                            // Input is invalid
-                            oTrans.Master().getModel().setPhNationalId("");
-                            ShowMessageFX.Information("Input must be 11 digits and contain numbers only.", "Computerized Acounting System", pxeModuleName);
-                        }
-                    } else {
-                        oTrans.Master().getModel().setPhNationalId("");
-                    }
-                    break;
-            }
-            loadMasterName();
-            loadRecordPersonalInfo();
-        } else {
-            // txtContact.selectAll();
-        }
-    };
-
-    private void address_KeyPressed(KeyEvent event) {
-        TextField address = (TextField) event.getSource();
-        int lnIndex = Integer.parseInt(((TextField) event.getSource()).getId().substring(12, 14));
-        String lsValue = (address.getText() == null ? "" : address.getText());
-        String lsProvince = "";
-        JSONObject poJson;
-
-        try {
-            switch (event.getCode()) {
-                case F3:
-                    switch (lnIndex) {
-                        case 3:                        
-                            /*search province*/
-                            poJson = new JSONObject();
-                            Province loProvince = new Province();
-                            loProvince.setApplicationDriver(oApp);
-                            loProvince.setRecordStatus("1");
-                            loProvince.initialize();
-
-                            poJson = loProvince.searchRecord(lsValue, false);
-                            if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
-                                ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                                AddressField03.clear();
-                            } else {
-                                AddressField03.setText((String) loProvince.getModel().getProvinceName());
-                                oTrans.Address(pnAddress).getModel().Town().Province().setProvinceId(loProvince.getModel().getProvinceId());
-                                oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId();
-                                oTrans.setProvinceID_temp(loProvince.getModel().getProvinceId());
-
-                                oTrans.Address(pnAddress).getModel().setTownId("");
-                                oTrans.Address(pnAddress).getModel().setBarangayId("");
-                                AddressField04.setText("");
-                                AddressField04.setText("");
-                            }
-
-                            break;
-                        case 4:
-                            /*search city*/
-                            poJson = new JSONObject();
-                            TownCity loTownCity = new TownCity();
-                            loTownCity.setApplicationDriver(oApp);
-                            loTownCity.setRecordStatus("1");
-                            loTownCity.initialize();
-
-                            try {
-                                if (!oTrans.getProvinceID_temp().equalsIgnoreCase("")) {
-                                    poJson = loTownCity.searchRecord(lsValue, false, oTrans.getProvinceID_temp());
-                                } else {
-                                    poJson = loTownCity.searchRecord(lsValue, false);
-                                }
-                            } catch (Exception e) {
-                                poJson = loTownCity.searchRecord(lsValue, false);
-                            }
-
-                            if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
-                                ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                                AddressField04.clear();
-                            } else {
-                                AddressField04.setText((String) loTownCity.getModel().getTownName());
-                                oTrans.Address(pnAddress).getModel().setTownId(loTownCity.getModel().getTownId());
-                            }
-                            loadRecordAddress();
-                            break;
-                        case 5:
-                            /*search barangay*/
-                            poJson = new JSONObject();
-                            Barangay loBarangay = new Barangay();
-                            loBarangay.setApplicationDriver(oApp);
-                            loBarangay.setRecordStatus("1");
-                            loBarangay.initialize();
-
-                            try {
-                                if (!oTrans.Address(pnAddress).getModel().getTownId().equalsIgnoreCase("")) {
-                                    poJson = loBarangay.searchRecord("", false, oTrans.Address(pnAddress).getModel().getTownId());
-                                    poJson = loBarangay.searchRecordWithStatus("", false, oTrans.Address(pnAddress).getModel().getTownId());
-                                } else {
-                                    poJson = loBarangay.searchRecord(lsValue, false);
-                                }
-                            } catch (Exception e) {
-                                poJson = loBarangay.searchRecord(lsValue, false);
-                            }
-
-                            if ("error".equalsIgnoreCase(poJson.get("result").toString())) {
-                                ShowMessageFX.Information((String) poJson.get("message"), "Computerized Acounting System", pxeModuleName);
-                                AddressField05.clear();
-                            } else {
-                                AddressField05.setText(loBarangay.getModel().getBarangayName());
-                                oTrans.Address(pnAddress).getModel().setBarangayId(loBarangay.getModel().getBarangayId());
-                                oTrans.Address(pnAddress).getModel().setTownId(loBarangay.getModel().getTownId());
-
-                            }
-                            loadRecordAddress();
-                            break;
-                    }
-
             }
         } catch (SQLException | GuanzonException e) {
-            ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
+            ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
+            System.exit(1);
         }
         
-        switch (event.getCode()) {
+
+        switch (event.getCode()){
             case ENTER:
-                CommonUtils.SetNextFocus(address);
             case DOWN:
-                CommonUtils.SetNextFocus(address);
+                CommonUtils.SetNextFocus(txtField);
                 break;
             case UP:
-                CommonUtils.SetPreviousFocus(address);
+                CommonUtils.SetPreviousFocus(txtField);
         }
     }
-
-    public void loadMasterName() {
-        String lsLastName = ((oTrans.Master().getModel().getLastName() instanceof String) && (!oTrans.Master().getModel().getLastName().equals("")) ? oTrans.Master().getModel().getLastName() : "");
-        String lsFirstName = ((oTrans.Master().getModel().getFirstName() instanceof String) && (!oTrans.Master().getModel().getFirstName().equals("")) ? oTrans.Master().getModel().getFirstName() : "");
-        String lsMiddleName = ((oTrans.Master().getModel().getMiddleName() instanceof String) && (!oTrans.Master().getModel().getMiddleName().equals("")) ? oTrans.Master().getModel().getMiddleName() : "");
-        String lsSuffixName = ((oTrans.Master().getModel().getSuffixName() instanceof String) && (!oTrans.Master().getModel().getSuffixName().equals("")) ? oTrans.Master().getModel().getSuffixName() : "");
-
-        StringBuilder fullName = new StringBuilder();
-        if (lsLastName != null && !lsLastName.trim().isEmpty()) {
-            fullName.append(lsLastName).append(", ");
-        }
-        if (lsFirstName != null && !lsFirstName.trim().isEmpty()) {
-            fullName.append(lsFirstName).append(" ");
-        }
-        if (lsMiddleName != null && !lsMiddleName.trim().isEmpty()) {
-            fullName.append(lsMiddleName).append(" ");
-        }
-        if (lsSuffixName != null && !lsSuffixName.trim().isEmpty()) {
-            fullName.append(lsSuffixName);
-        }
-
-        String lsCompName = fullName.toString().trim();
-        oTrans.Master().getModel().setCompanyName(lsCompName);
-        txtField02.setText(oTrans.Master().getModel().getCompanyName());
-    }
-
-    public void loadMasterAddress() {
-        boolean primaryAddressExists = false;
-        for (int i = 0; i < oTrans.getAddressCount(); i++) {
-            if (oTrans.Address(i).getModel().isPrimaryAddress()) {
-                txtField03.setText(oTrans.getMasterAddress(i));
-                primaryAddressExists = true; // Mark as found
-                break; // Exit the loop since a primary address is found
+    
+    private void txtAddress_KeyPressed(KeyEvent event){
+        TextField txtField = (TextField )event.getSource();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(10, 12));
+        
+        String lsValue = txtField.getText();
+        
+        try {
+            if (event.getCode() == F3 || event.getCode() == ENTER){
+                switch (lnIndex){
+                    case 3: //province
+                        poJSON = poClient.searchProvince(pnAddress, lsValue, false);
+                        
+                        if ("success".equals((String) poJSON.get("result"))){
+                            txtField.setText(poClient.Address(pnAddress).Town().Province().getDescription());
+                            CommonUtils.SetNextFocus(txtField);
+                            event.consume();
+                        }
+                        break;
+                    case 4: //town
+                        poJSON = poClient.searchTown(pnAddress, lsValue, false);
+                        
+                        if ("success".equals((String) poJSON.get("result"))){
+                            txtField.setText(poClient.Address(pnAddress).Town().getDescription());
+                            txtAddress03.setText(poClient.Address(pnAddress).Town().Province().getDescription());
+                            CommonUtils.SetNextFocus(txtField);
+                            event.consume();
+                        }
+                        break;
+                    case 5: //barangay
+                        poJSON = poClient.searchBarangay(pnAddress, lsValue, false);
+                        
+                        if ("success".equals((String) poJSON.get("result"))){
+                            txtField.setText(poClient.Address(pnAddress).Barangay().getBarangayName());
+                            txtAddress04.setText(poClient.Address(pnAddress).Town().getDescription());
+                            txtAddress03.setText(poClient.Address(pnAddress).Town().Province().getDescription());
+                            CommonUtils.SetNextFocus(txtField);
+                            event.consume();
+                        }
+                        break;    
+                }
             }
+        } catch (SQLException | GuanzonException e) {
+            ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
+            System.exit(1);
         }
-        if (!primaryAddressExists) {
-            txtField03.setText("");
+
+        switch (event.getCode()){
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
         }
     }
-
-    final ChangeListener<? super Boolean> address_Focus = (o, ov, nv) -> {
-        JSONObject loJSON = new JSONObject();
-        if (!pbLoaded) {
-            return;
+    
+    private void txtMobile_KeyPressed(KeyEvent event){
+        TextField txtField = (TextField )event.getSource();
+        
+        switch (event.getCode()){
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
         }
-
-        TextField txtPersonalInfo = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(txtPersonalInfo.getId().substring(12, 14));
-        String lsValue = (txtPersonalInfo.getText() == null ? "" : txtPersonalInfo.getText());
-
-        JSONObject jsonObject = new JSONObject();
-        if (lsValue == null) {
-            return;
+    }
+    
+    private void txtEmail_KeyPressed(KeyEvent event){
+        TextField txtField = (TextField )event.getSource();
+        
+        switch (event.getCode()){
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
         }
-        if (!nv) {
-            /*Lost Focus*/
-            lsValue = lsValue.trim();
-            switch (lnIndex) {
-                case 1:
-                    /*House No.*/
-                    loJSON = oTrans.Address(pnAddress).getModel().setHouseNo(lsValue);
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        Assert.fail((String) loJSON.get("message"));
-                    }
-                    loadRecordAddress();
-                    break;
+    }
+    
+    private void txtSocMed_KeyPressed(KeyEvent event){
+        TextField txtField = (TextField )event.getSource();
+        
+        switch (event.getCode()){
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
+        }
+    }
+    
+    private void txtAreaSocMed_KeyPressed(KeyEvent event){
+        TextArea txtField = (TextArea )event.getSource();
+        
+        switch (event.getCode()){
+            case ENTER:
+            case DOWN:
+                CommonUtils.SetNextFocus(txtField);
+                break;
+            case UP:
+                CommonUtils.SetPreviousFocus(txtField);
+        }
+    }
+    
+    final ChangeListener<? super Boolean> txtPersonal_Focus = (o,ov,nv)->{
+        if (!pbLoaded) return;
+        
+        TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(11, 13));
+        
+        String lsValue = txtField.getText();
+        
+        if (lsValue == null) return;
+            
+        
+        if(!nv){//lost focus
+            if (lnIndex == 2 || lnIndex == 3 || lnIndex == 4 || lnIndex == 5){
+                if (!lsValue.isEmpty()) lsValue = CommonUtils.TitleCase(lsValue);
+            }
+            
+            switch(lnIndex){
                 case 2:
-                    /*Address*/
-                    lsValue = autoCapitalize(lsValue);
-                    loJSON = oTrans.Address(pnAddress).getModel().setAddress(lsValue);
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        Assert.fail((String) loJSON.get("message"));
+                    poJSON = poClient.getModel().setLastName(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
-                    loadRecordAddress();
-
+                    
+                    txtField.setText(poClient.getModel().getLastName());
+                    txtField02.setText((poClient.getModel().getLastName() + ", " + poClient.getModel().getFirstName() + " " + poClient.getModel().getSuffixName() + " " + poClient.getModel().getMiddleName()).trim());                    
                     break;
                 case 3:
-                    /*Province*/
-                    //leave blank as it is searchable 
+                    poJSON = poClient.getModel().setFirstName(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getFirstName());
+                    txtField02.setText((poClient.getModel().getLastName() + ", " + poClient.getModel().getFirstName() + " " + poClient.getModel().getSuffixName() + " " + poClient.getModel().getMiddleName()).trim());                    
                     break;
                 case 4:
-                    /*City*/
-                    //leave blank as it is searchable 
-                    if (lsValue.equals("")) {
-                        oTrans.Address(pnAddress).getModel().setTownId(lsValue);
-                        oTrans.Address(pnAddress).getModel().setBarangayId(lsValue);
+                    poJSON = poClient.getModel().setMiddleName(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
-                    loadRecordAddress();
+                    
+                    txtField.setText(poClient.getModel().getMiddleName());
+                    txtField02.setText((poClient.getModel().getLastName() + ", " + poClient.getModel().getFirstName() + " " + poClient.getModel().getSuffixName() + " " + poClient.getModel().getMiddleName()).trim());                    
                     break;
-                case 5:
-                    /*Barangay*/
-                    //leave blank as it is searchable 
-                    loadRecordAddress();
-                    break;
-                case 6:
-                    /*Latitude*/
-                    if (!lsValue.matches("-?\\d+\\.?\\d*")) {
-                        oTrans.Address(pnAddress).getModel().setLatitude("0.0");
-                        loJSON.put("error", lsValue);
-                        loJSON.put("message", "Value must contain numbers only");
-                        oTrans.Address(pnAddress).getModel().setLatitude("0.0");
-                        loadRecordAddress();
-
-                        ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
-                    } else {
-                        loJSON = oTrans.Address(pnAddress).getModel().setLatitude(lsValue);
-                        if ("error".equals((String) loJSON.get("result"))) {
-                            Assert.fail((String) loJSON.get("message"));
-                        }
+                case 5:    
+                    poJSON = poClient.getModel().setSuffixName(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
-                    loadRecordAddress();
+                    
+                    txtField.setText(poClient.getModel().getSuffixName());
+                    txtField02.setText((poClient.getModel().getLastName() + ", " + poClient.getModel().getFirstName() + " " + poClient.getModel().getSuffixName() + " " + poClient.getModel().getMiddleName()).trim());                    
                     break;
-                case 7:
-                    /*Longitud*/
-                    if (!lsValue.matches("-?\\d+\\.?\\d*")) {
-                        loJSON.put("error", lsValue);
-                        loJSON.put("message", "Value must contain numbers only");
-                        oTrans.Address(pnAddress).getModel().setLongitude("0.0");
-                        ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
-                    } else {
-                        loJSON = oTrans.Address(pnAddress).getModel().setLongitude(lsValue);
-                        if ("error".equals((String) loJSON.get("result"))) {
-                            Assert.fail((String) loJSON.get("message"));
-                        }
+                case 12:
+                    poJSON = poClient.getModel().setMothersMaidenName(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
-                    loadRecordAddress();
+                    
+                    txtField.setText(poClient.getModel().getMothersMaidenName());
+                    break;
+                case 13:
+                    poJSON = poClient.getModel().setTaxIdNumber(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getTaxIdNumber());
+                    break;
+                case 14:
+                    poJSON = poClient.getModel().setLTOClientId(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getLTOClientId());
+                    break;
+                case 15:
+                    poJSON = poClient.getModel().setPhNationalId(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.getModel().getPhNationalId());
                     break;
             }
-
-        } else {
-            // txtContact.selectAll();
-        }
-    };
-
-    final ChangeListener<? super Boolean> email_Focus = (o, ov, nv) -> {
-        JSONObject loJSON;
-        if (!pbLoaded) {
-            return;
-        }
-        TextField txtEmail = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(txtEmail.getId().substring(txtEmail.getId().length() - 2));
-        String lsValue = (txtEmail.getText() == null ? "" : txtEmail.getText());
-        JSONObject jsonObject = new JSONObject();
-
-        if (lsValue == null) {
-            return;
-        }
-        if (!nv) {
-            /*Lost Focus*/
-            lsValue = lsValue.trim();
-            switch (lnIndex) {
-                case 1:
-                    /*Email.*/
-                    loJSON = oTrans.Mail(pnEmail).getModel().setMailAddress(lsValue);
-                    if ("error".equalsIgnoreCase(loJSON.get("result").toString())) {
-                        ShowMessageFX.Information((String) loJSON.get("message"), "Computerized Acounting System", pxeModuleName);
-                        mailFields01.clear();
-                    }
-
-                    oTrans.Mail(pnEmail).getModel().setMailAddress(lsValue);
-                    break;
-            }
-            loadRecordEmail();
-
-        } else {
-            // txtContact.selectAll();
-        }
-    };
-
-    final ChangeListener<? super Boolean> socialmedia_Focus = (o, ov, nv) -> {
-        JSONObject loJSON;
-        if (!pbLoaded) {
-            return;
-        }
-
-        TextField txtSocialMedia = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(txtSocialMedia.getId().substring(txtSocialMedia.getId().length() - 2));
-        String lsValue = (txtSocialMedia.getText() == null ? "" : txtSocialMedia.getText());
-        JSONObject jsonObject = new JSONObject();
-
-        if (lsValue == null) {
-            return;
-        }
-        if (!nv) {
-            /*Lost Focus*/
-            lsValue = lsValue.trim();
-            switch (lnIndex) {
-                case 1:
-                    /*Account.*/
-                    loJSON = oTrans.SocialMedia(pnSocialMedia).getModel().setAccount(lsValue);
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        Assert.fail((String) loJSON.get("message"));
-                    }
-                    break;
-            }
-            loadRecordSocialMedia();
-        } else {
-            // txtContact.selectAll();
-        }
-    };
-
-    final ChangeListener<? super Boolean> txtAreaSocialMedia_Focus = (o, ov, nv) -> {
-        if (!pbLoaded) {
-            return;
-        }
-        TextArea txtField = (TextArea) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(txtField.getId().substring(txtField.getId().length() - 2));
-        String lsValue = txtField.getText();
-
-        if (lsValue == null) {
-            return;
-        }
-        JSONObject loJSON;
-        if (!nv) {
-            /*Lost Focus*/
-            lsValue = lsValue.trim();
-            switch (lnIndex) {
-
-                case 2://Remarks
-                    loJSON = oTrans.SocialMedia(pnSocialMedia).getModel().setRemarks(lsValue);
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        System.err.println((String) loJSON.get("message"));
-                        ShowMessageFX.Information(null, pxeModuleName, (String) loJSON.get("message"));
-                        return;
-                    }
-                    break;
-            }
-            loadRecordSocialMedia();
-        } else {
+        } else{//got focus
             txtField.selectAll();
         }
     };
-
-    final ChangeListener<? super Boolean> mobile_Focus = (o, ov, nv) -> {
-        JSONObject loJSON;
-        if (!pbLoaded) {
-            return;
-        }
-        TextField txtMobile = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
-        int lnIndex = Integer.parseInt(txtMobile.getId().substring(txtMobile.getId().length() - 2));
-        String lsValue = (txtMobile.getText() == null ? "" : txtMobile.getText());
-        JSONObject jsonObject = new JSONObject();
-        if (lsValue == null) {
-            return;
-        }
-        if (!nv) {
-            /*Lost Focus*/
-            lsValue = lsValue.trim();
-            switch (lnIndex) {
-                case 1:
-                    /*Mobile No.*/
-                    loJSON = oTrans.Mobile(pnMobile).getModel().setMobileNo(lsValue);
-                    if ("error".equals((String) loJSON.get("result"))) {
-                        Assert.fail((String) loJSON.get("message"));
+    
+    final ChangeListener<? super Boolean> txtAddress_Focus = (o,ov,nv)->{
+        if (!pbLoaded) return;
+        
+        TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(10, 12));
+        
+        String lsValue = txtField.getText();
+        
+        if (lsValue == null) return;
+            
+        if(!nv){//lost focus
+            switch(lnIndex){
+                case 1: //house no
+                    poJSON = poClient.Address(pnAddress).setHouseNo(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
+                    
+                    txtField.setText(poClient.Address(pnAddress).getHouseNo());
+                    break;
+                case 2: //address
+                    poJSON = poClient.Address(pnAddress).setAddress(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(poClient.Address(pnAddress).getAddress());
+                    break;
+                case 6: //latitude
+                    if (!StringHelper.isNumeric(lsValue)) lsValue = "0.00";
+                    
+                    poJSON = poClient.Address(pnAddress).setLatitude(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(String.valueOf(poClient.Address(pnAddress).getLatitude()));
+                    break;
+                case 7: //longitude
+                    if (!StringHelper.isNumeric(lsValue)) lsValue = "0.00";
+                    
+                    poJSON = poClient.Address(pnAddress).setLongitude(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))){
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    
+                    txtField.setText(String.valueOf(poClient.Address(pnAddress).getLongitude()));
                     break;
             }
-            oTrans.Mobile(pnMobile).getModel().setMobileNetwork(MobileNetwork.GLOBE);
-            loadRecordMobile();
-        } else {
-            // txtContact.selectAll();
+            
+            loadRecordAddress();
+        } else{//got focus
+            txtField.selectAll();
         }
     };
-
-    private void InitSocialMediaTextFields() {
-        /*MOBILE INFO FOCUSED PROPERTY*/
-        txtSocial01.focusedProperty().addListener(socialmedia_Focus);
-        txtSocial02.focusedProperty().addListener(txtAreaSocialMedia_Focus);
-    }
-
-    private void InitEmailTextFields() {
-        /*MOBILE INFO FOCUSED PROPERTY*/
-        mailFields01.focusedProperty().addListener(email_Focus);
-    }
-
-    private void InitMobileTextFields() {
-        /*MOBILE INFO FOCUSED PROPERTY*/
-        txtMobile01.focusedProperty().addListener(mobile_Focus);
-    }
-
-    private void InitAddressTextFields() {
-        /*MOBILE INFO FOCUSED PROPERTY*/
-        AddressField01.focusedProperty().addListener(address_Focus);
-        AddressField02.focusedProperty().addListener(address_Focus);
-        AddressField03.focusedProperty().addListener(address_Focus);
-        AddressField04.focusedProperty().addListener(address_Focus);
-        AddressField05.focusedProperty().addListener(address_Focus);
-        AddressField06.focusedProperty().addListener(address_Focus);
-        AddressField07.focusedProperty().addListener(address_Focus);
-
-        AddressField03.setOnKeyPressed(this::address_KeyPressed);
-        AddressField04.setOnKeyPressed(this::address_KeyPressed);
-        AddressField05.setOnKeyPressed(this::address_KeyPressed);
-
-    }
-
-    private void InitPersonalInfoTextFields() {
-        /*MOBILE INFO FOCUSED PROPERTY*/
-        personalinfo02.focusedProperty().addListener(personalinfo_Focus);
-        personalinfo03.focusedProperty().addListener(personalinfo_Focus);
-        personalinfo04.focusedProperty().addListener(personalinfo_Focus);
-        personalinfo05.focusedProperty().addListener(personalinfo_Focus);
-        // personalinfo06.focusedProperty().addListener(personalinfo_Focus);
-        //   personalinfo07.focusedProperty().addListener(personalinfo_Focus);
-        //  personalinfo08.focusedProperty().addListener(personalinfo_Focus);
-        //   personalinfo09.focusedProperty().addListener(personalinfo_Focus);
-        //    personalinfo10.focusedProperty().addListener(personalinfo_Focus);
-        personalinfo11.focusedProperty().addListener(personalinfo_Focus);
-        personalinfo12.focusedProperty().addListener(personalinfo_Focus);
-        personalinfo13.focusedProperty().addListener(personalinfo_Focus);
-        personalinfo14.focusedProperty().addListener(personalinfo_Focus);
-        personalinfo15.focusedProperty().addListener(personalinfo_Focus);
-
-        personalinfo06.setOnKeyPressed(this::personalinfo_KeyPressed);
-        personalinfo08.setOnKeyPressed(this::personalinfo_KeyPressed);
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        personalinfo07.setConverter(new StringConverter<LocalDate>() {
-            @Override
-            public String toString(LocalDate date) {
-
-                return (date != null) ? date.format(formatter) : "";
-            }
-
-            @Override
-            public LocalDate fromString(String string) {
-                return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
-            }
-        });
-
-        personalinfo07.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if (!newValue) { // Lost focus
-                LocalDate selectedDate = personalinfo07.getValue();
-                System.out.println("this is date " + selectedDate);
-                LocalDate localbdate = LocalDate.parse(selectedDate.toString(), formatter);
-                String formattedDate = formatter.format(selectedDate);
-                oTrans.Master().getModel().setBirthDate((SQLUtil.toDate(formattedDate, "yyyy-MM-dd")));
-                personalinfo07.setValue(localbdate);
-            }
-        });
-
-    }
-
-    private void loadRecordPersonalInfo() {
-        try {
-            personalinfo02.setText(oTrans.Master().getModel().getLastName());
-            personalinfo03.setText(oTrans.Master().getModel().getFirstName());
-            personalinfo04.setText(oTrans.Master().getModel().getMiddleName());
-            personalinfo05.setText(oTrans.Master().getModel().getSuffixName());
-
-            Country loCountry = new Country();
-            loCountry.setApplicationDriver(oApp);
-
-            loCountry.setRecordStatus("1");
-            loCountry.initialize();
-            loCountry.openRecord(oTrans.Master().getModel().getCitizenshipId());
-            personalinfo06.setText(loCountry.getModel().getNationality());
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            personalinfo07.setConverter(new StringConverter<LocalDate>() {
-                @Override
-                public String toString(LocalDate date) {
-                    return (date != null) ? date.format(formatter) : "";
-                }
-
-                @Override
-                public LocalDate fromString(String string) {
-                    return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
-                }
-            }
-            );
-
-            if (!oTrans.Master().getModel().getBirthDate().equals("")) {
-                Object lobirthdate = oTrans.Master().getModel().getBirthDate();
-                if (lobirthdate == null) {
-                    // If the object is null, set the DatePicker to the current date
-                    personalinfo07.setValue(LocalDate.now());
-                } else if (lobirthdate instanceof Timestamp) {
-                    // If the object is a Timestamp, convert it to LocalDate
-                    Timestamp timestamp = (Timestamp) lobirthdate;
-                    LocalDate localDate = timestamp.toLocalDateTime().toLocalDate();
-                    personalinfo07.setValue(localDate);
-                } else if (lobirthdate instanceof Date) {
-                    // If the object is a java.sql.Date, convert it to LocalDate
-                    Date sqlDate = (Date) lobirthdate;
-                    LocalDate localDate = sqlDate.toLocalDate();
-                    personalinfo07.setValue(localDate);
-                } else {
-                }
-            }
-
-            if (!oTrans.Master().getModel().getBirthPlaceId().equals("")) {
-
-                TownCity loTownCity = new TownCity();
-                loTownCity.setApplicationDriver(oApp);
-                loTownCity.setRecordStatus("1");
-                loTownCity.initialize();
-                loTownCity.openRecord(oTrans.Master().getModel().getBirthPlaceId());
-
-                Province loProvince = new Province();
-                loProvince.setApplicationDriver(oApp);
-                loProvince.setRecordStatus("1");
-                loProvince.initialize();
-                loProvince.openRecord(loTownCity.getModel().getProvinceId());
-
-                personalinfo08.setText(loTownCity.getModel().getTownName() + ", " + loProvince.getModel().getProvinceName());
-            }
-            int lsGender = Integer.parseInt(oTrans.Master().getModel().getGender());
-            personalinfo09.getSelectionModel().select(lsGender);
-
-            int lsCivilStatus = Integer.parseInt(oTrans.Master().getModel().getCivilStatus());
-            personalinfo10.getSelectionModel().select(lsCivilStatus);
-
-            personalinfo11.setText(oTrans.Master().getModel().getCompanyName());
-            personalinfo12.setText(oTrans.Master().getModel().getMothersMaidenName());
-            personalinfo13.setText(oTrans.Master().getModel().getTaxIdNumber());
-            personalinfo14.setText(oTrans.Master().getModel().getLTOClientId());
-            personalinfo15.setText(oTrans.Master().getModel().getPhNationalId());
-        } catch (SQLException | GuanzonException e) {
-            ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
-        }
-    }
-
-    private void loadRecordAddress() {
-        try {
-            loadMasterAddress();
-
-            int lnCtr;
-            int lnCtr2 = 0;
-            address_data.clear();
-
-            if (oTrans.getAddressCount() >= 0) {
-                for (lnCtr = 0; lnCtr < oTrans.getAddressCount(); lnCtr++) {
-                    TownCity loTownCity = new TownCity();
-                    loTownCity.setApplicationDriver(oApp);
-                    loTownCity.setRecordStatus("1");
-                    loTownCity.initialize();
-                    loTownCity.openRecord(oTrans.Address(lnCtr2).getModel().getTownId());
-
-                    Barangay loBarangay = new Barangay();
-                    try {
-                        loBarangay.setApplicationDriver(oApp);
-                        loBarangay.setRecordStatus("1");
-                        loBarangay.initialize();
-                        loBarangay.openRecord(oTrans.Address(lnCtr2).getModel().getBarangayId());
-                    } catch (Exception e) {
-                    }
-
-                    address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
-                            (String) oTrans.Address(lnCtr2).getModel().getValue("sHouseNox"),
-                            (String) oTrans.Address(lnCtr2).getModel().getValue("sAddressx"),
-                            (String) loTownCity.getModel().getTownName(),
-                            (String) loBarangay.getModel().getBarangayName()
-                    ));
-                    lnCtr2 += 1;
-
-                }
-            }
-
-            if (pnAddress < 0 || pnAddress
-                    >= address_data.size()) {
-                if (!address_data.isEmpty()) {
-                    /* FOCUS ON FIRST ROW */
-                    tblAddress.getSelectionModel().select(0);
-                    tblAddress.getFocusModel().focus(0);
-                    pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
-                    getSelectedAddress();
-
-                }
-            } else {
-                /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
-                tblAddress.getSelectionModel().select(pnAddress);
-                tblAddress.getFocusModel().focus(pnAddress);
-                getSelectedAddress();
-            }
-        } catch (SQLException | GuanzonException e) {
-            ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
-        }
-    }
-
-    private void loadRecordMobile() {
-        int lnCtr2 = 0;
-        mobile_data.clear();
-
-        if (oTrans.getMobileCount() >= 0) {
-            for (int lnCtr = 0; lnCtr < oTrans.getMobileCount(); lnCtr++) {
-                mobile_data.add(new ModelMobile(String.valueOf(lnCtr + 1),
-                        oTrans.Mobile(lnCtr2).getModel().getValue("sMobileNo").toString(),
-                        oTrans.Mobile(lnCtr2).getModel().getValue("cOwnerxxx").toString(),
-                        oTrans.Mobile(lnCtr2).getModel().getValue("cMobileTp").toString()
-                ));
-                lnCtr2 += 1;
-            }
-
-        }
-
-        if (pnMobile < 0 || pnMobile
-                >= mobile_data.size()) {
-            if (!mobile_data.isEmpty()) {
-                /* FOCUS ON FIRST ROW */
-                tblMobile.getSelectionModel().select(0);
-                tblMobile.getFocusModel().focus(0);
-                pnMobile = 0;
-            }
-            getSelectedMobile();
-        } else {
-            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
-            tblMobile.getSelectionModel().select(pnMobile);
-            tblMobile.getFocusModel().focus(pnMobile);
-            getSelectedMobile();
-        }
-    }
-
-    private void loadRecordEmail() {
-        int lnCtr2 = 0;
-        email_data.clear();
-        if (oTrans.getMailCount() >= 0) {
-            for (int lnCtr = 0; lnCtr < oTrans.getMailCount(); lnCtr++) {
-                email_data.add(new ModelEmail(String.valueOf(lnCtr + 1),
-                        oTrans.Mail(lnCtr2).getModel().getValue("cOwnerxxx").toString(),
-                        oTrans.Mail(lnCtr2).getModel().getValue("sEMailAdd").toString()
-                ));
-                lnCtr2 += 1;
-            }
-        }
-        if (pnEmail < 0 || pnEmail
-                >= email_data.size()) {
-            if (!email_data.isEmpty()) {
-                /* FOCUS ON FIRST ROW */
-                tblEmail.getSelectionModel().select(0);
-                tblEmail.getFocusModel().focus(0);
-                pnEmail = tblEmail.getSelectionModel().getSelectedIndex();
-            }
-            getSelectedEmail();
-        } else {
-            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
-            tblEmail.getSelectionModel().select(pnEmail);
-            tblEmail.getFocusModel().focus(pnEmail);
-            getSelectedEmail();
-        }
-    }
-
-    private void loadRecordSocialMedia() {
-
-        int lnCtr2 = 0;
-        socialmedia_data.clear();
-        if (oTrans.getSocMedCount() >= 0) {
-            for (int lnCtr = 0; lnCtr < oTrans.getSocMedCount(); lnCtr++) {
-                socialmedia_data.add(new ModelSocialMedia(String.valueOf(lnCtr + 1),
-                        oTrans.SocialMedia(lnCtr2).getModel().getAccount(),
-                        oTrans.SocialMedia(lnCtr2).getModel().getSocMedType(),
-                        oTrans.SocialMedia(lnCtr2).getModel().getRemarks()
-                ));
-                lnCtr2 += 1;
-            }
-        }
-
-        if (pnSocialMedia < 0 || pnSocialMedia
-                >= socialmedia_data.size()) {
-            if (!socialmedia_data.isEmpty()) {
-                /* FOCUS ON FIRST ROW */
-                tblSocMed.getSelectionModel().select(0);
-                tblSocMed.getFocusModel().focus(0);
-                pnSocialMedia = tblSocMed.getSelectionModel().getSelectedIndex();
-            }
-            getSelectedSocialMedia();
-        } else {
-            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
-            tblSocMed.getSelectionModel().select(pnSocialMedia);
-            tblSocMed.getFocusModel().focus(pnSocialMedia);
-            getSelectedSocialMedia();
-
-        }
-
-    }
-
-    private void getSelectedSocialMedia() {
-        int lsSocMedType = 0;
-        if (oTrans.getSocMedCount() > 0) {
-            lsSocMedType = Integer.parseInt(oTrans.SocialMedia(pnSocialMedia).getModel().getSocMedType());
-            cmbSocMed01.getSelectionModel().select(lsSocMedType);
-
-            txtSocial01.setText(oTrans.SocialMedia(pnSocialMedia).getModel().getAccount());
-            txtSocial02.setText(oTrans.SocialMedia(pnSocialMedia).getModel().getRemarks());
-            cbSocMed01.setSelected((String) oTrans.SocialMedia(pnSocialMedia).getModel().getRecordStatus() == "1" ? true : false);
-            
-        }
-    }
-
-    private void getSelectedAddress() {
-        try {
-            if (oTrans.getAddressCount() > 0) {
-                AddressField01.setText(oTrans.Address(pnAddress).getModel().getHouseNo());
-                AddressField02.setText(oTrans.Address(pnAddress).getModel().getAddress());
-
-                Province loProvince = new Province();
-                loProvince.setApplicationDriver(oApp);
-                loProvince.setRecordStatus("1");
-                loProvince.initialize();
-                loProvince.openRecord(oTrans.Address(pnAddress).getModel().Town().Province().getProvinceId());
-
-                AddressField03.setText(loProvince.getModel().getProvinceName());
-
-                TownCity loTownCity = new TownCity();
-                loTownCity.setApplicationDriver(oApp);
-                loTownCity.setRecordStatus("1");
-                loTownCity.initialize();
-                loTownCity.openRecord(oTrans.Address(pnAddress).getModel().getTownId());
-
-                Barangay loBarangay = new Barangay();
-                loBarangay.setApplicationDriver(oApp);
-                loBarangay.setRecordStatus("1");
-                loBarangay.initialize();
-                loBarangay.openRecord(oTrans.Address(pnAddress).getModel().getBarangayId());
-
-                AddressField04.setText((String) loTownCity.getModel().getTownName());
-                AddressField05.setText(loBarangay.getModel().getBarangayName());
-                AddressField06.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLatitude()));
-                AddressField07.setText(String.valueOf(oTrans.Address(pnAddress).getModel().getLongitude()));
-
-                cbAddress01.setSelected(((String) oTrans.Address(pnAddress).getModel().getRecordStatus() == "1") ? true : false);
-                cbAddress02.setSelected(oTrans.Address(pnAddress).getModel().isPrimaryAddress());
-                cbAddress03.setSelected(oTrans.Address(pnAddress).getModel().isOfficeAddress());
-                cbAddress04.setSelected(oTrans.Address(pnAddress).getModel().isProvinceAddress());
-                cbAddress05.setSelected(oTrans.Address(pnAddress).getModel().isBillingAddress());
-                cbAddress06.setSelected(oTrans.Address(pnAddress).getModel().isShippingAddress());
-                cbAddress07.setSelected(oTrans.Address(pnAddress).getModel().isCurrentAddress());
-                cbAddress08.setSelected(oTrans.Address(pnAddress).getModel().isLTMSAddress());
-            }
-        } catch (SQLException | GuanzonException e) {
-            ShowMessageFX.Information(e.getMessage(), "Computerized Acounting System", pxeModuleName);
-        }
+    
+    final ChangeListener<? super Boolean> txtMobile_Focus = (o,ov,nv)->{
+        if (!pbLoaded) return;
         
-    }
-
-    private void getSelectedEmail() {
-        if (oTrans.getMailCount() > 0) {
-            mailFields01.setText(oTrans.Mail(pnEmail).getModel().getMailAddress());
-
-            int lsOwnerType = 0;
-            lsOwnerType = Integer.parseInt(oTrans.Mail(pnEmail).getModel().getOwnershipType());
-            cbEmail01.setSelected(oTrans.Mail(pnEmail).getModel().getRecordStatus() == "1" ? true : false);
-            cbEmail02.setSelected(oTrans.Mail(pnEmail).getModel().isPrimaryEmail());
-            cmbEmail01.getSelectionModel().select(lsOwnerType);
+        TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(9, 11));
+        
+        String lsValue = txtField.getText();
+        
+        if (lsValue == null) return;
             
-        }
-    }
-
-    private void getSelectedMobile() {
-        if (oTrans.getMobileCount() > 0) {
-            txtMobile01.setText(oTrans.Mobile(pnMobile).getModel().getMobileNo());
-            int lsOwnerType = 0;
-            int lsMobileType = 0;
-            try {
-                lsOwnerType = Integer.parseInt(oTrans.Mobile(pnMobile).getModel().getOwnershipType());
-                lsMobileType = Integer.parseInt(oTrans.Mobile(pnMobile).getModel().getMobileType());
-            } catch (Exception e) {
+        if(!nv){ //lost focus
+            switch(lnIndex){
+                case 1: //mobile
+                    if (lsValue.trim().isEmpty()) return;
+                    
+                    if (!StringHelper.isNumeric(lsValue)) {
+                        ShowMessageFX.Error(getStage(), "Mobile must be numeric.", "Warning", MODULE);
+                    } else{
+                        poJSON = poClient.Mobile(pnMobile).setMobileNo(lsValue);
+                    
+                        if (!"success".equals((String) poJSON.get("result"))){
+                            ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                        }
+                    }
+                                        
+                    txtField.setText(String.valueOf(poClient.Mobile(pnMobile).getMobileNo()));
             }
             
-            try {
-                cmbMobile01.getSelectionModel().select(lsOwnerType);
-                cmbMobile02.getSelectionModel().select(lsMobileType);
-            } catch (Exception e) {
-            }
-            cbMobileNo01.setSelected(((String) oTrans.Mobile(pnMobile).getModel().getRecordStatus() == "1") ? true : false);
-
-            cbMobileNo02.setSelected(oTrans.Mobile(pnMobile).getModel().isPrimaryMobile());
+            loadRecordMobile();
+        } else{ //got focus
+            txtField.selectAll();
         }
-    }
-
-    private void initAddressCheckbox() {
-        CheckBox[] cbAddressCheckboxes = {cbAddress01, cbAddress02, cbAddress03, cbAddress04, cbAddress05, cbAddress06, cbAddress07, cbAddress08};
-
-        for (int i = 0; i < cbAddressCheckboxes.length; i++) {
-            final CheckBox checkbox = cbAddressCheckboxes[i]; // Capture the current checkbox
-
-            checkbox.setOnMouseClicked(event -> {
-                JSONObject loJSON;
-                String id = checkbox.getId();
-                String numberPart = id.substring(id.length() - 2);
-
-                try {
-                    int number = Integer.parseInt(numberPart);
-                    switch (number) {
-                        case 1: //
-                            System.out.println("Checkbox 01 selected");
-
-                            loJSON = oTrans.Address(pnAddress).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
-                            }
-                            getSelectedAddress();
-                            break;
-                        case 2: // Primary Address || Restricted to 1 Primary Address
-                            System.out.println("" + oTrans.Address(pnAddress).getModel().getAddressId());
-                            boolean primaryAddressExists = false;
-                            for (int in = 0; in < oTrans.getAddressCount(); in++) {
-                                if (oTrans.Address(in).getModel().isPrimaryAddress()) {
-                                    primaryAddressExists = true;
-                                    if (oTrans.Address(in).getModel().getAddressId() == oTrans.Address(pnMobile).getModel().getAddressId()) {
-                                        if (ShowMessageFX.YesNo("There will be no primary address, proceed? \n", "Computerized Acounting System", pxeModuleName)) {
-                                            primaryAddressExists = false;
-                                            oTrans.Address(in).getModel().isPrimaryAddress(false);
-                                        }
-                                    } else {
-                                        if (ShowMessageFX.YesNo("Do you want to change the current primary address? \n", "Computerized Acounting System", pxeModuleName)) {
-                                            primaryAddressExists = false;
-                                            oTrans.Address(in).getModel().isPrimaryAddress(false);
-                                        }
-
-                                    }
-                                    break;
-                                }
-                            }
-                            if (!primaryAddressExists) {
-                                loJSON = oTrans.Address(pnMobile).getModel().isPrimaryAddress(checkbox.isSelected());
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                            }
-                            
-                            break;
-                        case 3: //Office
-                            loJSON = oTrans.Address(pnAddress).getModel().isOfficeAddress(checkbox.isSelected());
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
-                            }
-                            break;
-                        case 4: // Province
-                            loJSON = oTrans.Address(pnAddress).getModel().isProvinceAddress(checkbox.isSelected());
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
-                            }
-                            break;
-                        case 5: // Billing
-                            loJSON = oTrans.Address(pnAddress).getModel().isBillingAddress(checkbox.isSelected());
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
-                            }
-                            break;
-                        case 6: // Shipping
-                            loJSON = oTrans.Address(pnAddress).getModel().isShippingAddress(checkbox.isSelected());
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
-                            }
-                            break;
-                        case 7: // Current
-                            loJSON = oTrans.Address(pnAddress).getModel().isCurrentAddress(checkbox.isSelected());
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
-                            }
-                            break;
-                        case 8: // LTMS
-                            loJSON = oTrans.Address(pnAddress).getModel().isLTMSAddress(checkbox.isSelected());
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
-                            }
-                            break;
-                        default:
-                            System.out.println("Unknown checkbox selected");
-                            break;
+    };
+    
+    final ChangeListener<? super Boolean> txtEmail_Focus = (o,ov,nv)->{
+        if (!pbLoaded) return;
+        
+        TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(8, 10));
+        
+        String lsValue = txtField.getText();
+        
+        if (lsValue == null) return;
+            
+        if(!nv){//lost focus
+            switch(lnIndex){
+                case 1: //email address
+                    poJSON = poClient.Mail(pnEmail).setMailAddress(lsValue);
+                    if ("error".equalsIgnoreCase(poJSON.get("result").toString())) {
+                        ShowMessageFX.Information(getStage(), (String) poJSON.get("message"), "Computerized Acounting System", MODULE);
                     }
-                    loadRecordAddress();
-                } catch (NumberFormatException e) {
-                }
 
+                    txtField.setText(String.valueOf(poClient.Mail(pnEmail).getMailAddress()));
+                    break;
             }
-            );
+            
+            loadRecordEmail();
+        } else{//got focus
+            txtField.selectAll();
         }
-    }
+    };
+    
+    final ChangeListener<? super Boolean> txtSocmed_Focus = (o,ov,nv)->{
+        if (!pbLoaded) return;
+        
+        TextField txtField = (TextField)((ReadOnlyBooleanPropertyBase)o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(9, 11));
+        
+        String lsValue = txtField.getText();
+        
+        if (lsValue == null) return;
 
-    private void initEmailCheckbox() {
-        CheckBox[] cbEmailCheckboxes = {cbEmail01, cbEmail02};
-
-        for (int i = 0; i < cbEmailCheckboxes.length; i++) {
-            final CheckBox checkbox = cbEmailCheckboxes[i]; // Capture the current checkbox
-            checkbox.setOnMouseClicked(event -> {
-                JSONObject loJSON;
-                String id = checkbox.getId();
-                String numberPart = id.substring(id.length() - 2);
-
-                try {
-                    int number = Integer.parseInt(numberPart);
-                    switch (number) {
-                        case 1:
-                            loJSON = oTrans.Mail(pnEmail).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
-                            }
-                            break;
-                        case 2: // Primary Email
-                            boolean primaryEmailExists = false;
-                            for (int in = 0; in < oTrans.getMailCount(); in++) {
-                                if (oTrans.Mail(in).getModel().isPrimaryEmail()) {
-                                    primaryEmailExists = true;
-                                    if (oTrans.Mail(in).getModel().getEmailId() == oTrans.Mail(pnEmail).getModel().getEmailId()) {
-                                        if (ShowMessageFX.YesNo("There will be no primary email, proceed? \n", "Computerized Acounting System", pxeModuleName)) {
-                                            primaryEmailExists = false;
-                                            oTrans.Mail(in).getModel().isPrimaryEmail(false);
-                                        }
-
-                                    } else {
-                                        if (ShowMessageFX.YesNo("Do you want to change the current primary email? \n", "Computerized Acounting System", pxeModuleName)) {
-                                            primaryEmailExists = false;
-                                            oTrans.Mail(in).getModel().isPrimaryEmail(false);
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-                            if (!primaryEmailExists) {
-                                loJSON = oTrans.Mail(pnEmail).getModel().isPrimaryEmail(checkbox.isSelected());
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                            }
-                            break;
-                        default:
-                            System.out.println("Unknown checkbox selected");
-                            break;
+        if(!nv){//lost focus
+            switch(lnIndex){
+                case 1:
+                    poJSON = poClient.SocMed(pnSocmed).setAccount(lsValue);
+                    if ("error".equals((String) poJSON.get("result"))) {
+                        ShowMessageFX.Information(getStage(), (String) poJSON.get("message"), "Computerized Acounting System", MODULE);
+                        return;
                     }
-                    getSelectedEmail();
-                } catch (NumberFormatException e) {
-                }
-
-            });
+                    
+                    txtField.setText(String.valueOf(poClient.SocMed(pnSocmed).getAccount()));
+                    break;
+            }
+            
+            loadRecordSocialMedia();
+        } else{//got focus
+            txtField.selectAll();
         }
-    }
-
-    private void initSocialMediaCheckbox() {
-        CheckBox[] cbSocMedCheckboxes = {cbSocMed01};
-        for (int i = 0; i < cbSocMedCheckboxes.length; i++) {
-            final CheckBox checkbox = cbSocMedCheckboxes[i]; // Capture the current checkbox
-            checkbox.setOnMouseClicked(event -> {
-                String id = checkbox.getId();
-
-                String numberPart = id.substring(id.length() - 2);
-                try {
-                    int number = Integer.parseInt(numberPart);
-                    switch (number) {
-                        case 1:
-                            System.out.println("Checkbox 01 selected");
-                            oTrans.SocialMedia(pnSocialMedia).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
-                            getSelectedSocialMedia();
-                            break;
-                        default:
-                            System.out.println("Unknown checkbox selected");
-                            break;
+    };
+    
+    final ChangeListener<? super Boolean> txtAreaSocmed_Focus = (o,ov,nv)->{
+        if (!pbLoaded) return;
+        
+        TextArea txtField = (TextArea)((ReadOnlyBooleanPropertyBase)o).getBean();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(9, 11));
+        
+        String lsValue = txtField.getText();
+        
+        if (lsValue == null) return;
+            
+        if(!nv){//lost focus
+            switch(lnIndex){
+                case 2:
+                    poJSON = poClient.SocMed(pnSocmed).setRemarks(lsValue.trim());
+                    if ("error".equals((String) poJSON.get("result"))) {
+                        ShowMessageFX.Information(getStage(), (String) poJSON.get("message"), "Computerized Acounting System", MODULE);
+                        return;
                     }
-                } catch (NumberFormatException e) {
-                }
-
-            });
+                    
+                    txtField.setText(String.valueOf(poClient.SocMed(pnSocmed).getRemarks()));
+                    break;
+            }
+            
+            loadRecordSocialMedia();
+        } else{//got focus
+            txtField.selectAll();
         }
-    }
-
-    private void initMobileCheckbox() {
-        CheckBox[] cbMobileCheckboxes = {cbMobileNo01, cbMobileNo02};
-        for (int i = 0; i < cbMobileCheckboxes.length; i++) {
-            final CheckBox checkbox = cbMobileCheckboxes[i]; // Capture the current checkbox
-            checkbox.setOnMouseClicked(event -> {
-                JSONObject loJSON;
-                String id = checkbox.getId();
-                String numberPart = id.substring(id.length() - 2);
-                try {
-                    int number = Integer.parseInt(numberPart);
-                    switch (number) {
-                        case 1:
-                            loJSON = oTrans.Mobile(pnMobile).getModel().setRecordStatus(checkbox.isSelected() ? "1" : "0");
-                            if ("error".equals((String) loJSON.get("result"))) {
-                                Assert.fail((String) loJSON.get("message"));
-                            }
-                            break;
-                        case 2: // Primary Mobile
-                            boolean primaryMobileExists = false;
-                            for (int in = 0; in < oTrans.getMobileCount(); in++) {
-                                if (oTrans.Mobile(in).getModel().isPrimaryMobile()) {
-                                    primaryMobileExists = true;
-                                    if (oTrans.Mobile(in).getModel().getMobileId() == oTrans.Mobile(pnMobile).getModel().getMobileId()) {
-                                        if (ShowMessageFX.YesNo("There will be no primary mobile, proceed? \n", "Computerized Acounting System", pxeModuleName)) {
-                                            primaryMobileExists = false;
-                                            oTrans.Mobile(in).getModel().isPrimaryMobile(false);
-                                        }
-                                    } else {
-                                        if (ShowMessageFX.YesNo("Do you want to change the current primary mobile? \n", "Computerized Acounting System", pxeModuleName)) {
-                                            primaryMobileExists = false;
-                                            oTrans.Mobile(in).getModel().isPrimaryMobile(false);
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-                            if (!primaryMobileExists) {
-                                loJSON = oTrans.Mobile(pnMobile).getModel().isPrimaryMobile(checkbox.isSelected());
-                                if ("error".equals((String) loJSON.get("result"))) {
-                                    Assert.fail((String) loJSON.get("message"));
-                                }
-                            }
-
-                            break;
-                        default:
-                            System.out.println("Unknown checkbox selected");
-                            break;
-                    }
-                    getSelectedMobile();
-
-                } catch (NumberFormatException e) {
-                }
-            });
-        }
-    }
-
-    public void initTableOnClick() {
-        tblAddress.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 1) {  // Detect single click (or use another condition for double click)
-                pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
-                if (pnAddress >= 0) {
-                    getSelectedAddress();
-                }
-            }
-        });
-        tblMobile.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 1) {  // Detect single click (or use another condition for double click)
-                pnMobile = tblMobile.getSelectionModel().getSelectedIndex();
-                getSelectedMobile();
-            }
-        });
-       
-        tblEmail.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 1) {  // Detect single click (or use another condition for double click)
-                pnEmail = tblEmail.getSelectionModel().getSelectedIndex();
-                getSelectedEmail();
-            }
-        });
-
-        tblSocMed.setOnMouseClicked(event -> {
-            if (event.getClickCount() == 1) {
-                pnSocialMedia = tblSocMed.getSelectionModel().getSelectedIndex();
-            }
-        });
-    }
-
+    };
+    
     public void initAddressGrid() {
+        address_data.clear();
+        
         indexAddress01.setStyle("-fx-alignment: CENTER;");
         indexAddress02.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
         indexAddress03.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
@@ -1992,10 +906,11 @@ public class IndividualNewController implements Initializable {
         tblAddress.setItems(address_data);
         tblAddress.getSelectionModel().select(pnAddress + 1);
         tblAddress.autosize();
-        
     }
-
+    
     private void initMobileGrid() {
+        mobile_data.clear();
+        
         indexMobileNo01.setStyle("-fx-alignment: CENTER;");
         indexMobileNo02.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
         indexMobileNo03.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
@@ -2017,10 +932,12 @@ public class IndividualNewController implements Initializable {
     }
 
     private void initEmailGrid() {
+        email_data.clear();
+        
         indexEmail01.setStyle("-fx-alignment: CENTER;");
         indexEmail02.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
         indexEmail03.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
-//        
+        
         indexEmail01.setCellValueFactory(new PropertyValueFactory<>("index01"));
         indexEmail02.setCellValueFactory(new PropertyValueFactory<>("index02"));
         indexEmail03.setCellValueFactory(new PropertyValueFactory<>("index03"));
@@ -2035,6 +952,8 @@ public class IndividualNewController implements Initializable {
     }
 
     private void initSocialMediaGrid() {
+        socialmedia_data.clear();
+        
         indexSocMed01.setStyle("-fx-alignment: CENTER;");
         indexSocMed02.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
         indexSocMed03.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
@@ -2051,223 +970,805 @@ public class IndividualNewController implements Initializable {
             });
         });
         tblSocMed.setItems(socialmedia_data);
-        tblMobile.getSelectionModel().select(pnSocialMedia + 1);
+        tblMobile.getSelectionModel().select(pnSocmed + 1);
         tblSocMed.autosize();
     }
+    
+    private void initFields(){
+        txtPersonal02.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal03.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal04.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal05.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal06.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal08.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal11.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal12.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal13.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal14.focusedProperty().addListener(txtPersonal_Focus);
+        txtPersonal15.focusedProperty().addListener(txtPersonal_Focus);
 
-    /**
-     * Initializes the controller class.
-     */
-    public void initComboboxes() {
-        // Personal info
-        oTrans.Master().getModel().setGender("0");
-        oTrans.Master().getModel().setCivilStatus("0");
+        txtPersonal02.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal03.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal04.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal05.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal06.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal08.setOnKeyPressed(this::txtPersonal_KeyPressed);            
+        txtPersonal11.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal12.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal13.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal14.setOnKeyPressed(this::txtPersonal_KeyPressed);
+        txtPersonal15.setOnKeyPressed(this::txtPersonal_KeyPressed);
 
-        personalinfo09.setItems(gender);
-        personalinfo09.setOnAction(event -> {
-            String selectedItem = String.valueOf(personalinfo09.getSelectionModel().getSelectedIndex());
-            oTrans.Master().getModel().setGender(selectedItem);
+        txtAddress01.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress02.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress03.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress04.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress05.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress06.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress07.focusedProperty().addListener(txtAddress_Focus);
+        
+        txtAddress01.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress02.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress03.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress04.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress05.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress06.setOnKeyPressed(this::txtAddress_KeyPressed);
+        txtAddress07.setOnKeyPressed(this::txtAddress_KeyPressed);
 
-            personalinfo09.setValue(personalinfo09.getValue());
-        });
+        txtMobile01.setOnKeyPressed(this::txtMobile_KeyPressed);
+        txtMobile01.focusedProperty().addListener(txtMobile_Focus);
+        
+        txtEmail01.setOnKeyPressed(this::txtEmail_KeyPressed);
+        txtEmail01.focusedProperty().addListener(txtEmail_Focus);
+        
+        txtSocial01.setOnKeyPressed(this::txtSocMed_KeyPressed);
+        txtSocial02.setOnKeyPressed(this::txtAreaSocMed_KeyPressed);
+        txtSocial01.focusedProperty().addListener(txtSocmed_Focus);
+        txtSocial02.focusedProperty().addListener(txtAreaSocmed_Focus);
 
-        personalinfo10.setItems(civilstatus);
-        personalinfo10.setOnAction(event -> {
-            String selectedItem = String.valueOf(personalinfo10.getSelectionModel().getSelectedIndex());
-            oTrans.Master().getModel().setCivilStatus(selectedItem);
-            personalinfo10.setValue(personalinfo10.getValue());
-        });
-        personalinfo09.getSelectionModel().select(0);
-        personalinfo10.getSelectionModel().select(0);
+        btnExit.setOnAction(this::cmdButton_Click);
+        btnCancel.setOnAction(this::cmdButton_Click);
+        btnSave.setOnAction(this::cmdButton_Click);
+        btnAddAddress.setOnAction(this::cmdButton_Click);
+        btnDelAddress.setOnAction(this::cmdButton_Click);
+        btnAddMobile.setOnAction(this::cmdButton_Click);
+        btnDelMobile.setOnAction(this::cmdButton_Click);
+        btnAddEmail.setOnAction(this::cmdButton_Click);
+        btnDelEmail.setOnAction(this::cmdButton_Click);
+        btnAddSocMed.setOnAction(this::cmdButton_Click);
+        btnDelSocMed.setOnAction(this::cmdButton_Click);
 
-        // Mobile
+        tblAddress.setOnMouseClicked(this::address_Clicked);
+        tblMobile.setOnMouseClicked(this::mobile_Clicked);
+        tblEmail.setOnMouseClicked(this::email_Clicked);
+        tblSocMed.setOnMouseClicked(this::socmed_Clicked);  
+        
+        cmbPersonal09.setItems(gender);
+        cmbPersonal10.setItems(civilstatus);
         cmbMobile01.setItems(mobileOwn);
-        cmbMobile01.setOnAction(event -> {
-            int selectedIndex = cmbMobile01.getSelectionModel().getSelectedIndex();
-            oTrans.Mobile(pnMobile).getModel().setOwnershipType(String.valueOf(selectedIndex));
-            cmbMobile01.getSelectionModel().select(selectedIndex);
+        cmbMobile02.setItems(mobileType);
+        cmbEmail01.setItems(emailOwn);
+        cmbSocMed01.setItems(socialTyp);
+        
+        cmbPersonal09.setOnAction(event -> {            
+            poJSON = poClient.getModel().setGender(String.valueOf(cmbPersonal09.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+        });
+
+        cmbPersonal10.setOnAction(event -> {            
+            poJSON = poClient.getModel().setCivilStatus(String.valueOf(cmbPersonal10.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+        });
+        
+        cmbMobile01.setOnAction(event -> {            
+            poJSON = poClient.Mobile(pnMobile).setOwnershipType(String.valueOf(cmbMobile01.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+            
             loadRecordMobile();
         });
         
-        cmbMobile02.setItems(mobileType);
-        cmbMobile02.setOnAction(event -> {
-            int selectedIndex = cmbMobile02.getSelectionModel().getSelectedIndex();
-            String selectedItem = (String) cmbMobile02.getValue();
-            oTrans.Mobile(pnMobile).getModel().setMobileType(String.valueOf(selectedIndex));
-            cmbMobile02.getSelectionModel().select(selectedIndex);
-
+        cmbMobile02.setOnAction(event -> {            
+            poJSON = poClient.Mobile(pnMobile).setMobileType(String.valueOf(cmbMobile02.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+            
             loadRecordMobile();
         });
-
-        // Email
-        cmbEmail01.setItems(emailOwn);
-        cmbEmail01.setOnAction(event -> {
-            int selectedIndex = cmbEmail01.getSelectionModel().getSelectedIndex();
-            oTrans.Mail(pnEmail).getModel().setOwnershipType(String.valueOf(selectedIndex));
-            cmbEmail01.getSelectionModel().select(selectedIndex);
+        
+        cmbEmail01.setOnAction(event -> {            
+            poJSON = poClient.Mail(pnEmail).setOwnershipType(String.valueOf(cmbEmail01.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+            
             loadRecordEmail();
         });
         
-        // Social Media
-        cmbSocMed01.setItems(socialTyp);
-        cmbSocMed01.setOnAction(event -> {
-            int selectedIndex = cmbSocMed01.getSelectionModel().getSelectedIndex();
-            oTrans.SocialMedia(pnSocialMedia).getModel().setSocMedType(String.valueOf(selectedIndex));
-            cmbSocMed01.getSelectionModel().select(selectedIndex);
+        cmbSocMed01.setOnAction(event -> {            
+            poJSON = poClient.SocMed(pnSocmed).setSocMedType(String.valueOf(cmbSocMed01.getSelectionModel().getSelectedIndex()));
+            
+            if(!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+            }
+            
             loadRecordSocialMedia();
         });
-
-    }
-    public void initTextFieldsAutoFormat(){
-        TextField[] textFields = {personalinfo15, personalinfo14, personalinfo13};
-        for (int i = 0; i < textFields.length; i++) {
-            TextField textField = textFields[i];
-
-            textField.setOnKeyTyped((KeyEvent e) -> {
-                if (e.isControlDown() || e.isMetaDown()) {
-                    return;
+        
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        txtPersonal07.setConverter(new StringConverter<LocalDate>() {
+                @Override
+                public String toString(LocalDate date) {
+                    return (date != null) ? date.format(formatter) : "";
                 }
-                String text = textField.getText().replaceAll("[^\\d]", "");
-                if (textField.getId().equals("personalinfo13")) {
-                    if (text.length() >= 9) {
-                        e.consume();  // Prevent additional input beyond 9 digits
-                        text = text.substring(0, 9);
-                    }
-                } else {
-                    if (text.length() >= 11) {
-                        e.consume();  // Prevent additional input beyond 9 digits
-                        text = text.substring(0, 11);
-                    }
-                }
-                textField.setText(formatInput(text));  // Format and set the text
-                textField.positionCaret(textField.getText().length()); // Move cursor to end
-            });
-        }
-    }
 
-   private String formatInput(String digits) {
-        StringBuilder formatted = new StringBuilder();
-        for (int i = 0; i < digits.length(); i++) {
-            if (i == 3 || i == 5) {
-                formatted.append("-");  // Insert dash after 3rd and 5th digits
+                @Override
+                public LocalDate fromString(String string) {
+                    return (string != null && !string.isEmpty()) ? LocalDate.parse(string, formatter) : null;
+                }
+        });
+        
+        txtPersonal07.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) { // Lost focus
+                LocalDate selectedDate = txtPersonal07.getValue();
+                System.out.println("this is date " + selectedDate);
+                LocalDate localbdate = LocalDate.parse(selectedDate.toString(), formatter);
+                String formattedDate = formatter.format(selectedDate);
+                poClient.getModel().setBirthDate((SQLUtil.toDate(formattedDate, "yyyy-MM-dd")));
+                txtPersonal07.setValue(localbdate);
             }
-            formatted.append(digits.charAt(i));
-        }
-        return formatted.toString();
+        });
+        
+        initAddressCheckbox();
+        initMobileCheckbox();
+        initEmailCheckbox();
+        initSocialMediaCheckbox();
+        
+        clearfields();
     }
     
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        System.setProperty("sys.default.path.temp", "D:/GGC_Maven_Systems/temp/");
-        System.setProperty("sys.default.path.metadata", "D:/GGC_Maven_Systems/config/metadata/new/");
-        boolean[] booleanArray = {true, true, true, true};
-        oApp = MiscUtil.Connect();
+    private void clearfields(){
+        txtField01.setText("");
+        txtField02.setText("");
+        txtField03.setText("");
         
-        oTrans = new Client(oApp, "", null);
+        txtPersonal02.setText("");
+        txtPersonal03.setText("");
+        txtPersonal04.setText("");
+        txtPersonal05.setText("");
+        txtPersonal06.setText("");
+        txtPersonal07.setValue(LocalDate.now());
+        txtPersonal08.setText("");
+        txtPersonal11.setText("");
+        txtPersonal12.setText("");
+        txtPersonal13.setText("");
+        txtPersonal14.setText("");
+        txtPersonal15.setText("");
+        
+        txtAddress01.setText("");
+        txtAddress02.setText("");
+        txtAddress03.setText("");
+        txtAddress04.setText("");
+        txtAddress05.setText("");
+        txtAddress06.setText("0.00");
+        txtAddress07.setText("0.00");
+        
+        cbAddress01.selectedProperty().set(false);
+        cbAddress02.selectedProperty().set(false);
+        cbAddress03.selectedProperty().set(false);
+        cbAddress04.selectedProperty().set(false);
+        cbAddress05.selectedProperty().set(false);
+        cbAddress06.selectedProperty().set(false);
+        cbAddress07.selectedProperty().set(false);
+        cbAddress08.selectedProperty().set(false);
+        
+        txtMobile01.setText("");
+        cbMobileNo01.selectedProperty().set(false);
+        cbMobileNo02.selectedProperty().set(false);
+        
+        txtEmail01.setText("");
+        cbEmail01.selectedProperty().set(false);
+        cbEmail02.selectedProperty().set(false);
+        
+        txtSocial01.setText("");
+        txtSocial02.setText("");
+        
+        pnAddress = 0;
+        pnMobile = 0;
+        pnEmail = 0;
+        pnSocmed = 0;
+        
+        initAddressGrid();
+        initMobileGrid();
+        initEmailGrid();
+        initSocialMediaGrid();
+    }
+    
+    private void loadRecord(){
+        try {
+            pnEditMode = psClientID.isEmpty() ? EditMode.ADDNEW : EditMode.UPDATE;
+        
+            if (pnEditMode == EditMode.ADDNEW){
+                poJSON =  poClient.newRecord();
+                
+                anchorPersonal.setDisable(false);
+                gridAddress.setDisable(false);
+                gridMobile.setDisable(false);
+                gridEmail.setDisable(false);
+                gridSocMed.setDisable(false);
+                
+                lblClientStatus.setText("***NEW CUSTOMER");
+            } else {
+                poJSON = poClient.openClientRecord(psClientID);
+                
+                anchorPersonal.setDisable(true);
+                gridAddress.setDisable(true);
+                gridMobile.setDisable(true);
+                gridEmail.setDisable(true);
+                gridSocMed.setDisable(true);
+                
+                lblClientStatus.setText("***REPEAT CUSTOMER");
+            }
+                
+            if (!"success".equals((String) poJSON.get("result"))){
+                ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Error", MODULE);
+                System.exit(1);
+            }
+            
+            txtField01.setText(poClient.getModel().getClientId());            
+            txtField02.setText(poClient.getModel().getCompanyName());
+            txtField03.setText(""); //todo: put full address here      
+            
+            cmbPersonal09.getSelectionModel().selectFirst();
+            poClient.getModel().setGender(String.valueOf(cmbPersonal09.getSelectionModel().getSelectedIndex()));
 
-        //Reference in GUI_IndividualNew for new record or open & update record
-        Boolean lbOption = true;
-        if (pnEditMode == EditMode.UPDATE) {
-            lbOption = false;
+            cmbPersonal10.getSelectionModel().selectFirst();
+            poClient.getModel().setCivilStatus(String.valueOf(cmbPersonal10.getSelectionModel().getSelectedIndex()));
+
+            cmbMobile01.getSelectionModel().selectFirst();
+            poClient.Mobile(pnMobile).setOwnershipType(String.valueOf(cmbMobile01.getSelectionModel().getSelectedIndex()));
+
+            cmbMobile02.getSelectionModel().selectFirst();
+            poClient.Mobile(pnMobile).setMobileType(String.valueOf(cmbMobile02.getSelectionModel().getSelectedIndex()));
+
+            cmbEmail01.getSelectionModel().selectFirst();
+            poClient.Mail(pnEmail).setOwnershipType(String.valueOf(cmbEmail01.getSelectionModel().getSelectedIndex()));
+
+            cmbSocMed01.getSelectionModel().selectFirst();
+            poClient.SocMed(pnSocmed).setSocMedType(String.valueOf(cmbSocMed01.getSelectionModel().getSelectedIndex()));
+
+            loadRecordPersonalInfo();
+            loadRecordAddress();
+            loadRecordMobile();
+            loadRecordEmail();
+            loadRecordSocialMedia();
+            
+            if (pnEditMode == EditMode.ADDNEW){
+                txtPersonal02.requestFocus();
+                txtPersonal02.selectAll();
+            } else {
+                btnSave.requestFocus();
+            }
+        } catch (SQLException | GuanzonException | CloneNotSupportedException e) {
+            e.printStackTrace();
+            ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
+            System.exit(1);
+        }       
+    }
+    
+    private void loadRecordAddress() {
+        try {
+            loadMasterAddress();
+
+            int lnCtr;
+            address_data.clear();
+
+            if (poClient.getAddressCount() >= 0) {
+                for (lnCtr = 0; lnCtr < poClient.getAddressCount(); lnCtr++) {
+                    address_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
+                            (String) poClient.Address(lnCtr).getValue("sHouseNox"),
+                            (String) poClient.Address(lnCtr).getValue("sAddressx"),
+                            (String) poClient.Address(lnCtr).Town().getDescription(),
+                            (String) poClient.Address(lnCtr).Barangay().getBarangayName()));
+                }
+            }
+
+            if (pnAddress < 0 || pnAddress >= address_data.size()) {
+                if (!address_data.isEmpty()) {
+                    /* FOCUS ON FIRST ROW */
+                    tblAddress.getSelectionModel().select(0);
+                    tblAddress.getFocusModel().focus(0);
+                    pnAddress = tblAddress.getSelectionModel().getSelectedIndex();
+                    getSelectedAddress();
+                }
+            } else {
+                /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+                tblAddress.getSelectionModel().select(pnAddress);
+                tblAddress.getFocusModel().focus(pnAddress);
+                getSelectedAddress();
+            }
+        } catch (SQLException | GuanzonException e) {
+            e.printStackTrace();
         }
-        Boolean lbOption1 = true;
+    }
+    
+    public void loadMasterAddress() throws SQLException, GuanzonException{
+        String address;
+        boolean primaryAddressExists = false;
+        
+        
+        for (int i = 0; i < poClient.getAddressCount(); i++) {
+            if (poClient.Address(i).isPrimaryAddress()) {
+                address = poClient.Address(i).getHouseNo() + " " + 
+                            poClient.Address(i).getAddress() + " " +
+                            poClient.Address(i).Barangay().getBarangayName() + " " +
+                            poClient.Address(i).Town().getDescription() + ", " +
+                            poClient.Address(i).Town().Province().getDescription();
+                            
+                txtField03.setText(address.trim());
+                primaryAddressExists = true; // Mark as found
+                break; // Exit the loop since a primary address is found
+            }
+        }
+        
+        if (!primaryAddressExists) {
+            txtField03.setText("");
+        }
+    }
+    
+    private void getSelectedAddress() {
+        pbLoadingData = true;
+        try {
+            if (poClient.getAddressCount() > 0) {
+                txtAddress01.setText(poClient.Address(pnAddress).getHouseNo());
+                txtAddress02.setText(poClient.Address(pnAddress).getAddress());
+                txtAddress03.setText(poClient.Address(pnAddress).Town().Province().getDescription());
+                txtAddress04.setText(poClient.Address(pnAddress).Town().getDescription());
+                txtAddress05.setText(poClient.Address(pnAddress).Barangay().getBarangayName());
+                txtAddress06.setText(String.valueOf(poClient.Address(pnAddress).getLatitude()));
+                txtAddress07.setText(String.valueOf(poClient.Address(pnAddress).getLongitude()));
 
-        if (lbOption) {
-            // NEW RECORD
-            oTrans.New();
-            oTrans.Master().getModel().setClientType(ClientType.INSTITUTION);
-            pnEditMode = EditMode.ADDNEW;
+                cbAddress01.setSelected(("1".equals((String) poClient.Address(pnAddress).getRecordStatus())));
+                cbAddress02.setSelected(poClient.Address(pnAddress).isPrimaryAddress());
+                cbAddress03.setSelected(poClient.Address(pnAddress).isOfficeAddress());
+                cbAddress04.setSelected(poClient.Address(pnAddress).isProvinceAddress());
+                cbAddress05.setSelected(poClient.Address(pnAddress).isBillingAddress());
+                cbAddress06.setSelected(poClient.Address(pnAddress).isShippingAddress());
+                cbAddress07.setSelected(poClient.Address(pnAddress).isCurrentAddress());
+                cbAddress08.setSelected(poClient.Address(pnAddress).isLTMSAddress());
+            }
+        } catch (SQLException | GuanzonException e) {
+            e.printStackTrace();
+        }
+        pbLoadingData = false;
+    }
+    
+    private void loadRecordEmail() {
+        int lnCtr2 = 0;
+        email_data.clear();
+        if (poClient.getMailCount() >= 0) {
+            for (int lnCtr = 0; lnCtr < poClient.getMailCount(); lnCtr++) {
+                email_data.add(new ModelEmail(String.valueOf(lnCtr + 1),
+                        poClient.Mail(lnCtr2).getValue("cOwnerxxx").toString(),
+                        poClient.Mail(lnCtr2).getValue("sEMailAdd").toString()
+                ));
+                lnCtr2 += 1;
+            }
+        }
+        if (pnEmail < 0 || pnEmail
+                >= email_data.size()) {
+            if (!email_data.isEmpty()) {
+                /* FOCUS ON FIRST ROW */
+                tblEmail.getSelectionModel().select(0);
+                tblEmail.getFocusModel().focus(0);
+                pnEmail = tblEmail.getSelectionModel().getSelectedIndex();
+            }
+            getSelectedEmail();
         } else {
-            // OPEN RECORD
-            try {
-                oTrans.Master().openRecord(lsID);
-                oTrans.OpenClientAddress(lsID);
-                oTrans.OpenClientMobile(lsID);
-                oTrans.OpenClientMail(lsID);
-                oTrans.OpenClientSocialMedia(lsID);
+            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+            tblEmail.getSelectionModel().select(pnEmail);
+            tblEmail.getFocusModel().focus(pnEmail);
+            getSelectedEmail();
+        }
+    }
+    
+    private void getSelectedEmail() {
+        pbLoadingData = true;
+        if (poClient.getMailCount() > 0) {
+            txtEmail01.setText(poClient.Mail(pnEmail).getMailAddress());
 
-                if (oTrans.getAddressCount() <= 0) {
-                    booleanArray[0] = false;
-                }
-                if (oTrans.getMobileCount() <= 0) {
-                    booleanArray[1] = false;
-                }
-                if (oTrans.getMailCount() <= 0) {
-                    booleanArray[2] = false;
-                }
-                if (oTrans.getSocMedCount() <= 0) {
-                    booleanArray[3] = false;
-                }
-            } catch (SQLException | GuanzonException e) {
+            int lsOwnerType = 0;
+            lsOwnerType = Integer.parseInt(poClient.Mail(pnEmail).getOwnershipType());
+            cbEmail01.setSelected(("1".equals(poClient.Mail(pnEmail).getRecordStatus())));
+            cbEmail02.setSelected(poClient.Mail(pnEmail).isPrimaryEmail());
+            cmbEmail01.getSelectionModel().select(lsOwnerType);
+            
+        }
+        pbLoadingData = false;
+    }
+    
+    private void loadRecordMobile() {
+        int lnCtr2 = 0;
+        mobile_data.clear();
+
+        if (poClient.getMobileCount() >= 0) {
+            for (int lnCtr = 0; lnCtr < poClient.getMobileCount(); lnCtr++) {
+                mobile_data.add(new ModelMobile(String.valueOf(lnCtr + 1),
+                        poClient.Mobile(lnCtr2).getValue("sMobileNo").toString(),
+                        poClient.Mobile(lnCtr2).getValue("cOwnerxxx").toString(),
+                        poClient.Mobile(lnCtr2).getValue("cMobileTp").toString()
+                ));
+                lnCtr2 += 1;
+            }
+
+        }
+
+        if (pnMobile < 0 || pnMobile
+                >= mobile_data.size()) {
+            if (!mobile_data.isEmpty()) {
+                /* FOCUS ON FIRST ROW */
+                tblMobile.getSelectionModel().select(0);
+                tblMobile.getFocusModel().focus(0);
+                pnMobile = 0;
+            }
+            getSelectedMobile();
+        } else {
+            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+            tblMobile.getSelectionModel().select(pnMobile);
+            tblMobile.getFocusModel().focus(pnMobile);
+            getSelectedMobile();
+        }
+    }
+    
+    private void getSelectedMobile() {
+        pbLoadingData = true;
+        if (poClient.getMobileCount() > 0) {
+            try {
+                txtMobile01.setText(poClient.Mobile(pnMobile).getMobileNo());
+            
+                int lsOwnerType = 0;
+                int lsMobileType = 0;
+            
+                lsOwnerType = Integer.parseInt(poClient.Mobile(pnMobile).getOwnershipType());
+                lsMobileType = Integer.parseInt(poClient.Mobile(pnMobile).getMobileType());
+                
+                cmbMobile01.getSelectionModel().select(lsOwnerType);
+                cmbMobile02.getSelectionModel().select(lsMobileType);
+                
+                cbMobileNo01.setSelected(("1".equals((String) poClient.Mobile(pnMobile).getRecordStatus())));
+                cbMobileNo02.setSelected(poClient.Mobile(pnMobile).isPrimaryMobile());
+            } catch (NumberFormatException e) {
                 e.printStackTrace();
             }
         }
+        pbLoadingData = false;
+        
+    }
 
-        initButton();
-        InitPersonalInfoTextFields();
+    private void loadRecordSocialMedia() {
+        int lnCtr2 = 0;
+        socialmedia_data.clear();
+        if (poClient.getSocMedCount() >= 0) {
+            for (int lnCtr = 0; lnCtr < poClient.getSocMedCount(); lnCtr++) {
+                socialmedia_data.add(new ModelSocialMedia(String.valueOf(lnCtr + 1),
+                        poClient.SocMed(lnCtr2).getAccount(),
+                        poClient.SocMed(lnCtr2).getSocMedType(),
+                        poClient.SocMed(lnCtr2).getRemarks()
+                ));
+                lnCtr2 += 1;
+            }
+        }
 
-        InitAddressTextFields();
-        initAddressCheckbox();
-
-        InitMobileTextFields();
-        initMobileCheckbox();
-
-        InitEmailTextFields();
-        initEmailCheckbox();
-
-        InitSocialMediaTextFields();
-        initSocialMediaCheckbox();
-
-        initAddressGrid();
-        initSocialMediaGrid();
-        initEmailGrid();
-        initMobileGrid();
-
-        clearMaster();
-        clearAddress();
-        clearEmail();
-        clearSocMed();
-        clearMobile();
-
-        initComboboxes();
-        if (lbOption) {
-            loadRecordMobile();
-            loadRecordAddress();
-            loadRecordSocialMedia();
-            loadRecordEmail();
+        if (pnSocmed < 0 || pnSocmed
+                >= socialmedia_data.size()) {
+            if (!socialmedia_data.isEmpty()) {
+                /* FOCUS ON FIRST ROW */
+                tblSocMed.getSelectionModel().select(0);
+                tblSocMed.getFocusModel().focus(0);
+                pnSocmed = tblSocMed.getSelectionModel().getSelectedIndex();
+            }
+            getSelectedSocialMedia();
         } else {
-            if (booleanArray[0]) {
-                loadRecordMobile();
-            }
-            if (booleanArray[1]) {
-                loadRecordAddress();
-            }
-            if (booleanArray[2]) {
-                loadRecordSocialMedia();
-            }
-            if (booleanArray[3]) {
-                loadRecordEmail();
-            }
+            /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
+            tblSocMed.getSelectionModel().select(pnSocmed);
+            tblSocMed.getFocusModel().focus(pnSocmed);
+            getSelectedSocialMedia();
         }
+    }
+    
+    private void getSelectedSocialMedia() {
+        pbLoadingData = true;
+        
+        if (poClient.getSocMedCount() > 0) {
+            int lsSocMedType = Integer.parseInt(poClient.SocMed(pnSocmed).getSocMedType());
+            cmbSocMed01.getSelectionModel().select(lsSocMedType);
 
-        if (!lbOption) {
-            // load when using open record
-            loadMasterName();
-            loadRecordPersonalInfo();
+            txtSocial01.setText(poClient.SocMed(pnSocmed).getAccount());
+            txtSocial02.setText(poClient.SocMed(pnSocmed).getRemarks());
+            cbSocMed01.setSelected("1".equals((String) poClient.SocMed(pnSocmed).getRecordStatus()));
         }
-        initTextFieldsAutoFormat();
-        initTableOnClick();
-        pbLoaded = true;
+        
+        pbLoadingData = false;
+    }
+    
+    private void loadRecordPersonalInfo() {
+        try {
+            txtPersonal02.setText(poClient.getModel().getLastName());
+            txtPersonal03.setText(poClient.getModel().getFirstName());
+            txtPersonal04.setText(poClient.getModel().getMiddleName());
+            txtPersonal05.setText(poClient.getModel().getSuffixName());
 
-        String lsClientID = (String) oTrans.Master().getModel().getClientId();
-        if (txtField01 != null) { // Check if txtField01 is not null before setting its text
-            oTrans.Master().getModel().setClientId(lsClientID);
-            txtField01.setText((String) oTrans.Master().getModel().getClientId());
-        } else {
-            ShowMessageFX.OkayCancel(oTransnox, lsClientID, "No Client ID");
+            Country loCountry = new Country();
+            loCountry.setApplicationDriver(poGRider);
+
+            loCountry.setRecordStatus("1");
+            loCountry.initialize();
+            loCountry.openRecord(poClient.getModel().getCitizenshipId());
+            txtPersonal06.setText(loCountry.getModel().getNationality());
+
+            if (!poClient.getModel().getBirthDate().equals("")) {
+                Object lobirthdate = poClient.getModel().getBirthDate();
+                if (lobirthdate == null) {
+                    txtPersonal07.setValue(LocalDate.now());
+                } else if (lobirthdate instanceof Timestamp) {
+                    Timestamp timestamp = (Timestamp) lobirthdate;
+                    LocalDate localDate = timestamp.toLocalDateTime().toLocalDate();
+                    txtPersonal07.setValue(localDate);
+                } else if (lobirthdate instanceof Date) {
+                    Date sqlDate = (Date) lobirthdate;
+                    LocalDate localDate = sqlDate.toLocalDate();
+                    txtPersonal07.setValue(localDate);
+                } else {
+                }
+            }
+
+            if (!poClient.getModel().getBirthPlaceId().equals("")) {
+
+                TownCity loTownCity = new TownCity();
+                loTownCity.setApplicationDriver(poGRider);
+                loTownCity.setRecordStatus("1");
+                loTownCity.initialize();
+                loTownCity.openRecord(poClient.getModel().getBirthPlaceId());
+
+                Province loProvince = new Province();
+                loProvince.setApplicationDriver(poGRider);
+                loProvince.setRecordStatus("1");
+                loProvince.initialize();
+                loProvince.openRecord(loTownCity.getModel().getProvinceId());
+
+                txtPersonal08.setText(loTownCity.getModel().getDescription()+ ", " + loProvince.getModel().getDescription());
+            }
+            int lsGender = Integer.parseInt(poClient.getModel().getGender());
+            cmbPersonal09.getSelectionModel().select(lsGender);
+
+            int lsCivilStatus = Integer.parseInt(poClient.getModel().getCivilStatus());
+            cmbPersonal10.getSelectionModel().select(lsCivilStatus);
+
+            txtPersonal11.setText(poClient.getModel().getCompanyName());
+            txtPersonal12.setText(poClient.getModel().getMothersMaidenName());
+            txtPersonal13.setText(poClient.getModel().getTaxIdNumber());
+            txtPersonal14.setText(poClient.getModel().getLTOClientId());
+            txtPersonal15.setText(poClient.getModel().getPhNationalId());
+        } catch (SQLException | GuanzonException e) {
+            e.printStackTrace();
         }
+    }
+    
+    private void initAddressCheckbox() {
+        CheckBox[] cbAddressCheckboxes = {cbAddress01, cbAddress02, cbAddress03, cbAddress04, cbAddress05, cbAddress06, cbAddress07, cbAddress08};
 
-        oTrans.Master().getModel().setSpouseId(lsClientID);
-        personalinfo11.setText(oTrans.Master().getModel().getCompanyName());
+        for (CheckBox checkbox : cbAddressCheckboxes) {
+            // Capture the current checkbox
+            checkbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (!pbLoaded) return;
+                    
+                    JSONObject loJSON;
+                    String id = checkbox.getId(); 
+                    String numberPart = id.substring(id.length() - 2);
+                    
+                    try {
+                        int number = Integer.parseInt(numberPart);
+                        switch (number) {
+                            case 1: //
+                                loJSON = poClient.Address(pnAddress).setRecordStatus(newValue ? "1" : "0");
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                getSelectedAddress();
+                                break;
+                            case 2: // Primary Address || Restricted to 1 Primary Address
+                                poClient.Address(pnAddress).isPrimaryAddress(newValue);
+                                
+                                if (!pbLoadingData){
+                                    for (int in = 0; in < poClient.getAddressCount(); in++) {
+                                        if (in != pnAddress){
+                                            poClient.Address(in).isPrimaryAddress(false);
+                                        }
+                                    }
+                                }                                
+                                break;
+                            case 3: //Office
+                                loJSON = poClient.Address(pnAddress).isOfficeAddress(newValue);
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 4: // Province
+                                loJSON = poClient.Address(pnAddress).isProvinceAddress(newValue);
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 5: // Billing
+                                loJSON = poClient.Address(pnAddress).isBillingAddress(newValue);
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 6: // Shipping
+                                loJSON = poClient.Address(pnAddress).isShippingAddress(newValue);
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 7: // Current
+                                loJSON = poClient.Address(pnAddress).isCurrentAddress(newValue);
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 8: // LTMS
+                                loJSON = poClient.Address(pnAddress).isLTMSAddress(newValue);
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            default:
+                                System.out.println("Unknown checkbox selected");
+                                break;
+                        }
+                    } catch (NumberFormatException e) {
+                    }
+                }
+            });
+        }
+    }
+    
+    private void initMobileCheckbox() {
+        CheckBox[] cbMobileCheckboxes = {cbMobileNo01, cbMobileNo02};
+        for (CheckBox checkbox : cbMobileCheckboxes) {
+            // Capture the current checkbox
+            checkbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (!pbLoaded) return;
+                    
+                    JSONObject loJSON;
+                    String id = checkbox.getId();
+                    String numberPart = id.substring(id.length() - 2);
+                    
+                    try {
+                        int number = Integer.parseInt(numberPart);
+                        switch (number) {
+                            case 1: // Active
+                                loJSON = poClient.Mobile(pnMobile).setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                            case 2: // Primary Address || Restricted to 1 Primary Address
+                                poClient.Mobile(pnMobile).isPrimaryMobile(newValue);
+                                
+                                if (!pbLoadingData){
+                                    for (int in = 0; in < poClient.getMobileCount(); in++) {
+                                        if (in != pnMobile){
+                                            poClient.Mobile(in).isPrimaryMobile(false);
+                                        }
+                                    }
+                                }                                                          
+                                break;
+                            default:
+                                System.out.println("Unknown checkbox selected");
+                                break;
+                        }
+                    } catch (NumberFormatException e) {
+                    }
+                }
+            });
+        }
+    }
+    
+    private void initEmailCheckbox() {
+        CheckBox[] cbEmailCheckboxes = {cbEmail01, cbEmail02};
+
+        for (CheckBox checkbox : cbEmailCheckboxes) {
+            // Capture the current checkbox
+            checkbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (!pbLoaded) return;
+                    
+                    String id = checkbox.getId();
+                    String numberPart = id.substring(id.length() - 2);
+                    
+                    try {
+                        int number = Integer.parseInt(numberPart);
+                        
+                        switch (number) {
+                            case 1:
+                                poJSON = poClient.Mail(pnEmail).setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                                
+                                if ("error".equals((String) poJSON.get("result"))) {
+                                    Assert.fail((String) poJSON.get("message"));
+                                }
+                                break;
+                            case 2: // Primary Email
+                                poClient.Mail(pnEmail).isPrimaryEmail(newValue);
+                                
+                                if (!pbLoadingData){
+                                    for (int in = 0; in < poClient.getMailCount(); in++) {
+                                        if (in != pnEmail){
+                                            poClient.Mail(in).isPrimaryEmail(false);
+                                        }
+                                    }
+                                }                                                          
+                                break;
+                            default:
+                                System.out.println("Unknown checkbox selected");
+                                break;
+                        }
+                        
+                        getSelectedEmail();
+                    } catch (NumberFormatException e) {
+                    }
+                }
+            });
+        }
+    }
+    
+    private void initSocialMediaCheckbox() {
+        CheckBox[] cbSocMedCheckboxes = {cbSocMed01};
+        for (CheckBox checkbox : cbSocMedCheckboxes) {
+            checkbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
+                @Override
+                public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                    if (!pbLoaded) return;
+                    
+                    String id = checkbox.getId();
+
+                    String numberPart = id.substring(id.length() - 2);
+                    try {
+                        int number = Integer.parseInt(numberPart);
+                        switch (number) {
+                            case 1:
+                                poClient.SocMed(pnSocmed).setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                                break;
+                            default:
+                                System.out.println("Unknown checkbox selected");
+                                break;
+                        }
+                        getSelectedSocialMedia();
+                    } catch (NumberFormatException e) {
+                    }
+                }
+            });
+        }
+    }
+    
+    public Stage getStage() {
+        return (Stage) AnchorMain.getScene().getWindow();        
     }
 }

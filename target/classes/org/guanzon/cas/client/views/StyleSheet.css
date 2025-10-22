@@ -162,22 +162,22 @@ TAB PANE CSS                                                                    
     -fx-background-insets: 0;
     -fx-border-radius: 0;
     -fx-border-insets: 0;
-    -fx-min-width: USE_PREF_SIZE;        /* Allow the tab to grow based on the text */
-    -fx-max-width: USE_PREF_SIZE;        /* Max width set based on text content */
-    -fx-pref-width: USE_COMPUTED_SIZE;
+    /*-fx-min-width: USE_PREF_SIZE;*/        /* Allow the tab to grow based on the text */
+    /*-fx-max-width: USE_PREF_SIZE;*/        /* Max width set based on text content */
+    /*-fx-pref-width: USE_COMPUTED_SIZE;*/
 }
 
 .tab-pane {
     -fx-tab-min-height:20px;
     -fx-tab-max-height:30px;
-    -fx-min-width: USE_PREF_SIZE;        /* Allow the tab to grow based on the text */
-    -fx-max-width: USE_PREF_SIZE;        /* Max width set based on text content */
-    -fx-pref-width: USE_COMPUTED_SIZE;
+    /*-fx-min-width: USE_PREF_SIZE;*/        /* Allow the tab to grow based on the text */
+    /*-fx-max-width: USE_PREF_SIZE;*/        /* Max width set based on text content */
+    /*-fx-pref-width: USE_COMPUTED_SIZE;*/
 }
 .tab {
-    -fx-min-width: USE_PREF_SIZE;        /* Allow the tab to grow based on the text */
-    -fx-max-width: USE_PREF_SIZE;        /* Max width set based on text content */
-    -fx-pref-width: USE_COMPUTED_SIZE;
+    /*-fx-min-width: USE_PREF_SIZE;*/        /* Allow the tab to grow based on the text */
+    /*-fx-max-width: USE_PREF_SIZE;*/        /* Max width set based on text content */
+    /*-fx-pref-width: USE_COMPUTED_SIZE;*/
     -fx-tab-min-height:30px;
     -fx-tab-max-height:30px;
     -fx-pref-height: 30px;

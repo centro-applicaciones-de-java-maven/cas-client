@@ -146,10 +146,12 @@
     -fx-background-color: #f0f0f0;  
     -fx-border-color: #cccccc;     
     -fx-text-fill: #a6a6a6;        
-    .text-field:disabled {
+}
+
+.text-field:disabled {
     -fx-background-color: #f7f7f7;     
 }
-}
+
 /*.text-field:focused {
     -fx-background-color: #ffffff;   
     -fx-border-color: #0078d7;        

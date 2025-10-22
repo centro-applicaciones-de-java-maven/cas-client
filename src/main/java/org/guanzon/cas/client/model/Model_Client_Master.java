@@ -6,6 +6,7 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
+import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
@@ -27,14 +28,17 @@ public class Model_Client_Master extends Model{
 
             MiscUtil.initRowSet(poEntity);
             
-            //assign default values
+            //assign default valu
+            poEntity.updateObject("cGenderCd", "0");
+            poEntity.updateObject("cCvilStat", "0");
+            poEntity.updateObject("cClientTp", ClientType.INDIVIDUAL);
             poEntity.updateObject("dBirthDte", SQLUtil.toDate("1900-01-01", SQLUtil.FORMAT_SHORT_DATE));
-            poEntity.updateString("cLRClient", Logical.NO);
-            poEntity.updateString("cMCClient", Logical.NO);
-            poEntity.updateString("cSCClient", Logical.NO);
-            poEntity.updateString("cSPClient", Logical.NO);
-            poEntity.updateString("cCPClient", Logical.NO);
-            poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
+            poEntity.updateObject("cLRClient", Logical.NO);
+            poEntity.updateObject("cMCClient", Logical.NO);
+            poEntity.updateObject("cSCClient", Logical.NO);
+            poEntity.updateObject("cSPClient", Logical.NO);
+            poEntity.updateObject("cCPClient", Logical.NO);
+            poEntity.updateObject("cRecdStat", RecordStatus.ACTIVE);
             //end - assign default values
 
             poEntity.insertRow();
@@ -280,44 +284,10 @@ public class Model_Client_Master extends Model{
     }
     
     public Model_TownCity BirthTown() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sBirthPlc"))){
-            if (poTownCity.getEditMode() == EditMode.READY && 
-                poTownCity.getTownId().equals((String) getValue("sBirthPlc")))
-                return poTownCity;
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sBirthPlc"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity;
-                else {
-                    poTownCity.initialize();
-                    return poTownCity;
-                }
-            }
-        } else {
-            poTownCity.initialize();
-            return poTownCity;
-        }
+        return poTownCity;
     }
     
     public Model_Country Citizenship() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sCitizenx"))){
-            if (poCountry.getEditMode() == EditMode.READY && 
-                poCountry.getCountryId().equals((String) getValue("sCitizenx")))
-                return poCountry;
-            else{
-                poJSON = poCountry.openRecord((String) getValue("sCitizenx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poCountry;
-                else {
-                    poTownCity.initialize();
-                    return poCountry;
-                }
-            }
-        } else {
-            poCountry.initialize();
-            return poCountry;
-        }
+        return poCountry;
     }
 }

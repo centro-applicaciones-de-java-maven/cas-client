@@ -122,13 +122,8 @@ public class Model_AR_Client_Master extends Model{
         return setValue("dCltSince", dateClientSince);
     }
     
-
     public Date getdateClientSince(){
-        Date date = null;
-        if(!getValue("dCltSince").toString().isEmpty()){
-            date = CommonUtils.toDate(getValue("dCltSince").toString());
-        }
-        return date;
+        return (Date) getValue("dCltSince");
     }
     
     public JSONObject setBeginningDate(Date beginningDate){
@@ -236,7 +231,7 @@ public class Model_AR_Client_Master extends Model{
     public Model_Term Term() throws SQLException, GuanzonException{
         if (!"".equals((String) getValue("sTermIDxx"))) {
             if (poTerm.getEditMode() == EditMode.READY
-                    && poTerm.getTermCode().equals((String) getValue("sTermIDxx"))) {
+                    && poTerm.getTermId().equals((String) getValue("sTermIDxx"))) {
                 return poTerm;
             } else {
                 poJSON = poTerm.openRecord((String) getValue("sTermIDxx"));

@@ -234,65 +234,14 @@ public class Model_Client_Address extends Model{
     }
     
     public Model_Barangay Barangay() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sBrgyIDxx"))){
-            if (poBarangay.getEditMode() == EditMode.READY && 
-                poBarangay.getBarangayId().equals((String) getValue("sBrgyIDxx")))
-                return poBarangay;
-            else{
-                poJSON = poBarangay.openRecord((String) getValue("sBrgyIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poBarangay;
-                else {
-                    poBarangay.initialize();
-                    return poBarangay;
-                }
-            }
-        } else {
-            poBarangay.initialize();
-            return poBarangay;
-        }
+        return poBarangay;
     }
     
     public Model_TownCity Town() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sTownIDxx"))){
-            if (poTownCity.getEditMode() == EditMode.READY && 
-                poTownCity.getTownId().equals((String) getValue("sTownIDxx")))
-                return poTownCity;
-            else{
-                poJSON = poTownCity.openRecord((String) getValue("sTownIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poTownCity;
-                else {
-                    poBarangay.initialize();
-                    return poTownCity;
-                }
-            }
-        } else {
-            poTownCity.initialize();
-            return poTownCity;
-        }
+        return poTownCity;
     }
     
     public Model_Client_Master Client() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sClientID"))){
-            if (poClient.getEditMode() == EditMode.READY && 
-                poClient.getClientId().equals((String) getValue("sClientID")))
-                return poClient;
-            else{
-                poJSON = poClient.openRecord((String) getValue("sClientID"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poClient;
-                else {
-                    poClient.initialize();
-                    return poClient;
-                }
-            }
-        } else {
-            poClient.initialize();
-            return poClient;
-        }
+        return poClient;
     }
 }

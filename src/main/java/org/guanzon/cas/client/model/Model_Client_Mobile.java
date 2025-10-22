@@ -179,23 +179,6 @@ public class Model_Client_Mobile extends Model{
     }
     
     public Model_Client_Master Client() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sClientID"))){
-            if (poClient.getEditMode() == EditMode.READY && 
-                poClient.getClientId().equals((String) getValue("sClientID")))
-                return poClient;
-            else{
-                poJSON = poClient.openRecord((String) getValue("sClientID"));
-
-                if ("success".equals((String) poJSON.get("result")))
-                    return poClient;
-                else {
-                    poClient.initialize();
-                    return poClient;
-                }
-            }
-        } else {
-            poClient.initialize();
-            return poClient;
-        }
+        return poClient;
     }
 }

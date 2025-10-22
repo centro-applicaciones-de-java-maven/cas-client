@@ -76,7 +76,7 @@ public class Client {
         poSocMed = new ArrayList<>();
         poInsContact = new ArrayList<>();
     }
-    public String getMasterAddress(int lnRow) {
+    public String getMasterAddress(int lnRow) throws SQLException, GuanzonException {
         String lsTownId = "";
         String lsHouseNo = "";
         lsTownId = poAddress.get(lnRow).getModel().getTownId();
@@ -116,8 +116,8 @@ public class Client {
         
         String HouseNo = (poAddress.get(lnRow).getModel().getHouseNo().equals("") ? "" : poAddress.get(lnRow).getModel().getHouseNo());
         String Address = ((poAddress.get(lnRow).getModel().getAddress() instanceof String) && (!poAddress.get(lnRow).getModel().getAddress().equals("")) ?  poAddress.get(lnRow).getModel().getAddress() : "");
-        String Province = ((loProvince.getModel().getProvinceName() instanceof String) && (!loProvince.getModel().getProvinceName().equals("")) ? loProvince.getModel().getProvinceName() : "");
-        String City = ((loTownCity.getModel().getTownName() instanceof String) && (!loTownCity.getModel().getTownName().equals("")) ? " " + loTownCity.getModel().getTownName() : "");
+        String Province = ((loProvince.getModel().getDescription()instanceof String) && (!loProvince.getModel().getDescription().equals("")) ? loProvince.getModel().getDescription() : "");
+        String City = ((loTownCity.getModel().getDescription() instanceof String) && (!loTownCity.getModel().getDescription().equals("")) ? " " + loTownCity.getModel().getDescription() : "");
         String Barangay = ((loBarangay.getModel().getBarangayName() instanceof String) && (!loBarangay.getModel().getBarangayName().equals("")) ?  loBarangay.getModel().getBarangayName() : "");
         String ZipCode = ((loTownCity.getModel().getZipCode() instanceof String) && (!loTownCity.getModel().getZipCode().equals("")) ? " " + loTownCity.getModel().getZipCode() : "");
 
@@ -220,7 +220,7 @@ public class Client {
         return poListInsContact.size();
     }
 
-    public JSONObject addMobile() {
+    public JSONObject addMobile() throws SQLException, GuanzonException{
         poJSON = new JSONObject();
 
         if (poMobile.isEmpty()) {
@@ -254,7 +254,7 @@ public class Client {
                         ", a.dModified" +
                         ", b.sTownName xTownName" +
                         ", d.sBrgyName xBrgyName" +
-                        ", c.sProvName xProvName" +
+                        ", c.sDescript xProvName" +
                 " FROM Client_Address a" + 
                  " LEFT JOIN TownCity b ON a.sTownIDxx = b.sTownIDxx" +
                             " LEFT JOIN Province c ON b.sProvIDxx = c.sProvIDxx" +
@@ -466,7 +466,7 @@ public class Client {
         return poJSON;
     }
     
-    public JSONObject addAddress() {
+    public JSONObject addAddress() throws SQLException, GuanzonException{
         poJSON = new JSONObject();
 
         if (poAddress.isEmpty()) {
@@ -485,7 +485,7 @@ public class Client {
         return poJSON;
     }
 
-    public JSONObject addMail() {
+    public JSONObject addMail() throws SQLException, GuanzonException{
         poJSON = new JSONObject();
 
         if (poMail.isEmpty()) {
@@ -504,7 +504,7 @@ public class Client {
         return poJSON;
     }
 
-    public JSONObject addSocialMedia() {
+    public JSONObject addSocialMedia() throws SQLException, GuanzonException{
         poJSON = new JSONObject();
 
         if (poSocMed.isEmpty()) {
@@ -523,7 +523,7 @@ public class Client {
         return poJSON;
     }
 
-    public JSONObject addInsContactPerson() {
+    public JSONObject addInsContactPerson() throws SQLException, GuanzonException{
         poJSON = new JSONObject();
 
         if (poInsContact.isEmpty()) {
@@ -729,7 +729,7 @@ public class Client {
     }
     
     
-    public JSONObject New() {
+    public JSONObject New() throws SQLException, GuanzonException{
         poJSON = poClient.newRecord();
         if (!"success".equals((String) poJSON.get("result"))) {
             return poJSON;
@@ -770,7 +770,7 @@ public class Client {
         return poJSON;
     }
 
-    public JSONObject Save() throws SQLException, GuanzonException{
+    public JSONObject Save() throws SQLException, GuanzonException, CloneNotSupportedException{
         int lnCtr;
 
         if (psParent.isEmpty()) {
@@ -934,7 +934,7 @@ public class Client {
         return poJSON;
     }
 
-    private Client_Mobile mobile() {
+    private Client_Mobile mobile() throws SQLException, GuanzonException{
         Client_Mobile object = new Client_Mobile();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
@@ -945,7 +945,7 @@ public class Client {
     }
 
 
-    private Client_Address address() {
+    private Client_Address address() throws SQLException, GuanzonException{
         Client_Address object = new Client_Address();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
@@ -955,7 +955,7 @@ public class Client {
         return object;
     }
 
-    private Client_Mail email() {
+    private Client_Mail email() throws SQLException, GuanzonException{
         Client_Mail object = new Client_Mail();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
@@ -965,7 +965,7 @@ public class Client {
         return object;
     }
 
-    private Client_Social_Media socmed() {
+    private Client_Social_Media socmed() throws SQLException, GuanzonException{
         Client_Social_Media object = new Client_Social_Media();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
@@ -975,7 +975,7 @@ public class Client {
         return object;
     }
 
-    private Client_Institution_Contact insCPerson() {
+    private Client_Institution_Contact insCPerson() throws SQLException, GuanzonException{
         Client_Institution_Contact object = new Client_Institution_Contact();
         object.setApplicationDriver(poGRider);
         object.setWithParentClass(true);
