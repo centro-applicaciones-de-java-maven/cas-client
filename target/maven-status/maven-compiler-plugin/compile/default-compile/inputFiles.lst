@@ -1,37 +1,37 @@
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\controller\IndividualNewControllerx.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelAddress.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\Client_Address.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Mail.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\Client_Mobile.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\Client_Social_Media.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\controller\IndividualNewController.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelSocialMedia.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\ClientModels.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\Client.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\controller\ClientMasterParameterController.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\account\AP_Client_Master.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\controller\ClientMasterTransactionIndividualController.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\services\ClientControllers.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\account\GlobalVariables.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Address.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\controller\NewCustomerController.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Master.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\ClientInfo.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AR_Client_Master.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\Client_Institution_Contact.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Institution_Contact.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\Client_Mail.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Social_Media.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\ClientGUI.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AP_Client_Master.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\Client_Master.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\controller\ClientMasterTransactionCompanyController.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AR_Client_Ledger.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelMobile.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Account_Client_Accreditation.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AP_Client_Ledger.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\account\Account_Accreditation.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Mobile.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\controller\AccountAccreditationController.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelEmail.java
-D:\000MNVProject\CAS IntegSys JavaMaven\cas-client\src\main\java\org\guanzon\cas\client\services\ClientModels.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\services\ClientControllers.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\AP_Client_Master.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\ClientGUI.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\Client_Mail.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\Client_Social_Media.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\controller\InstitutionNewController.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_Client_Address.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\table\ModelContactPerson.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\Client.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\Account_Accreditation.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_Client_Institution_Contact.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\Client_Address.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\Client_Mobile.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_Client_Mail.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\controller\ClientMasterTransactionCompanyController.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\controller\NewCustomerController.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\controller\IndividualNewController.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\controller\IndividualNewControllerx.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_Client_Mobile.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_AR_Client_Master.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\controller\ClientMasterParameterController.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_AP_Client_Master.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_Client_Master.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_AR_Client_Ledger.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\controller\ClientMasterTransactionIndividualController.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\controller\AccountAccreditationController.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\table\ModelAddress.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\Client_Institution_Contact.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\Client_Master.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_Account_Client_Accreditation.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_Client_Social_Media.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\services\ClientModels.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\table\ModelMobile.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\model\Model_AP_Client_Ledger.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\ClientInfo.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\table\ModelEmail.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\ph\com\guanzongroup\cas\client\table\ModelSocialMedia.java

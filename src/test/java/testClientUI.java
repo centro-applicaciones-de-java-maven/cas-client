@@ -1,4 +1,4 @@
-import org.guanzon.cas.client.ClientGUI;
+import ph.com.guanzongroup.cas.client.ClientGUI;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;

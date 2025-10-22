@@ -6,7 +6,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.LogWrapper;
-import org.guanzon.cas.client.controller.IndividualNewController;
+import ph.com.guanzongroup.cas.client.controller.IndividualNewController;
 
 public class GUI_IndividualNew extends Application {
     private double xOffset = 0; 

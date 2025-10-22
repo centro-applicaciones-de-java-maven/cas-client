@@ -3,20 +3,18 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.guanzon</groupId>
     <artifactId>cas-client</artifactId>
-    <version>0.2-SNAPSHOT</version>
+    <version>0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
     <dependencies>
         <dependency>
-            <groupId>org.guanzon</groupId>
-            <artifactId>appdriver-agent</artifactId>
-            <version>0.2-SNAPSHOT</version>
-            <type>jar</type>
+            <groupId>ph.com.guanzongroup</groupId>
+            <artifactId>cas-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.guanzon</groupId>
             <artifactId>cas-parameter</artifactId>
-            <version>0.2-SNAPSHOT</version>
-            <type>jar</type>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
