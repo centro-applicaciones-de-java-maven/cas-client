@@ -1,9 +1,7 @@
 package org.guanzon.cas.client.account;
 
 import java.sql.SQLException;
-import javafx.application.Platform;
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GuanzonException;
@@ -14,7 +12,6 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
-import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.appdriver.iface.GValidator;
 import org.guanzon.cas.client.ClientGUI;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
@@ -306,6 +303,7 @@ public class Account_Accreditation extends Parameter {
                 loObject.getModel().setAddressId(poModel.getAddressId());
                 loObject.getModel().setContactId(poModel.getContactId());
                 loObject.getModel().setCategoryCode(poModel.getCategoryCode());
+                loObject.getModel().setBeginningDate(poGRider.getServerDate());
                 
                 //if blacklisting set  Inactive record 
                 loObject.getModel().setRecordStatus(getModel().getTransactionType().equals("1") ? "0" : "1");
@@ -326,6 +324,7 @@ public class Account_Accreditation extends Parameter {
                     loObject.getModel().setAddressId(poModel.getAddressId());
                     loObject.getModel().setContactId(poModel.getContactId());
                     loObject.getModel().setCategoryCode(poModel.getCategoryCode());
+                    loObject.getModel().setBeginningDate(poGRider.getServerDate());
                     
                     //if blacklisting set  Inactive record 
                     loObject.getModel().setRecordStatus(getModel().getTransactionType().equals("1") ? "0" : "1");
