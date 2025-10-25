@@ -1,26 +1,27 @@
-package ph.com.guanzongroup.cas.client;
+package org.guanzon.cas.client.account;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.agent.impl.Parameter;
+import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
-import ph.com.guanzongroup.cas.client.model.Model_AP_Client_Ledger;
-import ph.com.guanzongroup.cas.client.model.Model_AP_Client_Master;
-import ph.com.guanzongroup.cas.client.services.ClientModels;
+import org.guanzon.appdriver.iface.GValidator;
+import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
+import org.guanzon.cas.client.model.Model_AP_Client_Master;
+import org.guanzon.cas.client.services.ClientModels;
+import org.guanzon.cas.client.validator.APClientValidatorFactory;
 import org.json.simple.JSONObject;
 
 public class AP_Client_Master extends Parameter {
 
-    Model_AP_Client_Master poModel;
-
+    private Model_AP_Client_Master poModel;
     private List<Model_AP_Client_Ledger> paLedger;
 
     @SuppressWarnings("unchecked")
@@ -43,30 +44,23 @@ public class AP_Client_Master extends Parameter {
     public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
 
-        if (poModel.getClientId().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Client must not be empty.");
+        //initialize validator
+        GValidator loValidator = APClientValidatorFactory.make(poGRider.getIndustry());
+        
+        //initialize params for app validator
+        loValidator.setApplicationDriver(poGRider);
+        loValidator.setMaster(poModel);
+        
+        //validate
+        poJSON = loValidator.validate();
+        
+        //if validation not success
+        if ("error".equals((String) poJSON.get("result"))) {
             return poJSON;
         }
 
-//        if (poModel.getAddressId().isEmpty()) {
-//            poJSON.put("result", "error");
-//            poJSON.put("message", "Client address not be empty.");
-//            return poJSON;
-//        }
-        if (poModel.getContactId().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Contact person not be empty.");
-            return poJSON;
-        }
-
-        if (poModel.getCategoryCode().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Category not be empty.");
-            return poJSON;
-        }
-
-        poModel.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
+        //set modified date and id
+        poModel.setModifyingId(poGRider.getUserID());
         poModel.setModifiedDate(poGRider.getServerDate());
 
         poJSON.put("result", "success");

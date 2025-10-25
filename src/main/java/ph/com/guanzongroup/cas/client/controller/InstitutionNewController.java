@@ -104,6 +104,9 @@ public class InstitutionNewController implements Initializable {
 
     @FXML
     private TextField txtAddress02;
+    
+    @FXML
+    private TextField txtAddress06;
 
     @FXML
     private CheckBox cbAddress01;
@@ -449,6 +452,16 @@ public class InstitutionNewController implements Initializable {
 
                     txtField.setText(poClient.Address(pnCompany).getAddress());
                     break;
+                    
+                case 6:
+                    poJSON = poClient.getModel().setTaxIdNumber(lsValue);
+                    
+                    if (!"success".equals((String) poJSON.get("result"))) {
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    txtField.setText(poClient.getModel().getTaxIdNumber());
+                    
+                    break;
 
             }
 
@@ -595,6 +608,7 @@ public class InstitutionNewController implements Initializable {
         txtAddress03.focusedProperty().addListener(txtAddress_Focus);
         txtAddress04.focusedProperty().addListener(txtAddress_Focus);
         txtAddress05.focusedProperty().addListener(txtAddress_Focus);
+        txtAddress06.focusedProperty().addListener(txtAddress_Focus);
 
         txtAddress01.setOnKeyPressed(this::txtAddress_KeyPressed);
         txtAddress02.setOnKeyPressed(this::txtAddress_KeyPressed);
@@ -643,6 +657,7 @@ public class InstitutionNewController implements Initializable {
         txtAddress03.setText("");
         txtAddress04.setText("");
         txtAddress05.setText("");
+        txtAddress06.setText("");
 
         cbAddress01.selectedProperty().set(false);
         cbAddress02.selectedProperty().set(false);
@@ -698,6 +713,7 @@ public class InstitutionNewController implements Initializable {
             txtField01.setText(poClient.getModel().getClientId());
             txtField02.setText(poClient.getModel().getCompanyName());
             txtAddress00.setText(poClient.getModel().getCompanyName());
+            txtAddress06.setText(poClient.getModel().getTaxIdNumber());
             txtField03.setText(""); //todo: put full address here      
 
             loadRecordAddress();
