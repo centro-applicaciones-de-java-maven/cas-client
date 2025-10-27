@@ -1,24 +1,18 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package org.guanzon.cas.client.validator;
 
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.appdriver.iface.GValidator;
 import org.guanzon.cas.client.constants.AccountAccreditationStatus;
-import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.iface.GValidator;
+import ph.com.guanzongroup.cas.model.Model_Account_Client_Accreditation;
 
 /**
  *

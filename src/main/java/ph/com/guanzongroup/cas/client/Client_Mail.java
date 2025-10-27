@@ -7,21 +7,21 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
-import ph.com.guanzongroup.cas.client.model.Model_Client_Mail;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.model.Model_Client_Mail;
 
 public class Client_Mail  extends Parameter{
     Model_Client_Mail poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Client_Mail();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Client_eMail_Address");
-        poModel.setTableName("Client_eMail_Address");
-        poModel.initialize();
+        poModel = ObjectInitiator.createModel(Model_Client_Mail.class, poGRider, Tables.CLIENT_MAIL);
+        
+        super.initialize();
     }
     
     @Override

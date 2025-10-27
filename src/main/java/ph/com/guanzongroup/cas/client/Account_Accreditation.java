@@ -1,8 +1,8 @@
-package org.guanzon.cas.client.account;
+package ph.com.guanzongroup.cas.client;
 
 import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.agent.impl.Parameter;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
@@ -12,16 +12,14 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
-import org.guanzon.appdriver.iface.GValidator;
-import org.guanzon.cas.client.ClientGUI;
-import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
-import org.guanzon.cas.client.services.ClientControllers;
-import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.client.validator.ClientAccreditationValidatorFactory;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.iface.GValidator;
+import ph.com.guanzongroup.cas.model.Model_Account_Client_Accreditation;
 
 public class Account_Accreditation extends Parameter {
-
     private Model_Account_Client_Accreditation poModel;
     private String psApprovalUser = "";
 
@@ -31,8 +29,7 @@ public class Account_Accreditation extends Parameter {
 
         psRecdStat = TransactionStatus.STATE_OPEN;
 
-        ClientModels model = new ClientModels(poGRider);
-        poModel = model.ClientAccreditation();
+        poModel = ObjectInitiator.createModel(Model_Account_Client_Accreditation.class, poGRider, Tables.ACCOUNT_CLIENT_ACCREDITATION);
     }
 
     @Override
@@ -244,15 +241,15 @@ public class Account_Accreditation extends Parameter {
         JSONObject loJSON;
 
         String lsSQL = "SELECT"
-                + " a.sContctID"
-                + " ,a.sCPerson1"
-                + " ,a.sMobileNo"
-                + " , b.sClientID"
-                + " , b.sCompnyNm"
-                + " FROM Client_Institution_Contact_Person a "
-                + " LEFT JOIN Client_Master b ON a.sClientID = b.sClientID"
-                + " WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
-                + " AND b.cClientTp = " + SQLUtil.toSQL(Logical.NO);
+                        + "  a.sContctID"
+                        + ", a.sCPerson1"
+                        + ", a.sMobileNo"
+                        + ", b.sClientID"
+                        + ", b.sCompnyNm"
+                        + " FROM Client_Institution_Contact_Person a "
+                        + " LEFT JOIN Client_Master b ON a.sClientID = b.sClientID"
+                        + " WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
+                        + " AND b.cClientTp = " + SQLUtil.toSQL(Logical.NO);
 
         if (fbByCode) {
             lsSQL = MiscUtil.addCondition(lsSQL, "a.sContctID = " + SQLUtil.toSQL(fsValue));
@@ -405,12 +402,13 @@ public class Account_Accreditation extends Parameter {
 
     public AP_Client_Master getAPClientMaster(String foClientID)
             throws GuanzonException, SQLException {
-        AP_Client_Master loObject = new ClientControllers(poGRider, null).APClientMaster();
+        
+        AP_Client_Master loObject = ObjectInitiator.createParameter(AP_Client_Master.class, poGRider, true, logwrapr);
+        
         poJSON = loObject.openRecord(foClientID);
         if ("error".equals((String) poJSON.get("result"))) {
             loObject.newRecord();
         }
-        loObject.setWithParentClass(true);
         return loObject;
     }
 }

@@ -21,6 +21,7 @@ import org.guanzon.appdriver.constant.ClientType;
 import ph.com.guanzongroup.cas.client.controller.IndividualNewController;
 import ph.com.guanzongroup.cas.client.controller.InstitutionNewController;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.client.ClientInfo;
 
 public class ClientGUI extends Application {
     private double xOffset = 0; 

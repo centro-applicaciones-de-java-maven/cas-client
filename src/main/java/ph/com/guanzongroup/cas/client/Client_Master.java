@@ -9,8 +9,10 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
-import ph.com.guanzongroup.cas.client.model.Model_Client_Master;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.model.Model_Client_Master;
 
 public class Client_Master extends Parameter {
     Model_Client_Master poModel;
@@ -22,16 +24,13 @@ public class Client_Master extends Parameter {
     }
 
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
 
-        poModel = new Model_Client_Master();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Client_Master");
-        poModel.setTableName("Client_Master");
-        poModel.initialize();
+        poModel = ObjectInitiator.createModel(Model_Client_Master.class, poGRider, Tables.CLIENT_MASTER);
 
         psClientTp = "10";
+        super.initialize();
     }
 
     @Override

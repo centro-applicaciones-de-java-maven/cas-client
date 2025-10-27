@@ -1,26 +1,26 @@
-package org.guanzon.cas.client.account;
+package ph.com.guanzongroup.cas.client;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.agent.impl.Parameter;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
-import org.guanzon.appdriver.iface.GValidator;
-import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
-import org.guanzon.cas.client.model.Model_AP_Client_Master;
-import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.client.validator.APClientValidatorFactory;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.iface.GValidator;
+import ph.com.guanzongroup.cas.model.Model_AP_Client_Ledger;
+import ph.com.guanzongroup.cas.model.Model_AP_Client_Master;
 
 public class AP_Client_Master extends Parameter {
-
     private Model_AP_Client_Master poModel;
     private List<Model_AP_Client_Ledger> paLedger;
 
@@ -31,13 +31,12 @@ public class AP_Client_Master extends Parameter {
 
     @Override
     public void initialize() throws SQLException, GuanzonException {
-        super.initialize();
-
         psRecdStat = TransactionStatus.STATE_OPEN;
-        paLedger = new ArrayList<Model_AP_Client_Ledger>();
+        paLedger = new ArrayList<>();
 
-        ClientModels model = new ClientModels(poGRider);
-        poModel = model.APClientMaster();
+        poModel = ObjectInitiator.createModel(Model_AP_Client_Master.class, poGRider, Tables.AP_CLIENT_MASTER);
+        
+        super.initialize();
     }
 
     @Override
@@ -344,7 +343,7 @@ public class AP_Client_Master extends Parameter {
         }
 
         while (loRS.next()) {
-            Model_AP_Client_Ledger loLedger = new ClientModels(poGRider).APClientLedger();
+            Model_AP_Client_Ledger loLedger = ObjectInitiator.createModel(Model_AP_Client_Ledger.class, poGRider, Tables.AP_CLIENT_LEDGER);
             poJSON = loLedger.openRecord(loRS.getString("sClientID"), loRS.getString("nLedgerNo"));
 
             if ("success".equals((String) poJSON.get("result"))) {

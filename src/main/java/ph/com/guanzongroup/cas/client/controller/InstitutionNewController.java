@@ -42,10 +42,10 @@ import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import ph.com.guanzongroup.cas.client.ClientInfo;
-import ph.com.guanzongroup.cas.client.services.ClientControllers;
 import ph.com.guanzongroup.cas.client.table.ModelAddress;
 import org.json.simple.JSONObject;
 import ph.com.guanzongroup.cas.client.table.ModelContactPerson;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
 
 public class InstitutionNewController implements Initializable {
 
@@ -245,7 +245,7 @@ public class InstitutionNewController implements Initializable {
 
             initFields();
 
-            poClient = new ClientControllers(poGRider, poWrapper).ClientInfo();
+            poClient = ObjectInitiator.createParameter(ClientInfo.class, poGRider, false, poWrapper);
             poClient.setClientType(ClientType.INSTITUTION);
             poClient.setRecordStatus("1");
             loadRecord();

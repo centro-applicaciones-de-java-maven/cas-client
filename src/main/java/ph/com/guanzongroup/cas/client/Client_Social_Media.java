@@ -7,21 +7,21 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
-import ph.com.guanzongroup.cas.client.model.Model_Client_Social_Media;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.model.Model_Client_Social_Media;
 
 public class Client_Social_Media  extends Parameter{
     Model_Client_Social_Media poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException{
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Client_Social_Media();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Client_Social_Media");
-        poModel.setTableName("Client_Social_Media");
-        poModel.initialize();
+        poModel = ObjectInitiator.createModel(Model_Client_Social_Media.class, poGRider, Tables.CLIENT_SOCIAL_MEDIA);
+        
+        super.initialize();
     }
     
     @Override

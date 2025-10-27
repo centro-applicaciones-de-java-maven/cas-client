@@ -49,7 +49,6 @@ import org.guanzon.appdriver.base.StringHelper;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import ph.com.guanzongroup.cas.client.ClientInfo;
-import ph.com.guanzongroup.cas.client.services.ClientControllers;
 import ph.com.guanzongroup.cas.client.table.ModelAddress;
 import ph.com.guanzongroup.cas.client.table.ModelEmail;
 import ph.com.guanzongroup.cas.client.table.ModelMobile;
@@ -60,6 +59,7 @@ import ph.com.guanzongroup.cas.parameter.TownCity;
 import org.json.simple.JSONObject;
 import javafx.util.StringConverter;
 import org.guanzon.appdriver.base.SQLUtil;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
 
 public class IndividualNewController implements Initializable {
     @FXML
@@ -316,7 +316,7 @@ public class IndividualNewController implements Initializable {
                         
             initFields();
  
-            poClient = new ClientControllers(poGRider, poWrapper).ClientInfo();
+            poClient = ObjectInitiator.createParameter(ClientInfo.class, poGRider, false, poWrapper);
             poClient.setClientType(ClientType.INDIVIDUAL);
             poClient.setRecordStatus("1");
             loadRecord();

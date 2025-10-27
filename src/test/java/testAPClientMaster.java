@@ -1,10 +1,8 @@
 import java.sql.SQLException;
-import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import ph.com.guanzongroup.cas.client.AP_Client_Master;
-import ph.com.guanzongroup.cas.client.services.ClientControllers;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -12,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testAPClientMaster {
@@ -25,7 +24,7 @@ public class testAPClientMaster {
         instance = MiscUtil.Connect();
         
         try {
-            record = new ClientControllers(instance, null).APClientMaster();
+            record = ObjectInitiator.createParameter(AP_Client_Master.class, instance, false, null);
         } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }

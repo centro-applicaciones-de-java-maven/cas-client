@@ -12,19 +12,19 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
-import ph.com.guanzongroup.cas.client.model.Model_Client_Address;
-import ph.com.guanzongroup.cas.client.model.Model_Client_Institution_Contact;
-import ph.com.guanzongroup.cas.client.model.Model_Client_Mail;
-import ph.com.guanzongroup.cas.client.model.Model_Client_Master;
-import ph.com.guanzongroup.cas.client.model.Model_Client_Mobile;
-import ph.com.guanzongroup.cas.client.model.Model_Client_Social_Media;
-import ph.com.guanzongroup.cas.client.services.ClientModels;
 import ph.com.guanzongroup.cas.parameter.Barangay;
 import ph.com.guanzongroup.cas.parameter.Country;
 import ph.com.guanzongroup.cas.parameter.Province;
 import ph.com.guanzongroup.cas.parameter.TownCity;
-import ph.com.guanzongroup.cas.parameter.services.ParamControllers;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.model.Model_Client_Address;
+import ph.com.guanzongroup.cas.model.Model_Client_Institution_Contact;
+import ph.com.guanzongroup.cas.model.Model_Client_Mail;
+import ph.com.guanzongroup.cas.model.Model_Client_Master;
+import ph.com.guanzongroup.cas.model.Model_Client_Mobile;
+import ph.com.guanzongroup.cas.model.Model_Client_Social_Media;
 
 public class ClientInfo extends Parameter{
     Model_Client_Master poClient;
@@ -48,15 +48,16 @@ public class ClientInfo extends Parameter{
         
         psRecdStat = Logical.YES;
 
-        ClientModels model = new ClientModels(poGRider);
-        poClient = model.ClientMaster();
-        poMobile = model.ClientMobile();               
-        poMail = model.ClientMail();
-        poAddress = model.ClientAddress();
-        poSocMed = model.ClientSocMed();
-        poContact = model.ClientInstitutionContact();
+        poClient = ObjectInitiator.createModel(Model_Client_Master.class, poGRider, Tables.CLIENT_MASTER);
+        poMobile = ObjectInitiator.createModel(Model_Client_Mobile.class, poGRider, Tables.CLIENT_MOBILE);
+        poMail = ObjectInitiator.createModel(Model_Client_Mail.class, poGRider, Tables.CLIENT_MAIL);
+        poAddress = ObjectInitiator.createModel(Model_Client_Address.class, poGRider, Tables.CLIENT_ADDRESS);
+        poSocMed = ObjectInitiator.createModel(Model_Client_Social_Media.class, poGRider, Tables.CLIENT_SOCIAL_MEDIA);
+        poContact = ObjectInitiator.createModel(Model_Client_Institution_Contact.class, poGRider, Tables.CLIENT_INSTITUTION_CONTACT);
         
         if (psClientTp == null || psClientTp.isEmpty()) psClientTp = ClientType.INDIVIDUAL;
+        
+        super.initialize();
     }
         
     @Override
@@ -436,7 +437,7 @@ public class ClientInfo extends Parameter{
     public JSONObject searchBirthPlace(String lsValue) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
-        TownCity loParam = new ParamControllers(poGRider, logwrapr).TownCity();
+        TownCity loParam = ObjectInitiator.createParameter(TownCity.class, poGRider, true, logwrapr);
         
         poJSON = loParam.searchRecord(lsValue, false);
         
@@ -458,7 +459,7 @@ public class ClientInfo extends Parameter{
     public JSONObject searchCitizenship(String lsValue) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
-        Country loParam = new ParamControllers(poGRider, logwrapr).Country();
+        Country loParam = ObjectInitiator.createParameter(Country.class, poGRider, true, logwrapr);
         
         poJSON = loParam.searchRecord(lsValue, false);
         
@@ -480,7 +481,7 @@ public class ClientInfo extends Parameter{
     public JSONObject searchProvince(int lnRow, String lsValue, boolean lbByCode) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
-        Province loParam = new ParamControllers(poGRider, logwrapr).Province();
+        Province loParam = ObjectInitiator.createParameter(Province.class, poGRider, true, logwrapr);
         
         poJSON = loParam.searchRecord(lsValue, lbByCode);
         
@@ -502,7 +503,7 @@ public class ClientInfo extends Parameter{
     public JSONObject searchTown(int lnRow, String lsValue, boolean lbByCode) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
-        TownCity loParam = new ParamControllers(poGRider, logwrapr).TownCity();
+        TownCity loParam = ObjectInitiator.createParameter(TownCity.class, poGRider, true, logwrapr);
         
         if (paAddress.get(lnRow).Town().getProvinceId() == null ||
             paAddress.get(lnRow).Town().getProvinceId().isEmpty()){
@@ -528,7 +529,7 @@ public class ClientInfo extends Parameter{
     public JSONObject searchBarangay(int lnRow, String lsValue, boolean lbByCode) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
-        Barangay loParam = new ParamControllers(poGRider, logwrapr).Barangay();
+        Barangay loParam = ObjectInitiator.createParameter(Barangay.class, poGRider, true, logwrapr);
         
         if (paAddress.get(lnRow).Town().getTownId() == null ||
             paAddress.get(lnRow).Town().getTownId().isEmpty()){

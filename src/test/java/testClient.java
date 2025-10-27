@@ -6,7 +6,6 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import ph.com.guanzongroup.cas.client.ClientInfo;
-import ph.com.guanzongroup.cas.client.services.ClientControllers;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -14,6 +13,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.Assert;
 import org.junit.runners.MethodSorters;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testClient {
@@ -30,8 +30,7 @@ public class testClient {
         logWrapper = new LogWrapper("CAS", System.getProperty("sys.default.path.temp") + "cas-error.log");
 
         try {
-            ClientControllers client = new ClientControllers(instance, null);
-            record = client.ClientInfo();
+            record = ObjectInitiator.createParameter(ClientInfo.class, instance, false, null);
         } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }

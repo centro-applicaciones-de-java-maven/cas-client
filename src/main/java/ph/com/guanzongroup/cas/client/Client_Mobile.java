@@ -7,21 +7,21 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.Logical;
-import ph.com.guanzongroup.cas.client.model.Model_Client_Mobile;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.constants.Tables;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
+import ph.com.guanzongroup.cas.model.Model_Client_Mobile;
 
 public class Client_Mobile  extends Parameter{
     Model_Client_Mobile poModel;
     
     @Override
-    public void initialize() {
+    public void initialize() throws SQLException, GuanzonException {
         psRecdStat = Logical.YES;
         
-        poModel = new Model_Client_Mobile();
-        poModel.setApplicationDriver(poGRider);
-        poModel.setXML("Model_Client_Mobile");
-        poModel.setTableName("Client_Mobile");
-        poModel.initialize();
+        poModel = ObjectInitiator.createModel(Model_Client_Mobile.class, poGRider, Tables.CLIENT_MOBILE);
+        
+        super.initialize();
     }
     
     @Override

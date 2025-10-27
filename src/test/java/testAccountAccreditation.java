@@ -1,10 +1,8 @@
 import java.sql.SQLException;
-import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import ph.com.guanzongroup.cas.client.Account_Accreditation;
-import ph.com.guanzongroup.cas.client.services.ClientControllers;
 import org.json.simple.JSONObject;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -12,6 +10,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import ph.com.guanzongroup.cas.core.ObjectInitiator;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class testAccountAccreditation {
@@ -25,7 +24,7 @@ public class testAccountAccreditation {
         instance = MiscUtil.Connect();
         
         try {
-            record = new ClientControllers(instance, null).AccountAccreditation();
+            record = ObjectInitiator.createParameter(Account_Accreditation.class, instance, false, null);
         } catch (SQLException | GuanzonException e) {
             Assert.fail(e.getMessage());
         }
