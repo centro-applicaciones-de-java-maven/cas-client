@@ -189,38 +189,71 @@ public class Account_Accreditation extends Parameter {
     }
 
     public JSONObject searchClient(String fsValue, boolean fbByCode) throws SQLException, GuanzonException, Exception {
-        JSONObject loJSON;
+        JSONObject loJSON = new JSONObject();
 
         if (fbByCode) {
             if (fsValue.equals(getModel().getClientId())) {
-                loJSON = new JSONObject();
                 loJSON.put("result", "success");
                 return loJSON;
             }
         } else {
-            if (getModel().Client().getCompanyName() != null && !getModel().Client().getCompanyName().isEmpty()) {
-                if (fsValue.equals(getModel().Client().getCompanyName())) {
-                    loJSON = new JSONObject();
-                    loJSON.put("result", "success");
-                    return loJSON;
-                }
+            
+            String lsSQL = "SELECT"
+                + " sClientID"
+                + ", sCompnyNm"
+                + " FROM Client_Master"
+                + " WHERE cRecdStat= '1'";
+            
+            loJSON = ShowDialogFX.Search(poGRider, 
+                    lsSQL, 
+                    fsValue, 
+                    "Client ID»Client Name", 
+                    "sClientID»sCompnyNm",
+                    "sClientID»sCompnyNm",
+                    fbByCode ? 0 : 1);
+            
+            if (loJSON != null) {
+                getModel().setClientId(loJSON.get("sClientID").toString());
+            } else {
+                loJSON.put("result", "success");
+                loJSON.put("message", "No record selected.");
+                return loJSON;
             }
+            
+//            if (getModel().Client().getCompanyName() != null && !getModel().Client().getCompanyName().isEmpty()) {
+//                if (fsValue.equals(getModel().Client().getCompanyName())) {
+//                    loJSON = new JSONObject();
+//                    loJSON.put("result", "success");
+//                    return loJSON;
+//                }
+//            }
         }
         //initialize Client GUI
         ClientGUI loClient = new ClientGUI();
 
         loClient.setGRider(poGRider);
         loClient.setLogWrapper(null);
+        
         //filter client type 
         loClient.setClientType(ClientType.INSTITUTION);
+        
         //searchRecord(fsValue,fbByCode) will run make sure to set client and bycode
         //bycode true client id
         //bycode false company
-        loClient.setClientId(fsValue);
-        loClient.setByCode(fbByCode);
 
+        //set client id
+        loClient.setClientId(getModel().getClientId());
+        
+        //set search by code
+        loClient.setByCode(fbByCode);
+        
+        //search record
+        loClient.searchRecord(getModel().Client().getCompanyName(), fbByCode);
+
+        //load record
         CommonUtils.showModal(loClient);
 
+        //load if button 
         if (!loClient.isCancelled()) {
             System.out.println("Client Id: " + loClient.getClient().getModel().getClientId());
             System.out.println("address Id: " + loClient.getClient().Address(0).getClientId());

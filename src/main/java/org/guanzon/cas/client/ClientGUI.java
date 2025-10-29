@@ -158,7 +158,7 @@ public class ClientGUI extends Application {
 
     }
 
-    private JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
+    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
         String lsSQL = getSQ_Browse();
         
         JSONObject loJSON = ShowDialogFX.Search(poGRider,
