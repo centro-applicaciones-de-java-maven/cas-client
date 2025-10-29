@@ -54,7 +54,7 @@ public class ClientInfo extends Parameter{
         poContact = ObjectInitiator.createModel(Model_Client_Institution_Contact.class, poGRider, Tables.CLIENT_INSTITUTION_CONTACT);
         
         if (psClientTp == null || psClientTp.isEmpty()) psClientTp = ClientType.INDIVIDUAL;
-        
+        initFields();
         super.initialize();
     }
         

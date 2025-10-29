@@ -58,6 +58,17 @@
                 </configuration>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>other sources/src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>other-sources/src/main/resources</directory>
+            </resource>
+        </resources>
     </build>
     <distributionManagement>
         <repository>
