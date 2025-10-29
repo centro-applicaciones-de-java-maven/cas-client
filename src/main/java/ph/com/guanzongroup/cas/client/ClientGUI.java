@@ -11,7 +11,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
@@ -21,7 +20,6 @@ import org.guanzon.appdriver.constant.ClientType;
 import ph.com.guanzongroup.cas.client.controller.IndividualNewController;
 import ph.com.guanzongroup.cas.client.controller.InstitutionNewController;
 import org.json.simple.JSONObject;
-import ph.com.guanzongroup.cas.client.ClientInfo;
 
 public class ClientGUI extends Application {
     private double xOffset = 0; 
@@ -80,7 +78,7 @@ public class ClientGUI extends Application {
         }
 
         if (psClientTp.equals(ClientType.INDIVIDUAL)) {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/IndividualNew.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ph/com/guanzongroup/cas/client/views/IndividualNew.fxml"));
 
             IndividualNewController controller = new IndividualNewController();
             controller.setGRider(poGRider);
@@ -118,7 +116,7 @@ public class ClientGUI extends Application {
                 poClient = controller.getClient();
             }
         } else {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/InstitutionNew.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/ph/com/guanzongroup/cas/client/views/InstitutionNew.fxml"));
 
             InstitutionNewController controller = new InstitutionNewController();
             controller.setGRider(poGRider);

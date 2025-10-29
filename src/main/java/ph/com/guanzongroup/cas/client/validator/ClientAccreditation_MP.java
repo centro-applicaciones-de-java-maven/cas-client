@@ -1,4 +1,4 @@
-package org.guanzon.cas.client.validator;
+package ph.com.guanzongroup.cas.client.validator;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.constant.UserRight;
-import org.guanzon.cas.client.constants.AccountAccreditationStatus;
+import ph.com.guanzongroup.cas.client.constants.AccountAccreditationStatus;
 import org.json.simple.JSONObject;
 import ph.com.guanzongroup.cas.iface.GValidator;
 import ph.com.guanzongroup.cas.model.Model_Account_Client_Accreditation;
@@ -18,14 +18,14 @@ import ph.com.guanzongroup.cas.model.Model_Account_Client_Accreditation;
  *
  * @author User
  */
-public class ClientAccreditation_Appliance implements GValidator{
+public class ClientAccreditation_MP implements GValidator{
 
     private GRiderCAS poGRider;
     private JSONObject poJSON;
     private boolean isRequiredApproval;
     private String psTranStat;
 
-    Model_Account_Client_Accreditation poMaster;
+    private Model_Account_Client_Accreditation poMaster;
 
     @Override
     public void setApplicationDriver(Object applicationDriver) {

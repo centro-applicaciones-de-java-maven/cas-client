@@ -44,8 +44,6 @@ public class ClientInfo extends Parameter{
     
     @Override
     public void initialize() throws SQLException, GuanzonException{
-        super.initialize();
-        
         psRecdStat = Logical.YES;
 
         poClient = ObjectInitiator.createModel(Model_Client_Master.class, poGRider, Tables.CLIENT_MASTER);

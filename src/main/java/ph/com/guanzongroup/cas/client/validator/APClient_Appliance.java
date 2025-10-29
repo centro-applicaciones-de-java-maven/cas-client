@@ -1,4 +1,4 @@
-package org.guanzon.cas.client.validator;
+package ph.com.guanzongroup.cas.client.validator;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -12,12 +12,12 @@ import ph.com.guanzongroup.cas.model.Model_AP_Client_Master;
  *
  * @author User
  */
-public class APClient_MP implements GValidator{
+public class APClient_Appliance implements GValidator{
 
     private GRiderCAS poGRider;
     private JSONObject poJSON;
-    private String psTranStat;
-    private Model_AP_Client_Master poMaster;
+
+    Model_AP_Client_Master poMaster;
 
     @Override
     public void setApplicationDriver(Object applicationDriver) {
@@ -49,6 +49,7 @@ public class APClient_MP implements GValidator{
     public JSONObject validate() {
         
         try {
+            
             poJSON = new JSONObject();
             
             //validate industry

@@ -12,7 +12,7 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
-import org.guanzon.cas.client.validator.ClientAccreditationValidatorFactory;
+import ph.com.guanzongroup.cas.client.validator.ClientAccreditationValidatorFactory;
 import org.json.simple.JSONObject;
 import ph.com.guanzongroup.cas.constants.Tables;
 import ph.com.guanzongroup.cas.core.ObjectInitiator;

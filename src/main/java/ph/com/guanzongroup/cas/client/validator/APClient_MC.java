@@ -1,4 +1,4 @@
-package org.guanzon.cas.client.validator;
+package ph.com.guanzongroup.cas.client.validator;
 
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -12,7 +12,7 @@ import ph.com.guanzongroup.cas.model.Model_AP_Client_Master;
  *
  * @author User
  */
-public class APClient_General implements GValidator{
+public class APClient_MC implements GValidator{
 
     private GRiderCAS poGRider;
     private JSONObject poJSON;

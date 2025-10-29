@@ -1,4 +1,4 @@
-package org.guanzon.cas.client.validator;
+package ph.com.guanzongroup.cas.client.validator;
 
 import ph.com.guanzongroup.cas.iface.GValidator;
 
