@@ -639,6 +639,7 @@ public class ClientInfo extends Parameter{
 
         //validate contact person
         if (getModel().getClientType().equals(ClientType.INSTITUTION)) {
+            
             if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty()
                     && paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) {
                 paContact.remove(paContact.size() - 1);
@@ -770,18 +771,30 @@ public class ClientInfo extends Parameter{
             }
            
             if (getModel().getClientType().equals(ClientType.INSTITUTION)){
+                
                 Model_Client_Institution_Contact loContact;
+                int lnPrimary = 0;
+                
                 for (lnCtr = 0; lnCtr <= paContact.size() - 1; lnCtr++){
                     loContact = paContact.get(lnCtr);
 
-                    if (loContact.getContactPersonName().isEmpty()) {
+                    if (loContact.getContactPersonName().isEmpty() && loContact.getMobileNo().isEmpty()) {
                         paContact.remove(lnCtr);
                         break;
                     }
-
-                    if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
+                    
+                    //if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
+                    if (loContact.isPrimaryContactPersion()) lnPrimary += 1;
                     if (loContact.getEditMode() == EditMode.ADDNEW || loContact.getEditMode() == EditMode.UPDATE) loContact.setModifiedDate(poGRider.getServerDate());
                 }
+                
+                if (lnPrimary > 0) {
+                    poJSON = new JSONObject();
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Only one contact person should be primary!\nPlease check contact details.");
+                    return poJSON;
+                }
+
             }
             
         }

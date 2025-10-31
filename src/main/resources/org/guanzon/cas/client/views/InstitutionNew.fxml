@@ -331,13 +331,18 @@
                                                                                           <Insets left="15.0" />
                                                                                        </GridPane.margin>
                                                                                     </Text>
-                                                                                    <CheckBox fx:id="cbContact01" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                                    <CheckBox fx:id="cbContact01" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="6">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
+                                                                                    </CheckBox>
+                                                                                    <CheckBox fx:id="cbContact02" mnemonicParsing="false" selected="true" text="Primary" GridPane.columnIndex="7" GridPane.halignment="RIGHT">
+                                                                                       <font>
+                                                                                          <Font size="14.0" />
+                                                                                       </font>
                                                                                     </CheckBox>
                                                               <Button fx:id="btnAddContact" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="10">
                                                                      <graphic>

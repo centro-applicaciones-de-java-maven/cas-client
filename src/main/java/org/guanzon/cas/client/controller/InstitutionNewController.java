@@ -141,6 +141,9 @@ public class InstitutionNewController implements Initializable {
 
     @FXML
     private CheckBox cbContact01;
+    
+    @FXML
+    private CheckBox cbContact02;
 
     @FXML
     private Button btnAddContact;
@@ -672,6 +675,7 @@ public class InstitutionNewController implements Initializable {
         txtContact05.setText("");
 
         cbContact01.selectedProperty().set(false);
+        cbContact02.selectedProperty().set(false);
 
         pnCompany = 0;
         pnContactPerson = 0;
@@ -853,7 +857,9 @@ public class InstitutionNewController implements Initializable {
     }
 
     private void getSelectedContactPerson() {
+        
         pbLoadingData = true;
+        
         if (poClient.getInstiContactCount() > 0) {
             txtContact00.setText(poClient.InstiContact(pnContactPerson).getContactPersonName());
             txtContact01.setText(poClient.InstiContact(pnContactPerson).getContactPersonPosition());
@@ -863,6 +869,7 @@ public class InstitutionNewController implements Initializable {
             txtContact05.setText(poClient.InstiContact(pnContactPerson).getMailAddress());
 
             cbContact01.setSelected(("1".equals(poClient.InstiContact(pnContactPerson).getRecordStatus())));
+            cbContact02.setSelected(poClient.InstiContact(pnContactPerson).isPrimaryContactPersion());
 
         }
         pbLoadingData = false;
@@ -924,8 +931,11 @@ public class InstitutionNewController implements Initializable {
     }
 
     private void initContactPersonCheckbox() {
-        CheckBox[] cbMobileCheckboxes = {cbContact01};
+        
+        CheckBox[] cbMobileCheckboxes = {cbContact01, cbContact02};
+        
         for (CheckBox checkbox : cbMobileCheckboxes) {
+            
             // Capture the current checkbox
             checkbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
@@ -943,6 +953,13 @@ public class InstitutionNewController implements Initializable {
                         switch (number) {
                             case 1: // Active
                                 loJSON = poClient.Mobile(pnContactPerson).setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                                
+                            case 2: // Primary
+                                loJSON = poClient.Mobile(pnContactPerson).isPrimaryMobile(checkbox.isSelected());
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
