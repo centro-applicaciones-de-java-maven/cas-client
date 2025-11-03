@@ -97,6 +97,14 @@ public class ClientInfo extends Parameter{
         
         return paContact.get(row);
     }
+    
+    public ArrayList<Model_Client_Address> AddressList(){
+        return paAddress;
+    }
+    
+    public ArrayList<Model_Client_Institution_Contact> InstiContactList(){
+        return paContact;
+    }
         
     public int getMobileCount(){
         return paMobile.size();
@@ -712,24 +720,11 @@ public class ClientInfo extends Parameter{
             
             //assign client ids to details
             int lnCtr;
-
-            Model_Client_Mobile loMobile;
-            for (lnCtr = 0; lnCtr <= paMobile.size() - 1; lnCtr++){
-                loMobile = paMobile.get(lnCtr);
-                
-                if (loMobile.getMobileNo().isEmpty()) {
-                    paMobile.remove(lnCtr);
-                    break;
-                }
-                                
-                loMobile.setClientId(poClient.getClientId());
-                loMobile.setMobileNetwork(CommonUtils.classifyNetwork(loMobile.getMobileNo()));
-                
-                if (paMobile.size() == 1) loMobile.isPrimaryMobile(true);
-                if (loMobile.getEditMode() == EditMode.ADDNEW  || loMobile.getEditMode() == EditMode.UPDATE) loMobile.setModifiedDate(poGRider.getServerDate());
-            }
             
+            //CONTACT ADDRESS
             Model_Client_Address loAddress;
+            int lnPrimaryAddr = 0;
+            
             for (lnCtr = 0; lnCtr <= paAddress.size() - 1; lnCtr++){
                 loAddress = paAddress.get(lnCtr);
                 
@@ -737,43 +732,30 @@ public class ClientInfo extends Parameter{
                     paAddress.remove(lnCtr);
                     break;
                 }
-                
                 loAddress.setClientId(poClient.getClientId());
-                if (paAddress.size() == 1) loAddress.isPrimaryAddress(true);
+                
+                //if (paAddress.size() == 1) loAddress.isPrimaryAddress(true);
+                if (loAddress.isPrimaryAddress()) lnPrimaryAddr += 1;
                 if (loAddress.getEditMode() == EditMode.ADDNEW  || loAddress.getEditMode() == EditMode.UPDATE) loAddress.setModifiedDate(poGRider.getServerDate());
             }
             
-            Model_Client_Mail loMail;
-            for (lnCtr = 0; lnCtr <= paMail.size() - 1; lnCtr++){
-                loMail = paMail.get(lnCtr);
-                
-                if (loMail.getMailAddress().isEmpty()) {
-                    paMail.remove(lnCtr);
-                    break;
-                }
-                
-                loMail.setClientId(poClient.getClientId());
-                if (paMail.size() == 1) loMail.isPrimaryEmail(true);
-                if (loMail.getEditMode() == EditMode.ADDNEW  || loMail.getEditMode() == EditMode.UPDATE) loMail.setModifiedDate(poGRider.getServerDate());
+            if (lnPrimaryAddr > 1) {
+                poJSON = new JSONObject();
+                poJSON.put("result", "error");
+                poJSON.put("message", "Only one address should be primary!\nPlease check address.");
+                return poJSON;
             }
-            
-            Model_Client_Social_Media loSocMed;
-            for (lnCtr = 0; lnCtr <= paSocMed.size() - 1; lnCtr++){
-                loSocMed = paSocMed.get(lnCtr);
-                
-                if (loSocMed.getAccount().isEmpty()) {
-                    paSocMed.remove(lnCtr);
-                    break;
-                }
-                
-                loSocMed.setClientId(poClient.getClientId());                
-                if (loSocMed.getEditMode() == EditMode.ADDNEW  || loSocMed.getEditMode() == EditMode.UPDATE) loSocMed.setModifiedDate(poGRider.getServerDate());
+            if (lnPrimaryAddr <= 0) {
+                poJSON = new JSONObject();
+                poJSON.put("result", "error");
+                poJSON.put("message", "Please select atleast one primary address!");
+                return poJSON;
             }
            
             if (getModel().getClientType().equals(ClientType.INSTITUTION)){
                 
                 Model_Client_Institution_Contact loContact;
-                int lnPrimary = 0;
+                int lnPrimaryContact = 0;
                 
                 for (lnCtr = 0; lnCtr <= paContact.size() - 1; lnCtr++){
                     loContact = paContact.get(lnCtr);
@@ -783,16 +765,103 @@ public class ClientInfo extends Parameter{
                         break;
                     }
                     
-                    //if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
-                    if (loContact.isPrimaryContactPersion()) lnPrimary += 1;
+                    if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
+                    if (loContact.isPrimaryContactPersion()) lnPrimaryContact += 1;
                     if (loContact.getEditMode() == EditMode.ADDNEW || loContact.getEditMode() == EditMode.UPDATE) loContact.setModifiedDate(poGRider.getServerDate());
                 }
                 
-                if (lnPrimary > 0) {
+                if (lnPrimaryContact > 1) {
                     poJSON = new JSONObject();
                     poJSON.put("result", "error");
-                    poJSON.put("message", "Only one contact person should be primary!\nPlease check contact details.");
+                    poJSON.put("message", "Only one contact person should be primary active!\nPlease check contact details.");
                     return poJSON;
+                }
+                
+                if (lnPrimaryContact <= 0) {
+                    poJSON = new JSONObject();
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Please select atleast one primary contact!");
+                    return poJSON;
+                 }
+
+            }else{
+                
+                //MOBILE NUMBER
+                Model_Client_Mobile loMobile;
+                int lnPrimaryMobile = 0;
+
+                for (lnCtr = 0; lnCtr <= paMobile.size() - 1; lnCtr++){
+                    loMobile = paMobile.get(lnCtr);
+
+                    if (loMobile.getMobileNo().isEmpty()) {
+                        paMobile.remove(lnCtr);
+                        break;
+                    }
+
+                    loMobile.setClientId(poClient.getClientId());
+                    loMobile.setMobileNetwork(CommonUtils.classifyNetwork(loMobile.getMobileNo()));
+
+                    //if (paMobile.size() == 1) loMobile.isPrimaryMobile(true);
+                    if (loMobile.isPrimaryMobile()) lnPrimaryMobile += 1;
+                    if (loMobile.getEditMode() == EditMode.ADDNEW  || loMobile.getEditMode() == EditMode.UPDATE) loMobile.setModifiedDate(poGRider.getServerDate());
+                }
+
+                if (lnPrimaryMobile > 1) {
+                    poJSON = new JSONObject();
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Only one mobile should be primary!\nPlease check address.");
+                    return poJSON;
+                }
+                if (lnPrimaryMobile <= 0) {
+                    poJSON = new JSONObject();
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Please select atleast one primary mobile!");
+                    return poJSON;
+                }
+                
+                //CONTACT EMAIL
+                Model_Client_Mail loMail;
+                int lnPrimaryMail = 0;
+
+                for (lnCtr = 0; lnCtr <= paMail.size() - 1; lnCtr++){
+                    loMail = paMail.get(lnCtr);
+
+                    if (loMail.getMailAddress().isEmpty()) {
+                        paMail.remove(lnCtr);
+                        break;
+                    }
+                    loMail.setClientId(poClient.getClientId());
+
+                    //if (paMail.size() == 1) loMail.isPrimaryEmail(true);
+                    if (loMail.isPrimaryEmail()) lnPrimaryMail += 1;
+                    if (loMail.getEditMode() == EditMode.ADDNEW  || loMail.getEditMode() == EditMode.UPDATE) loMail.setModifiedDate(poGRider.getServerDate());
+                }
+
+                if (lnPrimaryMail > 1) {
+                    poJSON = new JSONObject();
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Only one email should be primary!\nPlease check address.");
+                    return poJSON;
+                }
+                if (lnPrimaryMail <= 0) {
+                    poJSON = new JSONObject();
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Please select atleast one primary email!");
+                    return poJSON;
+                }
+
+                //CONTACT SOCIAL MEDIA
+                Model_Client_Social_Media loSocMed;
+                for (lnCtr = 0; lnCtr <= paSocMed.size() - 1; lnCtr++){
+                    loSocMed = paSocMed.get(lnCtr);
+
+                    if (loSocMed.getAccount().isEmpty()) {
+                        paSocMed.remove(lnCtr);
+                        break;
+                    }
+                    loSocMed.setClientId(poClient.getClientId());    
+ 
+                    if (loSocMed.getEditMode() == EditMode.ADDNEW  || loSocMed.getEditMode() == EditMode.UPDATE) loSocMed.setModifiedDate(poGRider.getServerDate());
                 }
 
             }
@@ -890,6 +959,7 @@ public class ClientInfo extends Parameter{
                     } else {
                         //validate if record is modified
                         loContact.updateRecord();
+                        loContact.isPrimaryContactPersion(loContact.isPrimaryContactPersion());
                         loContact.setModifiedDate(poGRider.getServerDate());
                         loContact.saveRecord();
                     }

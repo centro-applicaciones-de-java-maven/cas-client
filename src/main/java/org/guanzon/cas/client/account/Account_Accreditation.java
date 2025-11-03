@@ -15,6 +15,8 @@ import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.iface.GValidator;
 import org.guanzon.cas.client.ClientGUI;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
+import org.guanzon.cas.client.model.Model_Client_Address;
+import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
 import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.client.validator.ClientAccreditationValidatorFactory;
@@ -201,20 +203,23 @@ public class Account_Accreditation extends Parameter {
                 return loJSON;
             }
         } else {
-            
-            String lsSQL = "SELECT"
+            System.out.print("this is the value " + !fsValue.equals(""));
+            //if (fsValue.equals("") == false) {
+                
+                String lsSQL = "SELECT"
                 + " sClientID"
                 + ", sCompnyNm"
                 + " FROM Client_Master"
                 + " WHERE cRecdStat= '1'";
             
-            loJSON = ShowDialogFX.Search(poGRider, 
-                    lsSQL, 
-                    fsValue, 
-                    "Client ID»Client Name", 
-                    "sClientID»sCompnyNm",
-                    "sClientID»sCompnyNm",
-                    fbByCode ? 0 : 1);
+                loJSON = ShowDialogFX.Search(poGRider, 
+                        lsSQL, 
+                        fsValue, 
+                        "Client ID»Client Name", 
+                        "sClientID»sCompnyNm",
+                        "sClientID»sCompnyNm",
+                        fbByCode ? 0 : 1);
+            //}
             
             //initialize Client GUI
             ClientGUI loClient = new ClientGUI();
@@ -249,14 +254,30 @@ public class Account_Accreditation extends Parameter {
 
             //load if button 
             if (!loClient.isCancelled()) {
-                
-                System.out.println("Client Id: " + loClient.getClient().getModel().getClientId());
-                System.out.println("address Id: " + loClient.getClient().Address(0).getClientId());
-                System.out.println("contact person Id: " + loClient.getClient().InstiContact(0).getClientId());
 
                 getModel().setClientId(loClient.getClient().getModel().getClientId());
-                getModel().setAddressId(loClient.getClient().Address(0).getClientId() != null ? loClient.getClient().Address(0).getClientId() : "");
-                getModel().setContactId(loClient.getClient().InstiContact(0).getClientId() != null ? loClient.getClient().InstiContact(0).getClientId() : "");
+                
+                //get address
+                for(Model_Client_Address loAddr : loClient.getClient().AddressList()){
+                    
+                    //set primary address
+                    if (loAddr.isPrimaryAddress()) {
+                        getModel().setAddressId(loAddr.getAddressId()!= null ? loAddr.getAddressId() : "");
+                        break;
+                    }
+                }
+                System.out.println("address Id: " + getModel().getAddressId());
+                
+                //get contact
+                for(Model_Client_Institution_Contact loContact : loClient.getClient().InstiContactList()){
+                    
+                    //set primary contact
+                    if (loContact.isPrimaryContactPersion()) {
+                        getModel().setContactId(loContact.getContactPId()!= null ? loContact.getContactPId() : "");
+                        break;
+                    }
+                }
+                System.out.println("Contact Id: " + getModel().getContactId());
                 
                 loJSON.put("result", "success");
                 return loJSON;

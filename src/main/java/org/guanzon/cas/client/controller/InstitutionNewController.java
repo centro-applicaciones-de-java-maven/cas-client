@@ -261,7 +261,7 @@ public class InstitutionNewController implements Initializable {
         }
     }
 
-    private void cmdButton_Click(ActionEvent event) {
+    private void cmdButton_Click(ActionEvent event){
         try {
             switch (((Button) event.getSource()).getId()) {
                 case "btnExit":
@@ -703,18 +703,22 @@ public class InstitutionNewController implements Initializable {
                 poJSON = poClient.updateRecord();
                 
                 pnEditMode = poClient.getEditMode();
-
-                anchorAddress.setDisable(true);
-                gridAddress.setDisable(true);
                 
-                if(pnEditMode == EditMode.UPDATE){
+                if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
                     
                     //allow to modify contact on update
                     anchorSocMed.setDisable(false);
                     gridSocMed.setDisable(false);
+                    
+                    //allow to modify address on update
+                    anchorAddress.setDisable(false);
+                    gridAddress.setDisable(false);
                 }else{
                     anchorSocMed.setDisable(true);
                     gridSocMed.setDisable(true);
+                    
+                    anchorAddress.setDisable(true);
+                    gridAddress.setDisable(true);
                 }
 
                 lblClientStatus.setText("***REPEAT INSTITUTION");
@@ -952,16 +956,24 @@ public class InstitutionNewController implements Initializable {
                         int number = Integer.parseInt(numberPart);
                         switch (number) {
                             case 1: // Active
-                                loJSON = poClient.Mobile(pnContactPerson).setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                                loJSON = poClient.InstiContact(pnContactPerson).setRecordStatus(checkbox.isSelected() ? "1" : "0");
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
                                 break;
                                 
                             case 2: // Primary
-                                loJSON = poClient.Mobile(pnContactPerson).isPrimaryMobile(checkbox.isSelected());
+                                loJSON = poClient.InstiContact(pnContactPerson).isPrimaryContactPersion(checkbox.isSelected() ? true : false);
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
+                                }
+                                
+                                if (!pbLoadingData) {
+                                    for (int in = 0; in < poClient.getInstiContactCount(); in++) {
+                                        if (in != pnContactPerson) {
+                                            poClient.InstiContact(in).isPrimaryContactPersion(false);
+                                        }
+                                    }
                                 }
                                 break;
 
@@ -975,7 +987,7 @@ public class InstitutionNewController implements Initializable {
             });
         }
     }
-
+   
     public Stage getStage() {
         return (Stage) AnchorMain.getScene().getWindow();
     }

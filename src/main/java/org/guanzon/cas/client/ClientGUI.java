@@ -64,16 +64,21 @@ public class ClientGUI extends Application {
     
     @Override
     public void start(Stage primaryStage) throws Exception {
-        if (pbByCode) {
-            JSONObject loJSON = searchRecord(psClientId != null ? psClientId : "", true);
+        
+        if(psClientId != null && !psClientId.isEmpty()){
+            
+            if (pbByCode) {
+                JSONObject loJSON = searchRecord(psClientId != null ? psClientId : "", true);
 
-            if ("success".equals((String) loJSON.get("result"))) {
-                psClientId = (String) loJSON.get("clientId") != null ? (String) loJSON.get("clientId") : "";
-            }
-        } else {
-            JSONObject loJSON = searchRecord(psClientId != null ? psClientId : "", false);
-            if ("success".equals((String) loJSON.get("result"))) {
-                psClientId = (String) loJSON.get("clientId") != null ? (String) loJSON.get("clientId") : "";
+                if ("success".equals((String) loJSON.get("result"))) {
+                    psClientId = (String) loJSON.get("clientId") != null ? (String) loJSON.get("clientId") : "";
+                }
+            } else {
+                JSONObject loJSON = searchRecord(psClientId != null ? psClientId : "", false);
+                if ("success".equals((String) loJSON.get("result"))) {
+                    psClientId = (String) loJSON.get("clientId") != null ? (String) loJSON.get("clientId") : "";
+                }
+
             }
 
         }
