@@ -38,8 +38,6 @@ public class Model_Client_Address extends Model{
             poEntity.updateString("cCurrentx", Logical.NO);
             poEntity.updateString("cLTMSAddx", Logical.NO);
             poEntity.updateString("cRecdStat", RecordStatus.ACTIVE);
-//            poEntity.updateString("sModified", poGRider.getUserID());
-//            poEntity.updateObject("dModified", poGRider.getServerDate());
             //end - assign default values
 
             poEntity.insertRow();

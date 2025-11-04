@@ -301,7 +301,7 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
     
-    public JSONObject addAddress() throws CloneNotSupportedException{
+    public JSONObject addAddress() throws CloneNotSupportedException, SQLException{
         poJSON = new JSONObject();
         
         if (!pbInitRec){
@@ -330,8 +330,9 @@ public class ClientInfo extends Parameter{
             }
         }
         
-        Model_Client_Address object = (Model_Client_Address) poAddress.clone();
+        Model_Client_Address object = new ClientModels(poGRider).ClientAddress(); //(Model_Client_Address) poaddress.clone();
         object.newRecord();
+        object.setModifiedDate(poGRider.getServerDate());
 
         paAddress.add(object);
         
@@ -403,7 +404,7 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
     
-    public JSONObject addInstiContact() throws CloneNotSupportedException{
+    public JSONObject addInstiContact() throws CloneNotSupportedException, SQLException{
         poJSON = new JSONObject();
         
         if (!pbInitRec){
@@ -433,9 +434,10 @@ public class ClientInfo extends Parameter{
             }
         }
         
-        Model_Client_Institution_Contact object = (Model_Client_Institution_Contact) poContact.clone();
+        Model_Client_Institution_Contact object = new ClientModels(poGRider).ClientInstitutionContact();//(Model_Client_Institution_Contact) poContact.clone();
         object.newRecord();
-
+        object.setModifiedDate(poGRider.getServerDate());
+        
         paContact.add(object);
         
         poJSON.put("result", "success");
@@ -737,6 +739,8 @@ public class ClientInfo extends Parameter{
                 //if (paAddress.size() == 1) loAddress.isPrimaryAddress(true);
                 if (loAddress.isPrimaryAddress()) lnPrimaryAddr += 1;
                 if (loAddress.getEditMode() == EditMode.ADDNEW  || loAddress.getEditMode() == EditMode.UPDATE) loAddress.setModifiedDate(poGRider.getServerDate());
+                
+                System.out.print("this is the modified data " + loAddress.getModifiedDate());
             }
             
             if (lnPrimaryAddr > 1) {
@@ -765,9 +769,11 @@ public class ClientInfo extends Parameter{
                         break;
                     }
                     
-                    if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
+                    //if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
                     if (loContact.isPrimaryContactPersion()) lnPrimaryContact += 1;
                     if (loContact.getEditMode() == EditMode.ADDNEW || loContact.getEditMode() == EditMode.UPDATE) loContact.setModifiedDate(poGRider.getServerDate());
+                    
+                    System.out.print("this is the modified data " + loContact.getModifiedDate());
                 }
                 
                 if (lnPrimaryContact > 1) {

@@ -287,7 +287,9 @@ public class InstitutionNewController implements Initializable {
                 case "btnDelAddress":
                     break;
                 case "btnAddAddress":
+                    
                     JSONObject addObjAddress = poClient.addAddress();
+                    
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information(getStage(), (String) addObjAddress.get("message"), "Computerized Acounting System", MODULE);
                         break;
@@ -295,6 +297,7 @@ public class InstitutionNewController implements Initializable {
                         poClient.Address(pnCompany).setClientId(poClient.getModel().getClientId());
                         pnCompany = poClient.getAddressCount() - 1;
                         tblAddress.getSelectionModel().select(pnCompany + 1);
+                        
                         loadRecordAddress();
 
                         txtAddress03.requestFocus();
@@ -312,6 +315,7 @@ public class InstitutionNewController implements Initializable {
                         pnContactPerson = poClient.getMobileCount() - 1;
                         
                         tblSocMed.getSelectionModel().select(pnContactPerson + 1);
+                        
                         loadContactPerson();
 
                         txtContact00.requestFocus();
@@ -753,33 +757,45 @@ public class InstitutionNewController implements Initializable {
 
     private void loadRecordAddress() {
         try {
-            loadMasterAddress();
 
             int lnCtr;
             company_data.clear();
 
             if (poClient.getAddressCount() >= 0) {
+                
                 for (lnCtr = 0; lnCtr < poClient.getAddressCount(); lnCtr++) {
+                    
                     company_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
-                            (String) poClient.Address(lnCtr).getValue("sHouseNox"),
-                            (String) poClient.Address(lnCtr).getValue("sAddressx"),
+                            (String) poClient.Address(lnCtr).getHouseNo(),
+                            (String) poClient.Address(lnCtr).getAddress(),
                             (String) poClient.Address(lnCtr).Town().getDescription(),
                             (String) poClient.Address(lnCtr).Barangay().getBarangayName()));
+                    
+                    //set primary address the first item, only if size is 1
+                    if(poClient.getAddressCount() == 1 && lnCtr == 0){
+                        poClient.Address(0).isPrimaryAddress(true);
+                    }
                 }
             }
+            loadMasterAddress();
 
             if (pnCompany < 0 || pnCompany >= company_data.size()) {
+                
                 if (!company_data.isEmpty()) {
+                    
                     /* FOCUS ON FIRST ROW */
                     tblAddress.getSelectionModel().select(0);
                     tblAddress.getFocusModel().focus(0);
                     pnCompany = tblAddress.getSelectionModel().getSelectedIndex();
+                    
                     getSelectedAddress();
                 }
             } else {
+                
                 /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
                 tblAddress.getSelectionModel().select(pnCompany);
                 tblAddress.getFocusModel().focus(pnCompany);
+                
                 getSelectedAddress();
             }
         } catch (SQLException | GuanzonException e) {
@@ -792,7 +808,9 @@ public class InstitutionNewController implements Initializable {
         boolean primaryAddressExists = false;
 
         for (int i = 0; i < poClient.getAddressCount(); i++) {
+            
             if (poClient.Address(i).isPrimaryAddress()) {
+                
                 address = poClient.Address(i).getHouseNo() + " "
                         + poClient.Address(i).getAddress() + " "
                         + poClient.Address(i).Barangay().getBarangayName() + " "
@@ -800,6 +818,7 @@ public class InstitutionNewController implements Initializable {
                         + poClient.Address(i).Town().Province().getDescription();
 
                 txtField03.setText(address.trim());
+                
                 primaryAddressExists = true; // Mark as found
                 break; // Exit the loop since a primary address is found
             }
@@ -831,16 +850,20 @@ public class InstitutionNewController implements Initializable {
     }
 
     private void loadContactPerson() {
-        int lnCtr2 = 0;
         contactPerson_data.clear();
         if (poClient.getInstiContactCount() >= 0) {
             for (int lnCtr = 0; lnCtr < poClient.getInstiContactCount(); lnCtr++) {
+                
                 contactPerson_data.add(new ModelContactPerson(String.valueOf(lnCtr + 1),
-                        poClient.InstiContact(lnCtr).getValue("sCPerson1").toString(),
-                        poClient.InstiContact(lnCtr).getValue("sCPPosit1").toString(),
-                        poClient.InstiContact(lnCtr).getValue("sEMailAdd").toString()
+                        poClient.InstiContact(lnCtr).getContactPersonName(),
+                        poClient.InstiContact(lnCtr).getContactPersonPosition(),
+                        poClient.InstiContact(lnCtr).getMailAddress()
                 ));
-                lnCtr2 += 1;
+                
+                //set primary address the first item, only if size is 1
+                if(poClient.getInstiContactCount()== 1 && lnCtr == 0){
+                    poClient.InstiContact(0).isPrimaryContactPersion(true);
+                }
             }
         }
         if (pnContactPerson < 0 || pnContactPerson
