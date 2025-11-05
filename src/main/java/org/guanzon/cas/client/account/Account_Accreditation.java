@@ -15,6 +15,8 @@ import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.iface.GValidator;
 import org.guanzon.cas.client.ClientGUI;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
+import org.guanzon.cas.client.model.Model_Client_Address;
+import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
 import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.client.validator.ClientAccreditationValidatorFactory;
@@ -38,7 +40,7 @@ public class Account_Accreditation extends Parameter {
     @Override
     public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
-        
+
         //initialize validator
         GValidator loValidator = ClientAccreditationValidatorFactory.make(poGRider.getIndustry());
         
@@ -95,7 +97,7 @@ public class Account_Accreditation extends Parameter {
                 value,
                 "Transaction No»Date»Name",
                 "sTransNox»dTransact»sCompnyNm",
-                "sTransNox»dTransact»sCompnyNm",
+                "sTransNox»sCompnyNm",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -189,55 +191,107 @@ public class Account_Accreditation extends Parameter {
     }
 
     public JSONObject searchClient(String fsValue, boolean fbByCode) throws SQLException, GuanzonException, Exception {
-        JSONObject loJSON;
 
         if (fbByCode) {
+            JSONObject loJSON = new JSONObject();
             if (fsValue.equals(getModel().getClientId())) {
-                loJSON = new JSONObject();
                 loJSON.put("result", "success");
+                return loJSON;
+            }else{
+                loJSON.put("result", "error");
+                loJSON.put("message", "Client not found.");
                 return loJSON;
             }
         } else {
-            if (getModel().Client().getCompanyName() != null && !getModel().Client().getCompanyName().isEmpty()) {
-                if (fsValue.equals(getModel().Client().getCompanyName())) {
-                    loJSON = new JSONObject();
-                    loJSON.put("result", "success");
+            JSONObject loJSON = null;
+            if (!fsValue.isEmpty()) {
+                
+                String lsSQL = "SELECT"
+                + " sClientID"
+                + ", sCompnyNm"
+                + " FROM Client_Master"
+                + " WHERE cRecdStat= '1'";
+            
+                loJSON = ShowDialogFX.Search(poGRider, 
+                        lsSQL, 
+                        fsValue, 
+                        "Client ID»Client Name", 
+                        "sClientID»sCompnyNm",
+                        "sClientID»sCompnyNm",
+                        fbByCode ? 0 : 1);
+                
+                if (loJSON == null) {
                     return loJSON;
                 }
             }
+            
+            //initialize Client GUI
+            ClientGUI loClient = new ClientGUI();
+
+            loClient.setGRider(poGRider);
+            loClient.setLogWrapper(null);
+
+            //filter client type 
+            loClient.setClientType(ClientType.INSTITUTION);
+            
+            //searchRecord(fsValue,fbByCode) will run make sure to set client and bycode
+            //bycode true client id
+            //bycode false company
+
+            //set search by code
+            loClient.setByCode(fbByCode);
+            
+            if (loJSON != null) {
+                getModel().setClientId(loJSON.get("sClientID").toString());
+                
+                //set client id
+                loClient.setClientId(getModel().getClientId());
+                
+                //search record
+                loClient.searchRecord(getModel().Client().getCompanyName(), fbByCode);
+            }else {
+                loClient.setClientId("");
+            }
+
+            //load record
+            CommonUtils.showModal(loClient);
+            
+            //initialize new json for result
+            JSONObject loResult = new JSONObject();
+
+            //load if button 
+            if (!loClient.isCancelled()) {
+
+                getModel().setClientId(loClient.getClient().getModel().getClientId());
+                
+                //get address
+                for(Model_Client_Address loAddr : loClient.getClient().AddressList()){
+                    
+                    //set primary address
+                    if (loAddr.isPrimaryAddress()) {
+                        getModel().setAddressId(loAddr.getAddressId()!= null ? loAddr.getAddressId() : "");
+                        break;
+                    }
+                }
+                
+                //get contact
+                for(Model_Client_Institution_Contact loContact : loClient.getClient().InstiContactList()){
+                    
+                    //set primary contact
+                    if (loContact.isPrimaryContactPersion()) {
+                        getModel().setContactId(loContact.getContactPId()!= null ? loContact.getContactPId() : "");
+                        break;
+                    }
+                }
+                
+                loResult.put("result", "success");
+                return loResult;
+            } else {
+                loResult.put("result", "error");
+                loResult.put("message", "No record selected.");
+                return loResult;
+            }
         }
-        //initialize Client GUI
-        ClientGUI loClient = new ClientGUI();
-
-        loClient.setGRider(poGRider);
-        loClient.setLogWrapper(null);
-        //filter client type 
-        loClient.setClientType(ClientType.INSTITUTION);
-        //searchRecord(fsValue,fbByCode) will run make sure to set client and bycode
-        //bycode true client id
-        //bycode false company
-        loClient.setClientId(fsValue);
-        loClient.setByCode(fbByCode);
-
-        CommonUtils.showModal(loClient);
-
-        if (!loClient.isCancelled()) {
-            System.out.println("Client Id: " + loClient.getClient().getModel().getClientId());
-            System.out.println("address Id: " + loClient.getClient().Address(0).getClientId());
-            System.out.println("contact person Id: " + loClient.getClient().InstiContact(0).getClientId());
-
-            getModel().setClientId(loClient.getClient().getModel().getClientId());
-            getModel().setAddressId(loClient.getClient().Address(0).getClientId() != null ? loClient.getClient().Address(0).getClientId() : "");
-            getModel().setContactId(loClient.getClient().InstiContact(0).getClientId() != null ? loClient.getClient().InstiContact(0).getClientId() : "");
-            loJSON = new JSONObject();
-            loJSON.put("result", "success");
-        } else {
-            loJSON = new JSONObject();
-            loJSON.put("result", "error");
-            loJSON.put("message", "No record selected.");
-        }
-
-        return loJSON;
     }
 
     public JSONObject searchClientContact(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {

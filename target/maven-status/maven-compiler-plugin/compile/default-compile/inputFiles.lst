@@ -2,6 +2,7 @@ C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\ClientInfo.jav
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\Client_Social_Media.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\controller\IndividualNewControllerx.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AP_Client_Master.java
+C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\ClientAccreditation_MainOffice.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\services\ClientControllers.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\account\AP_Client_Master.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\ClientGUI.java
@@ -17,11 +18,14 @@ C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\controller\Cli
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\Client_Mail.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\ClientAccreditation_Car.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\APClient_Monarch.java
+C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\APClient_MainOffice.java
+C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\ClientAccreditation_Engineering.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\APClient_MC.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelAddress.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\APClient_LP.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Mail.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AR_Client_Ledger.java
+C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\APClient_Engineering.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\Client.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_AP_Client_Ledger.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Social_Media.java

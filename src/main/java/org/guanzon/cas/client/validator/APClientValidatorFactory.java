@@ -25,10 +25,14 @@ public class APClientValidatorFactory {
                 return new APClient_Monarch();
             case "05": //Los Pedritos
                 return new APClient_LP();
-            case "06": //General
-                return new APClient_General();
+            case "06": //Main Office
+                return new APClient_MainOffice();
             case "07": //Appliances
                 return new APClient_Appliance();
+            case "08": //Engineering
+                return new APClient_Engineering();
+            case "09": //General
+                return new APClient_General();
 
             case "": //Main Office
                 return new APClient_General();

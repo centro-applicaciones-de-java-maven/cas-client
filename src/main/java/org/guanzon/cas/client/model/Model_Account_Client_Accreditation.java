@@ -230,7 +230,7 @@ public class Model_Account_Client_Accreditation extends Model {
     public Model_Client_Institution_Contact ClientInstitutionContact() throws SQLException, GuanzonException {
         if (!"".equals(getValue("sContctID"))) {
             if (this.poClientInstitutionContact.getEditMode() == 1 && this.poClientInstitutionContact
-                    .getClientId().equals(getValue("sContctID"))) {
+                    .getContactPId().equals(getValue("sContctID"))) {
                 return this.poClientInstitutionContact;
             }
             this.poJSON = this.poClientInstitutionContact.openRecord((String) getValue("sContctID"));

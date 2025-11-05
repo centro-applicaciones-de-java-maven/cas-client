@@ -141,6 +141,9 @@ public class InstitutionNewController implements Initializable {
 
     @FXML
     private CheckBox cbContact01;
+    
+    @FXML
+    private CheckBox cbContact02;
 
     @FXML
     private Button btnAddContact;
@@ -248,6 +251,7 @@ public class InstitutionNewController implements Initializable {
             poClient = new ClientControllers(poGRider, poWrapper).ClientInfo();
             poClient.setClientType(ClientType.INSTITUTION);
             poClient.setRecordStatus("1");
+            
             loadRecord();
 
             pbLoaded = true;
@@ -257,7 +261,7 @@ public class InstitutionNewController implements Initializable {
         }
     }
 
-    private void cmdButton_Click(ActionEvent event) {
+    private void cmdButton_Click(ActionEvent event){
         try {
             switch (((Button) event.getSource()).getId()) {
                 case "btnExit":
@@ -267,7 +271,7 @@ public class InstitutionNewController implements Initializable {
                     getStage().close();
                     break;
                 case "btnSave":
-                    if (pnEditMode == EditMode.ADDNEW) {
+                    if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                         poJSON = poClient.saveRecord();
 
                         if (!"success".equals((String) poJSON.get("result"))) {
@@ -283,7 +287,9 @@ public class InstitutionNewController implements Initializable {
                 case "btnDelAddress":
                     break;
                 case "btnAddAddress":
+                    
                     JSONObject addObjAddress = poClient.addAddress();
+                    
                     if ("error".equals((String) addObjAddress.get("result"))) {
                         ShowMessageFX.Information(getStage(), (String) addObjAddress.get("message"), "Computerized Acounting System", MODULE);
                         break;
@@ -291,6 +297,7 @@ public class InstitutionNewController implements Initializable {
                         poClient.Address(pnCompany).setClientId(poClient.getModel().getClientId());
                         pnCompany = poClient.getAddressCount() - 1;
                         tblAddress.getSelectionModel().select(pnCompany + 1);
+                        
                         loadRecordAddress();
 
                         txtAddress03.requestFocus();
@@ -305,8 +312,10 @@ public class InstitutionNewController implements Initializable {
                         break;
                     } else {
                         poClient.InstiContact(pnContactPerson).setClientId(poClient.getModel().getClientId());
-                        pnContactPerson = poClient.getMobileCount() - 1;
+                        pnContactPerson = poClient.getInstiContactCount()- 1;
+                        
                         tblSocMed.getSelectionModel().select(pnContactPerson + 1);
+                        
                         loadContactPerson();
 
                         txtContact00.requestFocus();
@@ -488,63 +497,62 @@ public class InstitutionNewController implements Initializable {
         if (!nv) {//lost focus
             switch (lnIndex) {
                 case 0: //Full Name
-                    poJSON = poClient.InstiContact(pnCompany).setContactPersonName(lsValue);
-
+                    poJSON = poClient.InstiContact(pnContactPerson).setContactPersonName(lsValue);
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
 
-                    txtField.setText(poClient.InstiContact(pnCompany).getContactPersonName());
+                    txtField.setText(poClient.InstiContact(pnContactPerson).getContactPersonName());
                     break;
                 case 1: //Position
-                    poJSON = poClient.InstiContact(pnCompany).setContactPersonPosition(lsValue);
+                    poJSON = poClient.InstiContact(pnContactPerson).setContactPersonPosition(lsValue);
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
 
-                    txtField.setText(poClient.InstiContact(pnCompany).getContactPersonPosition());
+                    txtField.setText(poClient.InstiContact(pnContactPerson).getContactPersonPosition());
                     break;
                 case 2: //Mobile No
-                    poJSON = poClient.InstiContact(pnCompany).setMobileNo(lsValue);
+                    poJSON = poClient.InstiContact(pnContactPerson).setMobileNo(lsValue);
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
 
-                    txtField.setText(poClient.InstiContact(pnCompany).getMobileNo());
+                    txtField.setText(poClient.InstiContact(pnContactPerson).getMobileNo());
                     break;
                 case 3: //LandLine
-                    poJSON = poClient.InstiContact(pnCompany).setLandlineNo(lsValue);
+                    poJSON = poClient.InstiContact(pnContactPerson).setLandlineNo(lsValue);
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
 
-                    txtField.setText(poClient.InstiContact(pnCompany).getLandlineNo());
+                    txtField.setText(poClient.InstiContact(pnContactPerson).getLandlineNo());
                     break;
                 case 4: //Fax No
-                    poJSON = poClient.InstiContact(pnCompany).setFaxNo(lsValue);
+                    poJSON = poClient.InstiContact(pnContactPerson).setFaxNo(lsValue);
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
 
-                    txtField.setText(poClient.InstiContact(pnCompany).getFaxNo());
+                    txtField.setText(poClient.InstiContact(pnContactPerson).getFaxNo());
                     break;
                 case 5: //Email Address
-                    poJSON = poClient.InstiContact(pnCompany).setMailAddress(lsValue);
+                    poJSON = poClient.InstiContact(pnContactPerson).setMailAddress(lsValue);
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
 
-                    txtField.setText(poClient.InstiContact(pnCompany).getMailAddress());
+                    txtField.setText(poClient.InstiContact(pnContactPerson).getMailAddress());
                     break;
 
             }
 
-            loadRecordAddress();
+            loadContactPerson();
         } else {//got focus
             txtField.selectAll();
         }
@@ -671,6 +679,7 @@ public class InstitutionNewController implements Initializable {
         txtContact05.setText("");
 
         cbContact01.selectedProperty().set(false);
+        cbContact02.selectedProperty().set(false);
 
         pnCompany = 0;
         pnContactPerson = 0;
@@ -681,9 +690,8 @@ public class InstitutionNewController implements Initializable {
 
     private void loadRecord() {
         try {
-            pnEditMode = psClientID.isEmpty() ? EditMode.ADDNEW : EditMode.UPDATE;
 
-            if (pnEditMode == EditMode.ADDNEW) {
+            if (psClientID.isEmpty()) {
                 poJSON = poClient.newRecord();
 
                 anchorAddress.setDisable(false);
@@ -696,11 +704,26 @@ public class InstitutionNewController implements Initializable {
                 lblClientStatus.setText("***NEW INSTITUTION");
             } else {
                 poJSON = poClient.openClientRecord(psClientID);
-
-                anchorAddress.setDisable(true);
-                gridAddress.setDisable(true);
-                anchorSocMed.setDisable(true);
-                gridSocMed.setDisable(true);
+                poJSON = poClient.updateRecord();
+                
+                pnEditMode = poClient.getEditMode();
+                
+                if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){
+                    
+                    //allow to modify contact on update
+                    anchorSocMed.setDisable(false);
+                    gridSocMed.setDisable(false);
+                    
+                    //allow to modify address on update
+                    anchorAddress.setDisable(false);
+                    gridAddress.setDisable(false);
+                }else{
+                    anchorSocMed.setDisable(true);
+                    gridSocMed.setDisable(true);
+                    
+                    anchorAddress.setDisable(true);
+                    gridAddress.setDisable(true);
+                }
 
                 lblClientStatus.setText("***REPEAT INSTITUTION");
             }
@@ -734,33 +757,45 @@ public class InstitutionNewController implements Initializable {
 
     private void loadRecordAddress() {
         try {
-            loadMasterAddress();
 
             int lnCtr;
             company_data.clear();
 
             if (poClient.getAddressCount() >= 0) {
+                
                 for (lnCtr = 0; lnCtr < poClient.getAddressCount(); lnCtr++) {
+                    
                     company_data.add(new ModelAddress(String.valueOf(lnCtr + 1),
-                            (String) poClient.Address(lnCtr).getValue("sHouseNox"),
-                            (String) poClient.Address(lnCtr).getValue("sAddressx"),
+                            (String) poClient.Address(lnCtr).getHouseNo(),
+                            (String) poClient.Address(lnCtr).getAddress(),
                             (String) poClient.Address(lnCtr).Town().getDescription(),
                             (String) poClient.Address(lnCtr).Barangay().getBarangayName()));
+                    
+                    //set primary address the first item, only if size is 1
+                    if(poClient.getAddressCount() == 1 && lnCtr == 0){
+                        poClient.Address(0).isPrimaryAddress(true);
+                    }
                 }
             }
+            loadMasterAddress();
 
             if (pnCompany < 0 || pnCompany >= company_data.size()) {
+                
                 if (!company_data.isEmpty()) {
+                    
                     /* FOCUS ON FIRST ROW */
                     tblAddress.getSelectionModel().select(0);
                     tblAddress.getFocusModel().focus(0);
                     pnCompany = tblAddress.getSelectionModel().getSelectedIndex();
+                    
                     getSelectedAddress();
                 }
             } else {
+                
                 /* FOCUS ON THE ROW THAT pnRowDetail POINTS TO */
                 tblAddress.getSelectionModel().select(pnCompany);
                 tblAddress.getFocusModel().focus(pnCompany);
+                
                 getSelectedAddress();
             }
         } catch (SQLException | GuanzonException e) {
@@ -773,7 +808,9 @@ public class InstitutionNewController implements Initializable {
         boolean primaryAddressExists = false;
 
         for (int i = 0; i < poClient.getAddressCount(); i++) {
+            
             if (poClient.Address(i).isPrimaryAddress()) {
+                
                 address = poClient.Address(i).getHouseNo() + " "
                         + poClient.Address(i).getAddress() + " "
                         + poClient.Address(i).Barangay().getBarangayName() + " "
@@ -781,6 +818,7 @@ public class InstitutionNewController implements Initializable {
                         + poClient.Address(i).Town().Province().getDescription();
 
                 txtField03.setText(address.trim());
+                
                 primaryAddressExists = true; // Mark as found
                 break; // Exit the loop since a primary address is found
             }
@@ -812,24 +850,28 @@ public class InstitutionNewController implements Initializable {
     }
 
     private void loadContactPerson() {
-        int lnCtr2 = 0;
         contactPerson_data.clear();
         if (poClient.getInstiContactCount() >= 0) {
             for (int lnCtr = 0; lnCtr < poClient.getInstiContactCount(); lnCtr++) {
+                
                 contactPerson_data.add(new ModelContactPerson(String.valueOf(lnCtr + 1),
-                        poClient.InstiContact(lnCtr2).getValue("sCPerson1").toString(),
-                        poClient.InstiContact(lnCtr2).getValue("sCPPosit1").toString(),
-                        poClient.InstiContact(lnCtr2).getValue("sEMailAdd").toString()
+                        poClient.InstiContact(lnCtr).getContactPersonName(),
+                        poClient.InstiContact(lnCtr).getContactPersonPosition(),
+                        poClient.InstiContact(lnCtr).getMailAddress()
                 ));
-                lnCtr2 += 1;
+                
+                //set primary address the first item, only if size is 1
+                if(poClient.getInstiContactCount()== 1 && lnCtr == 0){
+                    poClient.InstiContact(0).isPrimaryContactPersion(true);
+                }
             }
         }
         if (pnContactPerson < 0 || pnContactPerson
                 >= contactPerson_data.size()) {
             if (!contactPerson_data.isEmpty()) {
                 /* FOCUS ON FIRST ROW */
-                tblSocMed.getSelectionModel().select(0);
-                tblSocMed.getFocusModel().focus(0);
+                tblSocMed.getSelectionModel().select(pnContactPerson);
+                tblSocMed.getFocusModel().focus(pnContactPerson);
                 pnContactPerson = tblSocMed.getSelectionModel().getSelectedIndex();
             }
             getSelectedContactPerson();
@@ -842,7 +884,9 @@ public class InstitutionNewController implements Initializable {
     }
 
     private void getSelectedContactPerson() {
+        
         pbLoadingData = true;
+        
         if (poClient.getInstiContactCount() > 0) {
             txtContact00.setText(poClient.InstiContact(pnContactPerson).getContactPersonName());
             txtContact01.setText(poClient.InstiContact(pnContactPerson).getContactPersonPosition());
@@ -852,6 +896,7 @@ public class InstitutionNewController implements Initializable {
             txtContact05.setText(poClient.InstiContact(pnContactPerson).getMailAddress());
 
             cbContact01.setSelected(("1".equals(poClient.InstiContact(pnContactPerson).getRecordStatus())));
+            cbContact02.setSelected(poClient.InstiContact(pnContactPerson).isPrimaryContactPersion());
 
         }
         pbLoadingData = false;
@@ -913,8 +958,11 @@ public class InstitutionNewController implements Initializable {
     }
 
     private void initContactPersonCheckbox() {
-        CheckBox[] cbMobileCheckboxes = {cbContact01};
+        
+        CheckBox[] cbMobileCheckboxes = {cbContact01, cbContact02};
+        
         for (CheckBox checkbox : cbMobileCheckboxes) {
+            
             // Capture the current checkbox
             checkbox.selectedProperty().addListener(new ChangeListener<Boolean>() {
                 @Override
@@ -931,9 +979,24 @@ public class InstitutionNewController implements Initializable {
                         int number = Integer.parseInt(numberPart);
                         switch (number) {
                             case 1: // Active
-                                loJSON = poClient.Mobile(pnContactPerson).setRecordStatus(checkbox.isSelected() ? "1" : "0");
+                                loJSON = poClient.InstiContact(pnContactPerson).setRecordStatus(checkbox.isSelected() ? "1" : "0");
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
+                                }
+                                break;
+                                
+                            case 2: // Primary
+                                loJSON = poClient.InstiContact(pnContactPerson).isPrimaryContactPersion(checkbox.isSelected() ? true : false);
+                                if ("error".equals((String) loJSON.get("result"))) {
+                                    Assert.fail((String) loJSON.get("message"));
+                                }
+                                
+                                if (!pbLoadingData) {
+                                    for (int in = 0; in < poClient.getInstiContactCount(); in++) {
+                                        if (in != pnContactPerson) {
+                                            poClient.InstiContact(in).isPrimaryContactPersion(false);
+                                        }
+                                    }
                                 }
                                 break;
 
@@ -947,7 +1010,7 @@ public class InstitutionNewController implements Initializable {
             });
         }
     }
-
+   
     public Stage getStage() {
         return (Stage) AnchorMain.getScene().getWindow();
     }
