@@ -40,7 +40,7 @@ public class Account_Accreditation extends Parameter {
     @Override
     public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
-        
+
         //initialize validator
         GValidator loValidator = ClientAccreditationValidatorFactory.make(poGRider.getIndustry());
         
@@ -97,7 +97,7 @@ public class Account_Accreditation extends Parameter {
                 value,
                 "Transaction No»Date»Name",
                 "sTransNox»dTransact»sCompnyNm",
-                "sTransNox»dTransact»sCompnyNm",
+                "sTransNox»sCompnyNm",
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
@@ -191,9 +191,9 @@ public class Account_Accreditation extends Parameter {
     }
 
     public JSONObject searchClient(String fsValue, boolean fbByCode) throws SQLException, GuanzonException, Exception {
-        JSONObject loJSON = new JSONObject();
 
         if (fbByCode) {
+            JSONObject loJSON = new JSONObject();
             if (fsValue.equals(getModel().getClientId())) {
                 loJSON.put("result", "success");
                 return loJSON;
@@ -203,8 +203,8 @@ public class Account_Accreditation extends Parameter {
                 return loJSON;
             }
         } else {
-            System.out.print("this is the value " + !fsValue.equals(""));
-            //if (fsValue.equals("") == false) {
+            JSONObject loJSON = null;
+            if (!fsValue.isEmpty()) {
                 
                 String lsSQL = "SELECT"
                 + " sClientID"
@@ -219,7 +219,11 @@ public class Account_Accreditation extends Parameter {
                         "sClientID»sCompnyNm",
                         "sClientID»sCompnyNm",
                         fbByCode ? 0 : 1);
-            //}
+                
+                if (loJSON == null) {
+                    return loJSON;
+                }
+            }
             
             //initialize Client GUI
             ClientGUI loClient = new ClientGUI();
@@ -251,6 +255,9 @@ public class Account_Accreditation extends Parameter {
 
             //load record
             CommonUtils.showModal(loClient);
+            
+            //initialize new json for result
+            JSONObject loResult = new JSONObject();
 
             //load if button 
             if (!loClient.isCancelled()) {
@@ -266,7 +273,6 @@ public class Account_Accreditation extends Parameter {
                         break;
                     }
                 }
-                System.out.println("address Id: " + getModel().getAddressId());
                 
                 //get contact
                 for(Model_Client_Institution_Contact loContact : loClient.getClient().InstiContactList()){
@@ -277,14 +283,13 @@ public class Account_Accreditation extends Parameter {
                         break;
                     }
                 }
-                System.out.println("Contact Id: " + getModel().getContactId());
                 
-                loJSON.put("result", "success");
-                return loJSON;
+                loResult.put("result", "success");
+                return loResult;
             } else {
-                loJSON.put("result", "error");
-                loJSON.put("message", "No record selected.");
-                return loJSON;
+                loResult.put("result", "error");
+                loResult.put("message", "No record selected.");
+                return loResult;
             }
         }
     }

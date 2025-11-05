@@ -312,7 +312,7 @@ public class InstitutionNewController implements Initializable {
                         break;
                     } else {
                         poClient.InstiContact(pnContactPerson).setClientId(poClient.getModel().getClientId());
-                        pnContactPerson = poClient.getMobileCount() - 1;
+                        pnContactPerson = poClient.getInstiContactCount()- 1;
                         
                         tblSocMed.getSelectionModel().select(pnContactPerson + 1);
                         

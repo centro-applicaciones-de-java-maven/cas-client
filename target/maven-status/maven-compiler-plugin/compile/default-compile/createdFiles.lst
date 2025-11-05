@@ -18,6 +18,7 @@ org\guanzon\cas\client\services\ClientControllers.class
 org\guanzon\cas\client\controller\IndividualNewController$4.class
 org\guanzon\cas\client\model\Model_AR_Client_Master.class
 org\guanzon\cas\client\table\models\ModelEmail.class
+org\guanzon\cas\client\validator\ClientAccreditation_MainOffice.class
 org\guanzon\cas\client\table\models\ModelAddress.class
 org\guanzon\cas\client\table\models\ModelMobile.class
 org\guanzon\cas\client\ClientInfo.class
@@ -36,6 +37,7 @@ org\guanzon\cas\client\model\Model_Client_Institution_Contact.class
 org\guanzon\cas\client\model\Model_Client_Mail.class
 org\guanzon\cas\client\table\models\ModelSocialMedia.class
 org\guanzon\cas\client\account\GlobalVariables.class
+org\guanzon\cas\client\validator\APClient_Engineering.class
 org\guanzon\cas\client\controller\IndividualNewController$3.class
 org\guanzon\cas\client\Client_Institution_Contact.class
 org\guanzon\cas\client\ClientGUI$4.class
@@ -52,6 +54,7 @@ org\guanzon\cas\client\services\ClientModels.class
 org\guanzon\cas\client\controller\IndividualNewController$6.class
 org\guanzon\cas\client\controller\InstitutionNewController.class
 org\guanzon\cas\client\validator\ClientAccreditation_Appliance.class
+org\guanzon\cas\client\validator\APClient_MainOffice.class
 org\guanzon\cas\client\validator\APClient_Appliance.class
 org\guanzon\cas\client\Client_Social_Media.class
 org\guanzon\cas\client\model\Model_Client_Master.class
@@ -61,3 +64,4 @@ org\guanzon\cas\client\validator\APClientValidatorFactory.class
 org\guanzon\cas\client\account\Account_Accreditation.class
 org\guanzon\cas\client\validator\APClient_LP.class
 org\guanzon\cas\client\model\ClientModels.class
+org\guanzon\cas\client\validator\ClientAccreditation_Engineering.class

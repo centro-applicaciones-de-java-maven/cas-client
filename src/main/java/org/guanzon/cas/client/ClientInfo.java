@@ -292,7 +292,7 @@ public class ClientInfo extends Parameter{
             }
         }
         
-        Model_Client_Mobile object = (Model_Client_Mobile) poMobile.clone();
+        Model_Client_Mobile object = new ClientModels(poGRider).ClientMobile();//(Model_Client_Mobile) poMobile.clone();
         object.newRecord();
 
         paMobile.add(object);
@@ -332,7 +332,6 @@ public class ClientInfo extends Parameter{
         
         Model_Client_Address object = new ClientModels(poGRider).ClientAddress(); //(Model_Client_Address) poaddress.clone();
         object.newRecord();
-        object.setModifiedDate(poGRider.getServerDate());
 
         paAddress.add(object);
         
@@ -363,7 +362,7 @@ public class ClientInfo extends Parameter{
             }
         }
         
-        Model_Client_Mail object = (Model_Client_Mail) poMail.clone();
+        Model_Client_Mail object = new ClientModels(poGRider).ClientMail();//(Model_Client_Mail) poMail.clone();
         object.newRecord();
 
         paMail.add(object);
@@ -395,7 +394,7 @@ public class ClientInfo extends Parameter{
             }
         }
         
-        Model_Client_Social_Media object = (Model_Client_Social_Media) poSocMed.clone();
+        Model_Client_Social_Media object = new ClientModels(poGRider).ClientSocMed();//(Model_Client_Social_Media) poSocMed.clone();
         object.newRecord();
 
         paSocMed.add(object);
@@ -436,7 +435,6 @@ public class ClientInfo extends Parameter{
         
         Model_Client_Institution_Contact object = new ClientModels(poGRider).ClientInstitutionContact();//(Model_Client_Institution_Contact) poContact.clone();
         object.newRecord();
-        object.setModifiedDate(poGRider.getServerDate());
         
         paContact.add(object);
         
@@ -739,8 +737,6 @@ public class ClientInfo extends Parameter{
                 //if (paAddress.size() == 1) loAddress.isPrimaryAddress(true);
                 if (loAddress.isPrimaryAddress()) lnPrimaryAddr += 1;
                 if (loAddress.getEditMode() == EditMode.ADDNEW  || loAddress.getEditMode() == EditMode.UPDATE) loAddress.setModifiedDate(poGRider.getServerDate());
-                
-                System.out.print("this is the modified data " + loAddress.getModifiedDate());
             }
             
             if (lnPrimaryAddr > 1) {
@@ -768,12 +764,11 @@ public class ClientInfo extends Parameter{
                         paContact.remove(lnCtr);
                         break;
                     }
+                    loContact.setClientId(poClient.getClientId());
                     
                     //if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
                     if (loContact.isPrimaryContactPersion()) lnPrimaryContact += 1;
                     if (loContact.getEditMode() == EditMode.ADDNEW || loContact.getEditMode() == EditMode.UPDATE) loContact.setModifiedDate(poGRider.getServerDate());
-                    
-                    System.out.print("this is the modified data " + loContact.getModifiedDate());
                 }
                 
                 if (lnPrimaryContact > 1) {
@@ -889,28 +884,13 @@ public class ClientInfo extends Parameter{
         Model_Client_Institution_Contact loContact;
         
         int lnCtr;
-       
-        if (!paMobile.isEmpty()){
-            for (lnCtr = 0; lnCtr <= paMobile.size() - 1; lnCtr++){
-                loMobile = paMobile.get(lnCtr);
-
-                if (loMobile.getEditMode() == EditMode.ADDNEW){
-                    poJSON = loMobile.saveRecord();
-                    if (!"success".equals((String) poJSON.get("result"))) return poJSON;
-                } else {
-                    //validate if record is modified
-                    loMobile.updateRecord();
-                    loMobile.setModifiedDate(poGRider.getServerDate());
-                    loMobile.saveRecord();
-                }
-            }
-        }
         
         if (!paAddress.isEmpty()){
             for (lnCtr = 0; lnCtr <= paAddress.size() - 1; lnCtr++){
                 loAddress = paAddress.get(lnCtr);
 
                 if (loAddress.getEditMode() == EditMode.ADDNEW){
+                    loAddress.setModifiedDate(poGRider.getServerDate());
                     poJSON = loAddress.saveRecord();
                     if (!"success".equals((String) poJSON.get("result"))) return poJSON;
                 } else {
@@ -922,55 +902,76 @@ public class ClientInfo extends Parameter{
             }
         }
         
-        if (!paMail.isEmpty()){
-            for (lnCtr = 0; lnCtr <= paMail.size() - 1; lnCtr++){
-                loMail = paMail.get(lnCtr);
-
-                if (loMail.getEditMode() == EditMode.ADDNEW){
-                    poJSON = loMail.saveRecord();
-                    if (!"success".equals((String) poJSON.get("result"))) return poJSON;
-                } else {
-                    //validate if record is modified
-                    loMail.updateRecord();
-                    loMail.setModifiedDate(poGRider.getServerDate());
-                    loMail.saveRecord();
-                }
-            }
-        }
-        
-        if (!paSocMed.isEmpty()){
-            for (lnCtr = 0; lnCtr <= paSocMed.size() - 1; lnCtr++){
-                loSocMed = paSocMed.get(lnCtr);
-
-                if (loSocMed.getEditMode() == EditMode.ADDNEW){
-                    poJSON = loSocMed.saveRecord();
-                    if (!"success".equals((String) poJSON.get("result"))) return poJSON;
-                } else {
-                    //validate if record is modified
-                    loSocMed.updateRecord();
-                    loSocMed.setModifiedDate(poGRider.getServerDate());
-                    loSocMed.saveRecord();
-                }
-            }
-        }
-        
         if (getModel().getClientType().equals(ClientType.INSTITUTION)){
+            
             if (!paContact.isEmpty()){
-                for (lnCtr = 0; lnCtr <= paContact.size() - 1; lnCtr++){
-                    loContact = paContact.get(lnCtr);
+                    for (lnCtr = 0; lnCtr <= paContact.size() - 1; lnCtr++){
+                        loContact = paContact.get(lnCtr);
 
-                    if (loContact.getEditMode() == EditMode.ADDNEW){
-                        poJSON = loContact.saveRecord();
+                        if (loContact.getEditMode() == EditMode.ADDNEW){
+                            loContact.setModifiedDate(poGRider.getServerDate());
+                            poJSON = loContact.saveRecord();
+                            if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+                        } else {
+                            //validate if record is modified
+                            loContact.updateRecord();
+                            loContact.isPrimaryContactPersion(loContact.isPrimaryContactPersion());
+                            loContact.setModifiedDate(poGRider.getServerDate());
+                            loContact.saveRecord();
+                        }
+                    }
+                }
+            
+        }else{
+         
+            if (!paMobile.isEmpty()){
+                for (lnCtr = 0; lnCtr <= paMobile.size() - 1; lnCtr++){
+                    loMobile = paMobile.get(lnCtr);
+
+                    if (loMobile.getEditMode() == EditMode.ADDNEW){
+                        poJSON = loMobile.saveRecord();
                         if (!"success".equals((String) poJSON.get("result"))) return poJSON;
                     } else {
                         //validate if record is modified
-                        loContact.updateRecord();
-                        loContact.isPrimaryContactPersion(loContact.isPrimaryContactPersion());
-                        loContact.setModifiedDate(poGRider.getServerDate());
-                        loContact.saveRecord();
+                        loMobile.updateRecord();
+                        loMobile.setModifiedDate(poGRider.getServerDate());
+                        loMobile.saveRecord();
                     }
                 }
             }
+            
+            if (!paMail.isEmpty()){
+                for (lnCtr = 0; lnCtr <= paMail.size() - 1; lnCtr++){
+                    loMail = paMail.get(lnCtr);
+
+                    if (loMail.getEditMode() == EditMode.ADDNEW){
+                        poJSON = loMail.saveRecord();
+                        if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+                    } else {
+                        //validate if record is modified
+                        loMail.updateRecord();
+                        loMail.setModifiedDate(poGRider.getServerDate());
+                        loMail.saveRecord();
+                    }
+                }
+            }
+            
+            if (!paSocMed.isEmpty()){
+                for (lnCtr = 0; lnCtr <= paSocMed.size() - 1; lnCtr++){
+                    loSocMed = paSocMed.get(lnCtr);
+
+                    if (loSocMed.getEditMode() == EditMode.ADDNEW){
+                        poJSON = loSocMed.saveRecord();
+                        if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+                    } else {
+                        //validate if record is modified
+                        loSocMed.updateRecord();
+                        loSocMed.setModifiedDate(poGRider.getServerDate());
+                        loSocMed.saveRecord();
+                    }
+                }
+            }
+
         }
         
         poJSON = new JSONObject();
