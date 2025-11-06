@@ -151,31 +151,6 @@
                                                                   <RowConstraints minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
                                                                </rowConstraints>
                                                                <children>
-                                                                        <TextField fx:id="txtAddress03" maxWidth="1.7976931348623157E308" minWidth="150.0" prefHeight="30.0" prefWidth="283.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
-                                                                  <TextField fx:id="txtAddress04" maxWidth="291.0" minWidth="150.0" prefHeight="30.0" prefWidth="291.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="4">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
-                                                                  <TextField fx:id="txtAddress05" maxWidth="246.0" minWidth="150.0" prefHeight="30.0" prefWidth="246.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
-                                                                  <TextField fx:id="txtAddress01" minWidth="62.0" prefWidth="62.0" promptText="House #" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
-                                                                  <TextField fx:id="txtAddress02" maxWidth="406.0" minWidth="-Infinity" prefHeight="30.0" prefWidth="405.0" promptText="Lot No./Building/Floor/Sitio/Purok" styleClass="text-field" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="5">
-                                                                           <GridPane.margin>
-                                                                              <Insets left="5.0" />
-                                                                           </GridPane.margin>
-                                                                        </TextField>
                                                                   <CheckBox fx:id="cbAddress01" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="5" GridPane.rowIndex="3">
                                                                      <font>
                                                                         <Font size="14.0" />
@@ -200,12 +175,12 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                   </CheckBox>
-                                                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="City" textAlignment="RIGHT" wrappingWidth="80.345703125" GridPane.columnIndex="4" GridPane.rowIndex="4">
+                                                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="City" textAlignment="RIGHT" wrappingWidth="80.345703125" GridPane.rowIndex="4">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
                                                                   </Text>
-                                                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Barangay" textAlignment="RIGHT" wrappingWidth="80.703125" GridPane.rowIndex="4">
+                                                                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Brgy" textAlignment="RIGHT" wrappingWidth="80.703125" GridPane.columnIndex="4" GridPane.rowIndex="4">
                                                                      <font>
                                                                         <Font size="14.0" />
                                                                      </font>
@@ -252,16 +227,41 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="TIN" textAlignment="RIGHT" wrappingWidth="81.35546875" GridPane.rowIndex="1">
-                                                                           <font>
-                                                                              <Font size="14.0" />
-                                                                           </font>
-                                                                        </Text>
                                                                         <TextField fx:id="txtAddress06" maxWidth="501.0" minWidth="150.0" prefHeight="30.0" prefWidth="501.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
+                                                                        <TextField fx:id="txtAddress03" maxWidth="1.7976931348623157E308" minWidth="150.0" prefHeight="30.0" prefWidth="283.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="3">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                  <TextField fx:id="txtAddress04" maxWidth="291.0" minWidth="150.0" prefHeight="30.0" prefWidth="291.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                  <TextField fx:id="txtAddress05" maxWidth="246.0" minWidth="150.0" prefHeight="30.0" prefWidth="246.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="5" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                  <TextField fx:id="txtAddress01" minWidth="62.0" prefWidth="62.0" promptText="House #" styleClass="text-field" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                  <TextField fx:id="txtAddress02" maxWidth="406.0" minWidth="-Infinity" prefHeight="30.0" prefWidth="405.0" promptText="Lot No./Building/Floor/Sitio/Purok" styleClass="text-field" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="5">
+                                                                           <GridPane.margin>
+                                                                              <Insets left="5.0" />
+                                                                           </GridPane.margin>
+                                                                        </TextField>
+                                                                        <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="TIN" textAlignment="RIGHT" wrappingWidth="81.35546875" GridPane.rowIndex="1">
+                                                                           <font>
+                                                                              <Font size="14.0" />
+                                                                           </font>
+                                                                        </Text>
                                                                </children>
                                                             </GridPane>
                                                          </children>
@@ -305,11 +305,6 @@
                                                                                     <RowConstraints minHeight="27.0" vgrow="SOMETIMES" />
                                                                                  </rowConstraints>
                                                                                  <children>
-                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
-                                                                                       <GridPane.margin>
-                                                                                          <Insets left="5.0" />
-                                                                                       </GridPane.margin>
-                                                                                    </TextField>
                                                                                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Position" GridPane.rowIndex="1">
                                                                                        <font>
                                                                                           <Font size="14.0" />
@@ -367,6 +362,11 @@
                                                                      </GridPane.margin>
                                                                   </Button>
                                                                                     <TextField fx:id="txtContact00" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
+                                                                                       <GridPane.margin>
+                                                                                          <Insets left="5.0" />
+                                                                                       </GridPane.margin>
+                                                                                    </TextField>
+                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
