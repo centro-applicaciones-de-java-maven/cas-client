@@ -222,7 +222,12 @@ public class Account_Accreditation extends Parameter {
                 
                 if (loJSON == null) {
                     return loJSON;
+                }else{
+                    if ("error".equals(loJSON.get("result"))) {
+                        return loJSON;
+                    }
                 }
+                System.out.print(loJSON.toJSONString());
             }
             
             //initialize Client GUI
