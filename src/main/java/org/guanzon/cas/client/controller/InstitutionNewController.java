@@ -277,12 +277,12 @@ public class InstitutionNewController implements Initializable {
                         if (!"success".equals((String) poJSON.get("result"))) {
                             ShowMessageFX.Warning(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                             break;
+                        }else{
+                            psClientID = poClient.getModel().getClientId();
+                            pbCancelled = false;
+                            getStage().close();
                         }
                     }
-
-                    psClientID = poClient.getModel().getClientId();
-                    pbCancelled = false;
-                    getStage().close();
                     break;
                 case "btnDelAddress":
                     break;
@@ -438,6 +438,7 @@ public class InstitutionNewController implements Initializable {
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                        return;
                     }
 
                     txtField.setText(poClient.getModel().getCompanyName());
@@ -448,6 +449,7 @@ public class InstitutionNewController implements Initializable {
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                        return;
                     }
 
                     txtField.setText(poClient.Address(pnCompany).getHouseNo());
@@ -457,19 +459,20 @@ public class InstitutionNewController implements Initializable {
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                        return;
                     }
 
                     txtField.setText(poClient.Address(pnCompany).getAddress());
                     break;
                     
-                case 6:
+                case 6: //tax id number
                     poJSON = poClient.getModel().setTaxIdNumber(lsValue);
                     
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                        return;
                     }
                     txtField.setText(poClient.getModel().getTaxIdNumber());
-                    
                     break;
 
             }
@@ -698,6 +701,7 @@ public class InstitutionNewController implements Initializable {
                 gridAddress.setDisable(false);
                 anchorSocMed.setDisable(false);
                 gridSocMed.setDisable(false);
+                
                 poClient.getModel().setCompanyName(psClientID);
                 txtField02.setText(psClientID);
                 txtAddress00.setText(psClientID);
@@ -742,7 +746,7 @@ public class InstitutionNewController implements Initializable {
             loadRecordAddress();
             loadContactPerson();
 
-            if (pnEditMode == EditMode.ADDNEW) {
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                 txtAddress00.requestFocus();
                 txtAddress00.selectAll();
             } else {

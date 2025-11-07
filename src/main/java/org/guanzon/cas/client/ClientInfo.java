@@ -137,6 +137,7 @@ public class ClientInfo extends Parameter{
         poJSON = poClient.openRecord(Id);
         
         if ("success".equals((String) poJSON.get("result"))){
+            
             //load addresses
             String lsSQL = "SELECT * FROM Client_Address" +
                             " WHERE sClientID = " + SQLUtil.toSQL(poClient.getClientId()) +
@@ -568,7 +569,7 @@ public class ClientInfo extends Parameter{
         poJSON = new JSONObject();
 
         //validate master                        
-        if (getEditMode() == EditMode.ADDNEW) {
+        if (getEditMode() == EditMode.ADDNEW || getEditMode() == EditMode.UPDATE) {
             poJSON = poClient.setClientType(psClientTp);
 
             if (poClient.getClientType().equals(ClientType.INDIVIDUAL)) {
@@ -710,7 +711,8 @@ public class ClientInfo extends Parameter{
     }
     
     @Override
-    protected JSONObject willSave() throws SQLException, GuanzonException{        
+    protected JSONObject willSave() throws SQLException, GuanzonException{
+        
         if (getEditMode() == EditMode.ADDNEW || getEditMode() == EditMode.UPDATE){
             
             if (getEditMode() == EditMode.ADDNEW){
@@ -736,7 +738,6 @@ public class ClientInfo extends Parameter{
                 
                 //if (paAddress.size() == 1) loAddress.isPrimaryAddress(true);
                 if (loAddress.isPrimaryAddress()) lnPrimaryAddr += 1;
-                if (loAddress.getEditMode() == EditMode.ADDNEW  || loAddress.getEditMode() == EditMode.UPDATE) loAddress.setModifiedDate(poGRider.getServerDate());
             }
             
             if (lnPrimaryAddr > 1) {
@@ -768,7 +769,6 @@ public class ClientInfo extends Parameter{
                     
                     //if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
                     if (loContact.isPrimaryContactPersion()) lnPrimaryContact += 1;
-                    if (loContact.getEditMode() == EditMode.ADDNEW || loContact.getEditMode() == EditMode.UPDATE) loContact.setModifiedDate(poGRider.getServerDate());
                 }
                 
                 if (lnPrimaryContact > 1) {
@@ -804,7 +804,6 @@ public class ClientInfo extends Parameter{
 
                     //if (paMobile.size() == 1) loMobile.isPrimaryMobile(true);
                     if (loMobile.isPrimaryMobile()) lnPrimaryMobile += 1;
-                    if (loMobile.getEditMode() == EditMode.ADDNEW  || loMobile.getEditMode() == EditMode.UPDATE) loMobile.setModifiedDate(poGRider.getServerDate());
                 }
 
                 if (lnPrimaryMobile > 1) {
@@ -835,7 +834,6 @@ public class ClientInfo extends Parameter{
 
                     //if (paMail.size() == 1) loMail.isPrimaryEmail(true);
                     if (loMail.isPrimaryEmail()) lnPrimaryMail += 1;
-                    if (loMail.getEditMode() == EditMode.ADDNEW  || loMail.getEditMode() == EditMode.UPDATE) loMail.setModifiedDate(poGRider.getServerDate());
                 }
 
                 if (lnPrimaryMail > 1) {
@@ -861,8 +859,6 @@ public class ClientInfo extends Parameter{
                         break;
                     }
                     loSocMed.setClientId(poClient.getClientId());    
- 
-                    if (loSocMed.getEditMode() == EditMode.ADDNEW  || loSocMed.getEditMode() == EditMode.UPDATE) loSocMed.setModifiedDate(poGRider.getServerDate());
                 }
 
             }
