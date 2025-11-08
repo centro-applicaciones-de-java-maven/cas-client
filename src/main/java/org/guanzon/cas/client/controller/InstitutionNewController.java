@@ -6,6 +6,8 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -934,6 +936,15 @@ public class InstitutionNewController implements Initializable {
                                 break;
                             case 2: // Primary Address || Restricted to 1 Primary Address
                                 poClient.Address(pnCompany).isPrimaryAddress(newValue);
+                                
+                                //initialize full primary address to client master
+                                String lshouseno = poClient.Address(pnCompany).getHouseNo() == null || poClient.Address(pnCompany).getHouseNo().isEmpty() ? "" : poClient.Address(pnCompany).getHouseNo() + " ";
+                                String lsaddress = poClient.Address(pnCompany).getAddress() == null || poClient.Address(pnCompany).getAddress().isEmpty() ? "" : poClient.Address(pnCompany).getAddress();
+                                String lsbrgy = poClient.Address(pnCompany).Barangay().getBarangayName() == null || poClient.Address(pnCompany).Barangay().getBarangayName().isEmpty() ? "" : ", " + poClient.Address(pnCompany).Barangay().getBarangayName();
+                                String lscity = poClient.Address(pnCompany).Town().getDescription() == null || poClient.Address(pnCompany).Town().getDescription().isEmpty() ? " " : ", " + poClient.Address(pnCompany).Town().getDescription();
+                                String lsprovince = poClient.Address(pnCompany).Town().Province().getDescription() == null || poClient.Address(pnCompany).Town().Province().getDescription().isEmpty() ? " " : " " + poClient.Address(pnCompany).Town().Province().getDescription();
+            
+                                poClient.getModel().setAdditionalInfo(lshouseno + lsaddress + lsbrgy + lscity + lsprovince);
 
                                 if (!pbLoadingData) {
                                     for (int in = 0; in < poClient.getAddressCount(); in++) {
@@ -954,7 +965,10 @@ public class InstitutionNewController implements Initializable {
                                 System.out.println("Unknown checkbox selected");
                                 break;
                         }
-                    } catch (NumberFormatException e) {
+                    } catch (SQLException ex) {
+                        Logger.getLogger(InstitutionNewController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (GuanzonException ex) {
+                        Logger.getLogger(InstitutionNewController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });

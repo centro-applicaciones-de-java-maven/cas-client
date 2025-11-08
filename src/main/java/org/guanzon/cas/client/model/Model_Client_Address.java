@@ -234,14 +234,35 @@ public class Model_Client_Address extends Model{
     }
     
     public Model_Barangay Barangay() throws SQLException, GuanzonException{
-        return poBarangay;
+        if (!"".equals(getValue("sBrgyIDxx"))) {
+            
+            this.poJSON = this.poBarangay.openRecord((String) getValue("sBrgyIDxx"));
+            if ("success".equals(this.poJSON.get("result"))) {
+                return this.poBarangay;
+            }
+        }
+        return this.poBarangay;
     }
     
     public Model_TownCity Town() throws SQLException, GuanzonException{
-        return poTownCity;
+        if (!"".equals(getValue("sTownIDxx"))) {
+            
+            this.poJSON = this.poTownCity.openRecord((String) getValue("sTownIDxx"));
+            if ("success".equals(this.poJSON.get("result"))) {
+                return this.poTownCity;
+            }
+        }
+        return this.poTownCity;
     }
     
     public Model_Client_Master Client() throws SQLException, GuanzonException{
-        return poClient;
+        if (!"".equals(getValue("sClientID"))) {
+            
+            this.poJSON = this.poClient.openRecord((String) getValue("sClientID"));
+            if ("success".equals(this.poJSON.get("result"))) {
+                return this.poClient;
+            }
+        }
+        return this.poClient;
     }
 }
