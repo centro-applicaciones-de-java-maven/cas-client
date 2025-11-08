@@ -227,7 +227,6 @@ public class Account_Accreditation extends Parameter {
                         return loJSON;
                     }
                 }
-                System.out.print(loJSON.toJSONString());
             }
             
             //initialize Client GUI
@@ -251,9 +250,7 @@ public class Account_Accreditation extends Parameter {
                 
                 //set client id
                 loClient.setClientId(getModel().getClientId());
-                
-                //search record
-                loClient.searchRecord(getModel().Client().getCompanyName(), fbByCode);
+
             }else {
                 loClient.setClientId("");
             }
@@ -267,7 +264,7 @@ public class Account_Accreditation extends Parameter {
             //load if button 
             if (!loClient.isCancelled()) {
 
-                getModel().setClientId(loClient.getClient().getModel().getClientId());
+                getModel().setClientId(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "");
                 
                 //get address
                 for(Model_Client_Address loAddr : loClient.getClient().AddressList()){
@@ -275,6 +272,8 @@ public class Account_Accreditation extends Parameter {
                     //set primary address
                     if (loAddr.isPrimaryAddress()) {
                         getModel().setAddressId(loAddr.getAddressId()!= null ? loAddr.getAddressId() : "");
+                        getModel().ClientAddress().setBarangayId(loAddr.getBarangayId());
+                        getModel().ClientAddress().setTownId(loAddr.getTownId());
                         break;
                     }
                 }

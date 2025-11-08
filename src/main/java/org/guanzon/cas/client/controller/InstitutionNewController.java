@@ -6,6 +6,8 @@ import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -277,12 +279,12 @@ public class InstitutionNewController implements Initializable {
                         if (!"success".equals((String) poJSON.get("result"))) {
                             ShowMessageFX.Warning(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                             break;
+                        }else{
+                            psClientID = poClient.getModel().getClientId();
+                            pbCancelled = false;
+                            getStage().close();
                         }
                     }
-
-                    psClientID = poClient.getModel().getClientId();
-                    pbCancelled = false;
-                    getStage().close();
                     break;
                 case "btnDelAddress":
                     break;
@@ -438,6 +440,7 @@ public class InstitutionNewController implements Initializable {
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                        return;
                     }
 
                     txtField.setText(poClient.getModel().getCompanyName());
@@ -448,6 +451,7 @@ public class InstitutionNewController implements Initializable {
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                        return;
                     }
 
                     txtField.setText(poClient.Address(pnCompany).getHouseNo());
@@ -457,19 +461,20 @@ public class InstitutionNewController implements Initializable {
 
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                        return;
                     }
 
                     txtField.setText(poClient.Address(pnCompany).getAddress());
                     break;
                     
-                case 6:
+                case 6: //tax id number
                     poJSON = poClient.getModel().setTaxIdNumber(lsValue);
                     
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                        return;
                     }
                     txtField.setText(poClient.getModel().getTaxIdNumber());
-                    
                     break;
 
             }
@@ -698,6 +703,7 @@ public class InstitutionNewController implements Initializable {
                 gridAddress.setDisable(false);
                 anchorSocMed.setDisable(false);
                 gridSocMed.setDisable(false);
+                
                 poClient.getModel().setCompanyName(psClientID);
                 txtField02.setText(psClientID);
                 txtAddress00.setText(psClientID);
@@ -742,7 +748,7 @@ public class InstitutionNewController implements Initializable {
             loadRecordAddress();
             loadContactPerson();
 
-            if (pnEditMode == EditMode.ADDNEW) {
+            if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
                 txtAddress00.requestFocus();
                 txtAddress00.selectAll();
             } else {
@@ -930,6 +936,15 @@ public class InstitutionNewController implements Initializable {
                                 break;
                             case 2: // Primary Address || Restricted to 1 Primary Address
                                 poClient.Address(pnCompany).isPrimaryAddress(newValue);
+                                
+                                //initialize full primary address to client master
+                                String lshouseno = poClient.Address(pnCompany).getHouseNo() == null || poClient.Address(pnCompany).getHouseNo().isEmpty() ? "" : poClient.Address(pnCompany).getHouseNo() + " ";
+                                String lsaddress = poClient.Address(pnCompany).getAddress() == null || poClient.Address(pnCompany).getAddress().isEmpty() ? "" : poClient.Address(pnCompany).getAddress();
+                                String lsbrgy = poClient.Address(pnCompany).Barangay().getBarangayName() == null || poClient.Address(pnCompany).Barangay().getBarangayName().isEmpty() ? "" : ", " + poClient.Address(pnCompany).Barangay().getBarangayName();
+                                String lscity = poClient.Address(pnCompany).Town().getDescription() == null || poClient.Address(pnCompany).Town().getDescription().isEmpty() ? " " : ", " + poClient.Address(pnCompany).Town().getDescription();
+                                String lsprovince = poClient.Address(pnCompany).Town().Province().getDescription() == null || poClient.Address(pnCompany).Town().Province().getDescription().isEmpty() ? " " : " " + poClient.Address(pnCompany).Town().Province().getDescription();
+            
+                                poClient.getModel().setAdditionalInfo(lshouseno + lsaddress + lsbrgy + lscity + lsprovince);
 
                                 if (!pbLoadingData) {
                                     for (int in = 0; in < poClient.getAddressCount(); in++) {
@@ -950,7 +965,10 @@ public class InstitutionNewController implements Initializable {
                                 System.out.println("Unknown checkbox selected");
                                 break;
                         }
-                    } catch (NumberFormatException e) {
+                    } catch (SQLException ex) {
+                        Logger.getLogger(InstitutionNewController.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (GuanzonException ex) {
+                        Logger.getLogger(InstitutionNewController.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
             });
