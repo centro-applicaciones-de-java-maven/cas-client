@@ -1,6 +1,7 @@
 package org.guanzon.cas.client.account;
 
 import java.sql.SQLException;
+import javafx.beans.value.ObservableStringValue;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.CommonUtils;
@@ -14,6 +15,7 @@ import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.iface.GValidator;
 import org.guanzon.cas.client.ClientGUI;
+import org.guanzon.cas.client.constants.AccountAccreditationStatus;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
 import org.guanzon.cas.client.model.Model_Client_Address;
 import org.guanzon.cas.client.model.Model_Client_Institution_Contact;
@@ -25,6 +27,7 @@ import org.json.simple.JSONObject;
 public class Account_Accreditation extends Parameter {
 
     private Model_Account_Client_Accreditation poModel;
+    private String psValidStatus = AccountAccreditationStatus.OPEN;
     private String psApprovalUser = "";
 
     @Override
@@ -46,7 +49,7 @@ public class Account_Accreditation extends Parameter {
         
         //initialize params for app validator
         loValidator.setApplicationDriver(poGRider);
-        loValidator.setTransactionStatus(poModel.getRecordStatus());
+        loValidator.setTransactionStatus(psValidStatus);
         loValidator.setMaster(poModel);
         
         //validate
@@ -340,7 +343,10 @@ public class Account_Accreditation extends Parameter {
 
     public JSONObject CloseTransaction() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
-
+        
+        //initliaze ongoing record status, for validator
+        psValidStatus = AccountAccreditationStatus.CONFIRMED;
+        
         //initialize validator
         poJSON = isEntryOkay();
         if ("error".equals((String) poJSON.get("result"))) {
@@ -374,7 +380,7 @@ public class Account_Accreditation extends Parameter {
             } else {
                 
                 //make sure its onready mode
-                if (loObject.getEditMode() == EditMode.READY) {
+                if (loObject.getEditMode() == EditMode.UPDATE) {
                     
                     //enter to update
                     loObject.updateRecord();
@@ -399,6 +405,8 @@ public class Account_Accreditation extends Parameter {
         String lsSQL = "UPDATE "
                 + poModel.getTable()
                 + " SET   cTranStat = " + SQLUtil.toSQL("1")
+                + ", sApproved= " + SQLUtil.toSQL(poGRider.getUserID())
+                + ", dApproved= " + SQLUtil.toSQL(poGRider.getServerDate())
                 + " WHERE sTransNox = " + SQLUtil.toSQL(getModel().getTransactionNo());
 
         Long lnResult = poGRider.executeQuery(lsSQL,
@@ -427,6 +435,9 @@ public class Account_Accreditation extends Parameter {
     public JSONObject VoidTransaction() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
 
+        //initliaze ongoing record status, for validator
+        psValidStatus = AccountAccreditationStatus.VOID;
+        
         //initialize validator
         poJSON = isEntryOkay();
         if ("error".equals((String) poJSON.get("result"))) {
