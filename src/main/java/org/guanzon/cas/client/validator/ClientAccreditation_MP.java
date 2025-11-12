@@ -162,20 +162,6 @@ public class ClientAccreditation_MP implements GValidator{
             isRequiredApproval = true;
         }
         
-        //if date approved is empty
-        if (poMaster.getDateApproved()== null) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "Invalid date approved");
-            return poJSON;
-        }
-        
-        //if user approved is empty
-        if (poMaster.getApproved() == null || poMaster.getApproved().isEmpty()) {
-            poJSON.put("result", "error");
-            poJSON.put("message", "IApprover is empty");
-            return poJSON;
-        }
-        
         poJSON.put("result", "success");
         poJSON.put("isRequiredApproval", isRequiredApproval);
         
