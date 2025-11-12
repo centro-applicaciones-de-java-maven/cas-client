@@ -463,8 +463,10 @@ public class Account_Accreditation extends Parameter {
 
     public AP_Client_Master getAPClientMaster(String foClientID)
             throws GuanzonException, SQLException {
+        
         AP_Client_Master loObject = new ClientControllers(poGRider, null).APClientMaster();
         poJSON = loObject.openRecord(foClientID);
+        
         if ("error".equals((String) poJSON.get("result"))) {
             loObject.newRecord();
         }

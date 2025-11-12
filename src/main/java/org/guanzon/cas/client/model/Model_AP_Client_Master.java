@@ -222,10 +222,7 @@ public class Model_AP_Client_Master extends Model {
 
     public Model_Category Category() throws SQLException, GuanzonException {
         if (!"".equals(getValue("sCategrCd"))) {
-            if (this.poCategory.getEditMode() == 1 && this.poCategory
-                    .getCategoryId().equals(getValue("sCategrCd"))) {
-                return this.poCategory;
-            }
+            
             this.poJSON = this.poCategory.openRecord((String) getValue("sCategrCd"));
             if ("success".equals(this.poJSON.get("result"))) {
                 return this.poCategory;
@@ -239,10 +236,7 @@ public class Model_AP_Client_Master extends Model {
 
     public Model_Client_Master Client() throws SQLException, GuanzonException {
         if (!"".equals(getValue("sClientID"))) {
-            if (this.poClientMaster.getEditMode() == 1 && this.poClientMaster
-                    .getClientId().equals(getValue("sClientID"))) {
-                return this.poClientMaster;
-            }
+            
             this.poJSON = this.poClientMaster.openRecord((String) getValue("sClientID"));
             if ("success".equals(this.poJSON.get("result"))) {
                 return this.poClientMaster;
@@ -256,10 +250,7 @@ public class Model_AP_Client_Master extends Model {
 
     public Model_Client_Address ClientAddress() throws SQLException, GuanzonException {
         if (!"".equals(getValue("sAddrssID"))) {
-            if (this.poClientAddress.getEditMode() == 1 && this.poClientAddress
-                    .getAddressId().equals(getValue("sAddrssID"))) {
-                return this.poClientAddress;
-            }
+            
             this.poJSON = this.poClientAddress.openRecord((String) getValue("sAddrssID"));
             if ("success".equals(this.poJSON.get("result"))) {
                 return this.poClientAddress;
@@ -273,10 +264,7 @@ public class Model_AP_Client_Master extends Model {
 
     public Model_Client_Institution_Contact ClientInstitutionContact() throws SQLException, GuanzonException {
         if (!"".equals(getValue("sContctID"))) {
-            if (this.poClientInstitutionContact.getEditMode() == 1 && this.poClientInstitutionContact
-                    .getClientId().equals(getValue("sContctID"))) {
-                return this.poClientInstitutionContact;
-            }
+            
             this.poJSON = this.poClientInstitutionContact.openRecord((String) getValue("sContctID"));
             if ("success".equals(this.poJSON.get("result"))) {
                 return this.poClientInstitutionContact;
@@ -290,10 +278,7 @@ public class Model_AP_Client_Master extends Model {
 
     public Model_Term Term() throws SQLException, GuanzonException {
         if (!"".equals(getValue("sTermIDxx"))) {
-            if (this.poTerm.getEditMode() == 1 && this.poTerm
-                    .getTermId().equals(getValue("sTermIDxx"))) {
-                return this.poTerm;
-            }
+            
             this.poJSON = this.poTerm.openRecord((String) getValue("sTermIDxx"));
             if ("success".equals(this.poJSON.get("result"))) {
                 return this.poTerm;
