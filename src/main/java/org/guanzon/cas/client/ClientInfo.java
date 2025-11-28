@@ -41,6 +41,7 @@ public class ClientInfo extends Parameter{
     ArrayList<Model_Client_Institution_Contact> paContact;
     
     String psClientTp;
+    String psCategory;
     
     @Override
     public void initialize() throws SQLException, GuanzonException{
@@ -124,6 +125,14 @@ public class ClientInfo extends Parameter{
     
     public int getInstiContactCount(){
         return paContact.size();
+    }
+    
+    public void setCategory(String category){
+        psCategory = category;
+    }
+    
+    public String getCategory(){
+        return psCategory;
     }
 
     public JSONObject openClientRecord(String Id) throws SQLException, GuanzonException, CloneNotSupportedException {
@@ -649,6 +658,13 @@ public class ClientInfo extends Parameter{
         //validate contact person
         if (getModel().getClientType().equals(ClientType.INSTITUTION)) {
             
+            //check category paramter value
+            if (getCategory() == null || getCategory().isEmpty()) {
+                poJSON.put("result", "error");
+                poJSON.put("message", "Invalid category code!");
+                return poJSON;
+            }
+            
             if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty()
                     && paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) {
                 paContact.remove(paContact.size() - 1);
@@ -766,6 +782,7 @@ public class ClientInfo extends Parameter{
                         break;
                     }
                     loContact.setClientId(poClient.getClientId());
+                    loContact.setCategoryCode(getCategory());
                     
                     //if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
                     if (loContact.isPrimaryContactPersion()) lnPrimaryContact += 1;

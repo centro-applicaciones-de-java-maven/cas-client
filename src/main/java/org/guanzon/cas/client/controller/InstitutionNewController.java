@@ -219,6 +219,8 @@ public class InstitutionNewController implements Initializable {
     private boolean pbLoaded;
     private boolean pbCancelled;
     private boolean pbLoadingData;
+    
+    private String psCategory;
 
     public void setGRider(GRiderCAS griderCAS) {
         poGRider = griderCAS;
@@ -239,6 +241,10 @@ public class InstitutionNewController implements Initializable {
     public boolean isCancelled() {
         return pbCancelled;
     }
+    
+    public void setCategoryCode(String categoryCd){
+        psCategory = categoryCd;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -252,6 +258,7 @@ public class InstitutionNewController implements Initializable {
 
             poClient = new ClientControllers(poGRider, poWrapper).ClientInfo();
             poClient.setClientType(ClientType.INSTITUTION);
+            poClient.setCategory(psCategory);
             poClient.setRecordStatus("1");
             
             loadRecord();
@@ -308,11 +315,15 @@ public class InstitutionNewController implements Initializable {
                 case "btnDelMobile":
                     break;
                 case "btnAddContact":
+                    
                     JSONObject addObj = poClient.addInstiContact();
+                    
                     if ("error".equals((String) addObj.get("result"))) {
                         ShowMessageFX.Information(getStage(), (String) addObj.get("message"), "Computerized Acounting System", MODULE);
                         break;
                     } else {
+                        
+                        poClient.InstiContact(pnContactPerson).setCategoryCode(psCategory);
                         poClient.InstiContact(pnContactPerson).setClientId(poClient.getModel().getClientId());
                         pnContactPerson = poClient.getInstiContactCount()- 1;
                         
@@ -500,6 +511,7 @@ public class InstitutionNewController implements Initializable {
         }
 
         if (!nv) {//lost focus
+
             switch (lnIndex) {
                 case 0: //Full Name
                     poJSON = poClient.InstiContact(pnContactPerson).setContactPersonName(lsValue);

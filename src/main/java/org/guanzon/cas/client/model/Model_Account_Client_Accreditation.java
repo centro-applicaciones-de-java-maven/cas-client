@@ -180,12 +180,15 @@ public class Model_Account_Client_Accreditation extends Model {
         if (!"".equals(getValue("sCategrCd"))) {
             
             this.poJSON = this.poCategory.openRecord((String) getValue("sCategrCd"));
+            System.out.print(this.poJSON);
             if ("success".equals(this.poJSON.get("result"))) {
                 return this.poCategory;
             }
             this.poCategory.initialize();
             return this.poCategory;
         }
+        
+        System.out.print("category code is empty");
         poCategory.initialize();
         return this.poCategory;
     }

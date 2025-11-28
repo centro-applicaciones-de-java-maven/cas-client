@@ -172,7 +172,7 @@ public class Account_Accreditation extends Parameter {
         } else {
             lsSQL = MiscUtil.addCondition(lsSQL, "sDescript LIKE " + SQLUtil.toSQL(fsValue + "%"));
         }
-        System.out.println("Category Query = " + lsSQL);
+
         loJSON = ShowDialogFX.Search(
                 poGRider,
                 lsSQL,
@@ -181,7 +181,7 @@ public class Account_Accreditation extends Parameter {
                 "sCategrCd»sDescript",
                 "sCategrCd»sDescript",
                 fbByCode ? 0 : 1);
-
+        
         if (loJSON != null) {
             loJSON.put("result", "success");
             getModel().setCategoryCode((String) loJSON.get("sCategrCd"));
@@ -237,6 +237,7 @@ public class Account_Accreditation extends Parameter {
 
             loClient.setGRider(poGRider);
             loClient.setLogWrapper(null);
+            loClient.setCategoryCode((String) getModel().getCategoryCode());
 
             //filter client type 
             loClient.setClientType(ClientType.INSTITUTION);
@@ -269,6 +270,9 @@ public class Account_Accreditation extends Parameter {
 
                 getModel().setClientId(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "");
                 
+                System.out.print("this is category "+ getModel().getCategoryCode());
+                System.out.print(getModel().getCategoryCode());
+                
                 //get address
                 for(Model_Client_Address loAddr : loClient.getClient().AddressList()){
                     
@@ -290,14 +294,9 @@ public class Account_Accreditation extends Parameter {
                         break;
                     }
                 }
-                
-                loResult.put("result", "success");
-                return loResult;
-            } else {
-                loResult.put("result", "error");
-                loResult.put("message", "No record selected.");
-                return loResult;
             }
+            loResult.put("result", "success");
+            return loResult;
         }
     }
 
