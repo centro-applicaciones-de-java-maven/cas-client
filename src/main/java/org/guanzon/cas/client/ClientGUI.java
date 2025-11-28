@@ -35,6 +35,8 @@ public class ClientGUI extends Application {
     private static String psClientTp;
     private static boolean pbCancelled;
     
+    private static String psCategory;
+    
     public void setGRider(GRiderCAS griderCAS){
         poGRider = griderCAS;
     }
@@ -60,6 +62,10 @@ public class ClientGUI extends Application {
     
     public boolean isCancelled(){
         return pbCancelled;
+    }
+    
+    public void setCategoryCode(String categoryCd){
+        psCategory = categoryCd;
     }
     
     @Override
@@ -122,12 +128,21 @@ public class ClientGUI extends Application {
                 poClient = controller.getClient();
             }
         } else {
+            
+            //ensure category param is initialized before entry
+            if (psCategory == null || psCategory.isEmpty()) {
+                ShowMessageFX.Error("Please load category first!", "Client Entry", null);
+                pbCancelled = true;
+                return;
+            }
+            
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/InstitutionNew.fxml"));
 
             InstitutionNewController controller = new InstitutionNewController();
             controller.setGRider(poGRider);
             controller.setLogWrapper(poWrapper);
             controller.setClientId(psClientId);
+            controller.setCategoryCode(psCategory);
 
             loader.setController(controller);
 
