@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -139,9 +140,6 @@ public class InstitutionNewController implements Initializable {
     private GridPane gridSocMed;
 
     @FXML
-    private TextField txtContact01;
-
-    @FXML
     private CheckBox cbContact01;
     
     @FXML
@@ -154,19 +152,37 @@ public class InstitutionNewController implements Initializable {
     private Button btnDelContact;
 
     @FXML
-    private TextField txtContact00;
+    private TextField txtContact00; //fullname
+    
+    @FXML
+    private TextField txtContact01; //position
 
     @FXML
-    private TextField txtContact02;
+    private TextField txtContact02; //mobile no
 
     @FXML
-    private TextField txtContact03;
+    private TextField txtContact03; //landline
 
     @FXML
-    private TextField txtContact04;
+    private TextField txtContact04; //fax no
 
     @FXML
-    private TextField txtContact05;
+    private TextField txtContact05; //email
+    
+    @FXML
+    private TextField txtContact06; //job title
+    
+    @FXML
+    private TextField txtContact07; //department
+    
+    @FXML
+    private TextField txtContact08; //role
+    
+    @FXML
+    private TextField txtContact09; //payee
+    
+    @FXML
+    private ComboBox cbcontact00; //payee type
 
     @FXML
     private TableView<ModelContactPerson> tblSocMed;
@@ -178,10 +194,10 @@ public class InstitutionNewController implements Initializable {
     private TableColumn<ModelContactPerson, String> indexSocMed02;
 
     @FXML
-    private TableColumn<ModelContactPerson, String> indexSocMed03;
+    private TableColumn<ModelContactPerson, String> indexSocMed03; //account type
 
     @FXML
-    private TableColumn<ModelContactPerson, String> indexSocMed04;
+    private TableColumn<ModelContactPerson, String> indexSocMed04; //role
 
     @FXML
     private HBox hbButtons;
@@ -641,18 +657,27 @@ public class InstitutionNewController implements Initializable {
         txtAddress04.setOnKeyPressed(this::txtAddress_KeyPressed);
         txtAddress05.setOnKeyPressed(this::txtAddress_KeyPressed);
 
+        txtContact09.focusedProperty().addListener(txtContactPerson_Focus);
         txtContact00.focusedProperty().addListener(txtContactPerson_Focus);
-        txtContact01.focusedProperty().addListener(txtContactPerson_Focus);
         txtContact02.focusedProperty().addListener(txtContactPerson_Focus);
         txtContact03.focusedProperty().addListener(txtContactPerson_Focus);
         txtContact04.focusedProperty().addListener(txtContactPerson_Focus);
+        txtContact05.focusedProperty().addListener(txtContactPerson_Focus);
+        txtContact06.focusedProperty().addListener(txtContactPerson_Focus);
+        txtContact01.focusedProperty().addListener(txtContactPerson_Focus);
+        txtContact07.focusedProperty().addListener(txtContactPerson_Focus);
+        txtContact08.focusedProperty().addListener(txtContactPerson_Focus);
 
-        txtContact05.setOnKeyPressed(this::txtContactPerson_KeyPressed);
-        txtContact01.setOnKeyPressed(this::txtContactPerson_KeyPressed);
+        txtContact09.setOnKeyPressed(this::txtContactPerson_KeyPressed);
+        txtContact00.setOnKeyPressed(this::txtContactPerson_KeyPressed);
         txtContact02.setOnKeyPressed(this::txtContactPerson_KeyPressed);
         txtContact03.setOnKeyPressed(this::txtContactPerson_KeyPressed);
         txtContact04.setOnKeyPressed(this::txtContactPerson_KeyPressed);
         txtContact05.setOnKeyPressed(this::txtContactPerson_KeyPressed);
+        txtContact06.setOnKeyPressed(this::txtContactPerson_KeyPressed);
+        txtContact01.setOnKeyPressed(this::txtContactPerson_KeyPressed);
+        txtContact07.setOnKeyPressed(this::txtContactPerson_KeyPressed);
+        txtContact08.setOnKeyPressed(this::txtContactPerson_KeyPressed);
 
         btnExit.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
