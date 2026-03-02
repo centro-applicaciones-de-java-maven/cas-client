@@ -10,7 +10,23 @@ import org.guanzon.cas.client.model.Model_Client_Mail;
 import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
+import org.guanzon.cas.client.model.Model_Contact_Role;
+
 public class ClientModels {
+    
+    private final GRiderCAS poGRider;
+
+    private Model_Client_Master poClientMaster;
+    private Model_Client_Address poClientAddress;
+    private Model_Client_Mobile poClientMobile;
+    private Model_Client_Mail poClientMail;
+    private Model_Client_Social_Media poClientSocmed;
+    private Model_Client_Institution_Contact poClientInstitutionContact;
+    private Model_Account_Client_Accreditation poClientAccreditation;
+    private Model_AP_Client_Master poAPClientMaster;
+    private Model_AP_Client_Ledger poAPClientLedger;
+    private Model_Contact_Role poClientRole;
+    
     public ClientModels(GRiderCAS applicationDriver) {
         poGRider = applicationDriver;
     }
@@ -64,6 +80,24 @@ public class ClientModels {
         }
 
         return poClientInstitutionContact;
+    }
+    
+    public Model_Contact_Role ClientRole(){
+        if (poGRider == null) {
+            System.err.println("ClientModel.ClientInstitutionContact: Application driver is not set.");
+            return null;
+        }
+        
+        if (poClientRole == null) {
+            poClientRole = new Model_Contact_Role();
+            poClientRole.setApplicationDriver(poGRider);
+            poClientRole.setXML("Model_Contact_Role");
+            poClientRole.setTableName("Corporate_Role");
+            poClientRole.initialize();
+        }
+        
+        return poClientRole;
+        
     }
         
     public Model_Client_Mobile ClientMobile() {
@@ -167,16 +201,4 @@ public class ClientModels {
 
         return poAPClientLedger;
     }
-        
-    private final GRiderCAS poGRider;
-
-    private Model_Client_Master poClientMaster;
-    private Model_Client_Address poClientAddress;
-    private Model_Client_Mobile poClientMobile;
-    private Model_Client_Mail poClientMail;
-    private Model_Client_Social_Media poClientSocmed;
-    private Model_Client_Institution_Contact poClientInstitutionContact;
-    private Model_Account_Client_Accreditation poClientAccreditation;
-    private Model_AP_Client_Master poAPClientMaster;
-    private Model_AP_Client_Ledger poAPClientLedger;
 }

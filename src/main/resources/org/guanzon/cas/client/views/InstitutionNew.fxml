@@ -5,7 +5,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
@@ -312,7 +311,12 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Full Name" GridPane.rowIndex="2">
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Role" GridPane.columnIndex="5">
+                                                                                       <font>
+                                                                                          <Font size="14.0" />
+                                                                                       </font>
+                                                                                    </Text>
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Payee" GridPane.rowIndex="2">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -335,17 +339,11 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Payee">
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Name">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </Text>
-                                                                                    <ComboBox fx:id="cbcontact00" maxWidth="1.7976931348623157E308" prefWidth="150.0" promptText="Select Account Tyoe" GridPane.columnIndex="6" GridPane.columnSpan="3">
-                                                                                       <stylesheets>
-                                                                                          <URL value="@StyleSheet.css" />
-                                                                                          <URL value="@../../../../../../../../../integsys/src/main/resources/ph/com/guanzongroup/integsys/css/StyleSheet.css" />
-                                                                                       </stylesheets>
-                                                                                    </ComboBox>
                                                                                     <CheckBox fx:id="cbContact01" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="6" GridPane.rowIndex="2">
                                                                                        <font>
                                                                                           <Font size="14.0" />
@@ -359,12 +357,17 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </CheckBox>
-                                                                                    <TextField fx:id="txtContact09" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
+                                                                                    <TextField fx:id="txtContact00" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextField fx:id="txtContact00" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                                                    <TextField fx:id="txtContact08" minWidth="150.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="3">
+                                                                                       <GridPane.margin>
+                                                                                          <Insets left="5.0" />
+                                                                                       </GridPane.margin>
+                                                                                    </TextField>
+                                                                                    <TextField fx:id="txtContact09" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
@@ -439,10 +442,11 @@
                                                                                 </columnConstraints>
                                                                                 <rowConstraints>
                                                                                   <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
                                                                                   <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                 </rowConstraints>
                                                                                  <children>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Position" GridPane.rowIndex="1">
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Position" GridPane.rowIndex="2">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -450,12 +454,7 @@
                                                                                           <Insets left="10.0" />
                                                                                        </GridPane.margin>
                                                                                     </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" GridPane.rowIndex="1">
-                                                                                       <font>
-                                                                                          <Font size="14.0" />
-                                                                                       </font>
-                                                                                    </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Role" GridPane.columnIndex="5" GridPane.rowIndex="1">
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" GridPane.rowIndex="2">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -475,17 +474,12 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="9" GridPane.rowIndex="2">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
                                                                                     <TextField fx:id="txtContact07" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="4">
-                                                                                       <GridPane.margin>
-                                                                                          <Insets left="5.0" />
-                                                                                       </GridPane.margin>
-                                                                                    </TextField>
-                                                                                    <TextField fx:id="txtContact08" minWidth="150.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="4" GridPane.rowIndex="1">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>

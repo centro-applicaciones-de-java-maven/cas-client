@@ -180,9 +180,6 @@ public class InstitutionNewController implements Initializable {
     
     @FXML
     private TextField txtContact09; //payee
-    
-    @FXML
-    private ComboBox cbcontact00; //payee type
 
     @FXML
     private TableView<ModelContactPerson> tblSocMed;
@@ -719,6 +716,10 @@ public class InstitutionNewController implements Initializable {
         txtContact03.setText("");
         txtContact04.setText("");
         txtContact05.setText("");
+        txtContact06.setText("");
+        txtContact07.setText("");
+        txtContact08.setText("");
+        txtContact09.setText("");
 
         cbContact01.selectedProperty().set(false);
         cbContact02.selectedProperty().set(false);
@@ -928,7 +929,9 @@ public class InstitutionNewController implements Initializable {
 
     private void getSelectedContactPerson() {
         
-        pbLoadingData = true;
+        try{
+            
+            pbLoadingData = true;
         
         if (poClient.getInstiContactCount() > 0) {
             txtContact00.setText(poClient.InstiContact(pnContactPerson).getContactPersonName());
@@ -937,12 +940,26 @@ public class InstitutionNewController implements Initializable {
             txtContact03.setText(poClient.InstiContact(pnContactPerson).getLandlineNo());
             txtContact04.setText(poClient.InstiContact(pnContactPerson).getFaxNo());
             txtContact05.setText(poClient.InstiContact(pnContactPerson).getMailAddress());
-
+            
+            txtContact06.setText(poClient.InstiContact(pnContactPerson).getContactJobTitle());
+            txtContact07.setText(poClient.InstiContact(pnContactPerson).getsDeprtmnt());
+            txtContact08.setText(poClient.InstiContact(pnContactPerson).getLandlineNo());
+            txtContact09.setText(poClient.InstiContact(pnContactPerson).getcPayeexxx());
+            
             cbContact01.setSelected(("1".equals(poClient.InstiContact(pnContactPerson).getRecordStatus())));
             cbContact02.setSelected(poClient.InstiContact(pnContactPerson).isPrimaryContactPersion());
+            
+            JSONObject loRole = poClient.searchRole(poClient.InstiContact(pnContactPerson).getsRoleIDxx(), true);
+            if ("success".equals((String) loRole.get("result"))) {
+                txtContact04.setText(loRole.get("sRolexx").toString());
+            }
 
         }
         pbLoadingData = false;
+        
+        }catch(Exception e){
+            poWrapper.severe(e.getMessage());
+        }
     }
 
     private void initCompanyCheckbox() {

@@ -18,6 +18,7 @@ import org.guanzon.cas.client.model.Model_Client_Mail;
 import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
+import org.guanzon.cas.client.model.Model_Contact_Role;
 import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.Country;
@@ -33,6 +34,7 @@ public class ClientInfo extends Parameter{
     Model_Client_Mail poMail;
     Model_Client_Social_Media poSocMed;
     Model_Client_Institution_Contact poContact;
+    Model_Contact_Role poRole;
     
     ArrayList<Model_Client_Mobile> paMobile;
     ArrayList<Model_Client_Address> paAddress;
@@ -56,6 +58,7 @@ public class ClientInfo extends Parameter{
         poAddress = model.ClientAddress();
         poSocMed = model.ClientSocMed();
         poContact = model.ClientInstitutionContact();
+        poRole = model.ClientRole();
         
         if (psClientTp == null || psClientTp.isEmpty()) psClientTp = ClientType.INDIVIDUAL;
     }
@@ -67,6 +70,10 @@ public class ClientInfo extends Parameter{
     
     public void setClientType(String clientType){
         psClientTp = clientType;
+    }
+    
+    public Model_Contact_Role Role(){
+        return poRole;
     }
 
     public Model_Client_Mobile Mobile(int row){
@@ -569,6 +576,25 @@ public class ClientInfo extends Parameter{
             paAddress.get(lnRow).Barangay().setBarangayId("");
             paAddress.get(lnRow).Barangay().setBarangayName("");        
         }
+        
+        return poJSON;
+    }
+    
+    public JSONObject searchRole(String lsValue, boolean byCode)throws SQLException, GuanzonException{
+        if (lsValue == null) lsValue = "";
+        
+        poJSON = poRole.searchRecord(lsValue, byCode);
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            poContact.setsRoleIDxx(poRole.getRoleIDxx());
+        } else {
+            return poJSON;
+        }
+        
+        poJSON = new JSONObject();
+        poJSON.put("result", "success");
+        poJSON.put("sIDxx", poRole.getRoleIDxx() == null ? "" : poRole.getRoleIDxx());
+        poJSON.put("sRolexx", poRole.getsRoleDesc() == null ? "" : poRole.getsRoleDesc());
         
         return poJSON;
     }

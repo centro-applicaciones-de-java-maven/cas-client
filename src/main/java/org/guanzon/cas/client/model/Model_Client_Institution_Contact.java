@@ -74,6 +74,14 @@ public class Model_Client_Institution_Contact extends Model{
         return (String) getValue("sCategrCd");
     }
     
+    public JSONObject setcPayeexxx(String cPayeexxx){
+        return setValue("cPayeexxx", cPayeexxx);
+    }
+
+    public String getcPayeexxx(){
+        return (String) getValue("cPayeexxx");
+    }
+    
     public JSONObject setContactPersonName(String contactPersonName){
         return setValue("sCPerson1", contactPersonName);
     }
@@ -82,12 +90,36 @@ public class Model_Client_Institution_Contact extends Model{
         return (String) getValue("sCPerson1");
     }
     
+    public JSONObject setContactJobTitle(String sJobTitle){
+        return setValue("sJobTitle", sJobTitle);
+    }
+
+    public String getContactJobTitle(){
+        return (String) getValue("sJobTitle");
+    }
+    
+    public JSONObject setsDeprtmnt(String sDeprtmnt){
+        return setValue("sDeprtmnt", sDeprtmnt);
+    }
+
+    public String getsDeprtmnt(){
+        return (String) getValue("sDeprtmnt");
+    }
+    
     public JSONObject setContactPersonPosition(String contactPersonPosition){
         return setValue("sCPPosit1", contactPersonPosition);
     }
 
     public String getContactPersonPosition(){
         return (String) getValue("sCPPosit1");
+    }
+    
+    public JSONObject setsRoleIDxx(String sRoleIDxx){
+        return setValue("sCPPosit1", sRoleIDxx);
+    }
+
+    public String getsRoleIDxx(){
+        return (String) getValue("sRoleIDxx");
     }
     
     public JSONObject setMobileNo(String mobileNo){
