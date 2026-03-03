@@ -10,7 +10,7 @@ import org.guanzon.cas.client.model.Model_Client_Mail;
 import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
-import org.guanzon.cas.client.model.Model_Contact_Role;
+import org.guanzon.cas.client.model.Model_Corporate_Role;
 
 public class ClientModels {
     
@@ -25,7 +25,7 @@ public class ClientModels {
     private Model_Account_Client_Accreditation poClientAccreditation;
     private Model_AP_Client_Master poAPClientMaster;
     private Model_AP_Client_Ledger poAPClientLedger;
-    private Model_Contact_Role poClientRole;
+    private Model_Corporate_Role poClientRole;
     
     public ClientModels(GRiderCAS applicationDriver) {
         poGRider = applicationDriver;
@@ -82,16 +82,16 @@ public class ClientModels {
         return poClientInstitutionContact;
     }
     
-    public Model_Contact_Role ClientRole(){
+    public Model_Corporate_Role ClientRole(){
         if (poGRider == null) {
             System.err.println("ClientModel.ClientInstitutionContact: Application driver is not set.");
             return null;
         }
         
         if (poClientRole == null) {
-            poClientRole = new Model_Contact_Role();
+            poClientRole = new Model_Corporate_Role();
             poClientRole.setApplicationDriver(poGRider);
-            poClientRole.setXML("Model_Contact_Role");
+            poClientRole.setXML("Model_Corporate_Role");
             poClientRole.setTableName("Corporate_Role");
             poClientRole.initialize();
         }

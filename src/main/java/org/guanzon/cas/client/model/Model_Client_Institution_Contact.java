@@ -66,6 +66,14 @@ public class Model_Client_Institution_Contact extends Model{
         return (String) getValue("sClientID");
     }
     
+    public JSONObject setcCPrsonID(String cCPrsonID){
+        return setValue("cCPrsonID", cCPrsonID);
+    }
+
+    public String getcCPrsonID(){
+        return (String) getValue("cCPrsonID");
+    }
+    
     public JSONObject setCategoryCode(String categoryCode){
         return setValue("sCategrCd", categoryCode);
     }

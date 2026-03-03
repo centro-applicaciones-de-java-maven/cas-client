@@ -18,7 +18,7 @@ import org.guanzon.cas.client.model.Model_Client_Mail;
 import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
-import org.guanzon.cas.client.model.Model_Contact_Role;
+import org.guanzon.cas.client.model.Model_Corporate_Role;
 import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.Country;
@@ -34,7 +34,7 @@ public class ClientInfo extends Parameter{
     Model_Client_Mail poMail;
     Model_Client_Social_Media poSocMed;
     Model_Client_Institution_Contact poContact;
-    Model_Contact_Role poRole;
+    Model_Corporate_Role poRole;
     
     ArrayList<Model_Client_Mobile> paMobile;
     ArrayList<Model_Client_Address> paAddress;
@@ -72,7 +72,7 @@ public class ClientInfo extends Parameter{
         psClientTp = clientType;
     }
     
-    public Model_Contact_Role Role(){
+    public Model_Corporate_Role Role(){
         return poRole;
     }
 
@@ -581,22 +581,53 @@ public class ClientInfo extends Parameter{
     }
     
     public JSONObject searchRole(String lsValue, boolean byCode)throws SQLException, GuanzonException{
+        
+        String lsSearch = 
+                       "SELECT " +
+                        "sRoleIDxx, " +
+                        "sRoleDesc " +
+                       "FROM " +
+                        "Corporate_Role " +
+                       "WHERE " +
+                        "cRecdStat = '1' "; 
+        
         if (lsValue == null) lsValue = "";
         
-        poJSON = poRole.searchRecord(lsValue, byCode);
+        String lsRoleIDxx = lsValue;
         
-        if ("success".equals((String) poJSON.get("result"))){
-            poContact.setsRoleIDxx(poRole.getRoleIDxx());
-        } else {
+        //show dialog (search by description)
+        if (!byCode) {
+            
+            poJSON = ShowDialogFX.Search(poGRider,
+                            lsSearch,
+                            lsValue,
+                            "ID»Role",
+                            "sRoleIDxx»sRoleDesc",
+                            "sRoleIDxx»sRoleDesc",
+                            byCode ? 0 : 1);
+            
+            if (poJSON == null) {
+                poJSON = new JSONObject();
+                poJSON.put("result", "error");
+                poJSON.put("message", "No record loaded.");
+                
+                return poJSON;
+            }
+            
+            //get selected role id
+            lsRoleIDxx = poJSON.get("sRoleIDxx") == null ? "" : (String) poJSON.get("sRoleIDxx");
+        }
+
+        poJSON = poRole.openRecord(lsRoleIDxx);
+        if (poJSON == null) {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            
             return poJSON;
         }
-        
-        poJSON = new JSONObject();
-        poJSON.put("result", "success");
-        poJSON.put("sIDxx", poRole.getRoleIDxx() == null ? "" : poRole.getRoleIDxx());
-        poJSON.put("sRolexx", poRole.getsRoleDesc() == null ? "" : poRole.getsRoleDesc());
-        
         return poJSON;
+    
     }
 
     @Override

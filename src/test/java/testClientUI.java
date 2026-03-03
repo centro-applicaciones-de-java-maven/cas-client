@@ -22,7 +22,7 @@ public class testClientUI {
     static ClientGUI client;
     
     @BeforeClass
-    public static void setUpClass() {
+    public static void setUpClass() throws IOException {
         try {
             String path;
             if (System.getProperty("os.name").toLowerCase().contains("win")) {

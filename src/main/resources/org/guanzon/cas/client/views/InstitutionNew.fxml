@@ -290,7 +290,7 @@
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
                                                                                     <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="60.0" prefWidth="60.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="10.0" />
+                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="85.0" prefWidth="10.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                                     <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
@@ -311,18 +311,10 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Role" GridPane.columnIndex="5">
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Role" GridPane.rowIndex="2">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
-                                                                                    </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Payee" GridPane.rowIndex="2">
-                                                                                       <font>
-                                                                                          <Font size="14.0" />
-                                                                                       </font>
-                                                                                       <GridPane.margin>
-                                                                                          <Insets left="15.0" />
-                                                                                       </GridPane.margin>
                                                                                     </Text>
                                                                                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Landline" GridPane.rowIndex="5">
                                                                                        <font>
@@ -357,17 +349,17 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </CheckBox>
+                                                                                    <CheckBox fx:id="cbContact00" alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Payee" GridPane.columnIndex="8" GridPane.rowIndex="2">
+                                                                                       <font>
+                                                                                          <Font size="14.0" />
+                                                                                       </font>
+                                                                                    </CheckBox>
                                                                                     <TextField fx:id="txtContact00" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextField fx:id="txtContact08" minWidth="150.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="3">
-                                                                                       <GridPane.margin>
-                                                                                          <Insets left="5.0" />
-                                                                                       </GridPane.margin>
-                                                                                    </TextField>
-                                                                                    <TextField fx:id="txtContact09" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
+                                                                                    <TextField fx:id="txtContact08" minWidth="150.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="2">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
@@ -496,9 +488,8 @@
                                                                               <TableView fx:id="tblSocMed" prefHeight="300.0" prefWidth="615.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                                                                                  <columns>
                                                                                     <TableColumn fx:id="indexSocMed01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
-                                                                                    <TableColumn fx:id="indexSocMed02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="221.0" text="Name" />
-                                                                                    <TableColumn fx:id="indexSocMed03" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="185.0" text="Account Type" />
-                                                                                    <TableColumn fx:id="indexSocMed04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="204.0" text="Role" />
+                                                                                    <TableColumn fx:id="indexSocMed02" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="331.0" text="Name" />
+                                                                                    <TableColumn fx:id="indexSocMed04" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="94.0" text="Role" />
                                                                                  </columns>
                                                                               </TableView>
                                                                            </children>
