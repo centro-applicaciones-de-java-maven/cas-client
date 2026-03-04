@@ -44,6 +44,7 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.cas.client.ClientGUI;
 import org.guanzon.cas.client.ClientInfo;
 import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.table.models.ModelAddress;
@@ -429,6 +430,9 @@ public class InstitutionNewController implements Initializable {
 
     private void txtContactPerson_KeyPressed(KeyEvent event){
         TextField txtField = (TextField) event.getSource();
+        
+        String lsValue = txtField.getText() == null ? "" : txtField.getText();
+        int lnIndex = Integer.parseInt(txtField.getId().substring(10, 12));
 
         switch (event.getCode()) {
             case ENTER:
@@ -442,9 +446,6 @@ public class InstitutionNewController implements Initializable {
                 
                 try {
                     
-                    String lsValue = txtField.getText() == null ? "" : txtField.getText();
-                
-                    int lnIndex = Integer.parseInt(txtField.getId().substring(10, 12));
                     switch(lnIndex){
                         case 0: //client name
 
@@ -463,33 +464,65 @@ public class InstitutionNewController implements Initializable {
                                 
                                 String lsfullname = poClient.getModel().getCompanyName() == null ? "" : lsLastnme + ", " + lsFrstnme + " " + lsMidnme + " " + lsSuffix;
                                 poClient.InstiContact(pnContactPerson).setContactPersonName(lsfullname);
-
-                                txtField.setText(poClient.InstiContact(pnContactPerson).getContactPersonName());
+                                
+                                //set back to institution
+                                poClient.setClientType(ClientType.INSTITUTION);
+                                
+                                getSelectedContactPerson();
                                 return;
                             }
-                            ShowMessageFX.Error(getStage(), poJSON.get("message").toString(),"Warning", MODULE);
-                            
+                            System.out.print(poJSON.toJSONString());
+
                             //set back to institution
                             poClient.setClientType(ClientType.INSTITUTION);
                             break;
                         case 8: //contact role
 
-                            poJSON = poClient.searchRole(lsValue, false);
-//                            if ("success".equalsIgnoreCase(poJSON.get("result").toString())) {
-//                                System.out.print(poClient.Role().getRoleIDxx());
-//
-//                                poClient.InstiContact(pnContactPerson).setsRoleIDxx(poClient.Role().getRoleIDxx());
-//
-//                                txtField.setText(poClient.Role().getsRoleDesc());
-//                                return;
-//                            }
-//                            ShowMessageFX.Error(getStage(), poJSON.get("message").toString(),"Warning", MODULE);
+                            poJSON = poClient.searchRole(pnContactPerson, lsValue);
+                            
+                            if ("error".equalsIgnoreCase((String) poJSON.get("result"))) {
+                                System.out.print(poJSON.get("message"));
+                                return;
+                            }
+                            
+                            getSelectedContactPerson();
                             break;
                     }   
                 } catch (Exception e) {
                     poWrapper.severe(e.getMessage());
                 }
-           
+                break;
+            case F4:
+                
+                try {
+                
+                    switch(lnIndex){
+                        case 0: //client name
+                            
+                            //initialize Client GUI
+                            ClientGUI loClient = new ClientGUI();
+
+                            loClient.setGRider(poGRider);
+                            loClient.setLogWrapper(null);
+                            loClient.setCategoryCode((String) psCategory);
+
+                            //filter client type 
+                            loClient.setClientType(ClientType.INDIVIDUAL);
+
+                            //set search by code
+                            loClient.setByCode(false);
+                            loClient.setClientId("");
+
+                            //load record
+                            CommonUtils.showModal(loClient);
+                                    
+                        break;           
+                    }
+                    
+            } catch (Exception e) {
+                poWrapper.severe(e.getMessage());
+            }
+            break;
         }
     }
 
@@ -622,7 +655,7 @@ public class InstitutionNewController implements Initializable {
                     txtField.setText(poClient.InstiContact(pnContactPerson).getMailAddress());
                     break;
                     
-                case 6:
+                case 6: //Job Title
                     poJSON = poClient.InstiContact(pnContactPerson).setContactJobTitle(lsValue);
 
                     if (!"success".equals((String) poJSON.get("result"))) {
@@ -631,7 +664,7 @@ public class InstitutionNewController implements Initializable {
 
                     txtField.setText(poClient.InstiContact(pnContactPerson).getContactJobTitle());
                     break;
-                case 7:
+                case 7: //Department
                     poJSON = poClient.InstiContact(pnContactPerson).setsDeprtmnt(lsValue);
 
                     if (!"success".equals((String) poJSON.get("result"))) {
@@ -713,7 +746,6 @@ public class InstitutionNewController implements Initializable {
         txtAddress04.setOnKeyPressed(this::txtAddress_KeyPressed);
         txtAddress05.setOnKeyPressed(this::txtAddress_KeyPressed);
 
-        txtContact00.focusedProperty().addListener(txtContactPerson_Focus);
         txtContact02.focusedProperty().addListener(txtContactPerson_Focus);
         txtContact03.focusedProperty().addListener(txtContactPerson_Focus);
         txtContact04.focusedProperty().addListener(txtContactPerson_Focus);
@@ -721,7 +753,6 @@ public class InstitutionNewController implements Initializable {
         txtContact06.focusedProperty().addListener(txtContactPerson_Focus);
         txtContact01.focusedProperty().addListener(txtContactPerson_Focus);
         txtContact07.focusedProperty().addListener(txtContactPerson_Focus);
-        txtContact08.focusedProperty().addListener(txtContactPerson_Focus);
 
         txtContact00.setOnKeyPressed(this::txtContactPerson_KeyPressed);
         txtContact02.setOnKeyPressed(this::txtContactPerson_KeyPressed);
@@ -1001,7 +1032,6 @@ public class InstitutionNewController implements Initializable {
             
             txtContact06.setText(poClient.InstiContact(pnContactPerson).getContactJobTitle());
             txtContact07.setText(poClient.InstiContact(pnContactPerson).getsDeprtmnt());
-            txtContact08.setText(poClient.InstiContact(pnContactPerson).getLandlineNo());
             
             cbContact01.setSelected(("1".equals(poClient.InstiContact(pnContactPerson).getRecordStatus())));
             cbContact02.setSelected(poClient.InstiContact(pnContactPerson).isPrimaryContactPersion());
@@ -1012,11 +1042,15 @@ public class InstitutionNewController implements Initializable {
                 return;
             }
             
-            poJSON = poClient.searchRole(poClient.InstiContact(pnContactPerson).getsRoleIDxx(), true);
+            poJSON = poClient.Role().searchRecord(poClient.InstiContact(pnContactPerson).getsRoleIDxx(), true);
             if(poJSON != null){
                 if ("success".equals((String) poJSON.get("result"))) {
-                    txtContact04.setText(poJSON.get("sRolexx").toString());
+                    txtContact08.setText(poClient.Role().getModel().getsRoleDesc());
+                }else{
+                    System.out.print(poJSON.get("message"));
                 }
+            }else{
+                System.out.print("No record loaded");
             }
 
         }

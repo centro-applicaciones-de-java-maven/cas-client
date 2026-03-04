@@ -19,6 +19,7 @@ import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
 import org.guanzon.cas.client.model.Model_Corporate_Role;
+import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.parameter.Barangay;
 import org.guanzon.cas.parameter.Country;
@@ -34,7 +35,8 @@ public class ClientInfo extends Parameter{
     Model_Client_Mail poMail;
     Model_Client_Social_Media poSocMed;
     Model_Client_Institution_Contact poContact;
-    Model_Corporate_Role poRole;
+    
+    Client_Role poRole;
     
     ArrayList<Model_Client_Mobile> paMobile;
     ArrayList<Model_Client_Address> paAddress;
@@ -52,13 +54,15 @@ public class ClientInfo extends Parameter{
         psRecdStat = Logical.YES;
 
         ClientModels model = new ClientModels(poGRider);
+        
+        poRole = new ClientControllers(poGRider, logwrapr).ClientRole();
+        
         poClient = model.ClientMaster();
         poMobile = model.ClientMobile();               
         poMail = model.ClientMail();
         poAddress = model.ClientAddress();
         poSocMed = model.ClientSocMed();
         poContact = model.ClientInstitutionContact();
-        poRole = model.ClientRole();
         
         if (psClientTp == null || psClientTp.isEmpty()) psClientTp = ClientType.INDIVIDUAL;
     }
@@ -72,7 +76,7 @@ public class ClientInfo extends Parameter{
         psClientTp = clientType;
     }
     
-    public Model_Corporate_Role Role(){
+    public Client_Role Role(){
         return poRole;
     }
 
@@ -580,54 +584,13 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
     
-    public JSONObject searchRole(String lsValue, boolean byCode)throws SQLException, GuanzonException{
+    public JSONObject searchRole(int lnRow, String lsValue) throws SQLException, GuanzonException{
         
-        String lsSearch = 
-                       "SELECT " +
-                        "sRoleIDxx, " +
-                        "sRoleDesc " +
-                       "FROM " +
-                        "Corporate_Role " +
-                       "WHERE " +
-                        "cRecdStat = '1' "; 
-        
-        if (lsValue == null) lsValue = "";
-        
-        String lsRoleIDxx = lsValue;
-        
-        //show dialog (search by description)
-        if (!byCode) {
-            
-            poJSON = ShowDialogFX.Search(poGRider,
-                            lsSearch,
-                            lsValue,
-                            "ID»Role",
-                            "sRoleIDxx»sRoleDesc",
-                            "sRoleIDxx»sRoleDesc",
-                            byCode ? 0 : 1);
-            
-            if (poJSON == null) {
-                poJSON = new JSONObject();
-                poJSON.put("result", "error");
-                poJSON.put("message", "No record loaded.");
-                
-                return poJSON;
-            }
-            
-            //get selected role id
-            lsRoleIDxx = poJSON.get("sRoleIDxx") == null ? "" : (String) poJSON.get("sRoleIDxx");
-        }
-
-        poJSON = poRole.openRecord(lsRoleIDxx);
-        if (poJSON == null) {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            
-            return poJSON;
+        poJSON = poRole.searchRecord(lsValue, false);
+        if ("success".equalsIgnoreCase((String) poJSON.get("result"))) {
+            paContact.get(lnRow).setsRoleIDxx(poRole.getModel().getRoleIDxx());
         }
         return poJSON;
-    
     }
 
     @Override

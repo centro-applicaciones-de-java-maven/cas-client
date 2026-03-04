@@ -53,22 +53,17 @@ public class Client {
         poClient = new Client_Master();
         poClient.setApplicationDriver(poGRider);
         poClient.setWithParentClass(true);
-//        poClient.setLogWrapper(poLogWrapper);
         poClient.initialize();
         
         poClientAddress = new Client_Address();
         poClientAddress.setApplicationDriver(poGRider);
         poClientAddress.setWithParentClass(true);
-//        poClient.setLogWrapper(poLogWrapper);
         poClientAddress.initialize();
         
         poClientIns = new Client_Institution_Contact();
         poClientIns.setApplicationDriver(poGRider);
         poClientIns.setWithParentClass(true);
-//        poClient.setLogWrapper(poLogWrapper);
         poClientIns.initialize();
-        
-        
 
         poMobile = new ArrayList<>();
         poAddress = new ArrayList<>();

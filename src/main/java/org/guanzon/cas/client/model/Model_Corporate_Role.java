@@ -31,6 +31,7 @@ public class Model_Corporate_Role extends Model{
             poEntity.moveToCurrentRow();
 
             poEntity.absolute(1);
+            ID = poEntity.getMetaData().getColumnLabel(1);
             
             pnEditMode = EditMode.UNKNOWN;
             

@@ -22,10 +22,10 @@ public class ClientModels {
     private Model_Client_Mail poClientMail;
     private Model_Client_Social_Media poClientSocmed;
     private Model_Client_Institution_Contact poClientInstitutionContact;
+    private Model_Corporate_Role poRole;
     private Model_Account_Client_Accreditation poClientAccreditation;
     private Model_AP_Client_Master poAPClientMaster;
     private Model_AP_Client_Ledger poAPClientLedger;
-    private Model_Corporate_Role poClientRole;
     
     public ClientModels(GRiderCAS applicationDriver) {
         poGRider = applicationDriver;
@@ -82,22 +82,21 @@ public class ClientModels {
         return poClientInstitutionContact;
     }
     
-    public Model_Corporate_Role ClientRole(){
+    public Model_Corporate_Role ClientRole() {
         if (poGRider == null) {
-            System.err.println("ClientModel.ClientInstitutionContact: Application driver is not set.");
+            System.err.println("ClientModel.ClientRole: Application driver is not set.");
             return null;
         }
-        
-        if (poClientRole == null) {
-            poClientRole = new Model_Corporate_Role();
-            poClientRole.setApplicationDriver(poGRider);
-            poClientRole.setXML("Model_Corporate_Role");
-            poClientRole.setTableName("Corporate_Role");
-            poClientRole.initialize();
+
+        if (poRole == null) {
+            poRole = new Model_Corporate_Role();
+            poRole.setApplicationDriver(poGRider);
+            poRole.setXML("Model_Corporate_Role");
+            poRole.setTableName("Corporate_Role");
+            poRole.initialize();
         }
-        
-        return poClientRole;
-        
+
+        return poRole;
     }
         
     public Model_Client_Mobile ClientMobile() {

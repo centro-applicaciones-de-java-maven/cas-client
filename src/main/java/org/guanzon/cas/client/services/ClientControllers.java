@@ -6,6 +6,7 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.cas.client.Client;
 import org.guanzon.cas.client.ClientInfo;
+import org.guanzon.cas.client.Client_Role;
 import org.guanzon.cas.client.account.AP_Client_Master;
 import org.guanzon.cas.client.account.Account_Accreditation;
 
@@ -46,6 +47,23 @@ public class ClientControllers {
         return poClientx;       
     }
     
+    public Client_Role ClientRole() throws SQLException, GuanzonException{
+        if (poGRider == null){
+            poLogWrapper.severe("ClientControllers.ClientInfo: Application driver is not set.");
+            return null;
+        }
+        
+        if (poClientRole != null) return poClientRole;
+        
+        poClientRole = new Client_Role();
+        poClientRole.setApplicationDriver(poGRider);
+        poClientRole.setWithParentClass(false);
+        poClientRole.setLogWrapper(poLogWrapper);
+        poClientRole.initialize();
+        
+        return poClientRole;       
+    }
+    
     public Account_Accreditation AccountAccreditation() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ClientControllers.AccountAccreditation: Application driver is not set.");
@@ -59,7 +77,6 @@ public class ClientControllers {
         poAccountAccreditation.setWithParentClass(false);
         poAccountAccreditation.setLogWrapper(poLogWrapper);
         poAccountAccreditation.initialize();
-//        poAccountAccreditation.newRecord();
         
         return poAccountAccreditation;       
     }
@@ -87,6 +104,7 @@ public class ClientControllers {
 
     private Client poClient;
     private ClientInfo poClientx;
+    private Client_Role poClientRole;
     private Account_Accreditation poAccountAccreditation;
     private AP_Client_Master poAPClientMaster;
 }

@@ -133,10 +133,10 @@
                                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
                                                                   <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="50.0" prefWidth="50.0" />
+                                                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="60.0" prefWidth="60.0" />
                                                                   <ColumnConstraints hgrow="SOMETIMES" minWidth="110.0" prefWidth="110.0" />
-                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="40.0" prefWidth="40.0" />
-                                                                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="40.0" prefWidth="40.0" />
+                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="60.0" prefWidth="60.0" />
+                                                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="60.0" prefWidth="60.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="5.0" prefWidth="5.0" />
                                                                         <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="30.0" />
                                                                </columnConstraints>
@@ -222,7 +222,7 @@
                                                                               <Font size="14.0" />
                                                                            </font>
                                                                         </Text>
-                                                                        <TextField fx:id="txtAddress00" maxWidth="501.0" minWidth="150.0" prefHeight="30.0" prefWidth="501.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="7">
+                                                                        <TextField fx:id="txtAddress00" minWidth="150.0" prefHeight="30.0" prefWidth="501.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="7">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -252,7 +252,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                  <TextField fx:id="txtAddress02" maxWidth="406.0" minWidth="-Infinity" prefHeight="30.0" prefWidth="405.0" promptText="Lot No./Building/Floor/Sitio/Purok" styleClass="text-field" GridPane.columnIndex="2" GridPane.columnSpan="5" GridPane.rowIndex="5">
+                                                                  <TextField fx:id="txtAddress02" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="30.0" prefWidth="405.0" promptText="Lot No./Building/Floor/Sitio/Purok" styleClass="text-field" GridPane.columnIndex="2" GridPane.columnSpan="6" GridPane.rowIndex="5">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -304,6 +304,9 @@
                                                                                     <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                                                                     <RowConstraints minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints minHeight="27.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                                                                    <RowConstraints minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
                                                                                  </rowConstraints>
                                                                                  <children>
                                                                                     <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Mobile No" GridPane.rowIndex="4">
@@ -336,6 +339,29 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </Text>
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" GridPane.rowIndex="2">
+                                                                                       <font>
+                                                                                          <Font size="14.0" />
+                                                                                       </font>
+                                                                                    </Text>
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Job Title" GridPane.rowIndex="7">
+                                                                                       <font>
+                                                                                          <Font size="14.0" />
+                                                                                       </font>
+                                                                                    </Text>
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Department" GridPane.columnIndex="5" GridPane.rowIndex="7">
+                                                                                       <font>
+                                                                                          <Font size="14.0" />
+                                                                                       </font>
+                                                                                    </Text>
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Position" GridPane.rowIndex="8">
+                                                                                       <font>
+                                                                                          <Font size="14.0" />
+                                                                                       </font>
+                                                                                       <GridPane.margin>
+                                                                                          <Insets left="10.0" />
+                                                                                       </GridPane.margin>
+                                                                                    </Text>
                                                                                     <CheckBox fx:id="cbContact01" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Active" GridPane.columnIndex="6" GridPane.rowIndex="2">
                                                                                        <font>
                                                                                           <Font size="14.0" />
@@ -344,17 +370,20 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </CheckBox>
-                                                                                    <CheckBox fx:id="cbContact02" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Primary" GridPane.columnIndex="7" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                                                                    <CheckBox fx:id="cbContact02" alignment="CENTER_RIGHT" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Primary" GridPane.columnIndex="7" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </CheckBox>
-                                                                                    <CheckBox fx:id="cbContact00" alignment="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Payee" GridPane.columnIndex="8" GridPane.rowIndex="2">
+                                                                                    <CheckBox fx:id="cbContact00" maxWidth="1.7976931348623157E308" mnemonicParsing="false" selected="true" text="Payee" GridPane.columnIndex="6">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
+                                                                                       <GridPane.margin>
+                                                                                          <Insets left="5.0" />
+                                                                                       </GridPane.margin>
                                                                                     </CheckBox>
-                                                                                    <TextField fx:id="txtContact00" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
+                                                                                    <TextField fx:id="txtContact00" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" promptText="Press F3: Search or F4: New Client" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
@@ -374,7 +403,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextField fx:id="txtContact04" minWidth="150.0" prefHeight="30.0" prefWidth="175.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="3" GridPane.rowIndex="4">
+                                                                                    <TextField fx:id="txtContact04" minWidth="150.0" prefHeight="30.0" prefWidth="175.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="5" GridPane.rowIndex="4">
                                                                                        <opaqueInsets>
                                                                                           <Insets />
                                                                                        </opaqueInsets>
@@ -382,7 +411,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextField fx:id="txtContact05" minWidth="150.0" prefHeight="30.0" prefWidth="175.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="3" GridPane.rowIndex="5">
+                                                                                    <TextField fx:id="txtContact05" minWidth="150.0" prefHeight="30.0" prefWidth="175.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="5" GridPane.rowIndex="5">
                                                                                        <opaqueInsets>
                                                                                           <Insets />
                                                                                        </opaqueInsets>
@@ -390,7 +419,22 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                              <Button fx:id="btnAddContact" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="10">
+                                                                                    <TextField fx:id="txtContact06" minWidth="150.0" prefWidth="175.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="7">
+                                                                                       <GridPane.margin>
+                                                                                          <Insets left="5.0" />
+                                                                                       </GridPane.margin>
+                                                                                    </TextField>
+                                                                                    <TextField fx:id="txtContact07" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="5" GridPane.rowIndex="7">
+                                                                                       <GridPane.margin>
+                                                                                          <Insets left="5.0" />
+                                                                                       </GridPane.margin>
+                                                                                    </TextField>
+                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="10" GridPane.rowIndex="8">
+                                                                                       <GridPane.margin>
+                                                                                          <Insets left="5.0" />
+                                                                                       </GridPane.margin>
+                                                                                    </TextField>
+                                                              <Button fx:id="btnAddContact" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="10" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="PLUS" size="15" textAlignment="CENTER" />
                                                                      </graphic>
@@ -401,7 +445,7 @@
                                                                               <Insets />
                                                                            </GridPane.margin>
                                                                   </Button>
-                                                                  <Button fx:id="btnDelContact" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="10" GridPane.rowIndex="2">
+                                                                  <Button fx:id="btnDelContact" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="10" GridPane.halignment="CENTER">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="TRASH" size="15" textAlignment="CENTER" />
                                                                      </graphic>
@@ -415,73 +459,6 @@
                                                                                  </children>
                                                                               </GridPane>
                                                                            </children>
-                                                                        </AnchorPane>
-                                                                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
-                                                                           <children>
-                                                                              <GridPane>
-                                                                                <columnConstraints>
-                                                                                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="60.0" prefWidth="60.0" />
-                                                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0" />
-                                                                                    <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="60.0" prefWidth="60.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="10.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="80.0" prefWidth="80.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="10.0" />
-                                                                                    <ColumnConstraints hgrow="SOMETIMES" minWidth="30.0" prefWidth="30.0" />
-                                                                                </columnConstraints>
-                                                                                <rowConstraints>
-                                                                                  <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                                    <RowConstraints maxHeight="-Infinity" minHeight="5.0" prefHeight="5.0" vgrow="SOMETIMES" />
-                                                                                  <RowConstraints maxHeight="-Infinity" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                                                                </rowConstraints>
-                                                                                 <children>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Position" GridPane.rowIndex="2">
-                                                                                       <font>
-                                                                                          <Font size="14.0" />
-                                                                                       </font>
-                                                                                       <GridPane.margin>
-                                                                                          <Insets left="10.0" />
-                                                                                       </GridPane.margin>
-                                                                                    </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" GridPane.rowIndex="2">
-                                                                                       <font>
-                                                                                          <Font size="14.0" />
-                                                                                       </font>
-                                                                                    </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Job Title">
-                                                                                       <font>
-                                                                                          <Font size="14.0" />
-                                                                                       </font>
-                                                                                    </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Department" GridPane.columnIndex="5">
-                                                                                       <font>
-                                                                                          <Font size="14.0" />
-                                                                                       </font>
-                                                                                    </Text>
-                                                                                    <TextField fx:id="txtContact06" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
-                                                                                       <GridPane.margin>
-                                                                                          <Insets left="5.0" />
-                                                                                       </GridPane.margin>
-                                                                                    </TextField>
-                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="9" GridPane.rowIndex="2">
-                                                                                       <GridPane.margin>
-                                                                                          <Insets left="5.0" />
-                                                                                       </GridPane.margin>
-                                                                                    </TextField>
-                                                                                    <TextField fx:id="txtContact07" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="4">
-                                                                                       <GridPane.margin>
-                                                                                          <Insets left="5.0" />
-                                                                                       </GridPane.margin>
-                                                                                    </TextField>
-                                                                                 </children>
-                                                                              </GridPane>
-                                                                           </children>
-                                                                           <padding>
-                                                                              <Insets bottom="5.0" />
-                                                                           </padding>
                                                                         </AnchorPane>
                                                                         <AnchorPane>
                                                                            <children>

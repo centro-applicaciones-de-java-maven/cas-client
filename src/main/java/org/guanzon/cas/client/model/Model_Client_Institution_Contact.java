@@ -123,7 +123,7 @@ public class Model_Client_Institution_Contact extends Model{
     }
     
     public JSONObject setsRoleIDxx(String sRoleIDxx){
-        return setValue("sCPPosit1", sRoleIDxx);
+        return setValue("sRoleIDxx", sRoleIDxx);
     }
 
     public String getsRoleIDxx(){
