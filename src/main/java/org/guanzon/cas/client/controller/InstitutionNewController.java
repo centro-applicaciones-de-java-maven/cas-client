@@ -448,33 +448,34 @@ public class InstitutionNewController implements Initializable {
                     
                     switch(lnIndex){
                         case 0: //client name
-
-                            //temporary set to individual for searching
+                            
+                            //change client type temporary for searching client individual
                             poClient.setClientType(ClientType.INDIVIDUAL);
                             
-                            poJSON =  poClient.searchRecord(lsValue, false);
+                            poJSON =  poClient.searchContactPerson(lsValue, false);
                             if ("success".equalsIgnoreCase(poJSON.get("result").toString())) {
+                                poClient.openContactRecord(poClient.ContactPerson().getModel().getClientId());
+                                loadContactPerson();
 
-                                poClient.InstiContact(pnContactPerson).setcCPrsonID(poClient.getModel().getClientId());
-                                
-                                String lsLastnme = poClient.getModel().getLastName() == null ? "" : poClient.getModel().getLastName();
-                                String lsFrstnme = poClient.getModel().getFirstName()== null ? "" : poClient.getModel().getFirstName();
-                                String lsMidnme = poClient.getModel().getMiddleName()== null ? "" : poClient.getModel().getMiddleName();
-                                String lsSuffix = poClient.getModel().getSuffixName()== null ? "" : poClient.getModel().getSuffixName();
-                                
-                                String lsfullname = poClient.getModel().getCompanyName() == null ? "" : lsLastnme + ", " + lsFrstnme + " " + lsMidnme + " " + lsSuffix;
-                                poClient.InstiContact(pnContactPerson).setContactPersonName(lsfullname);
-                                
-                                //set back to institution
+//                                poClient.InstiContact(pnContactPerson).setcCPrsonID(poClient.getModel().getClientId());
+//                                
+//                                String lsLastnme = poClient.getModel().getLastName() == null ? "" : poClient.getModel().getLastName();
+//                                String lsFrstnme = poClient.getModel().getFirstName()== null ? "" : poClient.getModel().getFirstName();
+//                                String lsMidnme = poClient.getModel().getMiddleName()== null ? "" : poClient.getModel().getMiddleName();
+//                                String lsSuffix = poClient.getModel().getSuffixName()== null ? "" : poClient.getModel().getSuffixName();
+//                                
+//                                String lsfullname = poClient.getModel().getCompanyName() == null ? "" : lsLastnme + ", " + lsFrstnme + " " + lsMidnme + " " + lsSuffix;
+//                                poClient.InstiContact(pnContactPerson).setContactPersonName(lsfullname);
+//                                
+//                                //set back to institution
+//                                poClient.setClientType(ClientType.INSTITUTION);
+//                                
+//                                getSelectedContactPerson();
                                 poClient.setClientType(ClientType.INSTITUTION);
-                                
-                                getSelectedContactPerson();
                                 return;
                             }
-                            System.out.print(poJSON.toJSONString());
-
-                            //set back to institution
                             poClient.setClientType(ClientType.INSTITUTION);
+                            System.out.print(poJSON.toJSONString());
                             break;
                         case 8: //contact role
 
@@ -492,37 +493,6 @@ public class InstitutionNewController implements Initializable {
                     poWrapper.severe(e.getMessage());
                 }
                 break;
-            case F4:
-                
-                try {
-                
-                    switch(lnIndex){
-                        case 0: //client name
-                            
-                            //initialize Client GUI
-                            ClientGUI loClient = new ClientGUI();
-
-                            loClient.setGRider(poGRider);
-                            loClient.setLogWrapper(null);
-                            loClient.setCategoryCode((String) psCategory);
-
-                            //filter client type 
-                            loClient.setClientType(ClientType.INDIVIDUAL);
-
-                            //set search by code
-                            loClient.setByCode(false);
-                            loClient.setClientId("");
-
-                            //load record
-                            CommonUtils.showModal(loClient);
-                                    
-                        break;           
-                    }
-                    
-            } catch (Exception e) {
-                poWrapper.severe(e.getMessage());
-            }
-            break;
         }
     }
 

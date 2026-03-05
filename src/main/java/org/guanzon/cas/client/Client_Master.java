@@ -99,6 +99,7 @@ public class Client_Master extends Parameter {
         }
     }
     
+    
     public JSONObject searchBirthPlace(String fsValue, boolean fbByCode) {
         JSONObject loJSON;
         

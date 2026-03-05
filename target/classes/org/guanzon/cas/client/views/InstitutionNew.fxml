@@ -349,7 +349,7 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Department" GridPane.columnIndex="5" GridPane.rowIndex="7">
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Department" GridPane.columnIndex="5" GridPane.rowIndex="8">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -383,7 +383,7 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </CheckBox>
-                                                                                    <TextField fx:id="txtContact00" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" promptText="Press F3: Search or F4: New Client" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
+                                                                                    <TextField fx:id="txtContact00" minWidth="150.0" prefHeight="30.0" prefWidth="225.0" promptText="Press F3: Search" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
@@ -424,12 +424,12 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextField fx:id="txtContact07" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="5" GridPane.rowIndex="7">
+                                                                                    <TextField fx:id="txtContact07" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="5" GridPane.rowIndex="8">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="10" GridPane.rowIndex="8">
+                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="8">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>

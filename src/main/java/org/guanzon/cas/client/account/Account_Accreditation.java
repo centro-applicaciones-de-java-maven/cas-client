@@ -193,7 +193,10 @@ public class Account_Accreditation extends Parameter {
         return loJSON;
     }
 
-    public JSONObject searchClient(String fsValue, boolean fbByCode) throws SQLException, GuanzonException, Exception {
+    /**
+     fsClientType - ClientType.INSTITUTION, ClientType.INDIVIDUAL
+     **/
+    public JSONObject searchClient(String fsValue, String fsClientType ,boolean fbByCode) throws SQLException, GuanzonException, Exception {
 
         if (fbByCode) {
             JSONObject loJSON = new JSONObject();
@@ -240,7 +243,7 @@ public class Account_Accreditation extends Parameter {
             loClient.setCategoryCode((String) getModel().getCategoryCode());
 
             //filter client type 
-            loClient.setClientType(ClientType.INSTITUTION);
+            loClient.setClientType(fsClientType);
             
             //searchRecord(fsValue,fbByCode) will run make sure to set client and bycode
             //bycode true client id
@@ -269,9 +272,6 @@ public class Account_Accreditation extends Parameter {
             if (!loClient.isCancelled()) {
 
                 getModel().setClientId(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "");
-                
-                System.out.print("this is category "+ getModel().getCategoryCode());
-                System.out.print(getModel().getCategoryCode());
                 
                 //get address
                 for(Model_Client_Address loAddr : loClient.getClient().AddressList()){

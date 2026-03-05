@@ -18,7 +18,6 @@ import org.guanzon.cas.client.model.Model_Client_Mail;
 import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
-import org.guanzon.cas.client.model.Model_Corporate_Role;
 import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.parameter.Barangay;
@@ -37,6 +36,7 @@ public class ClientInfo extends Parameter{
     Model_Client_Institution_Contact poContact;
     
     Client_Role poRole;
+    Client_Master poContactPerson;
     
     ArrayList<Model_Client_Mobile> paMobile;
     ArrayList<Model_Client_Address> paAddress;
@@ -56,6 +56,7 @@ public class ClientInfo extends Parameter{
         ClientModels model = new ClientModels(poGRider);
         
         poRole = new ClientControllers(poGRider, logwrapr).ClientRole();
+        poContactPerson = new ClientControllers(poGRider, logwrapr).Client().Master();
         
         poClient = model.ClientMaster();
         poMobile = model.ClientMobile();               
@@ -78,6 +79,10 @@ public class ClientInfo extends Parameter{
     
     public Client_Role Role(){
         return poRole;
+    }
+    
+    public Client_Master ContactPerson(){
+        return poContactPerson;
     }
 
     public Model_Client_Mobile Mobile(int row){
@@ -285,6 +290,94 @@ public class ClientInfo extends Parameter{
                     return loJSON;
                 }
             }
+        }
+
+        return poJSON;
+    }
+    
+    public JSONObject openContactRecord(String Id) throws SQLException, GuanzonException, CloneNotSupportedException {
+        if (!pbInitRec){
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "Object is not initialized.");
+            return poJSON;
+        }
+        
+        //open contact record
+        poJSON = poContactPerson.getModel().openRecord(Id);
+        System.out.print("this is client id " + poContactPerson.getModel().getClientId());
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            
+            Model_Client_Institution_Contact loContact = (Model_Client_Institution_Contact) poContact.clone();
+            loContact.newRecord();
+            
+            loContact.setClientId(poClient.getClientId());
+            loContact.setCategoryCode(psCategory);
+            
+            //contact person name
+            String lsLastnme = poContactPerson.getModel().getLastName() == null ? "" : poContactPerson.getModel().getLastName();
+            String lsFrstnme = poContactPerson.getModel().getFirstName()== null ? "" : poContactPerson.getModel().getFirstName();
+            String lsMidnme = poContactPerson.getModel().getMiddleName()== null ? "" : poContactPerson.getModel().getMiddleName();
+            String lsSuffix = poContactPerson.getModel().getSuffixName()== null ? "" : poContactPerson.getModel().getSuffixName();
+
+            String lsfullname = poContactPerson.getModel().getCompanyName() == null ? "" : lsLastnme + ", " + lsFrstnme + " " + lsMidnme + " " + lsSuffix;
+
+            loContact.setContactPersonName(lsfullname);
+            
+            //load mobile nos
+            String lsSQL = "SELECT * FROM Client_Mobile" +
+                            " WHERE sClientID = " + SQLUtil.toSQL(poContactPerson.getModel().getClientId()) +
+                            " AND cRecdStat = '1'" +
+                            " AND cPrimaryx = '1'" +
+                            " ORDER BY sMobileID";
+            
+            ResultSet loRS = poGRider.executeQuery(lsSQL);
+            
+            while (loRS.next()){
+                Model_Client_Mobile object = (Model_Client_Mobile) poMobile.clone();
+                object.newRecord();
+                
+                JSONObject loJSON = object.openRecord(loRS.getString("sMobileID"));
+                if ("success".equals((String) loJSON.get("result"))) loContact.setMobileNo(object.getMobileNo());
+            }
+            
+            //load email addresses
+            lsSQL = "SELECT * FROM Client_eMail_Address" +
+                            " WHERE sClientID = " + SQLUtil.toSQL(poContactPerson.getModel().getClientId()) +
+                            " AND cRecdStat = '1'" +
+                            " AND cPrimaryx = '1'" +
+                            " ORDER BY sEmailIDx";
+
+            loRS = poGRider.executeQuery(lsSQL);
+
+            while (loRS.next()){
+                Model_Client_Mail object = (Model_Client_Mail) poMail.clone();
+                object.newRecord();
+
+                JSONObject loJSON = object.openRecord(loRS.getString("sEmailIDx"));
+                if ("success".equals((String) loJSON.get("result"))) loContact.setMailAddress(object.getMailAddress());
+
+            }
+            
+            //load social media accounts
+            lsSQL = "SELECT * FROM Client_Social_Media" +
+                            " WHERE sClientID = " + SQLUtil.toSQL(poContactPerson.getModel().getClientId()) +
+                            " AND cRecdStat = '1'" +
+                            " ORDER BY sSocialID";
+            
+            loRS = poGRider.executeQuery(lsSQL);
+            
+            while (loRS.next()){
+                Model_Client_Social_Media object = (Model_Client_Social_Media) poSocMed.clone();
+                object.newRecord();
+                
+                JSONObject loJSON = object.openRecord(loRS.getString("sSocialID"));
+                
+                if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount1(object.getAccount());
+            }
+         
+            paContact.add(loContact);
         }
 
         return poJSON;
@@ -591,6 +684,52 @@ public class ClientInfo extends Parameter{
             paContact.get(lnRow).setsRoleIDxx(poRole.getModel().getRoleIDxx());
         }
         return poJSON;
+    }
+    
+    public JSONObject searchContactPerson(String value, boolean byCode){
+        
+        try{
+            
+            String lsSQL = getSQ_Browse();
+        
+            poJSON = ShowDialogFX.Search(poGRider,
+                    lsSQL,
+                    value,
+                    "Birthday»Name»Mobile»Email",
+                    "dBirthDte»xFullName»xMobileNo»xEMailAdd",
+                    "a.dBirthDte»TRIM(CONCAT(a.sLastName, ', ', a.sFrstName, IF(a.sSuffixNm <> '', CONCAT(' ', a.sSuffixNm, ''), ''), ' ', a.sMiddName))»IFNULL(c.sMobileNo, '')»IFNULL(d.sEMailAdd, '')",
+                    byCode ? 0 : 1);
+
+            if (poJSON != null) {
+                poJSON = poContactPerson.getModel().openRecord((String) poJSON.get("sClientID"));
+                if ("success".equals((String) poJSON.get("result"))){
+                    
+                    //load addresses
+                    lsSQL = "SELECT * FROM Client_Address" +
+                                    " WHERE sClientID = " + SQLUtil.toSQL(poContactPerson.getModel().getClientId()) +
+                                    " ORDER BY sAddrssID";
+
+                    ResultSet loRS = poGRider.executeQuery(lsSQL);
+                    
+                    
+                }
+                return poJSON;
+            } else {
+                poJSON = new JSONObject();
+                poJSON.put("result", "error");
+                poJSON.put("message", "No record loaded.");
+                return poJSON;
+            }
+
+        }catch(Exception e){
+            logwrapr.severe(e.getMessage());
+            
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+            return poJSON;
+        }
+        
     }
 
     @Override
@@ -962,6 +1101,7 @@ public class ClientInfo extends Parameter{
                     loMobile = paMobile.get(lnCtr);
 
                     if (loMobile.getEditMode() == EditMode.ADDNEW){
+                        loMobile.setModifiedDate(poGRider.getServerDate());
                         poJSON = loMobile.saveRecord();
                         if (!"success".equals((String) poJSON.get("result"))) return poJSON;
                     } else {
@@ -978,6 +1118,7 @@ public class ClientInfo extends Parameter{
                     loMail = paMail.get(lnCtr);
 
                     if (loMail.getEditMode() == EditMode.ADDNEW){
+                        loMail.setModifiedDate(poGRider.getServerDate());
                         poJSON = loMail.saveRecord();
                         if (!"success".equals((String) poJSON.get("result"))) return poJSON;
                     } else {
@@ -994,6 +1135,7 @@ public class ClientInfo extends Parameter{
                     loSocMed = paSocMed.get(lnCtr);
 
                     if (loSocMed.getEditMode() == EditMode.ADDNEW){
+                        loSocMed.setModifiedDate(poGRider.getServerDate());
                         poJSON = loSocMed.saveRecord();
                         if (!"success".equals((String) poJSON.get("result"))) return poJSON;
                     } else {
@@ -1015,22 +1157,33 @@ public class ClientInfo extends Parameter{
     
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException{
-        String lsSQL = getSQ_Browse();
+        try{
+            
+            String lsSQL = getSQ_Browse();
         
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "Birthday»Name»Mobile»Email",
-                "dBirthDte»xFullName»xMobileNo»xEMailAdd",
-                "a.dBirthDte»TRIM(CONCAT(a.sLastName, ', ', a.sFrstName, IF(a.sSuffixNm <> '', CONCAT(' ', a.sSuffixNm, ''), ''), ' ', a.sMiddName))»IFNULL(c.sMobileNo, '')»IFNULL(d.sEMailAdd, '')",
-                byCode ? 0 : 1);
+            poJSON = ShowDialogFX.Search(poGRider,
+                    lsSQL,
+                    value,
+                    "Birthday»Name»Mobile»Email",
+                    "dBirthDte»xFullName»xMobileNo»xEMailAdd",
+                    "a.dBirthDte»TRIM(CONCAT(a.sLastName, ', ', a.sFrstName, IF(a.sSuffixNm <> '', CONCAT(' ', a.sSuffixNm, ''), ''), ' ', a.sMiddName))»IFNULL(c.sMobileNo, '')»IFNULL(d.sEMailAdd, '')",
+                    byCode ? 0 : 1);
 
-        if (poJSON != null) {
-            return poClient.openRecord((String) poJSON.get("sClientID"));
-        } else {
+            if (poJSON != null) {
+                return poClient.openRecord((String) poJSON.get("sClientID"));
+            } else {
+                poJSON = new JSONObject();
+                poJSON.put("result", "error");
+                poJSON.put("message", "No record loaded.");
+                return poJSON;
+            }
+
+        }catch(Exception e){
+            logwrapr.severe(e.getMessage());
+            
             poJSON = new JSONObject();
             poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
+            poJSON.put("message", e.getMessage());
             return poJSON;
         }
     }
