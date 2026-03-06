@@ -1,8 +1,8 @@
 package org.guanzon.cas.client.account;
 
 import java.sql.SQLException;
-import javafx.beans.value.ObservableStringValue;
 import org.guanzon.appdriver.agent.ShowDialogFX;
+import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GuanzonException;
@@ -10,7 +10,6 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.iface.GValidator;
@@ -193,150 +192,218 @@ public class Account_Accreditation extends Parameter {
         return loJSON;
     }
 
-    /**
-     fsClientType - ClientType.INSTITUTION, ClientType.INDIVIDUAL
-     **/
-    public JSONObject searchClient(String fsValue, String fsClientType ,boolean fbByCode) throws SQLException, GuanzonException, Exception {
+    public JSONObject searchClient(String fsValue ,boolean fbByCode) throws SQLException, GuanzonException, Exception {
 
-        if (fbByCode) {
-            JSONObject loJSON = new JSONObject();
-            if (fsValue.equals(getModel().getClientId())) {
-                loJSON.put("result", "success");
+        JSONObject loJSON = null;
+        
+        //retrieve records (value not empty), new entry (empty string)
+        if (!fsValue.isEmpty()) {
+
+            String lsSQL = "SELECT"
+            + " sClientID"
+            + ", sCompnyNm"
+            + " FROM Client_Master"
+            + " WHERE cRecdStat= '1'";
+
+            loJSON = ShowDialogFX.Search(poGRider, 
+                    lsSQL, 
+                    fsValue, 
+                    "Client ID»Client Name", 
+                    "sClientID»sCompnyNm",
+                    "sClientID»sCompnyNm",
+                    fbByCode ? 0 : 1);
+
+            if (loJSON == null) {
                 return loJSON;
             }else{
-                loJSON.put("result", "error");
-                loJSON.put("message", "Client not found.");
-                return loJSON;
-            }
-        } else {
-            JSONObject loJSON = null;
-            if (!fsValue.isEmpty()) {
-                
-                String lsSQL = "SELECT"
-                + " sClientID"
-                + ", sCompnyNm"
-                + " FROM Client_Master"
-                + " WHERE cRecdStat= '1'";
-            
-                loJSON = ShowDialogFX.Search(poGRider, 
-                        lsSQL, 
-                        fsValue, 
-                        "Client ID»Client Name", 
-                        "sClientID»sCompnyNm",
-                        "sClientID»sCompnyNm",
-                        fbByCode ? 0 : 1);
-                
-                if (loJSON == null) {
+                if ("error".equals(loJSON.get("result"))) {
                     return loJSON;
-                }else{
-                    if ("error".equals(loJSON.get("result"))) {
-                        return loJSON;
-                    }
                 }
             }
-            
-            //initialize Client GUI
-            ClientGUI loClient = new ClientGUI();
-
-            loClient.setGRider(poGRider);
-            loClient.setLogWrapper(null);
-            loClient.setCategoryCode((String) getModel().getCategoryCode());
-
-            //filter client type 
-            loClient.setClientType(fsClientType);
-            
-            //searchRecord(fsValue,fbByCode) will run make sure to set client and bycode
-            //bycode true client id
-            //bycode false company
-
-            //set search by code
-            loClient.setByCode(fbByCode);
-            
-            if (loJSON != null) {
-                getModel().setClientId(loJSON.get("sClientID").toString());
-                
-                //set client id
-                loClient.setClientId(getModel().getClientId());
-
-            }else {
-                loClient.setClientId("");
-            }
-
-            //load record
-            CommonUtils.showModal(loClient);
-            
-            //initialize new json for result
-            JSONObject loResult = new JSONObject();
-
-            //load if button 
-            if (!loClient.isCancelled()) {
-
-                getModel().setClientId(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "");
-                
-                //get address
-                for(Model_Client_Address loAddr : loClient.getClient().AddressList()){
-                    
-                    //set primary address
-                    if (loAddr.isPrimaryAddress()) {
-                        getModel().setAddressId(loAddr.getAddressId()!= null ? loAddr.getAddressId() : "");
-                        getModel().ClientAddress().setBarangayId(loAddr.getBarangayId());
-                        getModel().ClientAddress().setTownId(loAddr.getTownId());
-                        break;
-                    }
-                }
-                
-                //get contact
-                for(Model_Client_Institution_Contact loContact : loClient.getClient().InstiContactList()){
-                    
-                    //set primary contact
-                    if (loContact.isPrimaryContactPersion()) {
-                        getModel().setContactId(loContact.getContactPId()!= null ? loContact.getContactPId() : "");
-                        break;
-                    }
-                }
-            }
-            loResult.put("result", "success");
-            return loResult;
         }
+
+        //initialize Client GUI
+        ClientGUI loClient = new ClientGUI();
+
+        loClient.setGRider(poGRider);
+        loClient.setLogWrapper(null);
+        loClient.setCategoryCode((String) getModel().getCategoryCode());
+
+        //filter client type 
+        loClient.setClientType(ClientType.INSTITUTION);
+
+        //searchRecord(fsValue,fbByCode) will run make sure to set client and bycode
+        //bycode true client id
+        //bycode false company
+
+        //set search by code
+        loClient.setByCode(fbByCode);
+
+        if (loJSON != null) {
+            getModel().setClientId(loJSON.get("sClientID").toString());
+
+            //set client id
+            loClient.setClientId(getModel().getClientId());
+
+        }else {
+            loClient.setClientId("");
+        }
+
+        //load record
+        CommonUtils.showModal(loClient);
+
+        //initialize new json for result
+        JSONObject loResult = new JSONObject();
+
+        //load if button 
+        if (!loClient.isCancelled()) {
+
+            getModel().setClientId(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "");
+
+            //get address
+            for(Model_Client_Address loAddr : loClient.getClient().AddressList()){
+
+                //set primary address
+                if (loAddr.isPrimaryAddress()) {
+                    getModel().setAddressId(loAddr.getAddressId()!= null ? loAddr.getAddressId() : "");
+                    getModel().ClientAddress().setBarangayId(loAddr.getBarangayId());
+                    getModel().ClientAddress().setTownId(loAddr.getTownId());
+                    break;
+                }
+            }
+
+            //get contact
+            for(Model_Client_Institution_Contact loContact : loClient.getClient().InstiContactList()){
+
+                //set primary contact
+                if (loContact.isPrimaryContactPersion()) {
+                    getModel().setContactId(loContact.getContactPId()!= null ? loContact.getContactPId() : "");
+                    break;
+                }
+            }
+        }
+        loResult.put("result", "success");
+        return loResult;
     }
 
-    public JSONObject searchClientContact(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
-        JSONObject loJSON;
-
-        String lsSQL = "SELECT"
+    public JSONObject searchClientContact(String fsValue, boolean fbByCode) throws SQLException, GuanzonException, Exception {
+        
+        JSONObject loJSON = null;
+        
+        //do not allow if contact company is empty
+        String lsContactId = getModel().getContactId() == null ? "" : getModel().getContactId();
+        if (lsContactId.isEmpty()) {
+            loJSON = new JSONObject();
+            loJSON.put("result", "error");
+            loJSON.put("message", "Please select company first!");
+            return loJSON;
+        }
+        
+        //retrieve records (value not empty), new entry (empty value)
+        if (!fsValue.isEmpty()) {
+            
+            String lsSQL = "SELECT"
                 + " a.sContctID"
                 + " ,a.sCPerson1"
                 + " ,a.sMobileNo"
-                + " , b.sClientID"
-                + " , b.sCompnyNm"
+                + " ,b.sClientID"
+                + " ,b.sCompnyNm"
                 + " FROM Client_Institution_Contact_Person a "
-                + " LEFT JOIN Client_Master b ON a.sClientID = b.sClientID"
+                + " LEFT JOIN Client_Master b ON a.cCPrsonID = b.sClientID"
+                + " AND a.sContctID = " + SQLUtil.toSQL(lsContactId)
                 + " WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
-                + " AND b.cClientTp = " + SQLUtil.toSQL(Logical.NO);
-
-        if (fbByCode) {
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sContctID = " + SQLUtil.toSQL(fsValue));
-        } else {
-            lsSQL = MiscUtil.addCondition(lsSQL, "b.sCompnyNm LIKE " + SQLUtil.toSQL(fsValue + "%"));
-        }
-        System.out.println("Client Contact Search = " + lsSQL);
-        loJSON = ShowDialogFX.Search(
+                + " AND b.cClientTp = " + SQLUtil.toSQL(ClientType.INDIVIDUAL);
+            
+            loJSON = ShowDialogFX.Search(
                 poGRider,
                 lsSQL,
                 fsValue,
                 "ID»Contact Name»Contact Person»Mobile no",
-                "sContctID»sCompnyNm»sCPerson1»sMobileNo",
+                "a.sContctID»b.sCompnyNm»a.sCPerson1»sMobileNo",
                 "a.sContctID»b.sCompnyNm»a.sCPerson1»a.sMobileNo",
                 fbByCode ? 0 : 1);
+            
+            if (loJSON == null) {
+                return loJSON;
+            }else{
+                if ("error".equals(loJSON.get("result"))) {
+                    return loJSON;
+                }
+            }
+            //create here the update of primary contact person
+            if (ShowMessageFX.YesNo("Do you want to set this as primary contact?", "Contact Entry", "Account Accreditation") == true) {
+                
+                //initialize oontact id
+                loJSON = getModel().setContactId(loJSON.get("sClientID").toString());
+                if (loJSON == null) {
+                    loJSON = new JSONObject();
+                    loJSON.put("result", "error");
+                    loJSON.put("message", "No record loaded");
+                    return loJSON;
+                }
+                return loJSON;
+            }
+            
+            return loJSON;
+        }
+        
+        //initialize Client GUI
+        ClientGUI loClient = new ClientGUI();
+
+        loClient.setGRider(poGRider);
+        loClient.setLogWrapper(null);
+        loClient.setCategoryCode((String) getModel().getCategoryCode());
+
+        //filter client type 
+        loClient.setClientType(ClientType.INDIVIDUAL);
+
+        //searchRecord(fsValue,fbByCode) will run make sure to set client and bycode
+        //bycode true client id
+        //bycode false company
+
+        //set search by code
+        loClient.setByCode(fbByCode);
 
         if (loJSON != null) {
-            loJSON.put("result", "success");
-            getModel().setContactId((String) loJSON.get("sContctID"));
-        } else {
-            loJSON.put("result", "success");
-            loJSON.put("message", "No record selected.");
+            
+            //set ui client id to load
+            loClient.setClientId(getModel().getClientId());
+
+        }else {
+            loClient.setClientId("");
         }
 
+        //load record
+        CommonUtils.showModal(loClient);
+
+        if (!loClient.isCancelled()) {
+            
+            //add as new record, for contacts of company
+            loJSON = loClient.getClient().addInstiContact();
+            if (loJSON == null) {
+                loJSON = new JSONObject();
+                loJSON.put("result", "error");
+                loJSON.put("message", "Record not added!");
+
+                return loJSON;
+            }
+            System.out.println("count of contacts " + loClient.getClient().getInstiContactCount());
+            
+            //open contact record, to initialize properties
+            if ("success".equalsIgnoreCase((String) loJSON.get("result"))) {
+                
+                loClient.getClient().openContactRecord(getModel().getClientId());
+                if ("success".equalsIgnoreCase((String) loJSON.get("result"))) {
+                    
+                }
+            }
+            
+            //initialize as contact id
+            if (ShowMessageFX.YesNo("Do you want to set this as primary contact?", "Contact Entry", "Account Accreditation") == true) {
+                getModel().setContactId(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "");
+            }
+        }
+        loJSON.put("result", "success");
         return loJSON;
     }
 

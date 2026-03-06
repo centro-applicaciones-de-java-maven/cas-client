@@ -186,13 +186,16 @@ public class InstitutionNewController implements Initializable {
     private TableView<ModelContactPerson> tblSocMed;
 
     @FXML
-    private TableColumn<ModelContactPerson, String> indexSocMed01;
+    private TableColumn<ModelContactPerson, String> indexSocMed01; //index
 
     @FXML
-    private TableColumn<ModelContactPerson, String> indexSocMed02;
+    private TableColumn<ModelContactPerson, String> indexSocMed02; //name
+    
+     @FXML
+    private TableColumn<ModelContactPerson, String> indexSocMed03; //role
 
     @FXML
-    private TableColumn<ModelContactPerson, String> indexSocMed04; //role
+    private TableColumn<ModelContactPerson, String> indexSocMed04; //status
 
     @FXML
     private HBox hbButtons;
@@ -454,39 +457,23 @@ public class InstitutionNewController implements Initializable {
                             
                             poJSON =  poClient.searchContactPerson(lsValue, false);
                             if ("success".equalsIgnoreCase(poJSON.get("result").toString())) {
+                                
                                 poClient.openContactRecord(poClient.ContactPerson().getModel().getClientId());
-                                loadContactPerson();
-
-//                                poClient.InstiContact(pnContactPerson).setcCPrsonID(poClient.getModel().getClientId());
-//                                
-//                                String lsLastnme = poClient.getModel().getLastName() == null ? "" : poClient.getModel().getLastName();
-//                                String lsFrstnme = poClient.getModel().getFirstName()== null ? "" : poClient.getModel().getFirstName();
-//                                String lsMidnme = poClient.getModel().getMiddleName()== null ? "" : poClient.getModel().getMiddleName();
-//                                String lsSuffix = poClient.getModel().getSuffixName()== null ? "" : poClient.getModel().getSuffixName();
-//                                
-//                                String lsfullname = poClient.getModel().getCompanyName() == null ? "" : lsLastnme + ", " + lsFrstnme + " " + lsMidnme + " " + lsSuffix;
-//                                poClient.InstiContact(pnContactPerson).setContactPersonName(lsfullname);
-//                                
-//                                //set back to institution
-//                                poClient.setClientType(ClientType.INSTITUTION);
-//                                
-//                                getSelectedContactPerson();
                                 poClient.setClientType(ClientType.INSTITUTION);
+                                
+                                loadContactPerson();
                                 return;
                             }
                             poClient.setClientType(ClientType.INSTITUTION);
-                            System.out.print(poJSON.toJSONString());
                             break;
                         case 8: //contact role
 
                             poJSON = poClient.searchRole(pnContactPerson, lsValue);
-                            
                             if ("error".equalsIgnoreCase((String) poJSON.get("result"))) {
                                 System.out.print(poJSON.get("message"));
                                 return;
                             }
-                            
-                            getSelectedContactPerson();
+                            loadContactPerson();
                             break;
                     }   
                 } catch (Exception e) {
@@ -588,43 +575,6 @@ public class InstitutionNewController implements Initializable {
 
                     txtField.setText(poClient.InstiContact(pnContactPerson).getContactPersonPosition());
                     break;
-                case 2: //Mobile No
-                    poJSON = poClient.InstiContact(pnContactPerson).setMobileNo(lsValue);
-
-                    if (!"success".equals((String) poJSON.get("result"))) {
-                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
-                    }
-
-                    txtField.setText(poClient.InstiContact(pnContactPerson).getMobileNo());
-                    break;
-                case 3: //LandLine
-                    poJSON = poClient.InstiContact(pnContactPerson).setLandlineNo(lsValue);
-
-                    if (!"success".equals((String) poJSON.get("result"))) {
-                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
-                    }
-
-                    txtField.setText(poClient.InstiContact(pnContactPerson).getLandlineNo());
-                    break;
-                case 4: //Fax No
-                    poJSON = poClient.InstiContact(pnContactPerson).setFaxNo(lsValue);
-
-                    if (!"success".equals((String) poJSON.get("result"))) {
-                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
-                    }
-
-                    txtField.setText(poClient.InstiContact(pnContactPerson).getFaxNo());
-                    break;
-                case 5: //Email Address
-                    poJSON = poClient.InstiContact(pnContactPerson).setMailAddress(lsValue);
-
-                    if (!"success".equals((String) poJSON.get("result"))) {
-                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
-                    }
-
-                    txtField.setText(poClient.InstiContact(pnContactPerson).getMailAddress());
-                    break;
-                    
                 case 6: //Job Title
                     poJSON = poClient.InstiContact(pnContactPerson).setContactJobTitle(lsValue);
 
@@ -684,10 +634,12 @@ public class InstitutionNewController implements Initializable {
 
         indexSocMed01.setStyle("-fx-alignment: CENTER;");
         indexSocMed02.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
+        indexSocMed03.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
         indexSocMed04.setStyle("-fx-alignment: CENTER-LEFT;-fx-padding: 0 0 0 5;");
 
         indexSocMed01.setCellValueFactory(new PropertyValueFactory<>("index01"));
         indexSocMed02.setCellValueFactory(new PropertyValueFactory<>("index02"));
+        indexSocMed03.setCellValueFactory(new PropertyValueFactory<>("index03"));
         indexSocMed04.setCellValueFactory(new PropertyValueFactory<>("index04"));
 
         tblSocMed.widthProperty().addListener((ObservableValue<? extends Number> source, Number oldWidth, Number newWidth) -> {
@@ -955,10 +907,11 @@ public class InstitutionNewController implements Initializable {
         if (poClient.getInstiContactCount() > 0) {
             for (int lnCtr = 0; lnCtr < poClient.getInstiContactCount(); lnCtr++) {
                 
-                contactPerson_data.add(new ModelContactPerson(String.valueOf(lnCtr + 1),
+                contactPerson_data.add(new ModelContactPerson(
+                        String.valueOf(lnCtr + 1),
                         poClient.InstiContact(lnCtr).getContactPersonName(),
-                        poClient.InstiContact(lnCtr).getContactPersonName(),
-                        poClient.InstiContact(lnCtr).getsRoleIDxx()
+                        poClient.Role().getModel().getsRoleDesc(),
+                        poClient.InstiContact(lnCtr).getRecordStatus().equalsIgnoreCase("0") ? "Inactive" : "Active"
                 ));
                 
                 //set primary address the first item, only if size is 1
@@ -1131,6 +1084,7 @@ public class InstitutionNewController implements Initializable {
                                 if ("error".equals((String) loJSON.get("result"))) {
                                     Assert.fail((String) loJSON.get("message"));
                                 }
+                                loadContactPerson();
                                 break;
                                 
                             case 2: // Primary

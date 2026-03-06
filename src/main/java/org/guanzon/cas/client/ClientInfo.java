@@ -305,14 +305,15 @@ public class ClientInfo extends Parameter{
         
         //open contact record
         poJSON = poContactPerson.getModel().openRecord(Id);
-        System.out.print("this is client id " + poContactPerson.getModel().getClientId());
         
         if ("success".equals((String) poJSON.get("result"))){
             
-            Model_Client_Institution_Contact loContact = (Model_Client_Institution_Contact) poContact.clone();
+            //get last row and initialize as new record
+            Model_Client_Institution_Contact loContact = (Model_Client_Institution_Contact) paContact.get(paContact.size() - 1);
             loContact.newRecord();
             
             loContact.setClientId(poClient.getClientId());
+            loContact.setcCPrsonID(poContactPerson.getModel().getClientId());
             loContact.setCategoryCode(psCategory);
             
             //contact person name
@@ -339,7 +340,20 @@ public class ClientInfo extends Parameter{
                 object.newRecord();
                 
                 JSONObject loJSON = object.openRecord(loRS.getString("sMobileID"));
-                if ("success".equals((String) loJSON.get("result"))) loContact.setMobileNo(object.getMobileNo());
+                if ("success".equals((String) loJSON.get("result"))){
+                    
+                    switch(object.getMobileType()){
+                    
+                    case "0": //Mobile
+                        loContact.setMobileNo(object.getMobileNo());
+                        break;
+                    case "1": //Telephone
+                        loContact.setLandlineNo(object.getMobileNo());
+                        break;
+                    case "2": //Fax No
+                        loContact.setFaxNo(object.getMobileNo());
+                    }
+                }
             }
             
             //load email addresses
@@ -372,12 +386,21 @@ public class ClientInfo extends Parameter{
                 Model_Client_Social_Media object = (Model_Client_Social_Media) poSocMed.clone();
                 object.newRecord();
                 
+                //set first 3 accounts of contact social media
                 JSONObject loJSON = object.openRecord(loRS.getString("sSocialID"));
-                
-                if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount1(object.getAccount());
+                switch(loRS.getRow()){
+                    
+                    case 1:
+                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount1(object.getAccount());
+                        break;
+                    case 2:
+                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount2(object.getAccount());
+                    break;
+                    case 3:
+                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount3(object.getAccount());
+                    break;
+                }
             }
-         
-            paContact.add(loContact);
         }
 
         return poJSON;
@@ -701,19 +724,7 @@ public class ClientInfo extends Parameter{
                     byCode ? 0 : 1);
 
             if (poJSON != null) {
-                poJSON = poContactPerson.getModel().openRecord((String) poJSON.get("sClientID"));
-                if ("success".equals((String) poJSON.get("result"))){
-                    
-                    //load addresses
-                    lsSQL = "SELECT * FROM Client_Address" +
-                                    " WHERE sClientID = " + SQLUtil.toSQL(poContactPerson.getModel().getClientId()) +
-                                    " ORDER BY sAddrssID";
-
-                    ResultSet loRS = poGRider.executeQuery(lsSQL);
-                    
-                    
-                }
-                return poJSON;
+                return poContactPerson.getModel().openRecord((String) poJSON.get("sClientID"));
             } else {
                 poJSON = new JSONObject();
                 poJSON.put("result", "error");
