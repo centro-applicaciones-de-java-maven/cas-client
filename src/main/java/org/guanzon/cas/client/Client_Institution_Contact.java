@@ -86,6 +86,7 @@ public class Client_Institution_Contact  extends Parameter{
             return poJSON;
         }
     }
+    
     public JSONObject searchRecordbyclient(String value, boolean byCode) throws SQLException, GuanzonException{
         poJSON = ShowDialogFX.Search(poGRider,
                 getSQ_Browse(),

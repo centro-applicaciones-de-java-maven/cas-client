@@ -13,7 +13,10 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.iface.GValidator;
+import org.guanzon.cas.client.Client;
 import org.guanzon.cas.client.ClientGUI;
+import org.guanzon.cas.client.Client_Institution_Contact;
+import org.guanzon.cas.client.Client_Master;
 import org.guanzon.cas.client.constants.AccountAccreditationStatus;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
 import org.guanzon.cas.client.model.Model_Client_Address;
@@ -156,6 +159,19 @@ public class Account_Accreditation extends Parameter {
         }
 
         return lsSQL;
+    }
+    
+    public AP_Client_Master getAPClientMaster(String foClientID)
+            throws GuanzonException, SQLException {
+        
+        AP_Client_Master loObject = new ClientControllers(poGRider, null).APClientMaster();
+        poJSON = loObject.openRecord(foClientID);
+        
+        if ("error".equals((String) poJSON.get("result"))) {
+            loObject.newRecord();
+        }
+        loObject.setWithParentClass(true);
+        return loObject;
     }
 
     public JSONObject searchCategory(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
@@ -376,34 +392,15 @@ public class Account_Accreditation extends Parameter {
         //load record
         CommonUtils.showModal(loClient);
 
+        loJSON = new JSONObject();
+        
         if (!loClient.isCancelled()) {
-            
-            //add as new record, for contacts of company
-            loJSON = loClient.getClient().addInstiContact();
-            if (loJSON == null) {
-                loJSON = new JSONObject();
-                loJSON.put("result", "error");
-                loJSON.put("message", "Record not added!");
-
-                return loJSON;
-            }
-            System.out.println("count of contacts " + loClient.getClient().getInstiContactCount());
-            
-            //open contact record, to initialize properties
-            if ("success".equalsIgnoreCase((String) loJSON.get("result"))) {
-                
-                loClient.getClient().openContactRecord(getModel().getClientId());
-                if ("success".equalsIgnoreCase((String) loJSON.get("result"))) {
-                    
-                }
-            }
-            
-            //initialize as contact id
-            if (ShowMessageFX.YesNo("Do you want to set this as primary contact?", "Contact Entry", "Account Accreditation") == true) {
-                getModel().setContactId(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "");
-            }
+            loJSON.put("result", "success");
+            loJSON.put("contactid", loClient.getClient().getModel().getClientId());
+        }else{
+            loJSON.put("result", "error");
+            loJSON.put("message", "No record loaded");
         }
-        loJSON.put("result", "success");
         return loJSON;
     }
 
@@ -536,18 +533,5 @@ public class Account_Accreditation extends Parameter {
         poJSON.put("message", "Transaction voided successfully.");
 
         return poJSON;
-    }
-
-    public AP_Client_Master getAPClientMaster(String foClientID)
-            throws GuanzonException, SQLException {
-        
-        AP_Client_Master loObject = new ClientControllers(poGRider, null).APClientMaster();
-        poJSON = loObject.openRecord(foClientID);
-        
-        if ("error".equals((String) poJSON.get("result"))) {
-            loObject.newRecord();
-        }
-        loObject.setWithParentClass(true);
-        return loObject;
     }
 }

@@ -46,6 +46,7 @@ public class ClientInfo extends Parameter{
     
     String psClientTp;
     String psCategory;
+    String psCompanyID = ""; //for company contact
     
     @Override
     public void initialize() throws SQLException, GuanzonException{
@@ -149,6 +150,14 @@ public class ClientInfo extends Parameter{
     
     public String getCategory(){
         return psCategory;
+    }
+    
+    public void setCompanyID(String companyID){
+        psCompanyID = companyID;
+    }
+    
+    public String getCategory(){
+        return psCompanyID;
     }
 
     public JSONObject openClientRecord(String Id) throws SQLException, GuanzonException, CloneNotSupportedException {
@@ -826,7 +835,7 @@ public class ClientInfo extends Parameter{
         }
 
         //validate contact person
-        if (getModel().getClientType().equals(ClientType.INSTITUTION)) {
+        if (getModel().getClientType().equals(ClientType.INSTITUTION) || !psCompanyID.isEmpty()) {
             
             //check category paramter value
             if (getCategory() == null || getCategory().isEmpty()) {
@@ -939,7 +948,7 @@ public class ClientInfo extends Parameter{
                 return poJSON;
             }
            
-            if (getModel().getClientType().equals(ClientType.INSTITUTION)){
+            if (getModel().getClientType().equals(ClientType.INSTITUTION) || !psCompanyID.isEmpty()){
                 
                 Model_Client_Institution_Contact loContact;
                 int lnPrimaryContact = 0;
@@ -951,7 +960,9 @@ public class ClientInfo extends Parameter{
                         paContact.remove(lnCtr);
                         break;
                     }
-                    loContact.setClientId(poClient.getClientId());
+                    
+                    //individual client id or company client id
+                    loContact.setClientId(psCompanyID.isEmpty() ? poClient.getClientId() : psCompanyID);
                     loContact.setCategoryCode(getCategory());
                     
                     //if (paContact.size() == 1) loContact.isPrimaryContactPersion(true);
@@ -1085,7 +1096,7 @@ public class ClientInfo extends Parameter{
             }
         }
         
-        if (getModel().getClientType().equals(ClientType.INSTITUTION)){
+        if (getModel().getClientType().equals(ClientType.INSTITUTION) || !psCompanyID.isEmpty()){
             
             if (!paContact.isEmpty()){
                     for (lnCtr = 0; lnCtr <= paContact.size() - 1; lnCtr++){
