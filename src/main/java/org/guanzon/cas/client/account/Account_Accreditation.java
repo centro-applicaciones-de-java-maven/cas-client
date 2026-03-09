@@ -13,10 +13,7 @@ import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.iface.GValidator;
-import org.guanzon.cas.client.Client;
 import org.guanzon.cas.client.ClientGUI;
-import org.guanzon.cas.client.Client_Institution_Contact;
-import org.guanzon.cas.client.Client_Master;
 import org.guanzon.cas.client.constants.AccountAccreditationStatus;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
 import org.guanzon.cas.client.model.Model_Client_Address;
@@ -256,10 +253,9 @@ public class Account_Accreditation extends Parameter {
         loClient.setByCode(fbByCode);
 
         if (loJSON != null) {
-            getModel().setClientId(loJSON.get("sClientID").toString());
-
-            //set client id
-            loClient.setClientId(getModel().getClientId());
+            
+            //set cilent id to load for company entry
+            loClient.setClientId(loJSON.get("sClientID").toString());
 
         }else {
             loClient.setClientId("");
@@ -274,6 +270,7 @@ public class Account_Accreditation extends Parameter {
         //load if button 
         if (!loClient.isCancelled()) {
 
+            //set company id for supplier accreditation
             getModel().setClientId(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "");
 
             //get address
@@ -291,7 +288,7 @@ public class Account_Accreditation extends Parameter {
             //get contact
             for(Model_Client_Institution_Contact loContact : loClient.getClient().InstiContactList()){
 
-                //set primary contact
+                //set primary contact person of company for supplier accreditation
                 if (loContact.isPrimaryContactPersion()) {
                     getModel().setContactId(loContact.getContactPId()!= null ? loContact.getContactPId() : "");
                     break;
@@ -306,9 +303,9 @@ public class Account_Accreditation extends Parameter {
         
         JSONObject loJSON = null;
         
-        //do not allow if contact company is empty
-        String lsContactId = getModel().getContactId() == null ? "" : getModel().getContactId();
-        if (lsContactId.isEmpty()) {
+        //do not allow if company id is empty
+        String lsCompanyID = getModel().getClientId()== null ? "" : getModel().getClientId();
+        if (lsCompanyID.isEmpty()) {
             loJSON = new JSONObject();
             loJSON.put("result", "error");
             loJSON.put("message", "Please select company first!");
@@ -326,7 +323,7 @@ public class Account_Accreditation extends Parameter {
                 + " ,b.sCompnyNm"
                 + " FROM Client_Institution_Contact_Person a "
                 + " LEFT JOIN Client_Master b ON a.cCPrsonID = b.sClientID"
-                + " AND a.sContctID = " + SQLUtil.toSQL(lsContactId)
+                + " AND a.sClientID = " + SQLUtil.toSQL(lsCompanyID)
                 + " WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
                 + " AND b.cClientTp = " + SQLUtil.toSQL(ClientType.INDIVIDUAL);
             
@@ -335,8 +332,8 @@ public class Account_Accreditation extends Parameter {
                 lsSQL,
                 fsValue,
                 "ID»Contact Name»Contact Person»Mobile no",
-                "a.sContctID»b.sCompnyNm»a.sCPerson1»sMobileNo",
-                "a.sContctID»b.sCompnyNm»a.sCPerson1»a.sMobileNo",
+                "sClientID»b.sCompnyNm»a.sCPerson1»sMobileNo",
+                "sClientID»b.sCompnyNm»a.sCPerson1»a.sMobileNo",
                 fbByCode ? 0 : 1);
             
             if (loJSON == null) {
@@ -346,21 +343,6 @@ public class Account_Accreditation extends Parameter {
                     return loJSON;
                 }
             }
-            //create here the update of primary contact person
-            if (ShowMessageFX.YesNo("Do you want to set this as primary contact?", "Contact Entry", "Account Accreditation") == true) {
-                
-                //initialize oontact id
-                loJSON = getModel().setContactId(loJSON.get("sClientID").toString());
-                if (loJSON == null) {
-                    loJSON = new JSONObject();
-                    loJSON.put("result", "error");
-                    loJSON.put("message", "No record loaded");
-                    return loJSON;
-                }
-                return loJSON;
-            }
-            
-            return loJSON;
         }
         
         //initialize Client GUI
@@ -382,12 +364,15 @@ public class Account_Accreditation extends Parameter {
 
         if (loJSON != null) {
             
-            //set ui client id to load
-            loClient.setClientId(getModel().getClientId());
+            ///set cilent id to load for individual contact person
+            loClient.setClientId(loJSON.get("sClientID").toString());
 
         }else {
             loClient.setClientId("");
         }
+        
+        //set company id for contact entry
+        loClient.setCompanyID(getModel().getClientId());
 
         //load record
         CommonUtils.showModal(loClient);
@@ -395,11 +380,7 @@ public class Account_Accreditation extends Parameter {
         loJSON = new JSONObject();
         
         if (!loClient.isCancelled()) {
-            loJSON.put("result", "success");
-            loJSON.put("contactid", loClient.getClient().getModel().getClientId());
-        }else{
-            loJSON.put("result", "error");
-            loJSON.put("message", "No record loaded");
+            
         }
         return loJSON;
     }

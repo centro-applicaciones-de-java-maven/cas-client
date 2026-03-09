@@ -35,6 +35,8 @@ public class ClientGUI extends Application {
     private static String psClientTp;
     private static boolean pbCancelled;
     
+    private static String psCompanyID = ""; //for company contact
+    
     private static String psCategory;
     
     public void setGRider(GRiderCAS griderCAS){
@@ -58,6 +60,14 @@ public class ClientGUI extends Application {
     
     public ClientInfo getClient(){
         return poClient;
+    }
+    
+    public void setCompanyID(String companyID){
+        psCompanyID = companyID;
+    }
+    
+    public boolean isContactPerson(){
+        return !(psCompanyID == null || psCompanyID.isEmpty());
     }
     
     public boolean isCancelled(){
@@ -88,7 +98,7 @@ public class ClientGUI extends Application {
             }
 
         }
-
+        
         if (psClientTp.equals(ClientType.INDIVIDUAL)) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/IndividualNew.fxml"));
 
@@ -96,6 +106,19 @@ public class ClientGUI extends Application {
             controller.setGRider(poGRider);
             controller.setLogWrapper(poWrapper);
             controller.setClientId(psClientId);
+            
+            //initialize institution parameters for individual entry of contact person
+            if (isContactPerson()) {
+                controller.setCompanyID(psCompanyID);
+                controller.setCategory(psCategory);
+                
+                //ensure category param is initialized before entry
+                if (psCategory == null || psCategory.isEmpty()) {
+                    ShowMessageFX.Error("Please load category first!", "Client Entry", null);
+                    pbCancelled = true;
+                    return;
+                }
+            }
 
             loader.setController(controller);
 

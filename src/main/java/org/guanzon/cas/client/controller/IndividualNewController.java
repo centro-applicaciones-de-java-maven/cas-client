@@ -261,6 +261,7 @@ public class IndividualNewController implements Initializable {
     
     private ClientInfo poClient;
     private String psClientID;
+    private String psCategorycode;
 
     private int pnEditMode;
     private int pnAddress;
@@ -286,6 +287,8 @@ public class IndividualNewController implements Initializable {
     ObservableList<String> emailOwn = ModelEmail.emailOwn;
     ObservableList<String> socialTyp = ModelSocialMedia.socialTyp;
     
+    private String psCompanyID = ""; //for company contact
+    
     public void setGRider(GRiderCAS griderCAS){
         poGRider = griderCAS;
     }
@@ -300,6 +303,22 @@ public class IndividualNewController implements Initializable {
     
     public ClientInfo getClient(){
         return poClient;
+    }
+    
+    public void setCategory(String categorycode){
+        psCategorycode = categorycode;
+    }
+    
+    public String getCategory(){
+        return psCategorycode;
+    }
+    
+    public void setCompanyID(String companyID){
+        psCompanyID = companyID;
+    }
+    
+    public boolean isContactPerson(){
+        return !(psCompanyID == null || psCompanyID.isEmpty());
     }
     
     public boolean isCancelled(){
@@ -319,7 +338,16 @@ public class IndividualNewController implements Initializable {
             poClient = new ClientControllers(poGRider, poWrapper).ClientInfo();
             poClient.setClientType(ClientType.INDIVIDUAL);
             poClient.setRecordStatus("1");
+            
+            //set company id for this individual entry as contact person
+            if (isContactPerson()) {
+                poClient.setCompanyID(psCompanyID);
+                poClient.setCategory(psCategorycode);
+            }
+            
             loadRecord();
+            
+            System.out.print("contact record count" + poClient.getInstiContactCount());
             
             pbLoaded = true;
         } catch (SQLException | GuanzonException e) {
