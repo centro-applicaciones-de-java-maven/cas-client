@@ -8,6 +8,9 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,6 +19,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -35,7 +39,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GRiderCAS;
@@ -43,6 +49,7 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.cas.client.ClientGUI;
 import org.guanzon.cas.client.ClientInfo;
 import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.table.models.ModelAddress;
@@ -449,14 +456,54 @@ public class InstitutionNewController implements Initializable {
                     
                     switch(lnIndex){
                         case 0: //client name
-                            
+            
                             //change client type temporary for searching client individual
                             poClient.setClientType(ClientType.INDIVIDUAL);
                             
-                            poJSON =  poClient.searchContactPerson(lsValue, false);
-                            if ("success".equalsIgnoreCase(poJSON.get("result").toString())) {
+                            String lsContactID = "";
+                            if (lsValue == null || lsValue.isEmpty()) {
+                                lsContactID = "";
+                            }else{
+                                poJSON =  poClient.searchContactPerson(lsValue, false);
+                                if ("success".equalsIgnoreCase(poJSON.get("result").toString())) {
+                                    lsContactID = poClient.ContactPerson().getModel().getClientId() == null ? "" : poClient.ContactPerson().getModel().getClientId();
+                                }
+                            }
+                            
+                            //ShowMessageFX.Error(getStage(), poJSON.get("message").toString(),"Warning", MODULE);
+                            //initialize Client GUI
+                            ClientGUI loClient = new ClientGUI();
+                            
+                            loClient.setGRider(poGRider);
+                            loClient.setLogWrapper(null);
+                            loClient.setCategoryCode((String) psCategory);
+
+                            //filter client type 
+                            loClient.setClientType(ClientType.INDIVIDUAL);
+                            
+                            //set search by code
+                            loClient.setByCode(false);
+                            loClient.setClientId(lsContactID);
+                            
+                            // Get screen bounds
+                            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+
+                            // Calculate position: X = left edge, Y = vertical center
+                            double x = (getStage().getWidth()) / 2;
+                            double y = (screenBounds.getHeight() - getStage().getHeight()) / 2;
+                            
+                            getStage().setX(x);
+                            getStage().setY(y);
+                            
+                            loClient.setStagePosition(getStage().getX() + getStage().getWidth(), getStage().getY());
+                            
+                            //load record
+                            CommonUtils.showModal(loClient);
+                            
+                            //load if button 
+                            if (!loClient.isCancelled()) {
                                 
-                                poClient.openContactRecord(poClient.ContactPerson().getModel().getClientId());
+                                poClient.openContactRecord(loClient.getClient().getModel().getClientId());
                                 poClient.setClientType(ClientType.INSTITUTION);
                                 
                                 loadContactPerson();

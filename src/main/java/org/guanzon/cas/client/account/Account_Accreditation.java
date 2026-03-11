@@ -1,8 +1,9 @@
 package org.guanzon.cas.client.account;
 
 import java.sql.SQLException;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GuanzonException;
@@ -260,7 +261,7 @@ public class Account_Accreditation extends Parameter {
         }else {
             loClient.setClientId("");
         }
-
+        
         //load record
         CommonUtils.showModal(loClient);
 
@@ -371,9 +372,6 @@ public class Account_Accreditation extends Parameter {
             loClient.setClientId("");
         }
         
-        //set company id for contact entry
-        loClient.setCompanyID(getModel().getClientId());
-
         //load record
         CommonUtils.showModal(loClient);
 

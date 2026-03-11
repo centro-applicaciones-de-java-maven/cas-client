@@ -46,7 +46,6 @@ public class ClientInfo extends Parameter{
     
     String psClientTp;
     String psCategory;
-    String psCompanyID = ""; //for company contact
     
     @Override
     public void initialize() throws SQLException, GuanzonException{
@@ -150,15 +149,6 @@ public class ClientInfo extends Parameter{
     
     public String getCategory(){
         return psCategory;
-    }
-
-    
-    public void setCompanyID(String companyID){
-        psCompanyID = companyID;
-    }
-    
-    public boolean isContactPerson(){
-        return !(psCompanyID == null || psCompanyID.isEmpty());
     }
 
     public JSONObject openClientRecord(String Id) throws SQLException, GuanzonException, CloneNotSupportedException {
@@ -322,9 +312,9 @@ public class ClientInfo extends Parameter{
             Model_Client_Institution_Contact loContact = (Model_Client_Institution_Contact) paContact.get(paContact.size() - 1);
             loContact.newRecord();
             
+            loContact.setCategoryCode(psCategory);
             loContact.setClientId(poClient.getClientId());
             loContact.setcCPrsonID(poContactPerson.getModel().getClientId());
-            loContact.setCategoryCode(psCategory);
             
             //contact person name
             String lsLastnme = poContactPerson.getModel().getLastName() == null ? "" : poContactPerson.getModel().getLastName();
@@ -759,9 +749,29 @@ public class ClientInfo extends Parameter{
 
         //validate master                        
         if (getEditMode() == EditMode.ADDNEW || getEditMode() == EditMode.UPDATE) {
+            
             poJSON = poClient.setClientType(psClientTp);
+            
+            //validate address
+            switch (paAddress.size()) {
+                case 0:
+                    addAddress();
+                case 1:
+                    if (paAddress.get(paAddress.size() - 1).getTownId().isEmpty()) {
+                        poJSON.put("result", "error");
+                        poJSON.put("message", "Town must have a value.");
+                        return poJSON;
+                    }
+
+                    if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty()) {
+                        poJSON.put("result", "error");
+                        poJSON.put("message", "Address have a value.");
+                        return poJSON;
+                    }
+            }
 
             if (poClient.getClientType().equals(ClientType.INDIVIDUAL)) {
+                
                 if (poClient.getLastName().isEmpty()) {
                     poJSON.put("result", "error");
                     poJSON.put("message", "Last name must not be empty.");
@@ -779,137 +789,63 @@ public class ClientInfo extends Parameter{
 
                 poClient.setCompanyName(lsName);
                 
-                //initialize contact details on last row, if set as a contact person
-                if (isContactPerson()) {
-                    
-                    //load institution contact person
-                    String lsSQL = "SELECT * FROM Client_Institution_Contact_Person"
-                            + " WHERE sClientID = " + SQLUtil.toSQL(psCompanyID)
-                            + " ORDER BY sContctID";
-
-                    ResultSet loRS = poGRider.executeQuery(lsSQL);
-
-                    paContact.clear();
-                    while (loRS.next()) {
-                        Model_Client_Institution_Contact object = (Model_Client_Institution_Contact) poContact.clone();
-                        object.newRecord();
-
-                        JSONObject loJSON = object.openRecord(loRS.getString("sContctID"));
-
-                        if ("success".equals((String) loJSON.get("result"))) {
-                            paContact.add(object);
-                        } else {
-                            return loJSON;
-                        }
-                    }
-                    
-                    Model_Client_Institution_Contact loContactModel = InstiContact(getInstiContactCount() - 1);
-                    loContactModel.setCategoryCode(psCategory);
-                    loContactModel.setClientId(psCompanyID);
-                    loContactModel.setcCPrsonID(poClient.getClientId());
-                    loContactModel.setContactPersonName(lsName);
-                    loContactModel.isPrimaryContactPersion(getInstiContactCount() == 1); //one entry should be default as primary
-         
+                //validate mobile
+                if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) {
+                    paMobile.remove(paMobile.size() - 1);
                 }
+
+                switch (paMobile.size()) {
+                    case 0:
+                        addMobile();
+                    case 1:
+                        if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) {
+                            poJSON.put("result", "error");
+                            poJSON.put("message", "Client must have a mobile number.");
+                            return poJSON;
+                        }
+                }
+                    
             } else {
+                
                 poClient.setLastName("");
                 poClient.setFirstName("");
                 poClient.setMiddleName("");
                 poClient.setSuffixName("");
 
+                //check company name
                 if (poClient.getCompanyName().isEmpty()) {
                     poJSON.put("result", "error");
                     poJSON.put("message", "Company name must not be empty.");
                     return poJSON;
                 }
+                
+                //check category paramter value
+                if (getCategory() == null || getCategory().isEmpty()) {
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Invalid category code!");
+                    return poJSON;
+                }
+
+               switch (paContact.size()) {
+                   case 0:
+                       addInstiContact();
+                   case 1:
+                       //check last row's full name if set
+                       if (InstiContact(paContact.size() - 1).getContactPersonName().isEmpty() &&
+                               InstiContact(paContact.size() - 1).getMobileNo().isEmpty()) {
+                           poJSON.put("result", "error");
+                           poJSON.put("message", "Contact person name and mobile number must have a value.");
+                           return poJSON;
+                       }
+               }
             }
 
-            if (!"success".equals((String) poJSON.get("result"))) {
+            if ("error".equals((String) poJSON.get("result"))) {
                 return poJSON;
             }
 
             poClient.setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
             poClient.setModifiedDate(poGRider.getServerDate());
-        }
-
-        //validate address
-        switch (paAddress.size()) {
-            case 0:
-                addAddress();
-            case 1:
-                if (paAddress.get(paAddress.size() - 1).getTownId().isEmpty()) {
-                    poJSON.put("result", "error");
-                    poJSON.put("message", "Town must have a value.");
-                    return poJSON;
-                }
-
-                if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty()) {
-                    poJSON.put("result", "error");
-                    poJSON.put("message", "Address have a value.");
-                    return poJSON;
-                }
-        }
-
-        //validate mobile
-        if (poClient.getClientType().equals(ClientType.INDIVIDUAL)) {
-            if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) {
-                paMobile.remove(paMobile.size() - 1);
-            }
-
-            switch (paMobile.size()) {
-                case 0:
-                    addMobile();
-                case 1:
-                    if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) {
-                        poJSON.put("result", "error");
-                        poJSON.put("message", "Client must have a mobile number.");
-                        return poJSON;
-                    }
-            }
-        }
-
-        //validate contact person, from supplier entry and individual contact person
-        if (getModel().getClientType().equalsIgnoreCase(ClientType.INSTITUTION) || isContactPerson()) {
-            
-            //check category paramter value
-            if (getCategory() == null || getCategory().isEmpty()) {
-                poJSON.put("result", "error");
-                poJSON.put("message", "Invalid category code!");
-                return poJSON;
-            }
-            
-            //remove empty rows
-            if (getInstiContactCount() > 0) {
-                
-                if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() && paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) {
-                    paContact.remove(paContact.size() - 1);
-                }
-
-            }
-
-            /**
-             * REVISED VALIDATION
-             * allow entry without contact person
-             * should be record-based individual entry for supplier 
-             * Guillier 03/09/2026
-            **/
-            
-            if (isContactPerson()) {
-                
-                //this validation should only occur upon individual entry as contact person
-                switch (paContact.size()) {
-                    case 0:
-                        addInstiContact();
-                    case 1:
-                        //check last row's full name if set
-                        if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty()
-                                && paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) {
-                            poJSON.put("result", "error");
-                            poJSON.put("message", "Contact person name and mobile number must have a value.");
-                            return poJSON;
-                        }
-                }
-            }
         }
 
         poJSON = new JSONObject();
@@ -961,7 +897,8 @@ public class ClientInfo extends Parameter{
         if (getEditMode() == EditMode.ADDNEW || getEditMode() == EditMode.UPDATE){
             
             if (getEditMode() == EditMode.ADDNEW){
-                //assign master client id
+                
+                //assign master client id (INDIVIDUAL OR INSTITUTION)
                 poClient.setClientId(MiscUtil.getNextCode(poClient.getTable(), "sClientID", true, poGRider.getGConnection().getConnection(), poGRider.getBranchCode()));
             }
             
@@ -973,8 +910,8 @@ public class ClientInfo extends Parameter{
             int lnPrimaryAddr = 0;
             
             for (lnCtr = 0; lnCtr <= paAddress.size() - 1; lnCtr++){
-                loAddress = paAddress.get(lnCtr);
                 
+                loAddress = paAddress.get(lnCtr);
                 if (loAddress.getAddress().isEmpty() && loAddress.getTownId().isEmpty()) {
                     paAddress.remove(lnCtr);
                     break;
@@ -999,7 +936,7 @@ public class ClientInfo extends Parameter{
             }
            
             //initialize contact person for supplier account or individual contact entry
-            if (getModel().getClientType().equals(ClientType.INSTITUTION)  || isContactPerson()){
+            if (getModel().getClientType().equals(ClientType.INSTITUTION)){
                 
                 Model_Client_Institution_Contact loContact;
                 int lnPrimaryContact = 0;
@@ -1007,42 +944,36 @@ public class ClientInfo extends Parameter{
                 for (lnCtr = 0; lnCtr <= paContact.size() - 1; lnCtr++){
                     loContact = paContact.get(lnCtr);
 
-                    if (loContact.getContactPersonName().isEmpty() && loContact.getMobileNo().isEmpty()) {
+                    //remove row if empty
+                    if (loContact.getContactPersonName().isEmpty()) {
                         paContact.remove(lnCtr);
                         break;
                     }
                     
-                    //individual client id or company client id
-                    loContact.setClientId(isContactPerson() ? psCompanyID : poClient.getClientId());
-                    loContact.setCategoryCode(getCategory());
+                    /**
+                     see method openContactRecord()
+                     initialization of primary ids are moved here by searched individual client
+                     GUILLIER 2026/03/10
+                     **/
                     
                     if (loContact.isPrimaryContactPersion()) lnPrimaryContact += 1;
                 }
-                
-                /**
-                 * REVISED VALIDATION
-                 * allow entry without contact person
-                 * should be record-based individual entry for supplier 
-                 * Guillier 03/09/2026
-                **/
 
-//                if (lnPrimaryContact > 1) {
-//                    poJSON = new JSONObject();
-//                    poJSON.put("result", "error");
-//                    poJSON.put("message", "Only one contact person should be primary active!\nPlease check contact details.");
-//                    return poJSON;
-//                }
-//
-//                if (lnPrimaryContact <= 0) {
-//                    poJSON = new JSONObject();
-//                    poJSON.put("result", "error");
-//                    poJSON.put("message", "Please select atleast one primary contact!");
-//                    return poJSON;
-//                 }
+                if (lnPrimaryContact > 1) {
+                    poJSON = new JSONObject();
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Only one contact person should be primary active!\nPlease check contact details.");
+                    return poJSON;
+                }
 
-            }
-            
-            if(getModel().getClientType().equalsIgnoreCase(ClientType.INDIVIDUAL)){
+                if (lnPrimaryContact <= 0) {
+                    poJSON = new JSONObject();
+                    poJSON.put("result", "error");
+                    poJSON.put("message", "Please select atleast one primary contact!");
+                    return poJSON;
+                 }
+
+            }else{
                 
                 //MOBILE NUMBER
                 Model_Client_Mobile loMobile;
@@ -1060,25 +991,7 @@ public class ClientInfo extends Parameter{
                     loMobile.setMobileNetwork(CommonUtils.classifyNetwork(loMobile.getMobileNo()));
 
                     //get primary mobile
-                    if (loMobile.isPrimaryMobile()){
-                        
-                        //set primary mobile to contact info, based on mobile type. if set as as contact person
-                        if (isContactPerson()) {
-                            
-                            switch(loMobile.getMobileType()){
-                                case "0":
-                                    InstiContact(getInstiContactCount() - 1).setMobileNo(loMobile.getMobileNo());
-                                    break;
-                                case "1":
-                                    InstiContact(getInstiContactCount() - 1).setLandlineNo(loMobile.getMobileNo());
-                                    break;
-                                case "2":
-                                    InstiContact(getInstiContactCount() - 1).setFaxNo(loMobile.getMobileNo());
-                                    break;
-                            }
-                        }
-                        lnPrimaryMobile += 1;
-                    }
+                    if (loMobile.isPrimaryMobile()) lnPrimaryMobile += 1;
                 }
 
                 if (lnPrimaryMobile > 1) {
@@ -1107,14 +1020,7 @@ public class ClientInfo extends Parameter{
                     }
                     loMail.setClientId(poClient.getClientId());
 
-                    if (loMail.isPrimaryEmail()){
-                        
-                        //set primary email to contact info. if set as as contact person
-                        if (isContactPerson()) {
-                            InstiContact(getInstiContactCount() - 1).setMailAddress(loMail.getMailAddress());
-                        }
-                        lnPrimaryMail += 1;
-                    }
+                    if (loMail.isPrimaryEmail()) lnPrimaryMail += 1;
                 }
 
                 if (lnPrimaryMail > 1) {
@@ -1140,26 +1046,9 @@ public class ClientInfo extends Parameter{
                         break;
                     }
                     loSocMed.setClientId(poClient.getClientId());
-                    
-                    //set first 3 online account to contact info. if set as contact person
-                    if (isContactPerson()) {
-                        
-                        switch (lnCtr) {
-                            case 0:
-                                InstiContact(getInstiContactCount() - 1).setSocMedAccount1(loSocMed.getAccount());
-                                break;
-                            case 1:
-                                InstiContact(getInstiContactCount() - 1).setSocMedAccount2(loSocMed.getAccount());
-                                break;
-                            case 2:
-                                InstiContact(getInstiContactCount() - 1).setSocMedAccount3(loSocMed.getAccount());
-                                break;
-                        }
-                    }
                 }
                 
             }
-            
         }
         
         poJSON = new JSONObject();
@@ -1196,30 +1085,29 @@ public class ClientInfo extends Parameter{
         }
         
         //save contact via supplier entry or indiviual contact person
-        if (getModel().getClientType().equals(ClientType.INSTITUTION) || isContactPerson()){
+        if (getModel().getClientType().equals(ClientType.INSTITUTION)){
             
             if (!paContact.isEmpty()){
-                    for (lnCtr = 0; lnCtr <= paContact.size() - 1; lnCtr++){
-                        loContact = paContact.get(lnCtr);
+                
+                //save record for current entries
+                for (lnCtr = 0; lnCtr <= paContact.size() - 1; lnCtr++){
+                    loContact = paContact.get(lnCtr);
 
-                        if (loContact.getEditMode() == EditMode.ADDNEW){
-                            loContact.setModifiedDate(poGRider.getServerDate());
-                            poJSON = loContact.saveRecord();
-                            if (!"success".equals((String) poJSON.get("result"))) return poJSON;
-                        } else {
-                            //validate if record is modified
-                            loContact.updateRecord();
-                            loContact.isPrimaryContactPersion(loContact.isPrimaryContactPersion());
-                            loContact.setModifiedDate(poGRider.getServerDate());
-                            loContact.saveRecord();
-                        }
+                    if (loContact.getEditMode() == EditMode.ADDNEW){
+                        loContact.setModifiedDate(poGRider.getServerDate());
+                        poJSON = loContact.saveRecord();
+                        if (!"success".equals((String) poJSON.get("result"))) return poJSON;
+                    } else {
+                        
+                        //validate if record is modified
+                        loContact.updateRecord();
+                        loContact.isPrimaryContactPersion(loContact.isPrimaryContactPersion());
+                        loContact.setModifiedDate(poGRider.getServerDate());
+                        loContact.saveRecord();
                     }
                 }
-            
-        }
-        
-        //save entries as individual entry, not contact peron
-        if (getModel().getClientType().equalsIgnoreCase(ClientType.INDIVIDUAL)) {
+            }
+        }else {
             
             if (!paMobile.isEmpty()){
                 for (lnCtr = 0; lnCtr <= paMobile.size() - 1; lnCtr++){

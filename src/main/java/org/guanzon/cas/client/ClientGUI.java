@@ -35,8 +35,6 @@ public class ClientGUI extends Application {
     private static String psClientTp;
     private static boolean pbCancelled;
     
-    private static String psCompanyID = ""; //for company contact
-    
     private static String psCategory;
     
     public void setGRider(GRiderCAS griderCAS){
@@ -58,16 +56,13 @@ public class ClientGUI extends Application {
         psClientTp = clientType;
     }
     
+    public void setStagePosition(double X, double Y){
+        xOffset = X;
+        yOffset = Y;
+    }
+    
     public ClientInfo getClient(){
         return poClient;
-    }
-    
-    public void setCompanyID(String companyID){
-        psCompanyID = companyID;
-    }
-    
-    public boolean isContactPerson(){
-        return !(psCompanyID == null || psCompanyID.isEmpty());
     }
     
     public boolean isCancelled(){
@@ -106,19 +101,6 @@ public class ClientGUI extends Application {
             controller.setGRider(poGRider);
             controller.setLogWrapper(poWrapper);
             controller.setClientId(psClientId);
-            
-            //initialize institution parameters for individual entry of contact person
-            if (isContactPerson()) {
-                controller.setCompanyID(psCompanyID);
-                controller.setCategory(psCategory);
-                
-                //ensure category param is initialized before entry
-                if (psCategory == null || psCategory.isEmpty()) {
-                    ShowMessageFX.Error("Please load category first!", "Client Entry", null);
-                    pbCancelled = true;
-                    return;
-                }
-            }
 
             loader.setController(controller);
 
@@ -144,6 +126,11 @@ public class ClientGUI extends Application {
             primaryStage.initStyle(StageStyle.TRANSPARENT);
             primaryStage.initModality(Modality.APPLICATION_MODAL);
             primaryStage.setTitle("Client Info");
+            primaryStage.centerOnScreen();
+            
+            if (xOffset > 0) primaryStage.setX((xOffset - primaryStage.getWidth()) / 2);
+            if (yOffset > 0) primaryStage.setY((yOffset - primaryStage.getHeight()) / 2);
+            
             primaryStage.showAndWait();
 
             pbCancelled = controller.isCancelled();
@@ -191,6 +178,11 @@ public class ClientGUI extends Application {
             primaryStage.initStyle(StageStyle.TRANSPARENT);
             primaryStage.initModality(Modality.APPLICATION_MODAL);
             primaryStage.setTitle("Institution Info");
+            primaryStage.centerOnScreen();
+            
+            if (xOffset > 0) primaryStage.setX((xOffset - primaryStage.getWidth()) / 2);
+            if (yOffset > 0) primaryStage.setY((yOffset - primaryStage.getHeight()) / 2);
+            
             primaryStage.showAndWait();
 
             pbCancelled = controller.isCancelled();
