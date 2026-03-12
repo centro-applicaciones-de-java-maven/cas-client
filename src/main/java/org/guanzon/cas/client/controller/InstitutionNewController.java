@@ -8,9 +8,12 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.animation.Transition;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -456,60 +459,7 @@ public class InstitutionNewController implements Initializable {
                     
                     switch(lnIndex){
                         case 0: //client name
-            
-                            //change client type temporary for searching client individual
-                            poClient.setClientType(ClientType.INDIVIDUAL);
-                            
-                            String lsContactID = "";
-                            if (lsValue == null || lsValue.isEmpty()) {
-                                lsContactID = "";
-                            }else{
-                                poJSON =  poClient.searchContactPerson(lsValue, false);
-                                if ("success".equalsIgnoreCase(poJSON.get("result").toString())) {
-                                    lsContactID = poClient.ContactPerson().getModel().getClientId() == null ? "" : poClient.ContactPerson().getModel().getClientId();
-                                }
-                            }
-                            
-                            //ShowMessageFX.Error(getStage(), poJSON.get("message").toString(),"Warning", MODULE);
-                            //initialize Client GUI
-                            ClientGUI loClient = new ClientGUI();
-                            
-                            loClient.setGRider(poGRider);
-                            loClient.setLogWrapper(null);
-                            loClient.setCategoryCode((String) psCategory);
-
-                            //filter client type 
-                            loClient.setClientType(ClientType.INDIVIDUAL);
-                            
-                            //set search by code
-                            loClient.setByCode(false);
-                            loClient.setClientId(lsContactID);
-                            
-                            // Get screen bounds
-                            Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
-
-                            // Calculate position: X = left edge, Y = vertical center
-                            double x = (getStage().getWidth()) / 2;
-                            double y = (screenBounds.getHeight() - getStage().getHeight()) / 2;
-                            
-                            getStage().setX(x);
-                            getStage().setY(y);
-                            
-                            loClient.setStagePosition(getStage().getX() + getStage().getWidth(), getStage().getY());
-                            
-                            //load record
-                            CommonUtils.showModal(loClient);
-                            
-                            //load if button 
-                            if (!loClient.isCancelled()) {
-                                
-                                poClient.openContactRecord(loClient.getClient().getModel().getClientId());
-                                poClient.setClientType(ClientType.INSTITUTION);
-                                
-                                loadContactPerson();
-                                return;
-                            }
-                            poClient.setClientType(ClientType.INSTITUTION);
+                            searchContactInfo(lsValue);
                             break;
                         case 8: //contact role
 
@@ -1156,6 +1106,74 @@ public class InstitutionNewController implements Initializable {
                 }
             });
         }
+    }
+    
+    private void searchContactInfo(String lsValue) throws Exception{
+        
+        //change client type temporary for searching client individual
+        poClient.setClientType(ClientType.INDIVIDUAL);
+
+        String lsContactID = "";
+        if (lsValue == null || lsValue.isEmpty()) {
+            lsContactID = "";
+        }else{
+            poJSON =  poClient.searchContactPerson(lsValue, false);
+            if ("success".equalsIgnoreCase(poJSON.get("result").toString())) {
+                lsContactID = poClient.ContactPerson().getModel().getClientId() == null ? "" : poClient.ContactPerson().getModel().getClientId();
+            }
+        }
+
+        //ShowMessageFX.Error(getStage(), poJSON.get("message").toString(),"Warning", MODULE);
+        //initialize Client GUI
+        ClientGUI loClient = new ClientGUI();
+
+        loClient.setGRider(poGRider);
+        loClient.setLogWrapper(null);
+        loClient.setCategoryCode((String) psCategory);
+
+        //filter client type 
+        loClient.setClientType(ClientType.INDIVIDUAL);
+
+        //set search by code
+        loClient.setByCode(false);
+        loClient.setClientId(lsContactID);
+
+        // Get screen bounds
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        
+        new Transition() {
+            {
+                setCycleDuration(Duration.millis(1500));
+                setInterpolator(Interpolator.EASE_IN);
+            }
+            @Override
+            protected void interpolate(double frac) {
+                
+                //re align current form to left
+                getStage().setX(( getStage().getX() + (getStage().getWidth() / 5)  - getStage().getX()) - frac);
+            }
+        }.play();
+        
+
+        //show second form to right side
+        loClient.setStagePosition((screenBounds.getMaxX() - (getStage().getX()+ getStage().getWidth())), getStage().getY());
+
+        //load record
+        //CommonUtils.showModal(loClient);
+
+        //load if button 
+        if (!loClient.isCancelled()) {
+
+            poClient.openContactRecord(loClient.getClient().getModel().getClientId());
+            poClient.setClientType(ClientType.INSTITUTION);
+
+            loadContactPerson();
+            return;
+        }
+        //if closed, re center form
+        getStage().centerOnScreen();
+        poClient.setClientType(ClientType.INSTITUTION);
+
     }
    
     public Stage getStage() {

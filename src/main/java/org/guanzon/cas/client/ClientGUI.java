@@ -128,8 +128,8 @@ public class ClientGUI extends Application {
             primaryStage.setTitle("Client Info");
             primaryStage.centerOnScreen();
             
-            if (xOffset > 0) primaryStage.setX((xOffset - primaryStage.getWidth()) / 2);
-            if (yOffset > 0) primaryStage.setY((yOffset - primaryStage.getHeight()) / 2);
+            if (xOffset > 0) primaryStage.setX((xOffset));
+            if (yOffset > 0) primaryStage.setY((yOffset));
             
             primaryStage.showAndWait();
 
@@ -180,8 +180,8 @@ public class ClientGUI extends Application {
             primaryStage.setTitle("Institution Info");
             primaryStage.centerOnScreen();
             
-            if (xOffset > 0) primaryStage.setX((xOffset - primaryStage.getWidth()) / 2);
-            if (yOffset > 0) primaryStage.setY((yOffset - primaryStage.getHeight()) / 2);
+            if (xOffset > 0) primaryStage.setX((xOffset ));
+            if (yOffset > 0) primaryStage.setY((yOffset));
             
             primaryStage.showAndWait();
 
