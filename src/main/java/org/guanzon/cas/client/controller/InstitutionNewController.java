@@ -368,7 +368,6 @@ public class InstitutionNewController implements Initializable {
 
     private void company_Clicked(MouseEvent event) {
         pnCompany = tblAddress.getSelectionModel().getSelectedIndex();
-
         if (pnCompany >= 0) {
             getSelectedAddress();
         }
@@ -376,8 +375,7 @@ public class InstitutionNewController implements Initializable {
 
     private void contactPerson_Clicked(MouseEvent event) {
         pnContactPerson = tblSocMed.getSelectionModel().getSelectedIndex();
-
-        if (pnContactPerson > 0) {
+        if (pnContactPerson >= 0) {
             getSelectedContactPerson();
         }
     }
@@ -941,7 +939,7 @@ public class InstitutionNewController implements Initializable {
         
         if (poClient.getInstiContactCount() > 0) {
             
-            txtContact00.setText(poClient.InstiContact(pnContactPerson).getContactPersonName());
+            txtContact00.setText(poClient.InstiContact(pnContactPerson).getContactPersonName().trim());
             txtContact01.setText(poClient.InstiContact(pnContactPerson).getContactPersonPosition());
             txtContact02.setText(poClient.InstiContact(pnContactPerson).getMobileNo());
             txtContact03.setText(poClient.InstiContact(pnContactPerson).getLandlineNo());
@@ -1120,8 +1118,14 @@ public class InstitutionNewController implements Initializable {
             poJSON =  poClient.searchContactPerson(lsValue, false);
             if ("success".equalsIgnoreCase(poJSON.get("result").toString())) {
                 lsContactID = poClient.ContactPerson().getModel().getClientId() == null ? "" : poClient.ContactPerson().getModel().getClientId();
+            }else{
+                poClient.setClientType(ClientType.INSTITUTION);
+                return;
             }
         }
+        
+        //change back to institution
+        poClient.setClientType(ClientType.INSTITUTION);
 
         //ShowMessageFX.Error(getStage(), poJSON.get("message").toString(),"Warning", MODULE);
         //initialize Client GUI
@@ -1141,38 +1145,28 @@ public class InstitutionNewController implements Initializable {
         // Get screen bounds
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         
-        new Transition() {
-            {
-                setCycleDuration(Duration.millis(1500));
-                setInterpolator(Interpolator.EASE_IN);
-            }
-            @Override
-            protected void interpolate(double frac) {
-                
-                //re align current form to left
-                getStage().setX(( getStage().getX() + (getStage().getWidth() / 5)  - getStage().getX()) - frac);
-            }
-        }.play();
-        
+        //re align current form to left
+        getStage().setX((getStage().getWidth() / 5));
 
         //show second form to right side
         loClient.setStagePosition((screenBounds.getMaxX() - (getStage().getX()+ getStage().getWidth())), getStage().getY());
 
         //load record
-        //CommonUtils.showModal(loClient);
+        CommonUtils.showModal(loClient);
 
         //load if button 
         if (!loClient.isCancelled()) {
+            
+            //if closed, re center form
+            getStage().centerOnScreen();
 
             poClient.openContactRecord(loClient.getClient().getModel().getClientId());
-            poClient.setClientType(ClientType.INSTITUTION);
-
             loadContactPerson();
             return;
         }
+        
         //if closed, re center form
         getStage().centerOnScreen();
-        poClient.setClientType(ClientType.INSTITUTION);
 
     }
    

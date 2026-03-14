@@ -331,8 +331,6 @@ public class IndividualNewController implements Initializable {
             
             loadRecord();
             
-            System.out.print("contact record count" + poClient.getInstiContactCount());
-            
             pbLoaded = true;
         } catch (SQLException | GuanzonException e) {
             ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
@@ -824,7 +822,6 @@ public class IndividualNewController implements Initializable {
                     if ("error".equalsIgnoreCase(poJSON.get("result").toString())) {
                         ShowMessageFX.Information(getStage(), (String) poJSON.get("message"), "Computerized Acounting System", MODULE);
                     }
-
                     txtField.setText(String.valueOf(poClient.Mail(pnEmail).getMailAddress()));
                     break;
             }
@@ -1384,7 +1381,7 @@ public class IndividualNewController implements Initializable {
                 /* FOCUS ON FIRST ROW */
                 tblEmail.getSelectionModel().select(0);
                 tblEmail.getFocusModel().focus(0);
-                pnEmail = tblEmail.getSelectionModel().getSelectedIndex();
+                pnEmail = 0;//tblEmail.getSelectionModel().getSelectedIndex();
             }
             getSelectedEmail();
         } else {
@@ -1488,7 +1485,7 @@ public class IndividualNewController implements Initializable {
                 /* FOCUS ON FIRST ROW */
                 tblSocMed.getSelectionModel().select(0);
                 tblSocMed.getFocusModel().focus(0);
-                pnSocmed = tblSocMed.getSelectionModel().getSelectedIndex();
+                pnSocmed = 0;//tblSocMed.getSelectionModel().getSelectedIndex();
             }
             getSelectedSocialMedia();
         } else {

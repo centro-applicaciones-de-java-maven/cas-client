@@ -19,6 +19,7 @@ C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\Client_Mail.ja
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\ClientAccreditation_Car.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\APClient_Monarch.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\APClient_MainOffice.java
+C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\Client_Role.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\ClientAccreditation_Engineering.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\APClient_MC.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelAddress.java
@@ -41,7 +42,9 @@ C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\APCl
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\model\ClientModels.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\ClientAccreditation_MC.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\ClientAccreditation_MP.java
+C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Corporate_Role.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Institution_Contact.java
+C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelPayeeType.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\validator\ClientAccreditation_Appliance.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Address.java
 C:\Users\User\CAS\cas-client\src\main\java\org\guanzon\cas\client\controller\AccountAccreditationController.java

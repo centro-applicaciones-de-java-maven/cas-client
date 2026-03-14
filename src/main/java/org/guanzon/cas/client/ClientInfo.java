@@ -714,6 +714,11 @@ public class ClientInfo extends Parameter{
         try{
             
             String lsSQL = getSQ_Browse();
+            
+            String lsCondition = "(c.sClientID IS NOT NULL and d.sClientID IS NOT NULL) "
+                                    + "AND a.sClientID IN (SELECT e.sClientID FROM Client_Address e WHERE e.cRecdStat = '1' AND e.cPrimaryx = '1') "
+                                    + "AND a.sClientID IN (SELECT f.sClientID FROM Client_Social_Media f WHERE f.cRecdStat = '1')";
+            lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);
         
             poJSON = ShowDialogFX.Search(poGRider,
                     lsSQL,
