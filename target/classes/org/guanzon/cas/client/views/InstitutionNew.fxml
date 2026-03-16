@@ -227,7 +227,7 @@
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
                                                                         </TextField>
-                                                                        <TextField fx:id="txtAddress06" maxWidth="501.0" minWidth="150.0" prefHeight="30.0" prefWidth="501.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
+                                                                        <TextField fx:id="txtAddress06" maxWidth="501.0" minWidth="150.0" prefHeight="30.0" prefWidth="501.0" promptText="XXX-XX-XXXX" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="1">
                                                                            <GridPane.margin>
                                                                               <Insets left="5.0" />
                                                                            </GridPane.margin>
@@ -349,12 +349,12 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Department" GridPane.columnIndex="5" GridPane.rowIndex="8">
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Department" GridPane.rowIndex="8">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </Text>
-                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Position" GridPane.rowIndex="8">
+                                                                                    <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Position" GridPane.columnIndex="5" GridPane.rowIndex="8">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -424,12 +424,12 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextField fx:id="txtContact07" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="5" GridPane.rowIndex="8">
+                                                                                    <TextField fx:id="txtContact07" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="8">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.rowIndex="8">
+                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="5" GridPane.rowIndex="8">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>

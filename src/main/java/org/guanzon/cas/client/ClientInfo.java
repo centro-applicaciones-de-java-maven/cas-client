@@ -295,7 +295,7 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
     
-    public JSONObject openContactRecord(String Id) throws SQLException, GuanzonException, CloneNotSupportedException {
+    public JSONObject openContactRecord(String Id, int fnRow) throws SQLException, GuanzonException, CloneNotSupportedException {
         if (!pbInitRec){
             poJSON = new JSONObject();
             poJSON.put("result", "error");
@@ -308,9 +308,8 @@ public class ClientInfo extends Parameter{
         
         if ("success".equals((String) poJSON.get("result"))){
             
-            //get last row and initialize as new record
-            Model_Client_Institution_Contact loContact = (Model_Client_Institution_Contact) paContact.get(paContact.size() - 1);
-            loContact.newRecord();
+            //get last row and update record (considered new record when added to array list)
+            Model_Client_Institution_Contact loContact = (Model_Client_Institution_Contact) InstiContact(fnRow);
             
             loContact.setCategoryCode(psCategory);
             loContact.setClientId(poClient.getClientId());
@@ -381,6 +380,11 @@ public class ClientInfo extends Parameter{
                             " ORDER BY sSocialID";
             
             loRS = poGRider.executeQuery(lsSQL);
+            
+            //clear exisitng records before initializing data
+            loContact.setSocMedAccount1("");
+            loContact.setSocMedAccount2("");
+            loContact.setSocMedAccount3("");
             
             while (loRS.next()){
                 Model_Client_Social_Media object = (Model_Client_Social_Media) poSocMed.clone();
@@ -566,6 +570,12 @@ public class ClientInfo extends Parameter{
             if (paContact.get(getInstiContactCount()- 1).getMobileNo().isEmpty()){
                 poJSON.put("result", "error");
                 poJSON.put("message", "Unable to add new contact person record.\n\nLast record's mobile number is still empty.");
+                return poJSON;
+            }
+            
+            if (paContact.get(getInstiContactCount()- 1).getsRoleIDxx().isEmpty()){
+                poJSON.put("result", "error");
+                poJSON.put("message", "Unable to add new contact person record.\n\nLast record's role is still empty.");
                 return poJSON;
             }
         }
@@ -809,6 +819,18 @@ public class ClientInfo extends Parameter{
                             return poJSON;
                         }
                 }
+                
+                switch (paMail.size()) {
+                   case 0:
+                       addMail();
+                   case 1:
+                       //check last row's full name if set
+                       if (Mail(paMail.size() - 1).getMailAddress().isEmpty()) {
+                           poJSON.put("result", "error");
+                           poJSON.put("message", "Email Address must have a value.");
+                           return poJSON;
+                       }
+               }
                     
             } else {
                 
@@ -831,15 +853,23 @@ public class ClientInfo extends Parameter{
                     return poJSON;
                 }
 
+                //validate last row before saving
                switch (paContact.size()) {
                    case 0:
                        addInstiContact();
-                   case 1:
-                       //check last row's full name if set
+                   default: 
+                       //check last row's full name and mobile no if set
                        if (InstiContact(paContact.size() - 1).getContactPersonName().isEmpty() &&
                                InstiContact(paContact.size() - 1).getMobileNo().isEmpty()) {
                            poJSON.put("result", "error");
                            poJSON.put("message", "Contact person name and mobile number must have a value.");
+                           return poJSON;
+                       }
+                       
+                       //check last row's full name if set
+                       if (InstiContact(paContact.size() - 1).getsRoleIDxx().isEmpty()) {
+                           poJSON.put("result", "error");
+                           poJSON.put("message", "Contact person role must have a value.");
                            return poJSON;
                        }
                }
@@ -1103,7 +1133,6 @@ public class ClientInfo extends Parameter{
                         poJSON = loContact.saveRecord();
                         if (!"success".equals((String) poJSON.get("result"))) return poJSON;
                     } else {
-                        
                         //validate if record is modified
                         loContact.updateRecord();
                         loContact.isPrimaryContactPersion(loContact.isPrimaryContactPersion());

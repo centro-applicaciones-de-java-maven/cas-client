@@ -1,8 +1,6 @@
 package org.guanzon.cas.client.account;
 
 import java.sql.SQLException;
-import javafx.geometry.Rectangle2D;
-import javafx.stage.Screen;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.CommonUtils;
@@ -11,7 +9,6 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.iface.GValidator;
 import org.guanzon.cas.client.ClientGUI;
@@ -300,88 +297,6 @@ public class Account_Accreditation extends Parameter {
         return loResult;
     }
 
-    public JSONObject searchClientContact(String fsValue, boolean fbByCode) throws SQLException, GuanzonException, Exception {
-        
-        JSONObject loJSON = null;
-        
-        //do not allow if company id is empty
-        String lsCompanyID = getModel().getClientId()== null ? "" : getModel().getClientId();
-        if (lsCompanyID.isEmpty()) {
-            loJSON = new JSONObject();
-            loJSON.put("result", "error");
-            loJSON.put("message", "Please select company first!");
-            return loJSON;
-        }
-        
-        //retrieve records (value not empty), new entry (empty value)
-        if (!fsValue.isEmpty()) {
-            
-            String lsSQL = "SELECT"
-                + " a.sContctID"
-                + " ,a.sCPerson1"
-                + " ,a.sMobileNo"
-                + " ,b.sClientID"
-                + " ,b.sCompnyNm"
-                + " FROM Client_Institution_Contact_Person a "
-                + " LEFT JOIN Client_Master b ON a.cCPrsonID = b.sClientID"
-                + " AND a.sClientID = " + SQLUtil.toSQL(lsCompanyID)
-                + " WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
-                + " AND b.cClientTp = " + SQLUtil.toSQL(ClientType.INDIVIDUAL);
-            
-            loJSON = ShowDialogFX.Search(
-                poGRider,
-                lsSQL,
-                fsValue,
-                "ID»Contact Name»Contact Person»Mobile no",
-                "sClientID»b.sCompnyNm»a.sCPerson1»sMobileNo",
-                "sClientID»b.sCompnyNm»a.sCPerson1»a.sMobileNo",
-                fbByCode ? 0 : 1);
-            
-            if (loJSON == null) {
-                return loJSON;
-            }else{
-                if ("error".equals(loJSON.get("result"))) {
-                    return loJSON;
-                }
-            }
-        }
-        
-        //initialize Client GUI
-        ClientGUI loClient = new ClientGUI();
-
-        loClient.setGRider(poGRider);
-        loClient.setLogWrapper(null);
-        loClient.setCategoryCode((String) getModel().getCategoryCode());
-
-        //filter client type 
-        loClient.setClientType(ClientType.INDIVIDUAL);
-
-        //searchRecord(fsValue,fbByCode) will run make sure to set client and bycode
-        //bycode true client id
-        //bycode false company
-
-        //set search by code
-        loClient.setByCode(fbByCode);
-
-        if (loJSON != null) {
-            
-            ///set cilent id to load for individual contact person
-            loClient.setClientId(loJSON.get("sClientID").toString());
-
-        }else {
-            loClient.setClientId("");
-        }
-        
-        //load record
-        CommonUtils.showModal(loClient);
-
-        loJSON = new JSONObject();
-        
-        if (!loClient.isCancelled()) {
-            
-        }
-        return loJSON;
-    }
 
     public JSONObject CloseTransaction() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();

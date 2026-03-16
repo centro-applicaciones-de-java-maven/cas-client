@@ -8,12 +8,6 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.animation.Transition;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.ReadOnlyBooleanPropertyBase;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -44,7 +38,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GRiderCAS;
@@ -525,6 +518,7 @@ public class InstitutionNewController implements Initializable {
                     break;
                     
                 case 6: //tax id number
+                    
                     poJSON = poClient.getModel().setTaxIdNumber(lsValue);
                     
                     if (!"success".equals((String) poJSON.get("result"))) {
@@ -954,6 +948,7 @@ public class InstitutionNewController implements Initializable {
             cbContact00.setSelected(poClient.InstiContact(pnContactPerson).getcPayeexxx().equalsIgnoreCase("1"));
 
             if (poClient.InstiContact(pnContactPerson).getsRoleIDxx() == null || poClient.InstiContact(pnContactPerson).getsRoleIDxx().isEmpty()) {
+                txtContact08.clear();
                 pbLoadingData = false;
                 return;
             }
@@ -963,9 +958,11 @@ public class InstitutionNewController implements Initializable {
                 if ("success".equals((String) poJSON.get("result"))) {
                     txtContact08.setText(poClient.Role().getModel().getsRoleDesc());
                 }else{
+                    txtContact08.clear();
                     System.out.print(poJSON.get("message"));
                 }
             }else{
+                txtContact08.clear();
                 System.out.print("No record loaded");
             }
 
@@ -1160,7 +1157,7 @@ public class InstitutionNewController implements Initializable {
             //if closed, re center form
             getStage().centerOnScreen();
 
-            poClient.openContactRecord(loClient.getClient().getModel().getClientId());
+            poClient.openContactRecord(loClient.getClient().getModel().getClientId(), pnContactPerson);
             loadContactPerson();
             return;
         }
@@ -1173,4 +1170,5 @@ public class InstitutionNewController implements Initializable {
     public Stage getStage() {
         return (Stage) AnchorMain.getScene().getWindow();
     }
+  
 }
