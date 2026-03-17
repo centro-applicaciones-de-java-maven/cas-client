@@ -11,7 +11,9 @@ import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
 public class Model_Client_Institution_Contact extends Model{
+    
     Model_Client_Master poClient;
+    Model_Corporate_Role poRole;
     
     @Override
     public void initialize() {
@@ -41,6 +43,12 @@ public class Model_Client_Institution_Contact extends Model{
             poClient.setXML("Model_Client_Master");
             poClient.setTableName("Client_Master");
             poClient.initialize();
+            
+            poRole = new Model_Corporate_Role();
+            poRole.setApplicationDriver(poGRider);
+            poRole.setXML("Model_Corporate_Role");
+            poRole.setTableName("Corporate_Role");
+            poRole.initialize();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
@@ -225,5 +233,16 @@ public class Model_Client_Institution_Contact extends Model{
     
     public Model_Client_Master Client() throws SQLException, GuanzonException{
         return poClient;
+    }
+    
+    public Model_Corporate_Role ContactRole() throws SQLException, GuanzonException{
+        if (!"".equals(getValue("sRoleIDxx"))) {
+            this.poJSON = this.poRole.openRecord((String) getValue("sRoleIDxx"));
+            if ("success".equals(this.poJSON.get("result"))) {
+                return this.poRole;
+            }
+            return poRole;
+        }
+        return poRole;
     }
 }
