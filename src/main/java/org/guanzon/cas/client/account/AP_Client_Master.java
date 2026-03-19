@@ -6,9 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.agent.systables.Model_Transaction_Attachment;
+import org.guanzon.appdriver.agent.systables.SysTableContollers;
+import org.guanzon.appdriver.agent.systables.TransactionAttachment;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
+import org.guanzon.appdriver.base.WebFile;
+import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
@@ -22,11 +27,29 @@ import org.json.simple.JSONObject;
 public class AP_Client_Master extends Parameter {
 
     private Model_AP_Client_Master poModel;
+    
     private List<Model_AP_Client_Ledger> paLedger;
+    
+    private List<Model_Transaction_Attachment> paAttachments;
+    
+    private Model_Transaction_Attachment TransactionAttachment() throws SQLException, GuanzonException {
+        return new SysTableContollers(poGRider, null).TransactionAttachment().getModel();
+    }
 
     @SuppressWarnings("unchecked")
     public List<Model_AP_Client_Ledger> getLedgerList() {
         return (List<Model_AP_Client_Ledger>) (List<?>) paLedger;
+    }
+    
+    public List<Model_Transaction_Attachment> getAttachmentList() throws SQLException, GuanzonException {
+        return paAttachments;
+    }
+    
+    public int getTransactionAttachmentCount() {
+        if (paAttachments == null) {
+            paAttachments = new ArrayList<>();
+        }
+        return paAttachments.size();
     }
 
     @Override
@@ -38,6 +61,11 @@ public class AP_Client_Master extends Parameter {
 
         ClientModels model = new ClientModels(poGRider);
         poModel = model.APClientMaster();
+        
+        paAttachments = new ArrayList<>();
+        
+        //initialize models with new row
+        addAttachment();
     }
 
     @Override
@@ -149,62 +177,25 @@ public class AP_Client_Master extends Parameter {
 
         return lsSQL;
     }
-//
-//    public JSONObject searchClient(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
-//        JSONObject loJSON;
-//
-//        if (fbByCode) {
-//            if (fsValue.equals(getModel().getClientId())) {
-//                loJSON = new JSONObject();
-//                loJSON.put("result", "success");
-//                return loJSON;
-//            }
-//        } else {
-//            if (getModel().Client().getCompanyName() != null && !getModel().Client().getCompanyName().isEmpty()) {
-//                if (fsValue.equals(getModel().Client().getCompanyName())) {
-//                    loJSON = new JSONObject();
-//                    loJSON.put("result", "success");
-//                    return loJSON;
-//                }
-//            }
-//        }
-//
-//        String lsSQL = "SELECT"
-//                + " a.sClientID"
-//                + " , a.sCompnyNm"
-//                + " , b.sAddrssID"
-//                + " , TRIM(CONCAT (IFNULL(b.sHouseNox,''),', ',IFNULL(b.sAddressx,''),', ',IFNULL(b.sBrgyIDxx,''),', ',IFNULL(b.sTownIDxx,''))) xAddressx"
-//                + "     FROM Client_Master a "
-//                + "      LEFT JOIN Client_Address b ON a.sClientID = b.sClientID"
-//                + "     WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
-//                + "         AND a.cClientTp = " + SQLUtil.toSQL(Logical.YES);
-//
-//        if (fbByCode) {
-//            lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID = " + SQLUtil.toSQL(fsValue));
-//        } else {
-//            lsSQL = MiscUtil.addCondition(lsSQL, "a.sCompnyNm LIKE " + SQLUtil.toSQL(fsValue + "%"));
-//        }
-//        System.out.println("ClientSearch = " + lsSQL);
-//        loJSON = ShowDialogFX.Search(
-//                poGRider,
-//                lsSQL,
-//                fsValue,
-//                "ID»Company»Address",
-//                "sClientID»sCompnyNm»xAddressx",
-//                "a.sClientID»a.sCompnyNm»TRIM(CONCAT(b.sHouseNox, ', ', b.sAddressx, ', ', b.sBrgyIDxx, ', ', b.sTownIDxx))",
-//                fbByCode ? 0 : 1);
-//
-//        if (loJSON != null) {
-//            loJSON.put("result", "success");
-//            getModel().setClientId((String) loJSON.get("sClientID"));
-//            getModel().setAddressId(loJSON.get("sAddrssID") != null ? (String) loJSON.get("sAddrssID") : "");
-//        } else {
-//            loJSON.put("result", "success");
-//            loJSON.put("message", "No record selected.");
-//        }
-//
-//        return loJSON;
-//    }
+
+    public JSONObject addAttachment() throws SQLException, GuanzonException {
+        poJSON = new JSONObject();
+
+        if (paAttachments.isEmpty()) {
+            paAttachments.add(TransactionAttachment());
+            poJSON = paAttachments.get(getTransactionAttachmentCount() - 1).newRecord();
+        } else {
+            if (!paAttachments.get(paAttachments.size() - 1).getTransactionNo().isEmpty()) {
+                paAttachments.add(TransactionAttachment());
+            } else {
+                poJSON.put("result", "error");
+                poJSON.put("message", "Unable to add transaction attachment.");
+                return poJSON;
+            }
+        }
+        poJSON.put("result", "success");
+        return poJSON;
+    }
 
     public JSONObject searchTerm(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
         JSONObject loJSON;
@@ -314,8 +305,7 @@ public class AP_Client_Master extends Parameter {
         return loJSON;
     }
 
-    public JSONObject loadLedgerList()
-            throws SQLException, GuanzonException, CloneNotSupportedException {
+    public JSONObject loadLedgerList() throws SQLException, GuanzonException, CloneNotSupportedException {
 
         if (getModel().getClientId() == null
                 || getModel().getClientId().isEmpty()) {
@@ -356,6 +346,64 @@ public class AP_Client_Master extends Parameter {
 
         poJSON = new JSONObject();
         poJSON.put("result", "success");
+        return poJSON;
+    }
+    
+    public JSONObject loadAttachments() throws SQLException, GuanzonException {
+        
+        poJSON = new JSONObject();
+        paAttachments = new ArrayList<>();
+
+        TransactionAttachment loAttachment = new SysTableContollers(poGRider, null).TransactionAttachment();
+        List loList = loAttachment.getAttachments(SOURCE_CODE, poModel.getClientId());
+        
+        for (int lnCtr = 0; lnCtr <= loList.size() - 1; lnCtr++) {
+            
+            paAttachments.add(TransactionAttachment());
+            poJSON = paAttachments.get(getTransactionAttachmentCount() - 1).openRecord((String) loList.get(lnCtr));
+            
+            if ("success".equals((String) poJSON.get("result"))) {
+                if(poModel.getEditMode() == EditMode.UPDATE){
+                   poJSON = paAttachments.get(getTransactionAttachmentCount() - 1).updateRecord();
+                }
+                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getTransactionNo());
+                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getSourceNo());
+                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getSourceCode());
+                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getFileName());
+            }
+            
+            //Download Attachments
+            poJSON = WebFile.DownloadFile(WebFile.getAccessToken(System.getProperty("sys.default.access.token"))
+                    , "0032" //Constant
+                    , "" //Empty
+                    , paAttachments.get(getTransactionAttachmentCount() - 1).getFileName()
+                    , SOURCE_CODE
+                    , paAttachments.get(getTransactionAttachmentCount() - 1).getSourceNo()
+                    , "");
+            
+            if ("success".equals((String) poJSON.get("result"))) {
+                
+                poJSON = (JSONObject) poJSON.get("payload");
+                if(WebFile.Base64ToFile((String) poJSON.get("data")
+                        , (String) poJSON.get("hash")
+                        , System.getProperty("sys.default.path.temp.attachments") + "/"
+                        , (String) poJSON.get("filename"))){
+                    
+                    System.out.println("poJSON success: " +  poJSON.toJSONString());
+                    System.out.println("File downloaded succesfully.");
+                } else {
+                    
+                    poJSON = (JSONObject) poJSON.get("error");
+                    poJSON.put("result", "error");
+                    
+                    System.out.println("ERROR WebFile.DownloadFile: " + poJSON.get("message"));
+                    System.out.println("poJSON error WebFile.DownloadFile: " + poJSON.toJSONString());
+                }
+                
+            } else {
+                System.out.println("poJSON error WebFile.DownloadFile: " + poJSON.toJSONString());
+            }
+        }
         return poJSON;
     }
 }
