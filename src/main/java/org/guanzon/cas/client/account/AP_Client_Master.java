@@ -1,12 +1,15 @@
 package org.guanzon.cas.client.account;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
-import org.guanzon.appdriver.agent.systables.Model_Transaction_Attachment;
 import org.guanzon.appdriver.agent.systables.SysTableContollers;
 import org.guanzon.appdriver.agent.systables.TransactionAttachment;
 import org.guanzon.appdriver.base.GuanzonException;
@@ -30,10 +33,10 @@ public class AP_Client_Master extends Parameter {
     
     private List<Model_AP_Client_Ledger> paLedger;
     
-    private List<Model_Transaction_Attachment> paAttachments;
+    private List<TransactionAttachment> paAttachments;
     
-    private Model_Transaction_Attachment TransactionAttachment() throws SQLException, GuanzonException {
-        return new SysTableContollers(poGRider, null).TransactionAttachment().getModel();
+    private TransactionAttachment TransactionAttachment() throws SQLException, GuanzonException {
+        return new SysTableContollers(poGRider, logwrapr).TransactionAttachment();
     }
 
     @SuppressWarnings("unchecked")
@@ -41,7 +44,7 @@ public class AP_Client_Master extends Parameter {
         return (List<Model_AP_Client_Ledger>) (List<?>) paLedger;
     }
     
-    public List<Model_Transaction_Attachment> getAttachmentList() throws SQLException, GuanzonException {
+    public List<TransactionAttachment> getAttachmentList() throws SQLException, GuanzonException {
         return paAttachments;
     }
     
@@ -63,9 +66,6 @@ public class AP_Client_Master extends Parameter {
         poModel = model.APClientMaster();
         
         paAttachments = new ArrayList<>();
-        
-        //initialize models with new row
-        addAttachment();
     }
 
     @Override
@@ -182,10 +182,14 @@ public class AP_Client_Master extends Parameter {
         poJSON = new JSONObject();
 
         if (paAttachments.isEmpty()) {
+            
             paAttachments.add(TransactionAttachment());
+            System.out.print("add attachment size is " + paAttachments.size());
             poJSON = paAttachments.get(getTransactionAttachmentCount() - 1).newRecord();
+            System.out.print("add attachment result is " + poJSON);
         } else {
-            if (!paAttachments.get(paAttachments.size() - 1).getTransactionNo().isEmpty()) {
+            
+            if (!paAttachments.get(paAttachments.size() - 1).getModel().getTransactionNo().isEmpty()) {
                 paAttachments.add(TransactionAttachment());
             } else {
                 poJSON.put("result", "error");
@@ -195,6 +199,47 @@ public class AP_Client_Master extends Parameter {
         }
         poJSON.put("result", "success");
         return poJSON;
+    }
+    
+    public int addAttachment(String fFileName) throws SQLException, GuanzonException{
+        
+        for(int lnCtr = 0;lnCtr <= getTransactionAttachmentCount() - 1;lnCtr++){
+            
+            if(fFileName.equals(paAttachments.get(lnCtr).getModel().getFileName())
+                && RecordStatus.INACTIVE.equals(paAttachments.get(lnCtr).getModel().getRecordStatus())){
+                
+                paAttachments.get(lnCtr).getModel().setRecordStatus(RecordStatus.ACTIVE);
+                System.out.println("Attachment :"+ lnCtr+" Activate");
+                return lnCtr;
+            }
+        }
+        addAttachment();
+        
+        paAttachments.get(getTransactionAttachmentCount() - 1).getModel().setFileName(fFileName);
+        paAttachments.get(getTransactionAttachmentCount() - 1).getModel().setSourceNo(poModel.getClientId());
+        paAttachments.get(getTransactionAttachmentCount() - 1).getModel().setRecordStatus(RecordStatus.ACTIVE);
+        
+        return getTransactionAttachmentCount() - 1;
+    }
+    
+    public void copyFile(String fsPath){
+        Path source = Paths.get(fsPath);
+        Path targetDir = Paths.get(System.getProperty("sys.default.path.temp") + "/attachments");
+
+        try {
+            // Ensure target directory exists
+            if (!Files.exists(targetDir)) {
+                Files.createDirectories(targetDir);
+            }
+
+            // Copy file into the target directory
+            Files.copy(source, targetDir.resolve(source.getFileName()),
+                       StandardCopyOption.REPLACE_EXISTING);
+
+            System.out.println("File copied successfully!");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public JSONObject searchTerm(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
@@ -366,19 +411,19 @@ public class AP_Client_Master extends Parameter {
                 if(poModel.getEditMode() == EditMode.UPDATE){
                    poJSON = paAttachments.get(getTransactionAttachmentCount() - 1).updateRecord();
                 }
-                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getTransactionNo());
-                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getSourceNo());
-                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getSourceCode());
-                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getFileName());
+                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getModel().getTransactionNo());
+                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getModel().getSourceNo());
+                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getModel().getSourceCode());
+                System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getModel().getFileName());
             }
             
             //Download Attachments
             poJSON = WebFile.DownloadFile(WebFile.getAccessToken(System.getProperty("sys.default.access.token"))
                     , "0032" //Constant
                     , "" //Empty
-                    , paAttachments.get(getTransactionAttachmentCount() - 1).getFileName()
+                    , paAttachments.get(getTransactionAttachmentCount() - 1).getModel().getFileName()
                     , SOURCE_CODE
-                    , paAttachments.get(getTransactionAttachmentCount() - 1).getSourceNo()
+                    , paAttachments.get(getTransactionAttachmentCount() - 1).getModel().getSourceNo()
                     , "");
             
             if ("success".equals((String) poJSON.get("result"))) {
