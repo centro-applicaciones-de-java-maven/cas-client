@@ -3,6 +3,8 @@ package org.guanzon.cas.client;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
 import org.guanzon.appdriver.base.CommonUtils;
@@ -276,7 +278,7 @@ public class ClientInfo extends Parameter{
                     + " ORDER BY sContctID";
 
             loRS = poGRider.executeQuery(lsSQL);
-
+            
             paContact.clear();
             while (loRS.next()) {
                 Model_Client_Institution_Contact object = (Model_Client_Institution_Contact) poContact.clone();

@@ -744,7 +744,36 @@ public class InstitutionNewController implements Initializable {
                 lblClientStatus.setText("***NEW INSTITUTION");
             } else {
                 poJSON = poClient.openClientRecord(psClientID);
+                
+                //for update record, add new row to avoid null pointer exception on missing records from old entries -Guillier 2026/03/24
                 poJSON = poClient.updateRecord();
+                if ("success".equalsIgnoreCase(poJSON.get("result").toString())) {
+                    
+                    poJSON = poClient.addAddress();
+                    if(poJSON.get("result").toString().equalsIgnoreCase("error")){
+                        System.out.print(poJSON.get("message"));
+                    }
+                    
+                    poJSON = poClient.addMobile();
+                    if(poJSON.get("result").toString().equalsIgnoreCase("error")){
+                        System.out.print(poJSON.get("message"));
+                    }
+                    
+                    poJSON = poClient.addMail();
+                    if(poJSON.get("result").toString().equalsIgnoreCase("error")){
+                        System.out.print(poJSON.get("message"));
+                    }
+                    
+                    poJSON = poClient.addSocMed();
+                    if(poJSON.get("result").toString().equalsIgnoreCase("error")){
+                        System.out.print(poJSON.get("message"));
+                    }
+                    
+                    poJSON = poClient.addInstiContact();
+                    if(poJSON.get("result").toString().equalsIgnoreCase("error")){
+                        System.out.print(poJSON.get("message"));
+                    }
+                }
                 
                 pnEditMode = poClient.getEditMode();
                 
@@ -890,7 +919,9 @@ public class InstitutionNewController implements Initializable {
     }
 
     private void loadContactPerson() {
+        
         contactPerson_data.clear();
+        
         if (poClient.getInstiContactCount() > 0) {
             for (int lnCtr = 0; lnCtr < poClient.getInstiContactCount(); lnCtr++) {
                 
@@ -907,8 +938,8 @@ public class InstitutionNewController implements Initializable {
                 }
             }
         }
-        if (pnContactPerson < 0 || pnContactPerson
-                >= contactPerson_data.size()) {
+        if (pnContactPerson < 0 || pnContactPerson >= contactPerson_data.size()) {
+            
             if (!contactPerson_data.isEmpty()) {
                 /* FOCUS ON FIRST ROW */
                 tblSocMed.getSelectionModel().select(pnContactPerson);

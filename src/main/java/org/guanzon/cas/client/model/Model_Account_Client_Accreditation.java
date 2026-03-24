@@ -18,6 +18,7 @@ public class Model_Account_Client_Accreditation extends Model {
     private Model_Client_Master poClientMaster;
     private Model_Client_Address poClientAddress;
     private Model_Client_Institution_Contact poClientInstitutionContact;
+    private Model_AP_Client_Master poAPClient;
 
     @Override
     public void initialize() {
@@ -51,6 +52,7 @@ public class Model_Account_Client_Accreditation extends Model {
             poClientMaster = new ClientModels(poGRider).ClientMaster();
             poClientAddress = new ClientModels(poGRider).ClientAddress();
             poClientInstitutionContact = new ClientModels(poGRider).ClientInstitutionContact();
+            poAPClient = new ClientModels(poGRider).APClientMaster();
 
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -234,6 +236,21 @@ public class Model_Account_Client_Accreditation extends Model {
         }
         poClientInstitutionContact.initialize();
         return this.poClientInstitutionContact;
+    }
+    
+    public Model_AP_Client_Master APClient() throws SQLException, GuanzonException{
+        
+        if (!"".equals(getValue("sClientID"))) {
+            
+            this.poJSON = this.poAPClient.openRecord((String) getValue("sClientID"));
+            if ("success".equals(this.poJSON.get("result"))) {
+                return this.poAPClient;
+            }
+            this.poAPClient.initialize();
+            return this.poAPClient;
+        }
+        poAPClient.initialize();
+        return this.poAPClient;
     }
 
 }

@@ -279,6 +279,11 @@ public class Account_Accreditation extends Parameter {
                     getModel().setAddressId(loAddr.getAddressId()!= null ? loAddr.getAddressId() : "");
                     getModel().ClientAddress().setBarangayId(loAddr.getBarangayId());
                     getModel().ClientAddress().setTownId(loAddr.getTownId());
+                    
+                    //update ap client address id, if existing
+                    if (getModel().APClient().getClientId().equalsIgnoreCase(getModel().getClientId())) {
+                        getModel().APClient().setAddressId(loAddr.getAddressId()!= null ? loAddr.getAddressId() : "");
+                    }
                     break;
                 }
             }
@@ -286,9 +291,14 @@ public class Account_Accreditation extends Parameter {
             //get contact
             for(Model_Client_Institution_Contact loContact : loClient.getClient().InstiContactList()){
 
-                //set primary contact person of company for supplier accreditation
+                //set primary contact person of company for supplier accreditation and ap client master
                 if (loContact.isPrimaryContactPersion()) {
-                    getModel().setContactId(loContact.getContactPId()!= null ? loContact.getContactPId() : "");
+                    getModel().setContactId(loContact.getcCPrsonID()!= null ? loContact.getcCPrsonID() : "");
+                    
+                    //update ap client contact id, if existing
+                    if (getModel().APClient().getClientId().equalsIgnoreCase(getModel().getClientId())) {
+                        getModel().APClient().setContactId(loContact.getcCPrsonID()!= null ? loContact.getcCPrsonID() : "");
+                    }
                     break;
                 }
             }

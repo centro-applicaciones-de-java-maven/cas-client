@@ -202,11 +202,15 @@ public class AP_Client_Master extends Parameter {
             
             //Save Attachments
             for (int lnCtr = 0; lnCtr <= getTransactionAttachmentCount() - 1; lnCtr++) {
+                
                 if (paAttachments.get(lnCtr).getEditMode() == EditMode.ADDNEW || paAttachments.get(lnCtr).getEditMode() == EditMode.UPDATE) {
+                    
                     paAttachments.get(lnCtr).getModel().setModifyingId(poGRider.Encrypt(poGRider.getUserID()));
                     paAttachments.get(lnCtr).getModel().setModifiedDate(poGRider.getServerDate());
                     paAttachments.get(lnCtr).setWithParentClass(true);
+                    
                     poJSON = paAttachments.get(lnCtr).saveRecord();
+                    
                     if ("error".equals((String) poJSON.get("result"))) {
                         return poJSON;
                     }
@@ -218,6 +222,7 @@ public class AP_Client_Master extends Parameter {
         } catch (Exception ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, MiscUtil.getException(ex), ex);
         }
+        
         poJSON.put("result", "success");
         return poJSON;
     }
@@ -373,46 +378,6 @@ public class AP_Client_Master extends Parameter {
         return loJSON;
     }
 
-    public JSONObject searchClientContact(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
-        JSONObject loJSON;
-
-        String lsSQL = "SELECT"
-                + " a.sContctID"
-                + " ,a.sCPerson1"
-                + " ,a.sMobileNo"
-                + " , b.sClientID"
-                + " , b.sCompnyNm"
-                + " FROM Client_Institution_Contact_Person a "
-                + " LEFT JOIN Client_Master b ON a.sClientID = b.sClientID"
-                + " WHERE a.cRecdStat = " + SQLUtil.toSQL(RecordStatus.ACTIVE)
-                + " AND b.cClientTp = " + SQLUtil.toSQL(Logical.NO);
-
-        if (fbByCode) {
-            lsSQL = MiscUtil.addCondition(lsSQL, "a.sContctID = " + SQLUtil.toSQL(fsValue));
-        } else {
-            lsSQL = MiscUtil.addCondition(lsSQL, "b.sCompnyNm LIKE " + SQLUtil.toSQL(fsValue + "%"));
-        }
-        System.out.println("Client Contact Search = " + lsSQL);
-        loJSON = ShowDialogFX.Search(
-                poGRider,
-                lsSQL,
-                fsValue,
-                "ID»Contact Name»Contact Person»Mobile no",
-                "sContctID»sCompnyNm»sCPerson1»sMobileNo",
-                "a.sContctID»b.sCompnyNm»a.sCPerson1»a.sMobileNo",
-                fbByCode ? 0 : 1);
-
-        if (loJSON != null) {
-            loJSON.put("result", "success");
-            getModel().setContactId((String) loJSON.get("sContctID"));
-        } else {
-            loJSON.put("result", "success");
-            loJSON.put("message", "No record selected.");
-        }
-
-        return loJSON;
-    }
-
     public JSONObject loadLedgerList() throws SQLException, GuanzonException, CloneNotSupportedException {
 
         if (getModel().getClientId() == null
@@ -471,9 +436,11 @@ public class AP_Client_Master extends Parameter {
             poJSON = paAttachments.get(getTransactionAttachmentCount() - 1).openRecord((String) loList.get(lnCtr));
             
             if ("success".equals((String) poJSON.get("result"))) {
+                
                 if(poModel.getEditMode() == EditMode.UPDATE){
                    poJSON = paAttachments.get(getTransactionAttachmentCount() - 1).updateRecord();
                 }
+                
                 System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getModel().getTransactionNo());
                 System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getModel().getSourceNo());
                 System.out.println(paAttachments.get(getTransactionAttachmentCount() - 1).getModel().getSourceCode());
@@ -561,6 +528,7 @@ public class AP_Client_Master extends Parameter {
     
     public JSONObject removeAttachment(int fnRow) throws GuanzonException, SQLException{
         poJSON = new JSONObject();
+        
         if(getTransactionAttachmentCount() <= 0){
             poJSON.put("result", "error");
             poJSON.put("message", "No transaction attachment to be removed.");
