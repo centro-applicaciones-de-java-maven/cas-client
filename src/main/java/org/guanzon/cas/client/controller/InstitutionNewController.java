@@ -450,6 +450,11 @@ public class InstitutionNewController implements Initializable {
                     
                     switch(lnIndex){
                         case 0: //client name
+                            
+                            if (poClient.getInstiContactCount() <= 0) {
+                                ShowMessageFX.Error(getStage() ,"Please add row before proceeding!", MODULE, null);
+                                return;
+                            }
                             searchContactInfo(lsValue);
                             break;
                         case 8: //contact role
@@ -747,34 +752,6 @@ public class InstitutionNewController implements Initializable {
                 
                 //for update record, add new row to avoid null pointer exception on missing records from old entries -Guillier 2026/03/24
                 poJSON = poClient.updateRecord();
-                if ("success".equalsIgnoreCase(poJSON.get("result").toString())) {
-                    
-                    poJSON = poClient.addAddress();
-                    if(poJSON.get("result").toString().equalsIgnoreCase("error")){
-                        System.out.print(poJSON.get("message"));
-                    }
-                    
-                    poJSON = poClient.addMobile();
-                    if(poJSON.get("result").toString().equalsIgnoreCase("error")){
-                        System.out.print(poJSON.get("message"));
-                    }
-                    
-                    poJSON = poClient.addMail();
-                    if(poJSON.get("result").toString().equalsIgnoreCase("error")){
-                        System.out.print(poJSON.get("message"));
-                    }
-                    
-                    poJSON = poClient.addSocMed();
-                    if(poJSON.get("result").toString().equalsIgnoreCase("error")){
-                        System.out.print(poJSON.get("message"));
-                    }
-                    
-                    poJSON = poClient.addInstiContact();
-                    if(poJSON.get("result").toString().equalsIgnoreCase("error")){
-                        System.out.print(poJSON.get("message"));
-                    }
-                }
-                
                 pnEditMode = poClient.getEditMode();
                 
                 if(pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE){

@@ -237,20 +237,5 @@ public class Model_Account_Client_Accreditation extends Model {
         poClientInstitutionContact.initialize();
         return this.poClientInstitutionContact;
     }
-    
-    public Model_AP_Client_Master APClient() throws SQLException, GuanzonException{
-        
-        if (!"".equals(getValue("sClientID"))) {
-            
-            this.poJSON = this.poAPClient.openRecord((String) getValue("sClientID"));
-            if ("success".equals(this.poJSON.get("result"))) {
-                return this.poAPClient;
-            }
-            this.poAPClient.initialize();
-            return this.poAPClient;
-        }
-        poAPClient.initialize();
-        return this.poAPClient;
-    }
 
 }

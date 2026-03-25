@@ -27,7 +27,6 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.base.WebFile;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.appdriver.constant.TransactionStatus;
 import org.guanzon.appdriver.iface.GValidator;
@@ -235,6 +234,8 @@ public class AP_Client_Master extends Parameter {
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException {
         String lsSQL = getSQ_Browse();
+        
+        System.out.print(lsSQL);
 
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
@@ -245,6 +246,7 @@ public class AP_Client_Master extends Parameter {
                 byCode ? 0 : 1);
 
         if (poJSON != null) {
+            
             //clear retrieve ledger
             paLedger.clear();
 
