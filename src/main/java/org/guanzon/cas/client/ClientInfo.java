@@ -710,15 +710,6 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
     
-    public JSONObject searchRole(int lnRow, String lsValue) throws SQLException, GuanzonException{
-        
-        poJSON = poRole.searchRecord(lsValue, false);
-        if ("success".equalsIgnoreCase((String) poJSON.get("result"))) {
-            paContact.get(lnRow).setsRoleIDxx(poRole.getModel().getRoleIDxx());
-        }
-        return poJSON;
-    }
-    
     public JSONObject searchContactPerson(String value, boolean byCode){
         
         try{

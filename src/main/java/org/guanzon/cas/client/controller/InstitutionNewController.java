@@ -455,16 +455,15 @@ public class InstitutionNewController implements Initializable {
                                 ShowMessageFX.Error(getStage() ,"Please add row before proceeding!", MODULE, null);
                                 return;
                             }
-                            searchContactInfo(lsValue);
+                            searchContactPerson(lsValue);
                             break;
                         case 8: //contact role
 
-                            poJSON = poClient.searchRole(pnContactPerson, lsValue);
-                            if ("error".equalsIgnoreCase((String) poJSON.get("result"))) {
-                                System.out.print(poJSON.get("message"));
+                            if (poClient.getInstiContactCount() <= 0) {
+                                ShowMessageFX.Error(getStage() ,"Please add row before proceeding!", MODULE, null);
                                 return;
                             }
-                            loadContactPerson();
+                            searchContactRole(lsValue);
                             break;
                     }   
                 } catch (Exception e) {
@@ -1111,7 +1110,7 @@ public class InstitutionNewController implements Initializable {
         }
     }
     
-    private void searchContactInfo(String lsValue) throws Exception{
+    private void searchContactPerson(String lsValue) throws Exception{
         
         //change client type temporary for searching client individual
         poClient.setClientType(ClientType.INDIVIDUAL);
@@ -1132,7 +1131,6 @@ public class InstitutionNewController implements Initializable {
         //change back to institution
         poClient.setClientType(ClientType.INSTITUTION);
 
-        //ShowMessageFX.Error(getStage(), poJSON.get("message").toString(),"Warning", MODULE);
         //initialize Client GUI
         ClientGUI loClient = new ClientGUI();
 
@@ -1167,6 +1165,59 @@ public class InstitutionNewController implements Initializable {
 
             poClient.openContactRecord(loClient.getClient().getModel().getClientId(), pnContactPerson);
             loadContactPerson();
+            return;
+        }
+        
+        //if closed, re center form
+        getStage().centerOnScreen();
+
+    }
+    
+    private void searchContactRole(String lsValue) throws Exception{
+
+        String lsRoleIDxx = "";
+        if (lsValue == null || lsValue.isEmpty()) {
+            lsRoleIDxx = "";
+        }else{
+            poJSON = poClient.Role().searchRecord(lsValue, false);
+            if ("success".equalsIgnoreCase((String) poJSON.get("result"))) {
+                lsRoleIDxx = poClient.Role().getModel().getRoleIDxx()== null ? "" : poClient.Role().getModel().getRoleIDxx();
+            }
+        }
+
+        //initialize Client GUI
+        ClientGUI loClient = new ClientGUI();
+
+        loClient.setGRider(poGRider);
+        loClient.setLogWrapper(null);
+        loClient.setCategoryCode((String) psCategory);
+
+        //Opens Contact Role Entry Form
+        loClient.setClientType("2");
+
+        //set search by code
+        loClient.setByCode(false);
+        loClient.setClientId(lsRoleIDxx);
+        loClient.setRoleID(lsRoleIDxx);
+
+        // Get screen bounds
+        Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+        
+        //re align current form to left
+        getStage().setX((getStage().getWidth() / 5));
+
+        //show second form to right side
+        loClient.setStagePosition((screenBounds.getMaxX() - (getStage().getX()+ getStage().getWidth())), (screenBounds.getMaxY() - (getStage().getY()+ getStage().getHeight())));
+
+        //load record
+        CommonUtils.showModal(loClient);
+
+        //load if button 
+        if (!loClient.isCancelled()) {
+            
+            //if closed, re center form
+            getStage().centerOnScreen();
+
             return;
         }
         

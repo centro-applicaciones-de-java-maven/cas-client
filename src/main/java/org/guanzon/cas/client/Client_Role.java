@@ -89,6 +89,4 @@ public class Client_Role extends Parameter{
         return poJSON;
     }
     
-    
-    
 }
