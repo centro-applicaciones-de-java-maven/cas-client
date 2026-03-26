@@ -23,6 +23,7 @@ org\guanzon\cas\client\table\models\ModelAddress.class
 org\guanzon\cas\client\table\models\ModelMobile.class
 org\guanzon\cas\client\ClientInfo.class
 org\guanzon\cas\client\controller\IndividualNewController$1.class
+org\guanzon\cas\client\model\Model_Corporate_Role.class
 org\guanzon\cas\client\validator\ClientAccreditationValidatorFactory.class
 org\guanzon\cas\client\validator\APClient_General.class
 org\guanzon\cas\client\validator\APClient_MC.class
@@ -35,6 +36,7 @@ org\guanzon\cas\client\Client_Mail.class
 org\guanzon\cas\client\ClientGUI.class
 org\guanzon\cas\client\model\Model_Client_Institution_Contact.class
 org\guanzon\cas\client\model\Model_Client_Mail.class
+org\guanzon\cas\client\Client_Role.class
 org\guanzon\cas\client\table\models\ModelSocialMedia.class
 org\guanzon\cas\client\account\GlobalVariables.class
 org\guanzon\cas\client\validator\APClient_Engineering.class
@@ -60,6 +62,7 @@ org\guanzon\cas\client\Client_Social_Media.class
 org\guanzon\cas\client\model\Model_Client_Master.class
 org\guanzon\cas\client\Client_Mobile.class
 org\guanzon\cas\client\model\Model_AP_Client_Ledger.class
+org\guanzon\cas\client\table\models\ModelPayeeType.class
 org\guanzon\cas\client\validator\APClientValidatorFactory.class
 org\guanzon\cas\client\account\Account_Accreditation.class
 org\guanzon\cas\client\validator\APClient_LP.class

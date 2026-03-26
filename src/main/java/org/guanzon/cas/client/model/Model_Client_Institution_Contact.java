@@ -11,7 +11,9 @@ import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
 public class Model_Client_Institution_Contact extends Model{
+    
     Model_Client_Master poClient;
+    Model_Corporate_Role poRole;
     
     @Override
     public void initialize() {
@@ -41,6 +43,12 @@ public class Model_Client_Institution_Contact extends Model{
             poClient.setXML("Model_Client_Master");
             poClient.setTableName("Client_Master");
             poClient.initialize();
+            
+            poRole = new Model_Corporate_Role();
+            poRole.setApplicationDriver(poGRider);
+            poRole.setXML("Model_Corporate_Role");
+            poRole.setTableName("Corporate_Role");
+            poRole.initialize();
             //end - initialize other connections
             
             pnEditMode = EditMode.UNKNOWN;
@@ -66,12 +74,28 @@ public class Model_Client_Institution_Contact extends Model{
         return (String) getValue("sClientID");
     }
     
+    public JSONObject setcCPrsonID(String cCPrsonID){
+        return setValue("cCPrsonID", cCPrsonID);
+    }
+
+    public String getcCPrsonID(){
+        return (String) getValue("cCPrsonID");
+    }
+    
     public JSONObject setCategoryCode(String categoryCode){
         return setValue("sCategrCd", categoryCode);
     }
 
     public String getCategoryCode(){
         return (String) getValue("sCategrCd");
+    }
+    
+    public JSONObject setcPayeexxx(String cPayeexxx){
+        return setValue("cPayeexxx", cPayeexxx);
+    }
+
+    public String getcPayeexxx(){
+        return (String) getValue("cPayeexxx");
     }
     
     public JSONObject setContactPersonName(String contactPersonName){
@@ -82,12 +106,36 @@ public class Model_Client_Institution_Contact extends Model{
         return (String) getValue("sCPerson1");
     }
     
+    public JSONObject setContactJobTitle(String sJobTitle){
+        return setValue("sJobTitle", sJobTitle);
+    }
+
+    public String getContactJobTitle(){
+        return (String) getValue("sJobTitle");
+    }
+    
+    public JSONObject setsDeprtmnt(String sDeprtmnt){
+        return setValue("sDeprtmnt", sDeprtmnt);
+    }
+
+    public String getsDeprtmnt(){
+        return (String) getValue("sDeprtmnt");
+    }
+    
     public JSONObject setContactPersonPosition(String contactPersonPosition){
         return setValue("sCPPosit1", contactPersonPosition);
     }
 
     public String getContactPersonPosition(){
         return (String) getValue("sCPPosit1");
+    }
+    
+    public JSONObject setsRoleIDxx(String sRoleIDxx){
+        return setValue("sRoleIDxx", sRoleIDxx);
+    }
+
+    public String getsRoleIDxx(){
+        return (String) getValue("sRoleIDxx");
     }
     
     public JSONObject setMobileNo(String mobileNo){
@@ -185,5 +233,16 @@ public class Model_Client_Institution_Contact extends Model{
     
     public Model_Client_Master Client() throws SQLException, GuanzonException{
         return poClient;
+    }
+    
+    public Model_Corporate_Role ContactRole() throws SQLException, GuanzonException{
+        if (!"".equals(getValue("sRoleIDxx"))) {
+            this.poJSON = this.poRole.openRecord((String) getValue("sRoleIDxx"));
+            if ("success".equals(this.poJSON.get("result"))) {
+                return this.poRole;
+            }
+            return poRole;
+        }
+        return poRole;
     }
 }

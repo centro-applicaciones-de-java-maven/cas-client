@@ -56,6 +56,11 @@ public class ClientGUI extends Application {
         psClientTp = clientType;
     }
     
+    public void setStagePosition(double X, double Y){
+        xOffset = X;
+        yOffset = Y;
+    }
+    
     public ClientInfo getClient(){
         return poClient;
     }
@@ -88,7 +93,7 @@ public class ClientGUI extends Application {
             }
 
         }
-
+        
         if (psClientTp.equals(ClientType.INDIVIDUAL)) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/IndividualNew.fxml"));
 
@@ -121,6 +126,11 @@ public class ClientGUI extends Application {
             primaryStage.initStyle(StageStyle.TRANSPARENT);
             primaryStage.initModality(Modality.APPLICATION_MODAL);
             primaryStage.setTitle("Client Info");
+            primaryStage.centerOnScreen();
+            
+            if (xOffset > 0) primaryStage.setX((xOffset));
+            if (yOffset > 0) primaryStage.setY((yOffset));
+            
             primaryStage.showAndWait();
 
             pbCancelled = controller.isCancelled();
@@ -168,6 +178,11 @@ public class ClientGUI extends Application {
             primaryStage.initStyle(StageStyle.TRANSPARENT);
             primaryStage.initModality(Modality.APPLICATION_MODAL);
             primaryStage.setTitle("Institution Info");
+            primaryStage.centerOnScreen();
+            
+            if (xOffset > 0) primaryStage.setX((xOffset ));
+            if (yOffset > 0) primaryStage.setY((yOffset));
+            
             primaryStage.showAndWait();
 
             pbCancelled = controller.isCancelled();

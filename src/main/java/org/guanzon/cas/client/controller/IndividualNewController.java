@@ -261,6 +261,7 @@ public class IndividualNewController implements Initializable {
     
     private ClientInfo poClient;
     private String psClientID;
+    private String psCategorycode;
 
     private int pnEditMode;
     private int pnAddress;
@@ -302,6 +303,14 @@ public class IndividualNewController implements Initializable {
         return poClient;
     }
     
+    public void setCategory(String categorycode){
+        psCategorycode = categorycode;
+    }
+    
+    public String getCategory(){
+        return psCategorycode;
+    }
+    
     public boolean isCancelled(){
         return pbCancelled;
     }
@@ -319,6 +328,7 @@ public class IndividualNewController implements Initializable {
             poClient = new ClientControllers(poGRider, poWrapper).ClientInfo();
             poClient.setClientType(ClientType.INDIVIDUAL);
             poClient.setRecordStatus("1");
+            
             loadRecord();
             
             pbLoaded = true;
@@ -783,9 +793,9 @@ public class IndividualNewController implements Initializable {
                     
                         if (!"success".equals((String) poJSON.get("result"))){
                             ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                            return;
                         }
-                    }
-                                        
+                    }              
                     txtField.setText(String.valueOf(poClient.Mobile(pnMobile).getMobileNo()));
             }
             
@@ -808,11 +818,13 @@ public class IndividualNewController implements Initializable {
         if(!nv){//lost focus
             switch(lnIndex){
                 case 1: //email address
-                    poJSON = poClient.Mail(pnEmail).setMailAddress(lsValue);
+                    if (lsValue.trim().isEmpty()) return;
+                   
+                   poJSON = poClient.Mail(pnEmail).setMailAddress(lsValue);
                     if ("error".equalsIgnoreCase(poJSON.get("result").toString())) {
                         ShowMessageFX.Information(getStage(), (String) poJSON.get("message"), "Computerized Acounting System", MODULE);
+                        return;
                     }
-
                     txtField.setText(String.valueOf(poClient.Mail(pnEmail).getMailAddress()));
                     break;
             }
@@ -836,12 +848,13 @@ public class IndividualNewController implements Initializable {
         if(!nv){//lost focus
             switch(lnIndex){
                 case 1:
+                    if (lsValue.trim().isEmpty()) return;
+                    
                     poJSON = poClient.SocMed(pnSocmed).setAccount(lsValue);
                     if ("error".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Information(getStage(), (String) poJSON.get("message"), "Computerized Acounting System", MODULE);
                         return;
                     }
-                    
                     txtField.setText(String.valueOf(poClient.SocMed(pnSocmed).getAccount()));
                     break;
             }
@@ -865,12 +878,13 @@ public class IndividualNewController implements Initializable {
         if(!nv){//lost focus
             switch(lnIndex){
                 case 2:
+                    if (lsValue.trim().isEmpty()) return;
+                    
                     poJSON = poClient.SocMed(pnSocmed).setRemarks(lsValue.trim());
                     if ("error".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Information(getStage(), (String) poJSON.get("message"), "Computerized Acounting System", MODULE);
                         return;
                     }
-                    
                     txtField.setText(String.valueOf(poClient.SocMed(pnSocmed).getRemarks()));
                     break;
             }
@@ -1372,7 +1386,7 @@ public class IndividualNewController implements Initializable {
                 /* FOCUS ON FIRST ROW */
                 tblEmail.getSelectionModel().select(0);
                 tblEmail.getFocusModel().focus(0);
-                pnEmail = tblEmail.getSelectionModel().getSelectedIndex();
+                pnEmail = 0;//tblEmail.getSelectionModel().getSelectedIndex();
             }
             getSelectedEmail();
         } else {
@@ -1476,7 +1490,7 @@ public class IndividualNewController implements Initializable {
                 /* FOCUS ON FIRST ROW */
                 tblSocMed.getSelectionModel().select(0);
                 tblSocMed.getFocusModel().focus(0);
-                pnSocmed = tblSocMed.getSelectionModel().getSelectedIndex();
+                pnSocmed = 0;//tblSocMed.getSelectionModel().getSelectedIndex();
             }
             getSelectedSocialMedia();
         } else {

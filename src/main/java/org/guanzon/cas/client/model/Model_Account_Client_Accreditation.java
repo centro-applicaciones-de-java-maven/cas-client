@@ -18,6 +18,7 @@ public class Model_Account_Client_Accreditation extends Model {
     private Model_Client_Master poClientMaster;
     private Model_Client_Address poClientAddress;
     private Model_Client_Institution_Contact poClientInstitutionContact;
+    private Model_AP_Client_Master poAPClient;
 
     @Override
     public void initialize() {
@@ -51,6 +52,7 @@ public class Model_Account_Client_Accreditation extends Model {
             poClientMaster = new ClientModels(poGRider).ClientMaster();
             poClientAddress = new ClientModels(poGRider).ClientAddress();
             poClientInstitutionContact = new ClientModels(poGRider).ClientInstitutionContact();
+            poAPClient = new ClientModels(poGRider).APClientMaster();
 
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
