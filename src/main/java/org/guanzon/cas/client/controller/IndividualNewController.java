@@ -181,8 +181,6 @@ public class IndividualNewController implements Initializable {
     @FXML
     private Button btnAddAddress;
     @FXML
-    private Button btnDelAddress;
-    @FXML
     private Tab Mobile;
     @FXML
     private ComboBox cmbMobile01;
@@ -196,8 +194,6 @@ public class IndividualNewController implements Initializable {
     private CheckBox cbMobileNo02;
     @FXML
     private Button btnAddMobile;
-    @FXML
-    private Button btnDelMobile;
     @FXML
     private TableView tblMobile;
     @FXML
@@ -221,8 +217,6 @@ public class IndividualNewController implements Initializable {
     @FXML
     private Button btnAddEmail;
     @FXML
-    private Button btnDelEmail;
-    @FXML
     private TableView tblEmail;
     @FXML
     private TableColumn indexEmail01;
@@ -242,8 +236,6 @@ public class IndividualNewController implements Initializable {
     private CheckBox cbSocMed01;
     @FXML
     private Button btnAddSocMed;
-    @FXML
-    private Button btnDelSocMed;
     @FXML
     private TableView tblSocMed;
     @FXML
@@ -361,8 +353,6 @@ public class IndividualNewController implements Initializable {
                     pbCancelled = false;
                     getStage().close();
                     break;
-                case "btnDelAddress":
-                    break;
                 case "btnAddAddress":
                     JSONObject addObjAddress = poClient.addAddress();
                     if ("error".equals((String) addObjAddress.get("result"))) {
@@ -376,8 +366,6 @@ public class IndividualNewController implements Initializable {
                         
                         txtAddress03.requestFocus();
                     }
-                    break;
-                case "btnDelMobile":
                     break;
                 case "btnAddMobile":
                     JSONObject addObj = poClient.addMobile();
@@ -393,8 +381,6 @@ public class IndividualNewController implements Initializable {
                         txtMobile01.requestFocus();
                     }
                     break;
-                case "btnDelEmail":
-                    break;
                 case "btnAddEmail":
                     JSONObject addObjMail = poClient.addMail();
                     
@@ -409,8 +395,6 @@ public class IndividualNewController implements Initializable {
                         
                         txtEmail01.requestFocus();
                     }
-                    break;
-                case "btnDelSocMed":    
                     break;
                 case "btnAddSocMed":
                     JSONObject addSocMed = poClient.addSocMed();
@@ -1044,13 +1028,9 @@ public class IndividualNewController implements Initializable {
         btnCancel.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
         btnAddAddress.setOnAction(this::cmdButton_Click);
-        btnDelAddress.setOnAction(this::cmdButton_Click);
         btnAddMobile.setOnAction(this::cmdButton_Click);
-        btnDelMobile.setOnAction(this::cmdButton_Click);
         btnAddEmail.setOnAction(this::cmdButton_Click);
-        btnDelEmail.setOnAction(this::cmdButton_Click);
         btnAddSocMed.setOnAction(this::cmdButton_Click);
-        btnDelSocMed.setOnAction(this::cmdButton_Click);
 
         tblAddress.setOnMouseClicked(this::address_Clicked);
         tblMobile.setOnMouseClicked(this::mobile_Clicked);

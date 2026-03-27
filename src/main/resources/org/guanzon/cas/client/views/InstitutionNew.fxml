@@ -118,7 +118,7 @@
                                                    <content>
                                                       <AnchorPane fx:id="anchorAddress">
                                                          <children>
-                                                            <TableView fx:id="tblAddress" layoutX="20.0" layoutY="210.0" prefHeight="150.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="200.0">
+                                                            <TableView fx:id="tblAddress" layoutX="20.0" layoutY="210.0" prefHeight="180.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="180.0">
                                                                <columns>
                                                                   <TableColumn fx:id="indexAddress01" maxWidth="1.7976931348623157E308" minWidth="-1.0" prefWidth="35.0" text="No." />
                                                                   <TableColumn fx:id="indexAddress02" prefWidth="75.0" text="House No." />
@@ -195,7 +195,7 @@
                                                                               <Font size="14.0" />
                                                                            </font>
                                                                         </Text>
-                                                                  <Button fx:id="btnAddAddress" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="4">
+                                                                  <Button fx:id="btnAddAddress" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="5">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="PLUS" size="15" textAlignment="CENTER" />
                                                                      </graphic>
@@ -205,17 +205,6 @@
                                                                            <GridPane.margin>
                                                                               <Insets />
                                                                            </GridPane.margin>
-                                                                  </Button>
-                                                                  <Button fx:id="btnDelAddress" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="9" GridPane.rowIndex="5">
-                                                                     <graphic>
-                                                                        <FontAwesomeIconView glyphName="TRASH" size="15" textAlignment="CENTER" />
-                                                                     </graphic>
-                                                                     <tooltip>
-                                                                        <Tooltip text="CLEAR" />
-                                                                     </tooltip>
-                                                                     <GridPane.margin>
-                                                                        <Insets />
-                                                                     </GridPane.margin>
                                                                   </Button>
                                                                         <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="label" text="Name" textAlignment="RIGHT" wrappingWidth="81.35546875">
                                                                            <font>
@@ -375,7 +364,7 @@
                                                                                           <Font size="14.0" />
                                                                                        </font>
                                                                                     </CheckBox>
-                                                                                    <CheckBox fx:id="cbContact00" disable="true" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Payee" GridPane.columnIndex="6">
+                                                                                    <CheckBox fx:id="cbContact00" disable="true" mnemonicParsing="false" text="Payee" GridPane.columnIndex="8" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                                                                                        <font>
                                                                                           <Font size="14.0" />
                                                                                        </font>
@@ -429,12 +418,12 @@
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="5" GridPane.rowIndex="8">
+                                                                                    <TextField fx:id="txtContact01" minWidth="150.0" styleClass="text-field" GridPane.columnIndex="6" GridPane.columnSpan="3" GridPane.rowIndex="8">
                                                                                        <GridPane.margin>
                                                                                           <Insets left="5.0" />
                                                                                        </GridPane.margin>
                                                                                     </TextField>
-                                                              <Button fx:id="btnAddContact" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="10" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+                                                              <Button fx:id="btnAddContact" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="10" GridPane.halignment="CENTER" GridPane.rowIndex="8" GridPane.valignment="CENTER">
                                                                      <graphic>
                                                                         <FontAwesomeIconView glyphName="PLUS" size="15" textAlignment="CENTER" />
                                                                      </graphic>
@@ -444,17 +433,6 @@
                                                                            <GridPane.margin>
                                                                               <Insets />
                                                                            </GridPane.margin>
-                                                                  </Button>
-                                                                  <Button fx:id="btnDelContact" contentDisplay="CENTER" minHeight="27.0" minWidth="27.0" mnemonicParsing="false" styleClass="button_process" wrapText="true" GridPane.columnIndex="10" GridPane.halignment="CENTER">
-                                                                     <graphic>
-                                                                        <FontAwesomeIconView glyphName="TRASH" size="15" textAlignment="CENTER" />
-                                                                     </graphic>
-                                                                     <tooltip>
-                                                                        <Tooltip text="CLEAR" />
-                                                                     </tooltip>
-                                                                     <GridPane.margin>
-                                                                        <Insets />
-                                                                     </GridPane.margin>
                                                                   </Button>
                                                                                  </children>
                                                                               </GridPane>

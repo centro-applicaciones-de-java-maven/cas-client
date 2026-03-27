@@ -27,11 +27,6 @@ public class Model_Corporate_Role extends Model{
 
             MiscUtil.initRowSet(poEntity);
             
-            //initialize default values
-            poEntity.updateString("sModified", poGRider.getUserID());
-            poEntity.updateObject("dModified", poGRider.getServerDate());
-            //end of initialization
-            
             poEntity.insertRow();
             poEntity.moveToCurrentRow();
 

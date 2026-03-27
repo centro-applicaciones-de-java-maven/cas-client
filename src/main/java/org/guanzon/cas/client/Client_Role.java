@@ -45,7 +45,7 @@ public class Client_Role extends Parameter{
                    "FROM " +
                     "Corporate_Role " +
                    "WHERE " +
-                    "cRecdStat = '1' "; 
+                    "cRecdStat= '1'"; 
     }
 
     @Override

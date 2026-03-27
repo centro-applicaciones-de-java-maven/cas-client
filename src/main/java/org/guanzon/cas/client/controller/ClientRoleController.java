@@ -7,6 +7,9 @@ package org.guanzon.cas.client.controller;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import javafx.beans.property.ReadOnlyBooleanPropertyBase;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,9 +23,7 @@ import org.guanzon.appdriver.agent.ShowMessageFX;
 import org.guanzon.appdriver.base.GRiderCAS;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.LogWrapper;
-import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
-import org.guanzon.cas.client.ClientInfo;
 import org.guanzon.cas.client.Client_Role;
 import org.guanzon.cas.client.services.ClientControllers;
 import org.json.simple.JSONObject;
@@ -46,7 +47,7 @@ public class ClientRoleController implements Initializable {
     private JSONObject poJSON = new JSONObject();
     
     private int pnEditMode;
-    private boolean pbCancelled;
+    private boolean pbCancelled, pbLoaded;
 
     public void setGRider(GRiderCAS griderCAS){
         poGRider = griderCAS;
@@ -64,8 +65,8 @@ public class ClientRoleController implements Initializable {
         return pbCancelled;
     }
     
-    public String getRoleID(){
-        return psRoleIDxx;
+    public Client_Role getRole(){
+        return poRole;
     }
     
     @FXML
@@ -82,6 +83,9 @@ public class ClientRoleController implements Initializable {
     
     @FXML
     CheckBox chckActive;
+    
+    @FXML
+    private Button btnExit;
     
     @FXML
     Button btnSave;
@@ -103,6 +107,7 @@ public class ClientRoleController implements Initializable {
             initFields();
             loadRecord();
             
+            pbLoaded = true;
         } catch (SQLException | GuanzonException e) {
             ShowMessageFX.Error(getStage(), e.getMessage(), "Error", MODULE);
             System.exit(1);
@@ -110,9 +115,40 @@ public class ClientRoleController implements Initializable {
         
     }
     
+    final ChangeListener<? super Boolean> txtRole_Focus = (o, ov, nv) -> {
+        if (!pbLoaded) {
+            return;
+        }
+
+        TextField txtField = (TextField) ((ReadOnlyBooleanPropertyBase) o).getBean();
+        String lsID = txtField.getId();
+        String lsValue = txtField.getText() == null ? "" : txtField.getText();
+
+        if (lsValue == null) {
+            return;
+        }
+
+        if (!nv) {//lost focus
+
+            switch (lsID) {
+                case "tfDescript":
+                    poJSON = poRole.getModel().setsRoleDesc(lsValue);
+
+                    if (!"success".equals((String) poJSON.get("result"))) {
+                        ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
+                    }
+                    txtField.setText(poRole.getModel().getsRoleDesc());
+                    break;
+            }
+        } else {//got focus
+            txtField.selectAll();
+        }
+    };
+    
     private void cmdButton_Click(ActionEvent event){
         try {
             switch (((Button) event.getSource()).getId()) {
+                case "btnExit":
                 case "btnCancel":
                     psRoleIDxx = "";
                     pbCancelled = true;
@@ -122,6 +158,10 @@ public class ClientRoleController implements Initializable {
                 case "btnSave":
                     
                     if (pnEditMode == EditMode.ADDNEW || pnEditMode == EditMode.UPDATE) {
+                        
+                        //initialize modify value
+                        poRole.getModel().setsModified(poGRider.getUserID());
+                        poRole.getModel().setdModified(poGRider.getServerDate());
                         
                         poJSON = poRole.saveRecord();
                         if (!"success".equals((String) poJSON.get("result"))) {
@@ -144,8 +184,36 @@ public class ClientRoleController implements Initializable {
     }
     
     private void initFields(){
+        
+        tfDescript.focusedProperty().addListener(txtRole_Focus);
+        
+        btnExit.setOnAction(this::cmdButton_Click);
         btnCancel.setOnAction(this::cmdButton_Click);
         btnSave.setOnAction(this::cmdButton_Click);
+        
+        chckActive.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                
+                if (!pbLoaded) {
+                    return;
+                }
+                
+                poJSON = poRole.getModel().setcRecdStat(newValue ? "1" : "0");
+                if (poJSON == null) {
+                    chckActive.setSelected(oldValue);
+                    return;
+                }
+                
+                if (poJSON.get("result").toString().equalsIgnoreCase("error")) {
+                    chckActive.setSelected(oldValue);
+                    poRole.getModel().setcRecdStat(oldValue ? "1" : "0");
+                    
+                    ShowMessageFX.Error(getStage(), poJSON.get("message").toString(), "Record Status", MODULE);
+                }
+            }
+            
+        });
         
     }
     
@@ -155,6 +223,7 @@ public class ClientRoleController implements Initializable {
             
             poJSON = poRole.newRecord();
             if (poJSON.get("result").toString().equalsIgnoreCase("success")) {
+                poRole.getModel().setcRecdStat("1");
                 lblRoleStatus.setText("***New Role***");
             }else{
                 disableFields(true);
@@ -178,7 +247,6 @@ public class ClientRoleController implements Initializable {
         
         //initialize edit mode
         pnEditMode = poRole.getEditMode();
-        System.out.print("this is the edit mode " + pnEditMode);
         
         //display details
         tfRoleIDxx.setText(poRole.getModel().getRoleIDxx() == null ? "" : poRole.getModel().getRoleIDxx());

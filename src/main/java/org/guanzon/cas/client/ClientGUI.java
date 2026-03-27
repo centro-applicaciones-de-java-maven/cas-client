@@ -29,7 +29,9 @@ public class ClientGUI extends Application {
     
     private static GRiderCAS poGRider;
     private static LogWrapper poWrapper;
+    
     private static ClientInfo poClient;
+    private static Client_Role poRole;
     
     private static String psClientId;
     private static String psRoleId;
@@ -69,6 +71,10 @@ public class ClientGUI extends Application {
     
     public ClientInfo getClient(){
         return poClient;
+    }
+    
+    public Client_Role getRole(){
+        return poRole;
     }
     
     public boolean isCancelled(){
@@ -237,7 +243,7 @@ public class ClientGUI extends Application {
 
             pbCancelled = controller.isCancelled();
             if (!pbCancelled) {
-                
+                poRole = controller.getRole();
             }
         }
 
