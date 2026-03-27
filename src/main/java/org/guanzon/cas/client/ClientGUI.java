@@ -18,6 +18,7 @@ import org.guanzon.appdriver.base.LogWrapper;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
+import org.guanzon.cas.client.controller.ClientRoleController;
 import org.guanzon.cas.client.controller.IndividualNewController;
 import org.guanzon.cas.client.controller.InstitutionNewController;
 import org.json.simple.JSONObject;
@@ -28,9 +29,12 @@ public class ClientGUI extends Application {
     
     private static GRiderCAS poGRider;
     private static LogWrapper poWrapper;
+    
     private static ClientInfo poClient;
+    private static Client_Role poRole;
     
     private static String psClientId;
+    private static String psRoleId;
     private static boolean pbByCode;
     private static String psClientTp;
     private static boolean pbCancelled;
@@ -49,6 +53,10 @@ public class ClientGUI extends Application {
         psClientId = clientId;
     }
     
+    public void setRoleID(String roleId){
+        psRoleId = roleId;
+    }
+    
     public void setByCode(boolean byCode){
         pbByCode = byCode;
     }
@@ -65,6 +73,10 @@ public class ClientGUI extends Application {
         return poClient;
     }
     
+    public Client_Role getRole(){
+        return poRole;
+    }
+    
     public boolean isCancelled(){
         return pbCancelled;
     }
@@ -76,6 +88,7 @@ public class ClientGUI extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         
+        //search client record by id
         if(psClientId != null && !psClientId.isEmpty()){
             
             if (pbByCode) {
@@ -91,7 +104,6 @@ public class ClientGUI extends Application {
                 }
 
             }
-
         }
         
         if (psClientTp.equals(ClientType.INDIVIDUAL)) {
@@ -137,7 +149,7 @@ public class ClientGUI extends Application {
             if (!pbCancelled) {
                 poClient = controller.getClient();
             }
-        } else {
+        } else if(psClientTp.equals(ClientType.INSTITUTION)) {
             
             //ensure category param is initialized before entry
             if (psCategory == null || psCategory.isEmpty()) {
@@ -188,6 +200,50 @@ public class ClientGUI extends Application {
             pbCancelled = controller.isCancelled();
             if (!pbCancelled) {
                 poClient = controller.getClient();
+            }
+        }else{
+            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/guanzon/cas/client/views/ClientRole.fxml"));
+            
+            ClientRoleController controller = new ClientRoleController();
+            controller.setGRider(poGRider);
+            controller.setLogWrapper(poWrapper);
+            controller.setRoleIDxx(psRoleId);
+
+            loader.setController(controller);
+
+            Parent parent = loader.load();
+
+            parent.setOnMousePressed(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    xOffset = event.getSceneX();
+                    yOffset = event.getSceneY();
+                }
+            });
+            parent.setOnMouseDragged(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    primaryStage.setX(event.getScreenX() - xOffset);
+                    primaryStage.setY(event.getScreenY() - yOffset);
+                }
+            });
+
+            Scene scene = new Scene(parent);
+            primaryStage.setScene(scene);
+            primaryStage.initStyle(StageStyle.TRANSPARENT);
+            primaryStage.initModality(Modality.APPLICATION_MODAL);
+            primaryStage.setTitle("Client Role");
+            primaryStage.centerOnScreen();
+            
+            if (xOffset > 0) primaryStage.setX((xOffset ));
+            if (yOffset > 0) primaryStage.setY((yOffset));
+            
+            primaryStage.showAndWait();
+
+            pbCancelled = controller.isCancelled();
+            if (!pbCancelled) {
+                poRole = controller.getRole();
             }
         }
 
