@@ -4,12 +4,16 @@ import java.math.BigDecimal;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.cas.parameter.model.Model_xxxTransactionSource;
+import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_AP_Client_Ledger extends Model {
     //reference objects
+    Model_xxxTransactionSource poTransactionSource;
 
     @Override
     public void initialize() {
@@ -41,6 +45,9 @@ public class Model_AP_Client_Ledger extends Model {
             ID4 = "sSourceNo";
 
             //initialize reference objects
+            
+
+            this.poTransactionSource = (new ParamModels(this.poGRider)).TransactionSource();
             //end - initialize reference objects
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -130,6 +137,25 @@ public class Model_AP_Client_Ledger extends Model {
             return setValue("nAmountOt", 0.0); // Default value
         }
     }
+    
+        public Model_xxxTransactionSource TransactionSource() throws SQLException, GuanzonException {
+        if (!"".equals(getValue("sSourceCd"))) {
+            if (this.poTransactionSource.getEditMode() == 1 && this.poTransactionSource
+                    .getSourceCode().equals(getValue("sSourceCd"))) {
+                return this.poTransactionSource;
+            }
+            this.poJSON = this.poTransactionSource.openRecord((String) getValue("sSourceCd"));
+            if ("success".equals(this.poJSON.get("result"))) {
+                return this.poTransactionSource;
+            }
+            this.poTransactionSource.initialize();
+            return this.poTransactionSource;
+        }
+        this.poTransactionSource.initialize();
+        return this.poTransactionSource;
+    }
+
+
 
     public JSONObject setDatePosted(Date datePosted) {
         return setValue("dPostedxx", datePosted);
