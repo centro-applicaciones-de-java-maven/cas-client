@@ -381,30 +381,30 @@ public class ClientInfo extends Parameter{
             
             loRS = poGRider.executeQuery(lsSQL);
             
-            //clear exisitng records before initializing data
-            loContact.setSocMedAccount1("");
-            loContact.setSocMedAccount2("");
-            loContact.setSocMedAccount3("");
-            
-            while (loRS.next()){
-                Model_Client_Social_Media object = (Model_Client_Social_Media) poSocMed.clone();
-                object.newRecord();
-                
-                //set first 3 accounts of contact social media
-                JSONObject loJSON = object.openRecord(loRS.getString("sSocialID"));
-                switch(loRS.getRow()){
-                    
-                    case 1:
-                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount1(object.getAccount());
-                        break;
-                    case 2:
-                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount2(object.getAccount());
-                    break;
-                    case 3:
-                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount3(object.getAccount());
-                    break;
-                }
-            }
+//            //clear exisitng records before initializing data
+//            loContact.setSocMedAccount1("");
+//            loContact.setSocMedAccount2("");
+//            loContact.setSocMedAccount3("");
+//            
+//            while (loRS.next()){
+//                Model_Client_Social_Media object = (Model_Client_Social_Media) poSocMed.clone();
+//                object.newRecord();
+//                
+//                //set first 3 accounts of contact social media
+//                JSONObject loJSON = object.openRecord(loRS.getString("sSocialID"));
+//                switch(loRS.getRow()){
+//                    
+//                    case 1:
+//                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount1(object.getAccount());
+//                        break;
+//                    case 2:
+//                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount2(object.getAccount());
+//                    break;
+//                    case 3:
+//                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount3(object.getAccount());
+//                    break;
+//                }
+//            }
         }
 
         return poJSON;

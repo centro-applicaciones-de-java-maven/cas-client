@@ -170,29 +170,29 @@ public class Model_Client_Institution_Contact extends Model{
         return (String) getValue("sEMailAdd");
     }
     
-    public JSONObject setSocMedAccount1(String socialMediaAccount){
-        return setValue("sAccount1", socialMediaAccount);
-    }
-
-    public String getSocMedAccount1(){
-        return (String) getValue("sAccount1");
-    }
-    
-    public JSONObject setSocMedAccount2(String socialMediaAccount){
-        return setValue("sAccount2", socialMediaAccount);
-    }
-
-    public String getSocMedAccount2(){
-        return (String) getValue("sAccount2");
-    }
-    
-    public JSONObject setSocMedAccount3(String socialMediaAccount){
-        return setValue("sAccount3", socialMediaAccount);
-    }
-
-    public String getSocMedAccount3(){
-        return (String) getValue("sAccount3");
-    }
+//    public JSONObject setSocMedAccount1(String socialMediaAccount){
+//        return setValue("sAccount1", socialMediaAccount);
+//    }
+//
+//    public String getSocMedAccount1(){
+//        return (String) getValue("sAccount1");
+//    }
+//    
+//    public JSONObject setSocMedAccount2(String socialMediaAccount){
+//        return setValue("sAccount2", socialMediaAccount);
+//    }
+//
+//    public String getSocMedAccount2(){
+//        return (String) getValue("sAccount2");
+//    }
+//    
+//    public JSONObject setSocMedAccount3(String socialMediaAccount){
+//        return setValue("sAccount3", socialMediaAccount);
+//    }
+//
+//    public String getSocMedAccount3(){
+//        return (String) getValue("sAccount3");
+//    }
     
     public JSONObject setRemarks(String remarks){
         return setValue("sRemarksx", remarks);

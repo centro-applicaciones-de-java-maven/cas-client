@@ -1,6 +1,7 @@
 package org.guanzon.cas.client.services;
 
 import org.guanzon.appdriver.base.GRiderCAS;
+import org.guanzon.cas.client.model.Model_AP_Client_Bank_Account;
 import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
 import org.guanzon.cas.client.model.Model_AP_Client_Master;
 import org.guanzon.cas.client.model.Model_Account_Client_Accreditation;
@@ -26,6 +27,7 @@ public class ClientModels {
     private Model_Account_Client_Accreditation poClientAccreditation;
     private Model_AP_Client_Master poAPClientMaster;
     private Model_AP_Client_Ledger poAPClientLedger;
+    private Model_AP_Client_Bank_Account poAPClientBankAccount;
     
     public ClientModels(GRiderCAS applicationDriver) {
         poGRider = applicationDriver;
@@ -200,4 +202,22 @@ public class ClientModels {
 
         return poAPClientLedger;
     }
+    
+    public Model_AP_Client_Bank_Account APClientBankAccount() {
+        if (poGRider == null) {
+            System.err.println("ClientModel.APClientBankAccount: Application driver is not set.");
+            return null;
+        }
+
+        if (poAPClientBankAccount == null) {
+            poAPClientBankAccount = new Model_AP_Client_Bank_Account();
+            poAPClientBankAccount.setApplicationDriver(poGRider);
+            poAPClientBankAccount.setXML("Model_AP_Client_Bank_Account");
+            poAPClientBankAccount.setTableName("AP_Client_Bank_Account");
+            poAPClientBankAccount.initialize();
+        }
+
+        return poAPClientBankAccount;
+    }
+    
 }

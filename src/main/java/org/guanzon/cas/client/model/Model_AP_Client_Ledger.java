@@ -193,6 +193,7 @@ public class Model_AP_Client_Ledger extends Model {
 //        loJSON.put("message", "This feature is not supported.");
 //        return loJSON;
 //    }
+    
     @Override
     public JSONObject openRecord(String Id1, Object Id2, Object Id3) {
         JSONObject loJSON = new JSONObject();
