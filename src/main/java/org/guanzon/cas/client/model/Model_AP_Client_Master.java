@@ -191,6 +191,46 @@ public class Model_AP_Client_Master extends Model {
         return (String) getValue("cAutoHold");
     }
 
+    public JSONObject setPaymentOption(String paymentoption) {
+        return setValue("cPaymOptx", paymentoption);
+    }
+
+    public String getPaymentOption() {
+        return (String) getValue("cPaymOptx");
+    }
+    
+    public JSONObject setHoldOrder(String holdorder) {
+        return setValue("cHoldOrdr", holdorder);
+    }
+
+    public String getHoldOrder() {
+        return (String) getValue("cHoldOrdr");
+    }
+
+    public JSONObject setVatRegistered(String vatregistration) {
+        return setValue("cVATRegis", vatregistration);
+    }
+
+    public String getVatRegistered() {
+        return (String) getValue("cVATRegis");
+    }
+    
+    public JSONObject setPermitType(String permittype) {
+        return setValue("cPermitxx", permittype);
+    }
+
+    public String getPermitType() {
+        return (String) getValue("cPermitxx");
+    }
+    
+    public JSONObject setAllowBackOrder(String backorder) {
+        return setValue("cBackOrdr", backorder);
+    }
+
+    public String getAllowBackOrder() {
+        return (String) getValue("cBackOrdr");
+    }
+    
     public JSONObject setRecordStatus(String recordStatus) {
         return setValue("cRecdStat", recordStatus);
     }
