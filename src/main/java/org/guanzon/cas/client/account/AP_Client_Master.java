@@ -234,8 +234,6 @@ public class AP_Client_Master extends Parameter {
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException {
         String lsSQL = getSQ_Browse();
-        
-        System.out.print(lsSQL);
 
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
@@ -247,10 +245,43 @@ public class AP_Client_Master extends Parameter {
 
         if (poJSON != null) {
             
-            //clear retrieve ledger
-            paLedger.clear();
+            poJSON = poModel.openRecord((String) poJSON.get("sClientID"));
+            if (poJSON.get("result").toString().equalsIgnoreCase("success")) {
+                
+                //clear retrieve ledger
+                paLedger.clear();
 
-            return poModel.openRecord((String) poJSON.get("sClientID"));
+                //if client tagged as confirmed supplier, get date approved and set as date for client since. else set server date
+                lsSQL = "SELECT " +
+                        "* " +
+                       "FROM " +
+                        "Account_Client_Accreditation";
+
+                lsSQL = MiscUtil.addCondition(lsSQL, 
+                                        "sClientID = " + SQLUtil.toSQL(poModel.getClientId()!= null ? poModel.getClientId(): "" + " ") +
+                                       "AND " +
+                                        "cTranStat = '1' "
+                );
+
+                lsSQL = lsSQL + 
+                           " ORDER BY " +
+                            "dTimeStmp " +
+                           "DESC " +
+                            "LIMIT 1";
+
+                ResultSet loRS = poGRider.executeQuery(lsSQL);
+                if (MiscUtil.RecordCount(loRS) > 0) {
+                    while (loRS.next()) {
+                        poModel.setdateClientSince(loRS.getDate("dApproved") == null ? poGRider.getServerDate() : loRS.getDate("dApproved"));
+                    }
+                }else{
+                    poModel.setdateClientSince(poGRider.getServerDate());
+                }
+                MiscUtil.close(loRS);
+
+            }
+            return poJSON;
+            
         } else {
             poJSON = new JSONObject();
             poJSON.put("result", "error");
