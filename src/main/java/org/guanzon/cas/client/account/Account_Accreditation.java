@@ -1,5 +1,6 @@
 package org.guanzon.cas.client.account;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
@@ -91,7 +92,6 @@ public class Account_Accreditation extends Parameter {
     @Override
     public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException {
         String lsSQL = getSQ_Browse();
-
         poJSON = ShowDialogFX.Search(poGRider,
                 lsSQL,
                 value,
@@ -270,6 +270,28 @@ public class Account_Accreditation extends Parameter {
 
         //load if button 
         if (!loClient.isCancelled()) {
+            
+            //check existing record of client id to other supplier accreditation records
+            String lsSQL = "SELECT " +
+                            "* " +
+                           "FROM " +
+                            "Account_Client_Accreditation";
+            
+            lsSQL = MiscUtil.addCondition(lsSQL, 
+                                     "sClientID = " + SQLUtil.toSQL(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "" + " ") +
+                                    "AND " +
+                                     "(sTransNox <> " + SQLUtil.toSQL(poModel.getTransactionNo()) +
+                                    "AND " +
+                                     "cTranStat <> '4')"
+            );
+
+            ResultSet loRS = poGRider.executeQuery(lsSQL);
+            if (MiscUtil.RecordCount(loRS) > 0) {
+                loResult.put("result", "error");
+                loResult.put("message", "Client is already accredited as supplier!");
+                return loResult;
+            }
+            MiscUtil.close(loRS);
 
             //set company id for supplier accreditation
             getModel().setClientId(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "");
@@ -329,6 +351,7 @@ public class Account_Accreditation extends Parameter {
                 loObject.getModel().setAddressId(poModel.getAddressId());
                 loObject.getModel().setContactId(poModel.getContactId());
                 loObject.getModel().setCategoryCode(poModel.getCategoryCode());
+                loObject.getModel().setdateClientSince(poGRider.getServerDate());
                 loObject.getModel().setBeginningDate(poGRider.getServerDate());
                 
                 //if blacklisting set  Inactive record 
@@ -350,6 +373,7 @@ public class Account_Accreditation extends Parameter {
                     loObject.getModel().setAddressId(poModel.getAddressId());
                     loObject.getModel().setContactId(poModel.getContactId());
                     loObject.getModel().setCategoryCode(poModel.getCategoryCode());
+                    loObject.getModel().setdateClientSince(poGRider.getServerDate());
                     loObject.getModel().setBeginningDate(poGRider.getServerDate());
                     
                     //if blacklisting set  Inactive record 
