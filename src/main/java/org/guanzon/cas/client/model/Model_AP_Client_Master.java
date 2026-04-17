@@ -40,7 +40,12 @@ public class Model_AP_Client_Master extends Model {
             //assign default values  
             poEntity.updateNull("dCltSince");
             poEntity.updateNull("dBegDatex");
+            poEntity.updateObject("cVATRegis", Logical.NO);
+            poEntity.updateObject("cPermitxx", Logical.NO);
+            poEntity.updateObject("cBackOrdr", Logical.NO);
             poEntity.updateObject("cVatablex", Logical.NO);
+            poEntity.updateObject("cHoldOrdr", Logical.NO);
+            
             poEntity.updateObject("nDiscount", 0.00d);
             poEntity.updateObject("nCredLimt", 0.00d);
             poEntity.updateObject("nABalance", 0.00d);
@@ -174,6 +179,14 @@ public class Model_AP_Client_Master extends Model {
     public String getLedgerNo() {
         return (String) getValue("nLedgerNo");
     }
+            
+    public JSONObject setPayment(String payment) {
+        return setValue("cPaymOptx", payment);
+    }
+
+    public String getPayment() {
+        return (String) getValue("cPaymOptx");
+    }
 
     public JSONObject setVatable(String vatable) {
         return setValue("cVatablex", vatable);
@@ -181,6 +194,38 @@ public class Model_AP_Client_Master extends Model {
 
     public String getVatable() {
         return (String) getValue("cVatablex");
+    }
+    
+    public JSONObject isVatRegstr(String isVatRegstr) {
+        return setValue("cVATRegis", isVatRegstr);
+    }
+
+    public String isVatRegstr() {
+        return (String) getValue("cVATRegis");
+    }
+    
+    public JSONObject hasPermit(String hasPermit) {
+        return setValue("cPermitxx", hasPermit);
+    }
+
+    public String hasPermit() {
+        return (String) getValue("cPermitxx");
+    }
+    
+    public JSONObject isBackOrder(String isBackOrder) {
+        return setValue("cBackOrdr", isBackOrder);
+    }
+
+    public String isBackOrder() {
+        return (String) getValue("cBackOrdr");
+    }
+    
+    public JSONObject isHoldOrder(String isHoldOrder) {
+        return setValue("cHoldOrdr", isHoldOrder);
+    }
+
+    public String isHoldOrder() {
+        return (String) getValue("cHoldOrdr");
     }
 
     public JSONObject setAutoHold(String autoHold) {
