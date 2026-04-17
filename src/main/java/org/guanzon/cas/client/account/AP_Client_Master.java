@@ -33,6 +33,7 @@ import org.guanzon.appdriver.iface.GValidator;
 import org.guanzon.appdriver.token.RequestAccess;
 import org.guanzon.cas.client.model.Model_AP_Client_Ledger;
 import org.guanzon.cas.client.model.Model_AP_Client_Master;
+import org.guanzon.cas.client.model.Model_AP_Client_Bank_Account;
 import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.client.validator.APClientValidatorFactory;
 import org.json.simple.JSONObject;
@@ -40,7 +41,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class AP_Client_Master extends Parameter {
-    
     private final String SOURCE_CODE = "APCL";
     
     private static JSONObject token = null;
@@ -48,6 +48,7 @@ public class AP_Client_Master extends Parameter {
     private Model_AP_Client_Master poModel;
     
     private List<Model_AP_Client_Ledger> paLedger;
+    private List<Model_AP_Client_Bank_Account> paBankAccount;
     
     private List<TransactionAttachment> paAttachments;
     
@@ -58,6 +59,11 @@ public class AP_Client_Master extends Parameter {
     @SuppressWarnings("unchecked")
     public List<Model_AP_Client_Ledger> getLedgerList() {
         return (List<Model_AP_Client_Ledger>) (List<?>) paLedger;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Model_AP_Client_Bank_Account> getBankAccountList() {
+        return (List<Model_AP_Client_Bank_Account>) (List<?>) paBankAccount;
     }
     
     public List<TransactionAttachment> getAttachmentList() throws SQLException, GuanzonException {
@@ -215,7 +221,7 @@ public class AP_Client_Master extends Parameter {
                     }
                 }
             }
-            
+
         } catch (SQLException | GuanzonException | CloneNotSupportedException  ex) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE, MiscUtil.getException(ex), ex);
         } catch (Exception ex) {
@@ -454,6 +460,48 @@ public class AP_Client_Master extends Parameter {
         poJSON.put("result", "success");
         return poJSON;
     }
+
+    public JSONObject loadBankAccountList() throws SQLException, GuanzonException, CloneNotSupportedException {
+
+        if (getModel().getClientId() == null
+                || getModel().getClientId().isEmpty()) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record Loaded. Please load Client");
+            return poJSON;
+        }
+        paLedger.clear();
+        String lsSQL = "SELECT *"
+                + " a.sAPBnkIDx"
+                + " FROM AP_Client_Bank_Account a "
+                + " ORDER BY b.sAPBnkIDx";
+
+        lsSQL = MiscUtil.addCondition(lsSQL, "a.sClientID=" + SQLUtil.toSQL(getModel().getClientId()));
+        ResultSet loRS = poGRider.executeQuery(lsSQL);
+        System.out.println("Load list query is " + lsSQL);
+
+        if (MiscUtil.RecordCount(loRS)
+                <= 0) {
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record found.");
+            return poJSON;
+        }
+
+        while (loRS.next()) {
+            Model_AP_Client_Bank_Account loBank = new ClientModels(poGRider).APClientBankAccount();
+            poJSON = loBank.openRecord(loRS.getString("sAPBnkIDx"));
+
+            if ("success".equals((String) poJSON.get("result"))) {
+                paBankAccount.add(loBank);
+            } else {
+                return poJSON;
+            }
+        }
+
+        poJSON = new JSONObject();
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+
     
     public JSONObject loadAttachments() throws SQLException, GuanzonException {
         
