@@ -453,10 +453,10 @@ public class IndividualNewController implements Initializable {
             if (event.getCode() == F3 || event.getCode() == ENTER){
                 switch (lnIndex){
                     case 6: //citizenship
-                        poJSON = poClient.searchCitizenship(lsValue);
+                        poJSON = poClient.searcbNationality(lsValue, false);
                         
                         if ("success".equals((String) poJSON.get("result"))){
-                            txtField.setText(poClient.getModel().Citizenship().getDescription());
+                            txtField.setText(poClient.getModel().Citizenship().getNationality());
                             CommonUtils.SetNextFocus(txtField);
                             event.consume();
                         }
@@ -772,6 +772,8 @@ public class IndividualNewController implements Initializable {
                     
                     if (!StringHelper.isNumeric(lsValue)) {
                         ShowMessageFX.Error(getStage(), "Mobile must be numeric.", "Warning", MODULE);
+                    }else if(lsValue.trim().matches("^(09\\d{9}|\\+639\\d{9})$")){
+                        ShowMessageFX.Error(getStage(), "Mobile number is invalid", "Warning", MODULE);
                     } else{
                         poJSON = poClient.Mobile(pnMobile).setMobileNo(lsValue);
                     

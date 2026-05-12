@@ -633,6 +633,46 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
     
+    public JSONObject searcbNationality(String lsValue, boolean byCode)  throws SQLException, GuanzonException{
+        
+        //filter data with cRecdStat(1) and sNational is not empty. To force the user on completing the data
+        String lsSql = "SELECT sCntryIDx, sNational, sDescript FROM Country WHERE cRecdStat = '1' AND (sNational IS NOT NULL and trim(sNational) <> '')";
+ 
+        poJSON = ShowDialogFX.Search(
+                poGRider,
+                lsSql, 
+                lsValue, 
+                "ID»Nationality»Country",
+                "sCntryIDx»sNational»sDescript",
+                "sCntryIDx»sNational»sDescript",
+                byCode ? 0 : 1);
+        
+        if (poJSON == null) {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+        Country loParam = new ParamControllers(poGRider, logwrapr).Country();
+        poJSON = loParam.openRecord((String) poJSON.get("sCntryIDx"));
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            poClient.setCitizenshipId(loParam.getModel().getCountryId());
+            poClient.Citizenship().setCountryId(loParam.getModel().getCountryId());
+            poClient.Citizenship().setDescription(loParam.getModel().getDescription());
+            poClient.Citizenship().setNationality(loParam.getModel().getNationality());
+        } else {
+            poClient.setCitizenshipId("");
+            poClient.Citizenship().setCountryId("");
+            poClient.Citizenship().setDescription("");
+            poClient.Citizenship().setNationality("");
+        }
+        
+        poJSON = new JSONObject();
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
     public JSONObject searchProvince(int lnRow, String lsValue, boolean lbByCode) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
