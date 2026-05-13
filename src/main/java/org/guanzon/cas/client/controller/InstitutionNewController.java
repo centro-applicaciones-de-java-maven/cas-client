@@ -473,7 +473,7 @@ public class InstitutionNewController implements Initializable {
 
         String lsValue = txtField.getText();
 
-        if (lsValue == null) {
+        if (lsValue == null || lsValue.isEmpty()) {
             return;
         }
 
@@ -513,8 +513,14 @@ public class InstitutionNewController implements Initializable {
                     
                 case 6: //tax id number
                     
-                    poJSON = poClient.getModel().setTaxIdNumber(lsValue);
+                    String lsTinPattern = "^\\d{3}-\\d{2}-\\d{4}$";
+                    if (!lsValue.matches(lsTinPattern)) {
+                        ShowMessageFX.Warning(getStage(), "TIN Number is invalid", "Warning", MODULE);
+                        txtField.requestFocus();
+                        return;
+                    }
                     
+                    poJSON = poClient.getModel().setTaxIdNumber(lsValue);
                     if (!"success".equals((String) poJSON.get("result"))) {
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                         return;

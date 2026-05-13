@@ -604,7 +604,7 @@ public class IndividualNewController implements Initializable {
         
         String lsValue = txtField.getText();
         
-        if (lsValue == null) return;
+        if (lsValue == null || lsValue.isEmpty()) return;
             
         
         if(!nv){//lost focus
@@ -663,8 +663,15 @@ public class IndividualNewController implements Initializable {
                     txtField.setText(poClient.getModel().getMothersMaidenName());
                     break;
                 case 13:
-                    poJSON = poClient.getModel().setTaxIdNumber(lsValue);
                     
+                    String lsTinPattern = "^\\d{3}-\\d{2}-\\d{4}$";
+                    if (!lsValue.matches(lsTinPattern)) {
+                        ShowMessageFX.Warning(getStage(), "TIN Number is invalid", "Warning", MODULE);
+                        txtField.requestFocus();
+                        return;
+                    }
+                    
+                    poJSON = poClient.getModel().setTaxIdNumber(lsValue);
                     if (!"success".equals((String) poJSON.get("result"))){
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
@@ -681,8 +688,15 @@ public class IndividualNewController implements Initializable {
                     txtField.setText(poClient.getModel().getLTOClientId());
                     break;
                 case 15:
-                    poJSON = poClient.getModel().setPhNationalId(lsValue);
                     
+                    String lsNatlIDPattern = "^\\d{3}-\\d{2}-\\d{6}$";
+                    if (!lsValue.matches(lsNatlIDPattern)) {
+                        ShowMessageFX.Warning(getStage(), "National ID is invalid", "Warning", MODULE);
+                        txtField.requestFocus();
+                        return;
+                    }
+                    
+                    poJSON = poClient.getModel().setPhNationalId(lsValue);
                     if (!"success".equals((String) poJSON.get("result"))){
                         ShowMessageFX.Error(getStage(), (String) poJSON.get("message"), "Warning", MODULE);
                     }
@@ -771,9 +785,11 @@ public class IndividualNewController implements Initializable {
                     if (lsValue.trim().isEmpty()) return;
                     
                     if (!StringHelper.isNumeric(lsValue)) {
-                        ShowMessageFX.Error(getStage(), "Mobile must be numeric.", "Warning", MODULE);
-                    }else if(lsValue.trim().matches("^(09\\d{9}|\\+639\\d{9})$")){
-                        ShowMessageFX.Error(getStage(), "Mobile number is invalid", "Warning", MODULE);
+                        ShowMessageFX.Warning(getStage(), "Mobile must be numeric.", "Warning", MODULE);
+                        return;
+                    }else if(!lsValue.trim().matches("^(09\\d{9}|\\+639\\d{9})$")){
+                        ShowMessageFX.Warning(getStage(), "Mobile number is invalid", "Warning", MODULE);
+                        return;
                     } else{
                         poJSON = poClient.Mobile(pnMobile).setMobileNo(lsValue);
                     
