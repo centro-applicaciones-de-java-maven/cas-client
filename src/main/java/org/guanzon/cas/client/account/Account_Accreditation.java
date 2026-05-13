@@ -11,6 +11,7 @@ import org.guanzon.appdriver.base.SQLUtil;
 import org.guanzon.appdriver.constant.ClientType;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.TransactionStatus;
+import org.guanzon.appdriver.constant.UserRight;
 import org.guanzon.appdriver.iface.GValidator;
 import org.guanzon.cas.client.ClientGUI;
 import org.guanzon.cas.client.constants.AccountAccreditationStatus;
@@ -67,11 +68,18 @@ public class Account_Accreditation extends Parameter {
                 return poJSON;
             }
             
+            if (Integer.parseInt(poJSON.get("nUserLevl").toString()) <= UserRight.ENCODER){
+                poJSON.put("result", "error");
+                poJSON.put("message", "User is not an authorized approving officer.");
+                
+                return poJSON;
+            }
+
             //if success, return approving officer user id
             psApprovalUser = poJSON.get("sUserIDxx") != null
                     ? poJSON.get("sUserIDxx").toString()
                     : poGRider.getUserID();
-            
+
             //add approver's id to result
             poJSON.put("sApproved", psApprovalUser);
         }
