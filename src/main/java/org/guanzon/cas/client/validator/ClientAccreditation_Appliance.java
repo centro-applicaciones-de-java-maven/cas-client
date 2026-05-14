@@ -185,11 +185,6 @@ public class ClientAccreditation_Appliance implements GValidator{
             return poJSON;
         }
 
-        //if modified by enocder below, ask for approval
-        if (poGRider.getUserLevel() <= UserRight.ENCODER) {
-            isRequiredApproval = true;
-        }
-        
         poJSON.put("result", "success");
         poJSON.put("isRequiredApproval", isRequiredApproval);
         
