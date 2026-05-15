@@ -25,10 +25,13 @@ import org.guanzon.cas.client.services.ClientControllers;
 import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.client.validator.ClientAccreditationValidatorFactory;
 import org.json.simple.JSONObject;
+import ph.com.guanzongroup.cas.cashflow.model.Model_Payee;
+import ph.com.guanzongroup.cas.cashflow.services.CashflowModels;
 
 public class Account_Accreditation extends Parameter {
 
     private Model_Account_Client_Accreditation poModel;
+    private  Model_Payee loPayee ;
     private String psValidStatus = AccountAccreditationStatus.OPEN;
     private String psApprovalUser = "";
 
@@ -36,9 +39,9 @@ public class Account_Accreditation extends Parameter {
     public void initialize() throws SQLException, GuanzonException {
         super.initialize();
 
-        psRecdStat = TransactionStatus.STATE_OPEN;
-
         ClientModels model = new ClientModels(poGRider);
+        psRecdStat = TransactionStatus.STATE_OPEN;
+        loPayee = new CashflowModels(poGRider).Payee();
         poModel = model.ClientAccreditation();
     }
 
@@ -217,33 +220,31 @@ public class Account_Accreditation extends Parameter {
         return loJSON;
     }
 
-    public JSONObject searchClient(String fsValue ,boolean fbByCode) throws SQLException, GuanzonException, Exception {
+    public JSONObject searchCompany(String fsValue ,boolean fbByCode) throws SQLException, GuanzonException, Exception {
 
         JSONObject loJSON = null;
         
         //retrieve records (value not empty), new entry (empty string)
-        if (!fsValue.isEmpty()) {
-
-            String lsSQL = "SELECT"
+        String lsSQL = "SELECT"
             + " sClientID"
             + ", sCompnyNm"
             + " FROM Client_Master"
-            + " WHERE cRecdStat= '1'";
+            + " WHERE cRecdStat= '1'"
+            + " AND cClientTp= '1'";
 
-            loJSON = ShowDialogFX.Search(poGRider, 
-                    lsSQL, 
-                    fsValue, 
-                    "Client ID»Client Name", 
-                    "sClientID»sCompnyNm",
-                    "sClientID»sCompnyNm",
-                    fbByCode ? 0 : 1);
+        loJSON = ShowDialogFX.Search(poGRider, 
+                lsSQL, 
+                fsValue, 
+                "Client ID»Client Name", 
+                "sClientID»sCompnyNm",
+                "sClientID»sCompnyNm",
+                fbByCode ? 0 : 1);
 
-            if (loJSON == null) {
+        if (loJSON == null) {
+            return loJSON;
+        }else{
+            if ("error".equals(loJSON.get("result"))) {
                 return loJSON;
-            }else{
-                if ("error".equals(loJSON.get("result"))) {
-                    return loJSON;
-                }
             }
         }
 
@@ -264,14 +265,99 @@ public class Account_Accreditation extends Parameter {
         //set search by code
         loClient.setByCode(fbByCode);
 
-        if (loJSON != null) {
-            
-            //set cilent id to load for company entry
-            loClient.setClientId(loJSON.get("sClientID").toString());
-
-        }else {
-            loClient.setClientId("");
+        if (loJSON == null) {
+            loJSON.put("result", "error");
+            loJSON.put("message", "No record to load");
+            return loJSON;
         }
+        //set cilent id to load for company entry
+        loClient.setClientId(loJSON.get("sClientID").toString());
+        
+        //load record
+        CommonUtils.showModal(loClient);
+
+        //initialize new json for result
+        JSONObject loResult = new JSONObject();
+
+        //load if button 
+        if (!loClient.isCancelled()) {
+            
+            //check existing record of client id to other supplier accreditation records
+            lsSQL = "SELECT " +
+                            "* " +
+                           "FROM " +
+                            "Account_Client_Accreditation";
+            
+            lsSQL = MiscUtil.addCondition(lsSQL, 
+                                     "sClientID = " + SQLUtil.toSQL(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "" + " ") +
+                                    "AND " +
+                                     "(sTransNox <> " + SQLUtil.toSQL(poModel.getTransactionNo()) +
+                                    "AND " +
+                                     "cTranStat <> '4')"
+            );
+
+            ResultSet loRS = poGRider.executeQuery(lsSQL);
+            if (MiscUtil.RecordCount(loRS) > 0) {
+                loResult.put("result", "error");
+                loResult.put("message", "Client is already accredited as supplier!");
+                return loResult;
+            }
+            MiscUtil.close(loRS);
+
+            //set company id for supplier accreditation
+            getModel().setClientId(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "");
+
+            //get address
+            for(Model_Client_Address loAddr : loClient.getClient().AddressList()){
+
+                //set primary address
+                if (loAddr.isPrimaryAddress()) {
+                    
+                    getModel().setAddressId(loAddr.getAddressId()!= null ? loAddr.getAddressId() : "");
+                    
+                    getModel().ClientAddress().setBarangayId(loAddr.getBarangayId());
+                    getModel().ClientAddress().setTownId(loAddr.getTownId());
+                    break;
+                }
+            }
+
+            //get contact
+            for(Model_Client_Institution_Contact loContact : loClient.getClient().InstiContactList()){
+
+                //set primary contact person of company for supplier accreditation and ap client master
+                if (loContact.isPrimaryContactPersion()) {
+                    getModel().setContactId(loContact.getContactPId()!= null ? loContact.getContactPId() : "");
+                    break;
+                }
+            }
+        }
+        loResult.put("result", "success");
+        return loResult;
+    }
+    
+    public JSONObject addCompany() throws SQLException, GuanzonException, Exception {
+
+        JSONObject loJSON = null;
+
+        //initialize Client GUI
+        ClientGUI loClient = new ClientGUI();
+
+        loClient.setGRider(poGRider);
+        loClient.setLogWrapper(null);
+        loClient.setCategoryCode((String) getModel().getCategoryCode());
+
+        //filter client type 
+        loClient.setClientType(ClientType.INSTITUTION);
+
+        //searchRecord(fsValue,fbByCode) will run make sure to set client and bycode
+        //bycode true client id
+        //bycode false company
+
+        //set search by code
+        loClient.setByCode(false);
+
+        //set cilent empty, to create a new record
+        loClient.setClientId("");
         
         //load record
         CommonUtils.showModal(loClient);
@@ -334,7 +420,10 @@ public class Account_Accreditation extends Parameter {
         loResult.put("result", "success");
         return loResult;
     }
-
+    
+//    public JSONObject addPayee(){
+//        loPayee.
+//    }
 
     public JSONObject CloseTransaction() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
