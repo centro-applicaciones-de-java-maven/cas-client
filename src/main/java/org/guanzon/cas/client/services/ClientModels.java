@@ -12,6 +12,7 @@ import org.guanzon.cas.client.model.Model_Client_Master;
 import org.guanzon.cas.client.model.Model_Client_Mobile;
 import org.guanzon.cas.client.model.Model_Client_Social_Media;
 import org.guanzon.cas.client.model.Model_Corporate_Role;
+import ph.com.guanzongroup.cas.cashflow.model.Model_Payee;
 
 public class ClientModels {
     
@@ -28,6 +29,7 @@ public class ClientModels {
     private Model_AP_Client_Master poAPClientMaster;
     private Model_AP_Client_Ledger poAPClientLedger;
     private Model_AP_Client_Bank_Account poAPClientBankAccount;
+    private Model_Payee poPayee;
     
     public ClientModels(GRiderCAS applicationDriver) {
         poGRider = applicationDriver;
@@ -218,6 +220,23 @@ public class ClientModels {
         }
 
         return poAPClientBankAccount;
+    }
+    
+    public Model_Payee Payee(){
+        if (poGRider == null){
+            System.err.println("CashflowModels.Payee: Application driver is not set.");
+            return null;
+        }
+        
+        if (poPayee == null){
+            poPayee = new Model_Payee();
+            poPayee.setApplicationDriver(poGRider);
+            poPayee.setXML("Model_Payee");
+            poPayee.setTableName("Payee");
+            poPayee.initialize();
+        }
+
+        return poPayee;
     }
     
 }

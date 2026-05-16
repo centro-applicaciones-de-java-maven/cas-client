@@ -1,3 +1,7 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package org.guanzon.cas.client.account;
 
 import java.sql.ResultSet;
@@ -6,7 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import javax.sql.rowset.CachedRowSet;
 import org.guanzon.appdriver.agent.ShowDialogFX;
-import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.agent.services.Transaction;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
@@ -26,23 +30,30 @@ import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.client.validator.ClientAccreditationValidatorFactory;
 import org.json.simple.JSONObject;
 
-public class Account_Accreditation extends Parameter {
-
-    private Model_Account_Client_Accreditation poModel;
+/**
+ *
+ * @author User
+ */
+public class Accounts_Accreditation_Transaction extends Transaction{
+    
     private String psValidStatus = AccountAccreditationStatus.OPEN;
     private String psApprovalUser = "";
 
     @Override
-    public void initialize() throws SQLException, GuanzonException {
-        super.initialize();
-
+    protected JSONObject initialize() {
+        
         ClientModels model = new ClientModels(poGRider);
-        psRecdStat = TransactionStatus.STATE_OPEN;
-        poModel = model.ClientAccreditation();
+        psTranStat = TransactionStatus.STATE_OPEN;
+        poMaster = model.ClientAccreditation();
+        
+        initSQL();
+        
+        return super.initialize();
     }
 
     @Override
-    public JSONObject isEntryOkay() throws SQLException, GuanzonException, CloneNotSupportedException {
+    protected JSONObject isEntryOkay(String status) throws CloneNotSupportedException, SQLException, GuanzonException {
+        
         poJSON = new JSONObject();
 
         //initialize validator
@@ -51,7 +62,7 @@ public class Account_Accreditation extends Parameter {
         //initialize params for app validator
         loValidator.setApplicationDriver(poGRider);
         loValidator.setTransactionStatus(psValidStatus);
-        loValidator.setMaster(poModel);
+        loValidator.setMaster(getModel());
         
         //validate
         poJSON = loValidator.validate();
@@ -87,55 +98,29 @@ public class Account_Accreditation extends Parameter {
         }
 
         //initialize model date modified and modifier
-        poModel.setModifyingId((poGRider.getUserID()));
-        poModel.setModifiedDate(poGRider.getServerDate());
+        getModel().setModifyingId((poGRider.getUserID()));
+        getModel().setModifiedDate(poGRider.getServerDate());
 
         poJSON.put("result", "success");
         return poJSON;
     }
 
     @Override
-    public Model_Account_Client_Accreditation getModel() {
-        return poModel;
-    }
-
-    @Override
-    public JSONObject searchRecord(String value, boolean byCode) throws SQLException, GuanzonException {
-        String lsSQL = getSQ_Browse();
-        poJSON = ShowDialogFX.Search(poGRider,
-                lsSQL,
-                value,
-                "Transaction No»Date»Name",
-                "sTransNox»dTransact»sCompnyNm",
-                "sTransNox»sCompnyNm",
-                byCode ? 0 : 1);
-
-        if (poJSON != null) {
-            return poModel.openRecord((String) poJSON.get("sTransNox"));
-        } else {
-            poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "No record loaded.");
-            return poJSON;
-        }
-    }
-    
-    @Override
-    public String getSQ_Browse() {
-        String lsSQL;
+    public void initSQL() {
+ 
         String lsCondition = "";
 
-        if (psRecdStat.length() > 1) {
-            for (int lnCtr = 0; lnCtr <= psRecdStat.length() - 1; lnCtr++) {
-                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psRecdStat.charAt(lnCtr)));
+        if (psTranStat.length() > 1) {
+            for (int lnCtr = 0; lnCtr <= psTranStat.length() - 1; lnCtr++) {
+                lsCondition += ", " + SQLUtil.toSQL(Character.toString(psTranStat.charAt(lnCtr)));
             }
 
             lsCondition = "a.cTranStat IN (" + lsCondition.substring(2) + ")";
         } else {
-            lsCondition = "a.cTranStat = " + SQLUtil.toSQL(psRecdStat);
+            lsCondition = "a.cTranStat = " + SQLUtil.toSQL(psTranStat);
         }
 
-        lsSQL = " SELECT "
+        SQL_BROWSE = " SELECT "
                 + " a.sTransNox, "
                 + " a.cAcctType, "
                 + " a.sClientID, "
@@ -160,14 +145,120 @@ public class Account_Accreditation extends Parameter {
                 + " ON a.sContctID = d.sContctID ";
 
         if (!lsCondition.isEmpty()) {
-            lsSQL = MiscUtil.addCondition(lsSQL, lsCondition);
+            SQL_BROWSE = MiscUtil.addCondition(SQL_BROWSE, lsCondition);
         }
 
-        return lsSQL;
     }
     
-    public AP_Client_Master getAPClientMaster(String foClientID)
-            throws GuanzonException, SQLException {
+    public void setRecordStatus(String fStatus){
+        setTransactionStatus(fStatus);
+    }
+    
+    public JSONObject saveRecord() throws CloneNotSupportedException, SQLException, GuanzonException{
+        return saveTransaction();
+    }
+    
+    public JSONObject newRecord() throws CloneNotSupportedException{
+        return newTransaction();
+    }
+    
+    public JSONObject updateRecord(){
+        return updateTransaction();
+    }
+    
+    public JSONObject openRecord(String fsVal) throws CloneNotSupportedException, SQLException, GuanzonException{
+        return openTransaction(fsVal);
+    }
+    
+    public void ShowStatusHistory() throws SQLException, GuanzonException, Exception{
+        
+        CachedRowSet crs = getStatusHistory();
+            crs.beforeFirst();
+            
+            while(crs.next()){
+                
+                switch (crs.getString("cRefrStat")){
+                    case "":
+                        crs.updateString("cRefrStat", "-");
+                        break;
+                    case AccountAccreditationStatus.OPEN:
+                        crs.updateString("cRefrStat", "OPEN");
+                        break;
+                    case AccountAccreditationStatus.CONFIRMED:
+                        crs.updateString("cRefrStat", "CONFIRMED");
+                        break;
+                    case AccountAccreditationStatus.VOID:
+                        crs.updateString("cRefrStat", "VOID");
+                        break;
+                    default:
+                        char ch = crs.getString("cRefrStat").charAt(0);
+                        String stat = String.valueOf((int) ch - 64);
+
+                        switch (stat){
+                            
+                            case AccountAccreditationStatus.OPEN:
+                                crs.updateString("cRefrStat", "OPEN");
+                                break;
+                            case AccountAccreditationStatus.CONFIRMED:
+                                crs.updateString("cRefrStat", "CONFIRMED");
+                                break;
+                            case AccountAccreditationStatus.VOID:
+                                crs.updateString("cRefrStat", "VOID");
+                                break;
+                        }
+                }
+                crs.updateRow(); 
+            }
+            
+            JSONObject loJSON  = getEntryBy();
+            String entryBy = "";
+            String entryDate = "";
+
+            if ("success".equals((String) loJSON.get("result"))){
+                entryBy = (String) loJSON.get("sCompnyNm");
+                entryDate = (String) loJSON.get("sEntryDte");
+            }
+
+            showStatusHistoryUI("Supplier Accreditation", (String) getModel().getTransactionNo(), entryBy, entryDate, crs);
+            
+    }
+
+    public JSONObject searchRecord(String value, boolean byCode) {
+        
+        try {
+            
+            poJSON = ShowDialogFX.Search(poGRider,
+                SQL_BROWSE,
+                value,
+                "Transaction No»Date»Name",
+                "sTransNox»dTransact»sCompnyNm",
+                "sTransNox»sCompnyNm",
+                byCode ? 0 : 1);
+
+            if (poJSON != null) {
+                return getModel().openRecord((String) poJSON.get("sTransNox"));
+            } else {
+                poJSON = new JSONObject();
+                poJSON.put("result", "error");
+                poJSON.put("message", "No record loaded.");
+                return poJSON;
+            }
+
+        } catch (Exception e) {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", e.getMessage());
+            
+            return poJSON;
+        }
+        
+    }
+    
+    public Model_Account_Client_Accreditation getModel(){
+        return (Model_Account_Client_Accreditation) poMaster;
+    }
+    
+    public AP_Client_Master getAPClientMaster(String foClientID) throws GuanzonException, SQLException {
         
         AP_Client_Master loObject = new ClientControllers(poGRider, null).APClientMaster();
         poJSON = loObject.openRecord(foClientID);
@@ -181,7 +272,7 @@ public class Account_Accreditation extends Parameter {
         loObject.setWithParentClass(true);
         return loObject;
     }
-
+    
     public JSONObject searchCategory(String fsValue, boolean fbByCode) throws SQLException, GuanzonException {
         JSONObject loJSON;
 
@@ -215,7 +306,7 @@ public class Account_Accreditation extends Parameter {
 
         return loJSON;
     }
-
+    
     public JSONObject searchCompany(String fsValue ,boolean fbByCode) throws SQLException, GuanzonException, Exception {
 
         JSONObject loJSON = null;
@@ -287,7 +378,7 @@ public class Account_Accreditation extends Parameter {
             lsSQL = MiscUtil.addCondition(lsSQL, 
                                      "sClientID = " + SQLUtil.toSQL(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "" + " ") +
                                     "AND " +
-                                     "(sTransNox <> " + SQLUtil.toSQL(poModel.getTransactionNo()) +
+                                     "(sTransNox <> " + SQLUtil.toSQL(getModel().getTransactionNo()) +
                                     "AND " +
                                      "cTranStat <> '4')"
             );
@@ -373,7 +464,7 @@ public class Account_Accreditation extends Parameter {
             lsSQL = MiscUtil.addCondition(lsSQL, 
                                      "sClientID = " + SQLUtil.toSQL(loClient.getClient().getModel().getClientId()!= null ? loClient.getClient().getModel().getClientId(): "" + " ") +
                                     "AND " +
-                                     "(sTransNox <> " + SQLUtil.toSQL(poModel.getTransactionNo()) +
+                                     "(sTransNox <> " + SQLUtil.toSQL(getModel().getTransactionNo()) +
                                     "AND " +
                                      "cTranStat <> '4')"
             );
@@ -417,17 +508,6 @@ public class Account_Accreditation extends Parameter {
         return loResult;
     }
     
-    public JSONObject StatusChange(String fStatus) throws SQLException, GuanzonException, CloneNotSupportedException{
-        poGRider.beginTrans(fStatus, fStatus, SOURCE_CODE, SOURCE_CODE);
-        
-        poJSON = statusChange(getModel().getTable(), getModel().getTransactionNo(), fStatus, true);
-        if (poJSON.get("result").equals("error")) {
-            poGRider.rollbackTrans();
-        }
-        poGRider.commitTrans();
-        return poJSON;
-    }
-
     public JSONObject CloseTransaction() throws SQLException, GuanzonException, CloneNotSupportedException {
         poJSON = new JSONObject();
         
@@ -435,13 +515,21 @@ public class Account_Accreditation extends Parameter {
         psValidStatus = AccountAccreditationStatus.CONFIRMED;
         
         //initialize validator
-        poJSON = isEntryOkay();
+        poJSON = isEntryOkay(psValidStatus);
         if ("error".equals((String) poJSON.get("result"))) {
             return poJSON;
         }
         System.out.println(pbWthParent);
         poGRider.beginTrans("UPDATE STATUS", "ConfirmTransaction", SOURCE_CODE, getModel().getTransactionNo());
- 
+        poJSON = statusChange(poMaster.getTable(),
+                (String) poMaster.getValue("sTransNox"),
+                "ConfirmTransaction",
+                AccountAccreditationStatus.CONFIRMED,
+                false, true);
+        if ("error".equals((String) poJSON.get("result"))) {
+            poGRider.rollbackTrans();
+            return poJSON;
+        }
 
         //if Accreditation 
         if (getModel().getAccountType().equals("0")) {
@@ -452,10 +540,10 @@ public class Account_Accreditation extends Parameter {
             //check editmode if new or update
             if (loObject.getEditMode() == EditMode.ADDNEW) {
                 
-                loObject.getModel().setClientId(poModel.getClientId());
-                loObject.getModel().setAddressId(poModel.getAddressId());
-                loObject.getModel().setContactId(poModel.getContactId());
-                loObject.getModel().setCategoryCode(poModel.getCategoryCode());
+                loObject.getModel().setClientId(getModel().getClientId());
+                loObject.getModel().setAddressId(getModel().getAddressId());
+                loObject.getModel().setContactId(getModel().getContactId());
+                loObject.getModel().setCategoryCode(getModel().getCategoryCode());
                 loObject.getModel().setdateClientSince(poGRider.getServerDate());
                 loObject.getModel().setBeginningDate(poGRider.getServerDate());
                 
@@ -474,10 +562,10 @@ public class Account_Accreditation extends Parameter {
                     
                     //enter to update
                     loObject.updateRecord();
-                    loObject.getModel().setClientId(poModel.getClientId());
-                    loObject.getModel().setAddressId(poModel.getAddressId());
-                    loObject.getModel().setContactId(poModel.getContactId());
-                    loObject.getModel().setCategoryCode(poModel.getCategoryCode());
+                    loObject.getModel().setClientId(getModel().getClientId());
+                    loObject.getModel().setAddressId(getModel().getAddressId());
+                    loObject.getModel().setContactId(getModel().getContactId());
+                    loObject.getModel().setCategoryCode(getModel().getCategoryCode());
                     loObject.getModel().setdateClientSince(poGRider.getServerDate());
                     loObject.getModel().setBeginningDate(poGRider.getServerDate());
                     
@@ -542,7 +630,7 @@ public class Account_Accreditation extends Parameter {
         }
 
         String lsSQL = "UPDATE "
-                + poModel.getTable()
+                + getModel().getTable()
                 + " SET   cTranStat = " + SQLUtil.toSQL("1")
                 + ", sApproved= " + SQLUtil.toSQL(poGRider.getUserID())
                 + ", dApproved= " + SQLUtil.toSQL(poGRider.getServerDate())
@@ -562,7 +650,7 @@ public class Account_Accreditation extends Parameter {
 
         poGRider.commitTrans();
 
-        openRecord(getModel().getTransactionNo());
+        openTransaction(getModel().getTransactionNo());
         
         poJSON = new JSONObject();
         poJSON.put("result", "success");
@@ -572,97 +660,53 @@ public class Account_Accreditation extends Parameter {
     }
 
     public JSONObject VoidTransaction() throws SQLException, GuanzonException, CloneNotSupportedException {
-        poJSON = new JSONObject();
-
-        //initliaze ongoing record status, for validator
-        psValidStatus = AccountAccreditationStatus.VOID;
-        
-        //initialize validator
-        poJSON = isEntryOkay();
-        if ("error".equals((String) poJSON.get("result"))) {
-            return poJSON;
-        }
-        poGRider.beginTrans("UPDATE STATUS", "VoidTransaction", SOURCE_CODE, getModel().getTransactionNo());
-
-        String lsSQL = "UPDATE "
-                + poModel.getTable()
-                + " SET cTranStat = " + SQLUtil.toSQL("4")
-                + " WHERE sTransNox = " + SQLUtil.toSQL(getModel().getTransactionNo());
-
-        Long lnResult = poGRider.executeQuery(lsSQL,
-                getModel().getTable(),
-                poGRider.getBranchCode(), "", "");
-        if (lnResult <= 0L) {
-            poGRider.rollbackTrans();
-
             poJSON = new JSONObject();
-            poJSON.put("result", "error");
-            poJSON.put("message", "Error updating the transaction status.");
+
+            //initliaze ongoing record status, for validator
+            psValidStatus = AccountAccreditationStatus.VOID;
+
+            //initialize validator
+            poJSON = isEntryOkay(psValidStatus);
+            if ("error".equals((String) poJSON.get("result"))) {
+                return poJSON;
+            }
+            poGRider.beginTrans("UPDATE STATUS", "VoidTransaction", SOURCE_CODE, getModel().getTransactionNo());
+            poJSON = statusChange(poMaster.getTable(),
+                (String) poMaster.getValue("sTransNox"),
+                "ConfirmTransaction",
+                AccountAccreditationStatus.CONFIRMED,
+                false, true);
+            if ("error".equals((String) poJSON.get("result"))) {
+                poGRider.rollbackTrans();
+                return poJSON;
+            }
+
+            String lsSQL = "UPDATE "
+                    + getModel().getTable()
+                    + " SET cTranStat = " + SQLUtil.toSQL("4")
+                    + " WHERE sTransNox = " + SQLUtil.toSQL(getModel().getTransactionNo());
+
+            Long lnResult = poGRider.executeQuery(lsSQL,
+                    getModel().getTable(),
+                    poGRider.getBranchCode(), "", "");
+            if (lnResult <= 0L) {
+                poGRider.rollbackTrans();
+
+                poJSON = new JSONObject();
+                poJSON.put("result", "error");
+                poJSON.put("message", "Error updating the transaction status.");
+                return poJSON;
+            }
+
+            poGRider.commitTrans();
+
+            openTransaction(getModel().getTransactionNo());
+            poJSON = new JSONObject();
+            poJSON.put("result", "success");
+            poJSON.put("message", "Transaction voided successfully.");
+
             return poJSON;
         }
-
-        poGRider.commitTrans();
-
-        openRecord(getModel().getTransactionNo());
-        poJSON = new JSONObject();
-        poJSON.put("result", "success");
-        poJSON.put("message", "Transaction voided successfully.");
-
-        return poJSON;
-    }
-    
-    public void ShowStatusHistory() throws SQLException, GuanzonException, Exception{
-        
-        CachedRowSet crs = getStatusHistory();
-            crs.beforeFirst();
-            
-            while(crs.next()){
-                
-                switch (crs.getString("cRefrStat")){
-                    case "":
-                        crs.updateString("cRefrStat", "-");
-                        break;
-                    case AccountAccreditationStatus.OPEN:
-                        crs.updateString("cRefrStat", "OPEN");
-                        break;
-                    case AccountAccreditationStatus.CONFIRMED:
-                        crs.updateString("cRefrStat", "CONFIRMED");
-                        break;
-                    case AccountAccreditationStatus.VOID:
-                        crs.updateString("cRefrStat", "VOID");
-                        break;
-                    default:
-                        char ch = crs.getString("cRefrStat").charAt(0);
-                        String stat = String.valueOf((int) ch - 64);
-
-                        switch (stat){
-                            
-                            case AccountAccreditationStatus.OPEN:
-                                crs.updateString("cRefrStat", "OPEN");
-                                break;
-                            case AccountAccreditationStatus.CONFIRMED:
-                                crs.updateString("cRefrStat", "CONFIRMED");
-                                break;
-                            case AccountAccreditationStatus.VOID:
-                                crs.updateString("cRefrStat", "VOID");
-                                break;
-                        }
-                }
-                crs.updateRow(); 
-            }
-            
-            JSONObject loJSON  = getEntryBy();
-            String entryBy = "";
-            String entryDate = "";
-
-            if ("success".equals((String) loJSON.get("result"))){
-                entryBy = (String) loJSON.get("sCompnyNm");
-                entryDate = (String) loJSON.get("sEntryDte");
-            }
-
-            showStatusHistoryUI("Supplier Accreditation", (String) getModel().getTransactionNo(), entryBy, entryDate, crs);
-            
-    }
     
     public JSONObject getEntryBy() throws SQLException, GuanzonException {
         
@@ -672,7 +716,7 @@ public class Account_Accreditation extends Parameter {
         String lsEntryDate = "";
         String lsSQL =  " SELECT b.sModified, b.dModified " 
                         + " FROM Account_Client_Accreditation a "
-                        + " LEFT JOIN xxxAuditLogMaster b ON b.sSourceNo = a.sTransNox AND b.sEventNme LIKE 'ADD%NEW' AND b.sRemarksx = " + SQLUtil.toSQL(poModel.getTable());
+                        + " LEFT JOIN xxxAuditLogMaster b ON b.sSourceNo = a.sTransNox AND b.sEventNme LIKE 'ADD%NEW' AND b.sRemarksx = " + SQLUtil.toSQL(getModel().getTable());
         lsSQL = MiscUtil.addCondition(lsSQL, " a.sTransNox =  " + SQLUtil.toSQL(getModel().getTransactionNo())) ;
         System.out.println("Execute SQL : " + lsSQL);
         ResultSet loRS = poGRider.executeQuery(lsSQL);

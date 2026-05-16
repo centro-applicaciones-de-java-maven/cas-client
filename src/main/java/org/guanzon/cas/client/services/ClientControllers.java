@@ -9,6 +9,8 @@ import org.guanzon.cas.client.ClientInfo;
 import org.guanzon.cas.client.Client_Role;
 import org.guanzon.cas.client.account.AP_Client_Master;
 import org.guanzon.cas.client.account.Account_Accreditation;
+import org.guanzon.cas.client.account.Accounts_Accreditation_Transaction;
+import ph.com.guanzongroup.cas.cashflow.Payee;
 
 public class ClientControllers {
     public ClientControllers(GRiderCAS applicationDriver, LogWrapper logWrapper) {
@@ -81,6 +83,22 @@ public class ClientControllers {
         return poAccountAccreditation;       
     }
     
+    public Accounts_Accreditation_Transaction AccountAccreditationTransaction() throws SQLException, GuanzonException, CloneNotSupportedException{
+        if (poGRider == null){
+            poLogWrapper.severe("ClientControllers.AccountAccreditation: Application driver is not set.");
+            return null;
+        }
+        
+        if (poAccountAccreditationTransaction != null) return poAccountAccreditationTransaction;
+        
+        poAccountAccreditationTransaction = new Accounts_Accreditation_Transaction();
+        poAccountAccreditationTransaction.setApplicationDriver(poGRider);
+        poAccountAccreditationTransaction.setWithParent(false);
+        poAccountAccreditationTransaction.setLogWrapper(poLogWrapper);
+        
+        return poAccountAccreditationTransaction;       
+    }
+    
     public AP_Client_Master APClientMaster() throws SQLException, GuanzonException{
         if (poGRider == null){
             poLogWrapper.severe("ClientControllers.APClientMaster: Application driver is not set.");
@@ -98,6 +116,25 @@ public class ClientControllers {
         
         return poAPClientMaster;       
     }
+    
+    public Payee Payee() throws SQLException, GuanzonException {
+        if (poGRider == null) {
+            poLogWrapper.severe("CashFlowcontrollers.Payee: Application driver is not set.");
+            return null;
+        }
+
+        if (poPayee != null) {
+            return poPayee;
+        }
+
+        poPayee = new Payee();
+        poPayee.setApplicationDriver(poGRider);
+        poPayee.setWithParentClass(false);
+        poPayee.setLogWrapper(poLogWrapper);
+        poPayee.initialize();
+        poPayee.newRecord();
+        return poPayee;
+    }
 
     private final GRiderCAS poGRider;
     private final LogWrapper poLogWrapper;
@@ -106,5 +143,7 @@ public class ClientControllers {
     private ClientInfo poClientx;
     private Client_Role poClientRole;
     private Account_Accreditation poAccountAccreditation;
+    private Accounts_Accreditation_Transaction poAccountAccreditationTransaction;
     private AP_Client_Master poAPClientMaster;
+    private Payee poPayee;
 }
