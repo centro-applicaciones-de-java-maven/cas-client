@@ -381,30 +381,30 @@ public class ClientInfo extends Parameter{
             
             loRS = poGRider.executeQuery(lsSQL);
             
-//            //clear exisitng records before initializing data
-//            loContact.setSocMedAccount1("");
-//            loContact.setSocMedAccount2("");
-//            loContact.setSocMedAccount3("");
-//            
-//            while (loRS.next()){
-//                Model_Client_Social_Media object = (Model_Client_Social_Media) poSocMed.clone();
-//                object.newRecord();
-//                
-//                //set first 3 accounts of contact social media
-//                JSONObject loJSON = object.openRecord(loRS.getString("sSocialID"));
-//                switch(loRS.getRow()){
-//                    
-//                    case 1:
-//                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount1(object.getAccount());
-//                        break;
-//                    case 2:
-//                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount2(object.getAccount());
-//                    break;
-//                    case 3:
-//                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount3(object.getAccount());
-//                    break;
-//                }
-//            }
+            //clear exisitng records before initializing data
+            loContact.setSocMedAccount1("");
+            loContact.setSocMedAccount2("");
+            loContact.setSocMedAccount3("");
+            
+            while (loRS.next()){
+                Model_Client_Social_Media object = (Model_Client_Social_Media) poSocMed.clone();
+                object.newRecord();
+                
+                //set first 3 accounts of contact social media
+                JSONObject loJSON = object.openRecord(loRS.getString("sSocialID"));
+                switch(loRS.getRow()){
+                    
+                    case 1:
+                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount1(object.getAccount());
+                        break;
+                    case 2:
+                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount2(object.getAccount());
+                    break;
+                    case 3:
+                        if ("success".equals((String) loJSON.get("result"))) loContact.setSocMedAccount3(object.getAccount());
+                    break;
+                }
+            }
         }
 
         return poJSON;
@@ -633,6 +633,46 @@ public class ClientInfo extends Parameter{
         return poJSON;
     }
     
+    public JSONObject searcbNationality(String lsValue, boolean byCode)  throws SQLException, GuanzonException{
+        
+        //filter data with cRecdStat(1) and sNational is not empty. To force the user on completing the data
+        String lsSql = "SELECT sCntryIDx, sNational, sDescript FROM Country WHERE cRecdStat = '1' AND (sNational IS NOT NULL and trim(sNational) <> '')";
+ 
+        poJSON = ShowDialogFX.Search(
+                poGRider,
+                lsSql, 
+                lsValue, 
+                "ID»Nationality»Country",
+                "sCntryIDx»sNational»sDescript",
+                "sCntryIDx»sNational»sDescript",
+                byCode ? 0 : 1);
+        
+        if (poJSON == null) {
+            poJSON = new JSONObject();
+            poJSON.put("result", "error");
+            poJSON.put("message", "No record loaded.");
+            return poJSON;
+        }
+        Country loParam = new ParamControllers(poGRider, logwrapr).Country();
+        poJSON = loParam.openRecord((String) poJSON.get("sCntryIDx"));
+        
+        if ("success".equals((String) poJSON.get("result"))){
+            poClient.setCitizenshipId(loParam.getModel().getCountryId());
+            poClient.Citizenship().setCountryId(loParam.getModel().getCountryId());
+            poClient.Citizenship().setDescription(loParam.getModel().getDescription());
+            poClient.Citizenship().setNationality(loParam.getModel().getNationality());
+        } else {
+            poClient.setCitizenshipId("");
+            poClient.Citizenship().setCountryId("");
+            poClient.Citizenship().setDescription("");
+            poClient.Citizenship().setNationality("");
+        }
+        
+        poJSON = new JSONObject();
+        poJSON.put("result", "success");
+        return poJSON;
+    }
+    
     public JSONObject searchProvince(int lnRow, String lsValue, boolean lbByCode) throws SQLException, GuanzonException{
         if (lsValue == null) lsValue = "";
         
@@ -758,20 +798,26 @@ public class ClientInfo extends Parameter{
             
             poJSON = poClient.setClientType(psClientTp);
             
+            //remove empty address
+            if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty()) {
+                paAddress.remove(paAddress.size() - 1);
+            }
+            
             //validate address
             switch (paAddress.size()) {
                 case 0:
                     addAddress();
                 case 1:
+                    //check last row's town id if set
                     if (paAddress.get(paAddress.size() - 1).getTownId().isEmpty()) {
                         poJSON.put("result", "error");
                         poJSON.put("message", "Town must have a value.");
                         return poJSON;
                     }
-
+                    //check last row's address if set
                     if (paAddress.get(paAddress.size() - 1).getAddress().isEmpty()) {
                         poJSON.put("result", "error");
-                        poJSON.put("message", "Address have a value.");
+                        poJSON.put("message", "Address must have a value.");
                         return poJSON;
                     }
             }
@@ -795,15 +841,17 @@ public class ClientInfo extends Parameter{
 
                 poClient.setCompanyName(lsName);
                 
-                //validate mobile
+                //remove empty mobile
                 if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) {
                     paMobile.remove(paMobile.size() - 1);
                 }
 
+                //validate mobile
                 switch (paMobile.size()) {
                     case 0:
                         addMobile();
                     case 1:
+                        //check last row's mobile if set
                         if (paMobile.get(paMobile.size() - 1).getMobileNo().isEmpty()) {
                             poJSON.put("result", "error");
                             poJSON.put("message", "Client must have a mobile number.");
@@ -811,14 +859,38 @@ public class ClientInfo extends Parameter{
                         }
                 }
                 
+                //remove empty email address
+                if (paMail.get(paMail.size() - 1).getMailAddress().isEmpty()) {
+                    paMail.remove(paMail.size() - 1);
+                }
+                
+                //validate email address
                 switch (paMail.size()) {
                    case 0:
                        addMail();
                    case 1:
-                       //check last row's full name if set
+                       //check last row's email address if set
                        if (Mail(paMail.size() - 1).getMailAddress().isEmpty()) {
                            poJSON.put("result", "error");
                            poJSON.put("message", "Email Address must have a value.");
+                           return poJSON;
+                       }
+               }
+                
+                //remove empty social medias
+                if (paSocMed.get(paSocMed.size() - 1).getAccount().isEmpty()) {
+                    paSocMed.remove(paSocMed.size() - 1);
+                }
+                
+                //validate social medias
+                switch (paSocMed.size()) {
+                   case 0:
+                       addSocMed();
+                   case 1:
+                       //check last row's social media if set
+                       if (SocMed(paSocMed.size() - 1).getAccount().isEmpty()) {
+                           poJSON.put("result", "error");
+                           poJSON.put("message", "Social Media must have a value.");
                            return poJSON;
                        }
                }
@@ -843,8 +915,14 @@ public class ClientInfo extends Parameter{
                     poJSON.put("message", "Invalid category code!");
                     return poJSON;
                 }
+                
+                //remove empty contact person
+                if (paContact.get(paContact.size() - 1).getContactPersonName().isEmpty() &&
+                        paContact.get(paContact.size() - 1).getMobileNo().isEmpty()) {
+                    paContact.remove(paContact.size() - 1);
+                }
 
-                //validate last row before saving
+                //validate contact person
                switch (paContact.size()) {
                    case 0:
                        addInstiContact();

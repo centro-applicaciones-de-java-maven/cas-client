@@ -1,6 +1,7 @@
 org\guanzon\cas\client\Client.class
 org\guanzon\cas\client\validator\ClientAccreditation_Car.class
 org\guanzon\cas\client\model\Model_AR_Client_Ledger.class
+org\guanzon\cas\client\constants\APPaymentConstants.class
 org\guanzon\cas\client\ClientGUI$3.class
 org\guanzon\cas\client\ClientGUI$6.class
 org\guanzon\cas\client\model\Model_AP_Client_Master.class
@@ -39,6 +40,7 @@ org\guanzon\cas\client\Client_Mail.class
 org\guanzon\cas\client\ClientGUI.class
 org\guanzon\cas\client\model\Model_Client_Institution_Contact.class
 org\guanzon\cas\client\model\Model_Client_Mail.class
+org\guanzon\cas\client\AP_Client_Bank_Account.class
 org\guanzon\cas\client\Client_Role.class
 org\guanzon\cas\client\table\models\ModelSocialMedia.class
 org\guanzon\cas\client\account\GlobalVariables.class
@@ -57,6 +59,7 @@ org\guanzon\cas\client\controller\InstitutionNewController$3.class
 org\guanzon\cas\client\model\Model_Client_Social_Media.class
 org\guanzon\cas\client\services\ClientModels.class
 org\guanzon\cas\client\controller\IndividualNewController$6.class
+org\guanzon\cas\client\model\Model_AP_Client_Bank_Account.class
 org\guanzon\cas\client\controller\InstitutionNewController.class
 org\guanzon\cas\client\validator\ClientAccreditation_Appliance.class
 org\guanzon\cas\client\validator\APClient_MainOffice.class
