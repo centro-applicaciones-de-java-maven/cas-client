@@ -4,6 +4,7 @@ D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\clien
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\controller\ClientMasterTransactionCompanyController.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\Client_Address.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\controller\AccountAccreditationController.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Department_Client.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Client_Mail.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\validator\ClientAccreditation_LP.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\model\Model_Account_Client_Accreditation.java
@@ -21,6 +22,7 @@ D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\clien
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\validator\ClientAccreditation_MC.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\model\ClientModels.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\Client_Institution_Contact.java
+D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\DepartmentAssignment.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\table\models\ModelEmail.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\validator\APClient_Monarch.java
 D:\Guanzon\GMC SEG Folder - Maven\cas-client\src\main\java\org\guanzon\cas\client\validator\APClient_MP.java
