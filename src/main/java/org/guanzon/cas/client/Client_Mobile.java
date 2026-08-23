@@ -3,6 +3,7 @@ package org.guanzon.cas.client;
 import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
@@ -47,6 +48,13 @@ public class Client_Mobile  extends Parameter{
     @Override
     public Model_Client_Mobile getModel() {
         return poModel;
+    }
+
+    @Override
+    protected void saveComplete() {
+        //Model_AR_Client_Master.ClientMobile() serves repeat lookups for this id from
+        //ReferenceCache - drop the stale snapshot now that the record has changed.
+        ReferenceCache.invalidate("Client_Mobile", poModel.getClientId());
     }
     
     @Override

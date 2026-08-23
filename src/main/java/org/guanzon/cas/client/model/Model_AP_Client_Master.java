@@ -8,10 +8,9 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.cas.parameter.model.Model_Category;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
-import org.guanzon.cas.client.services.ClientModels;
 import org.guanzon.cas.parameter.model.Model_Term;
 
 public class Model_AP_Client_Master extends Model {
@@ -60,14 +59,9 @@ public class Model_AP_Client_Master extends Model {
 
             ID = "sClientID";
 
-            //initialize other connections
-            ParamModels model = new ParamModels(poGRider);
-            poCategory = model.Category();
-
-            poClientMaster = new ClientModels(poGRider).ClientMaster();
-            poClientAddress = new ClientModels(poGRider).ClientAddress();
-            poClientInstitutionContact = new ClientModels(poGRider).ClientInstitutionContact();
-            poTerm = new ParamModels(poGRider).Term();
+            //poCategory/poClientMaster/poClientAddress/poClientInstitutionContact/poTerm are
+            //intentionally NOT constructed here - see the matching accessor methods below, which
+            //build each lazily on first access so opening this record never touches those tables.
 
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -266,10 +260,24 @@ public class Model_AP_Client_Master extends Model {
     }
 
     public Model_Category Category() throws SQLException, GuanzonException {
-        if (!"".equals(getValue("sCategrCd"))) {
-            
-            this.poJSON = this.poCategory.openRecord((String) getValue("sCategrCd"));
+        if (this.poCategory == null) {
+            this.poCategory = new Model_Category();
+            this.poCategory.setApplicationDriver(poGRider);
+            this.poCategory.setXML("Model_Category");
+            this.poCategory.setTableName("Category");
+            this.poCategory.initialize();
+        }
+
+        String categoryId = (String) getValue("sCategrCd");
+
+        if (!"".equals(categoryId)) {
+            if (ReferenceCache.tryLoad("Category", categoryId, this.poCategory)) {
+                return this.poCategory;
+            }
+
+            this.poJSON = this.poCategory.openRecord(categoryId);
             if ("success".equals(this.poJSON.get("result"))) {
+                ReferenceCache.store("Category", categoryId, this.poCategory);
                 return this.poCategory;
             }
             this.poCategory.initialize();
@@ -280,10 +288,24 @@ public class Model_AP_Client_Master extends Model {
     }
 
     public Model_Client_Master Client() throws SQLException, GuanzonException {
-        if (!"".equals(getValue("sClientID"))) {
-            
-            this.poJSON = this.poClientMaster.openRecord((String) getValue("sClientID"));
+        if (this.poClientMaster == null) {
+            this.poClientMaster = new Model_Client_Master();
+            this.poClientMaster.setApplicationDriver(poGRider);
+            this.poClientMaster.setXML("Model_Client_Master");
+            this.poClientMaster.setTableName("Client_Master");
+            this.poClientMaster.initialize();
+        }
+
+        String clientId = (String) getValue("sClientID");
+
+        if (!"".equals(clientId)) {
+            if (ReferenceCache.tryLoad("Client_Master", clientId, this.poClientMaster)) {
+                return this.poClientMaster;
+            }
+
+            this.poJSON = this.poClientMaster.openRecord(clientId);
             if ("success".equals(this.poJSON.get("result"))) {
+                ReferenceCache.store("Client_Master", clientId, this.poClientMaster);
                 return this.poClientMaster;
             }
             this.poClientMaster.initialize();
@@ -294,10 +316,24 @@ public class Model_AP_Client_Master extends Model {
     }
 
     public Model_Client_Address ClientAddress() throws SQLException, GuanzonException {
-        if (!"".equals(getValue("sAddrssID"))) {
-            
-            this.poJSON = this.poClientAddress.openRecord((String) getValue("sAddrssID"));
+        if (this.poClientAddress == null) {
+            this.poClientAddress = new Model_Client_Address();
+            this.poClientAddress.setApplicationDriver(poGRider);
+            this.poClientAddress.setXML("Model_Client_Address");
+            this.poClientAddress.setTableName("Client_Address");
+            this.poClientAddress.initialize();
+        }
+
+        String addressId = (String) getValue("sAddrssID");
+
+        if (!"".equals(addressId)) {
+            if (ReferenceCache.tryLoad("Client_Address", addressId, this.poClientAddress)) {
+                return this.poClientAddress;
+            }
+
+            this.poJSON = this.poClientAddress.openRecord(addressId);
             if ("success".equals(this.poJSON.get("result"))) {
+                ReferenceCache.store("Client_Address", addressId, this.poClientAddress);
                 return this.poClientAddress;
             }
             this.poClientAddress.initialize();
@@ -308,10 +344,24 @@ public class Model_AP_Client_Master extends Model {
     }
 
     public Model_Client_Institution_Contact ClientInstitutionContact() throws SQLException, GuanzonException {
-        if (!"".equals(getValue("sContctID"))) {
-            
-            this.poJSON = this.poClientInstitutionContact.openRecord((String) getValue("sContctID"));
+        if (this.poClientInstitutionContact == null) {
+            this.poClientInstitutionContact = new Model_Client_Institution_Contact();
+            this.poClientInstitutionContact.setApplicationDriver(poGRider);
+            this.poClientInstitutionContact.setXML("Model_Client_Institution_Contact_Person");
+            this.poClientInstitutionContact.setTableName("Client_Institution_Contact_Person");
+            this.poClientInstitutionContact.initialize();
+        }
+
+        String contactId = (String) getValue("sContctID");
+
+        if (!"".equals(contactId)) {
+            if (ReferenceCache.tryLoad("Client_Institution_Contact_Person", contactId, this.poClientInstitutionContact)) {
+                return this.poClientInstitutionContact;
+            }
+
+            this.poJSON = this.poClientInstitutionContact.openRecord(contactId);
             if ("success".equals(this.poJSON.get("result"))) {
+                ReferenceCache.store("Client_Institution_Contact_Person", contactId, this.poClientInstitutionContact);
                 return this.poClientInstitutionContact;
             }
             this.poClientInstitutionContact.initialize();
@@ -322,10 +372,24 @@ public class Model_AP_Client_Master extends Model {
     }
 
     public Model_Term Term() throws SQLException, GuanzonException {
-        if (!"".equals(getValue("sTermIDxx"))) {
-            
-            this.poJSON = this.poTerm.openRecord((String) getValue("sTermIDxx"));
+        if (this.poTerm == null) {
+            this.poTerm = new Model_Term();
+            this.poTerm.setApplicationDriver(poGRider);
+            this.poTerm.setXML("Model_Term");
+            this.poTerm.setTableName("Term");
+            this.poTerm.initialize();
+        }
+
+        String termId = (String) getValue("sTermIDxx");
+
+        if (!"".equals(termId)) {
+            if (ReferenceCache.tryLoad("Term", termId, this.poTerm)) {
+                return this.poTerm;
+            }
+
+            this.poJSON = this.poTerm.openRecord(termId);
             if ("success".equals(this.poJSON.get("result"))) {
+                ReferenceCache.store("Term", termId, this.poTerm);
                 return this.poTerm;
             }
             this.poTerm.initialize();

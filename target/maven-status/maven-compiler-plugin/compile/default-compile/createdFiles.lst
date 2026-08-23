@@ -57,6 +57,7 @@ org\guanzon\cas\client\validator\ClientAccreditation_LP.class
 org\guanzon\cas\client\Client_Master.class
 org\guanzon\cas\client\controller\InstitutionNewController$3.class
 org\guanzon\cas\client\model\Model_Client_Social_Media.class
+org\guanzon\cas\client\account\Accounts_Accreditation_Transaction.class
 org\guanzon\cas\client\services\ClientModels.class
 org\guanzon\cas\client\controller\IndividualNewController$6.class
 org\guanzon\cas\client\model\Model_AP_Client_Bank_Account.class

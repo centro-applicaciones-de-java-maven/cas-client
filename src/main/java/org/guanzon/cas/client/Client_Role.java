@@ -7,6 +7,7 @@ package org.guanzon.cas.client;
 import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.cas.client.model.Model_Corporate_Role;
@@ -34,6 +35,13 @@ public class Client_Role extends Parameter{
     @Override
     public Model_Corporate_Role getModel() {
         return poModel;
+    }
+
+    @Override
+    protected void saveComplete() {
+        //Model_Client_Institution_Contact.ContactRole() serves repeat lookups for this id from
+        //ReferenceCache - drop the stale snapshot now that the record has changed.
+        ReferenceCache.invalidate("Corporate_Role", poModel.getRoleIDxx());
     }
     
     @Override

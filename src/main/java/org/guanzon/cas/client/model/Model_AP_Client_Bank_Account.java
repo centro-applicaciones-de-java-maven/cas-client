@@ -12,8 +12,8 @@ import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
 import org.guanzon.appdriver.constant.RecordStatus;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.cas.parameter.model.Model_Banks;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 /**
@@ -50,8 +50,9 @@ public class Model_AP_Client_Bank_Account extends Model  {
 
             ID = "sAPBnkIDx";
 
-            poBanks = new ParamModels(poGRider).Banks();
-            
+            //poBanks is intentionally NOT constructed here - see Banks() below, which builds it
+            //lazily on first access so opening this record never touches the Banks table.
+
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -95,15 +96,31 @@ public class Model_AP_Client_Bank_Account extends Model  {
     }
     
     public Model_Banks Banks() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sBankIDxx"))){
-            if (poBanks.getEditMode() == EditMode.READY && 
-                poBanks.getBankID().equals((String) getValue("sBankIDxx")))
+        if (poBanks == null) {
+            poBanks = new Model_Banks();
+            poBanks.setApplicationDriver(poGRider);
+            poBanks.setXML("Model_Banks");
+            poBanks.setTableName("Banks");
+            poBanks.initialize();
+        }
+
+        String bankId = (String) getValue("sBankIDxx");
+
+        if (!"".equals(bankId)){
+            if (poBanks.getEditMode() == EditMode.READY &&
+                poBanks.getBankID().equals(bankId))
                 return poBanks;
             else{
-                poJSON = poBanks.openRecord((String) getValue("sBankIDxx"));
-
-                if ("success".equals((String) poJSON.get("result")))
+                if (ReferenceCache.tryLoad("Banks", bankId, poBanks)) {
                     return poBanks;
+                }
+
+                poJSON = poBanks.openRecord(bankId);
+
+                if ("success".equals((String) poJSON.get("result"))){
+                    ReferenceCache.store("Banks", bankId, poBanks);
+                    return poBanks;
+                }
                 else {
                     poBanks.initialize();
                     return poBanks;
