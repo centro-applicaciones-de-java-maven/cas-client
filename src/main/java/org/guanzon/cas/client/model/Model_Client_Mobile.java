@@ -52,15 +52,11 @@ public class Model_Client_Mobile extends Model{
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
-            
-            //initialize other connections
-            poClient = new Model_Client_Master();
-            poClient.setApplicationDriver(poGRider);
-            poClient.setXML("Model_Client_Master");
-            poClient.setTableName("Client_Master");
-            poClient.initialize();
-            //end - initialize other connections
-            
+
+            //poClient is intentionally NOT constructed here - see Client() below, which builds
+            //it lazily on first access. NOTE: Client() has no FK-driven fetch logic today (it
+            //never called openRecord() even before this change) - only construction was moved.
+
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -179,6 +175,13 @@ public class Model_Client_Mobile extends Model{
     }
     
     public Model_Client_Master Client() throws SQLException, GuanzonException{
+        if (poClient == null) {
+            poClient = new Model_Client_Master();
+            poClient.setApplicationDriver(poGRider);
+            poClient.setXML("Model_Client_Master");
+            poClient.setTableName("Client_Master");
+            poClient.initialize();
+        }
         return poClient;
     }
 }

@@ -47,21 +47,13 @@ public class Model_Client_Master extends Model{
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
-            
-            //initialize other connections
-            poTownCity = new Model_TownCity();
-            poTownCity.setApplicationDriver(poGRider);
-            poTownCity.setXML("Model_TownCity");
-            poTownCity.setTableName("TownCity");
-            poTownCity.initialize();
-            
-            poCountry = new Model_Country();
-            poCountry.setApplicationDriver(poGRider);
-            poCountry.setXML("Model_Country");
-            poCountry.setTableName("Country");
-            poCountry.initialize();
-            //end - initialize other connections
-            
+
+            //poTownCity/poCountry are intentionally NOT constructed here - see BirthTown()/
+            //Citizenship() below. NOTE: neither accessor (nor any setter in this class) has ever
+            //loaded these by FK - setBirthPlaceId()/setCitizenshipId() only set the plain column,
+            //they don't sync poTownCity/poCountry. Only construction is made lazy here; no new
+            //fetch behavior is added.
+
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -284,10 +276,24 @@ public class Model_Client_Master extends Model{
     }
     
     public Model_TownCity BirthTown() throws SQLException, GuanzonException{
+        if (poTownCity == null) {
+            poTownCity = new Model_TownCity();
+            poTownCity.setApplicationDriver(poGRider);
+            poTownCity.setXML("Model_TownCity");
+            poTownCity.setTableName("TownCity");
+            poTownCity.initialize();
+        }
         return poTownCity;
     }
-    
+
     public Model_Country Citizenship() throws SQLException, GuanzonException{
+        if (poCountry == null) {
+            poCountry = new Model_Country();
+            poCountry.setApplicationDriver(poGRider);
+            poCountry.setXML("Model_Country");
+            poCountry.setTableName("Country");
+            poCountry.initialize();
+        }
         return poCountry;
     }
 }

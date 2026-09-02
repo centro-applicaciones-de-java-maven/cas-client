@@ -35,15 +35,11 @@ public class Model_Client_Mail extends Model{
             poEntity.absolute(1);
 
             ID = poEntity.getMetaData().getColumnLabel(1);
-            
-            //initialize other connections
-            poClient = new Model_Client_Master();
-            poClient.setApplicationDriver(poGRider);
-            poClient.setXML("Model_Client_Master");
-            poClient.setTableName("Model_Client_Master");
-            poClient.initialize();
-            //end - initialize other connections
-            
+
+            //poClient is intentionally NOT constructed here - see Client() below, which builds
+            //it lazily on first access. NOTE: Client() has no FK-driven fetch logic today (it
+            //never called openRecord() even before this change) - only construction was moved.
+
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -113,6 +109,17 @@ public class Model_Client_Mail extends Model{
     }
     
     public Model_Client_Master Client() throws SQLException, GuanzonException{
+        if (poClient == null) {
+            poClient = new Model_Client_Master();
+            poClient.setApplicationDriver(poGRider);
+            poClient.setXML("Model_Client_Master");
+            //NOTE: pre-existing bug kept as-is (not introduced by this change, flagged
+            //separately) - this should be "Client_Master" like every other class's Client field,
+            //not "Model_Client_Master". Harmless today since this accessor never calls
+            //openRecord() (see class-level note above), but worth fixing if that ever changes.
+            poClient.setTableName("Model_Client_Master");
+            poClient.initialize();
+        }
         return poClient;
     }
 }

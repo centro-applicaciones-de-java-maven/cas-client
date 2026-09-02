@@ -7,6 +7,7 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.json.simple.JSONObject;
 
@@ -38,19 +39,9 @@ public class Model_Client_Institution_Contact extends Model{
 
             ID = poEntity.getMetaData().getColumnLabel(1);
             
-            //initialize other connections
-            poClient = new Model_Client_Master();
-            poClient.setApplicationDriver(poGRider);
-            poClient.setXML("Model_Client_Master");
-            poClient.setTableName("Client_Master");
-            poClient.initialize();
-            
-            poRole = new Model_Corporate_Role();
-            poRole.setApplicationDriver(poGRider);
-            poRole.setXML("Model_Corporate_Role");
-            poRole.setTableName("Corporate_Role");
-            poRole.initialize();
-            //end - initialize other connections
+            //poClient/poRole are intentionally NOT constructed here - see the matching accessor
+            //methods below, which build each lazily on first access so opening this record never
+            //touches those tables.
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -233,13 +224,38 @@ public class Model_Client_Institution_Contact extends Model{
     }
     
     public Model_Client_Master Client() throws SQLException, GuanzonException{
+        //No FK-driven fetch logic exists for this accessor today (it never called openRecord()
+        //even before this change) - only its construction is made lazy here, since there is
+        //nothing to cache.
+        if (poClient == null) {
+            poClient = new Model_Client_Master();
+            poClient.setApplicationDriver(poGRider);
+            poClient.setXML("Model_Client_Master");
+            poClient.setTableName("Client_Master");
+            poClient.initialize();
+        }
         return poClient;
     }
-    
+
     public Model_Corporate_Role ContactRole() throws SQLException, GuanzonException{
-        if (!"".equals(getValue("sRoleIDxx"))) {
-            this.poJSON = this.poRole.openRecord((String) getValue("sRoleIDxx"));
+        if (poRole == null) {
+            poRole = new Model_Corporate_Role();
+            poRole.setApplicationDriver(poGRider);
+            poRole.setXML("Model_Corporate_Role");
+            poRole.setTableName("Corporate_Role");
+            poRole.initialize();
+        }
+
+        String roleId = (String) getValue("sRoleIDxx");
+
+        if (!"".equals(roleId)) {
+            if (ReferenceCache.tryLoad("Corporate_Role", roleId, this.poRole)) {
+                return this.poRole;
+            }
+
+            this.poJSON = this.poRole.openRecord(roleId);
             if ("success".equals(this.poJSON.get("result"))) {
+                ReferenceCache.store("Corporate_Role", roleId, this.poRole);
                 return this.poRole;
             }
             return poRole;

@@ -1,4 +1,5 @@
 testAccountAccreditation.class
+testLazyLoadSmoke.class
 testClient.class
 GUI_IndividualNew.class
 testAPClientMaster.class

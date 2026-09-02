@@ -7,6 +7,7 @@ import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
 import org.guanzon.appdriver.constant.Logical;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.constant.RecordStatus;
 import org.guanzon.cas.parameter.model.Model_Barangay;
 import org.guanzon.cas.parameter.model.Model_TownCity;
@@ -47,25 +48,9 @@ public class Model_Client_Address extends Model{
 
             ID = ("sAddrssID");
             
-            //initialize other connections
-            poTownCity = new Model_TownCity();
-            poTownCity.setApplicationDriver(poGRider);
-            poTownCity.setXML("Model_TownCity");
-            poTownCity.setTableName("TownCity");
-            poTownCity.initialize();
-            
-            poClient = new Model_Client_Master();
-            poClient.setApplicationDriver(poGRider);
-            poClient.setXML("Model_Client_Master");
-            poClient.setTableName("Client_Master");
-            poClient.initialize();
-            
-            poBarangay = new Model_Barangay();
-            poBarangay.setApplicationDriver(poGRider);
-            poBarangay.setXML("Model_Barangay");
-            poBarangay.setTableName("Barangay");
-            poBarangay.initialize();
-            //end - initialize other connections
+            //poTownCity/poClient/poBarangay are intentionally NOT constructed here - see the
+            //matching accessor methods below, which build each lazily on first access so opening
+            //this record never touches those tables.
             
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
@@ -234,14 +219,29 @@ public class Model_Client_Address extends Model{
     }
     
     public Model_Barangay Barangay() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sBrgyIDxx"))) {
+        if (poBarangay == null) {
+            poBarangay = new Model_Barangay();
+            poBarangay.setApplicationDriver(poGRider);
+            poBarangay.setXML("Model_Barangay");
+            poBarangay.setTableName("Barangay");
+            poBarangay.initialize();
+        }
+
+        String barangayId = (String) getValue("sBrgyIDxx");
+
+        if (!"".equals(barangayId)) {
             if (poBarangay.getEditMode() == EditMode.READY
-                    && poBarangay.getBarangayId().equals((String) getValue("sBrgyIDxx"))) {
+                    && poBarangay.getBarangayId().equals(barangayId)) {
                 return poBarangay;
             } else {
-                poJSON = poBarangay.openRecord((String) getValue("sBrgyIDxx"));
+                if (ReferenceCache.tryLoad("Barangay", barangayId, poBarangay)) {
+                    return poBarangay;
+                }
+
+                poJSON = poBarangay.openRecord(barangayId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Barangay", barangayId, poBarangay);
                     return poBarangay;
                 } else {
                     poBarangay.initialize();
@@ -252,27 +252,31 @@ public class Model_Client_Address extends Model{
             poBarangay.initialize();
             return poBarangay;
         }
-        
-        
-//        if (!"".equals(getValue("sBrgyIDxx"))) {
-//            
-//            this.poJSON = this.poBarangay.openRecord((String) getValue("sBrgyIDxx"));
-//            if ("success".equals(this.poJSON.get("result"))) {
-//                return this.poBarangay;
-//            }
-//        }
-//        return this.poBarangay;
     }
-    
+
     public Model_TownCity Town() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sTownIDxx"))) {
-            
+        if (poTownCity == null) {
+            poTownCity = new Model_TownCity();
+            poTownCity.setApplicationDriver(poGRider);
+            poTownCity.setXML("Model_TownCity");
+            poTownCity.setTableName("TownCity");
+            poTownCity.initialize();
+        }
+
+        String townId = (String) getValue("sTownIDxx");
+
+        if (!"".equals(townId)) {
             if (poTownCity.getEditMode() == EditMode.READY
-                    && poTownCity.getTownId().equals((String) getValue("sTownIDxx"))) {
+                    && poTownCity.getTownId().equals(townId)) {
                 return poTownCity;
             } else {
-                poJSON = poTownCity.openRecord((String) getValue("sTownIDxx"));
+                if (ReferenceCache.tryLoad("TownCity", townId, poTownCity)) {
+                    return poTownCity;
+                }
+
+                poJSON = poTownCity.openRecord(townId);
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("TownCity", townId, poTownCity);
                     return poTownCity;
                 } else {
                     poTownCity.initialize();
@@ -282,22 +286,27 @@ public class Model_Client_Address extends Model{
         } else {
             return poTownCity;
         }
-        
-//        if (!"".equals(getValue("sTownIDxx"))) {
-//            
-//            this.poJSON = this.poTownCity.openRecord((String) getValue("sTownIDxx"));
-//            if ("success".equals(this.poJSON.get("result"))) {
-//                return this.poTownCity;
-//            }
-//        }
-//        return this.poTownCity;
     }
-    
+
     public Model_Client_Master Client() throws SQLException, GuanzonException{
-        if (!"".equals(getValue("sClientID"))) {
-            
-            this.poJSON = this.poClient.openRecord((String) getValue("sClientID"));
+        if (poClient == null) {
+            poClient = new Model_Client_Master();
+            poClient.setApplicationDriver(poGRider);
+            poClient.setXML("Model_Client_Master");
+            poClient.setTableName("Client_Master");
+            poClient.initialize();
+        }
+
+        String clientId = (String) getValue("sClientID");
+
+        if (!"".equals(clientId)) {
+            if (ReferenceCache.tryLoad("Client_Master", clientId, this.poClient)) {
+                return this.poClient;
+            }
+
+            this.poJSON = this.poClient.openRecord(clientId);
             if ("success".equals(this.poJSON.get("result"))) {
+                ReferenceCache.store("Client_Master", clientId, this.poClient);
                 return this.poClient;
             }
         }

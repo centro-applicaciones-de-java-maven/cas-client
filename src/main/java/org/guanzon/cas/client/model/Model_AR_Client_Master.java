@@ -3,6 +3,7 @@ package org.guanzon.cas.client.model;
 import java.sql.SQLException;
 import java.util.Date;
 import org.guanzon.appdriver.agent.services.Model;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.base.CommonUtils;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
@@ -47,38 +48,10 @@ public class Model_AR_Client_Master extends Model{
 
             ID = "sClientID";
             
-            //initialize reference objects
-            poTerm = new Model_Term();
-            poTerm.setApplicationDriver(poGRider);
-            poTerm.setXML("Model_Term");
-            poTerm.setTableName("Term");
-            poTerm.initialize();
-            
-            poClientMaster = new Model_Client_Master();
-            poClientMaster.setApplicationDriver(poGRider);
-            poClientMaster.setXML("Model_Client_Master");
-            poClientMaster.setTableName("Client_Master");
-            poClientMaster.initialize();
-            
-            poClientAddress = new Model_Client_Address();
-            poClientAddress.setApplicationDriver(poGRider);
-            poClientAddress.setXML("Model_Client_Address");
-            poClientAddress.setTableName("Client_Address");
-            poClientAddress.initialize();
-            
-            poClientInstitutionContact = new Model_Client_Institution_Contact();
-            poClientInstitutionContact.setApplicationDriver(poGRider);
-            poClientInstitutionContact.setXML("Model_Client_Institution_Contact_Person");
-            poClientInstitutionContact.setTableName("Client_Institution_Contact_Person");
-            poClientInstitutionContact.initialize();
-            
-            poClientMobile = new Model_Client_Mobile();
-            poClientMobile.setApplicationDriver(poGRider);
-            poClientMobile.setXML("Model_Client_Mobile");
-            poClientMobile.setTableName("Client_Mobile");
-            poClientMobile.initialize();
-            //end - initialize reference objects
-            
+            //poTerm/poClientMaster/poClientAddress/poClientInstitutionContact/poClientMobile are
+            //intentionally NOT constructed here - see the matching accessor methods below, which
+            //build each lazily on first access so opening this record never touches those tables.
+
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -229,14 +202,29 @@ public class Model_AR_Client_Master extends Model{
     
     //reference object models
     public Model_Term Term() throws SQLException, GuanzonException{
-        if (!"".equals((String) getValue("sTermIDxx"))) {
+        if (poTerm == null) {
+            poTerm = new Model_Term();
+            poTerm.setApplicationDriver(poGRider);
+            poTerm.setXML("Model_Term");
+            poTerm.setTableName("Term");
+            poTerm.initialize();
+        }
+
+        String termId = (String) getValue("sTermIDxx");
+
+        if (!"".equals(termId)) {
             if (poTerm.getEditMode() == EditMode.READY
-                    && poTerm.getTermId().equals((String) getValue("sTermIDxx"))) {
+                    && poTerm.getTermId().equals(termId)) {
                 return poTerm;
             } else {
-                poJSON = poTerm.openRecord((String) getValue("sTermIDxx"));
+                if (ReferenceCache.tryLoad("Term", termId, poTerm)) {
+                    return poTerm;
+                }
+
+                poJSON = poTerm.openRecord(termId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Term", termId, poTerm);
                     return poTerm;
                 } else {
                     poTerm.initialize();
@@ -248,16 +236,31 @@ public class Model_AR_Client_Master extends Model{
             return poTerm;
         }
     }
-        
-    public Model_Client_Master Client() throws SQLException, GuanzonException{    
-        if (!"".equals((String) getValue("sClientID"))) {
+
+    public Model_Client_Master Client() throws SQLException, GuanzonException{
+        if (poClientMaster == null) {
+            poClientMaster = new Model_Client_Master();
+            poClientMaster.setApplicationDriver(poGRider);
+            poClientMaster.setXML("Model_Client_Master");
+            poClientMaster.setTableName("Client_Master");
+            poClientMaster.initialize();
+        }
+
+        String clientId = (String) getValue("sClientID");
+
+        if (!"".equals(clientId)) {
             if (poClientMaster.getEditMode() == EditMode.READY
-                    && poClientMaster.getClientId().equals((String) getValue("sClientID"))) {
+                    && poClientMaster.getClientId().equals(clientId)) {
                 return poClientMaster;
             } else {
-                poJSON = poClientMaster.openRecord((String) getValue("sClientID"));
+                if (ReferenceCache.tryLoad("Client_Master", clientId, poClientMaster)) {
+                    return poClientMaster;
+                }
+
+                poJSON = poClientMaster.openRecord(clientId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Client_Master", clientId, poClientMaster);
                     return poClientMaster;
                 } else {
                     poClientMaster.initialize();
@@ -269,19 +272,36 @@ public class Model_AR_Client_Master extends Model{
             return poClientMaster;
         }
     }
-    
+
+    //NOTE: pre-existing bug kept as-is (not introduced by this change, flagged separately) -
+    //the cache-match check below compares poClientAddress.getClientId() (the WRONG id-getter for
+    //this child) against getValue("sAddrssID"), instead of checking the address's own id.
     public Model_Client_Address ClientAddress() throws SQLException, GuanzonException{
+        if (poClientAddress == null) {
+            poClientAddress = new Model_Client_Address();
+            poClientAddress.setApplicationDriver(poGRider);
+            poClientAddress.setXML("Model_Client_Address");
+            poClientAddress.setTableName("Client_Address");
+            poClientAddress.initialize();
+        }
+
+        String addressId = (String) getValue("sAddrssID");
+
         if (!"".equals((String) getValue("sClientID"))) {
             if (poClientAddress.getEditMode() == EditMode.READY
-                    && poClientAddress.getClientId().equals((String) getValue("sAddrssID"))) {
+                    && poClientAddress.getClientId().equals(addressId)) {
                 return poClientAddress;
             } else {
-                
+                if (ReferenceCache.tryLoad("Client_Address", addressId, poClientAddress)) {
+                    return poClientAddress;
+                }
+
                 System.out.println("before = " + (String) poJSON.get("result"));
-                poJSON = poClientAddress.openRecord((String) getValue("sAddrssID"));
-                
+                poJSON = poClientAddress.openRecord(addressId);
+
                 System.out.println("after = " + (String) poJSON.get("result"));
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Client_Address", addressId, poClientAddress);
                     return poClientAddress;
                 } else {
                     poClientAddress.initialize();
@@ -293,18 +313,35 @@ public class Model_AR_Client_Master extends Model{
             return poClientAddress;
         }
     }
-    
+
+    //NOTE: pre-existing bug kept as-is (not introduced by this change, flagged separately) -
+    //the cache-match check below compares poClientInstitutionContact.getClientId() (the WRONG
+    //id-getter for this child) against getValue("sContctID"), instead of checking its own id.
     public Model_Client_Institution_Contact ClientInstitutionContact() throws SQLException, GuanzonException{
-        
-            System.out.println("Client_Institution_Contact == " + (String) getValue("sClientID"));
+        if (poClientInstitutionContact == null) {
+            poClientInstitutionContact = new Model_Client_Institution_Contact();
+            poClientInstitutionContact.setApplicationDriver(poGRider);
+            poClientInstitutionContact.setXML("Model_Client_Institution_Contact_Person");
+            poClientInstitutionContact.setTableName("Client_Institution_Contact_Person");
+            poClientInstitutionContact.initialize();
+        }
+
+        String contactId = (String) getValue("sContctID");
+
+        System.out.println("Client_Institution_Contact == " + (String) getValue("sClientID"));
         if (!"".equals((String) getValue("sClientID"))) {
             if (poClientInstitutionContact.getEditMode() == EditMode.READY
-                    && poClientInstitutionContact.getClientId().equals((String) getValue("sContctID"))) {
+                    && poClientInstitutionContact.getClientId().equals(contactId)) {
                 return poClientInstitutionContact;
             } else {
-                poJSON = poClientInstitutionContact.openRecord((String) getValue("sContctID"));
+                if (ReferenceCache.tryLoad("Client_Institution_Contact_Person", contactId, poClientInstitutionContact)) {
+                    return poClientInstitutionContact;
+                }
+
+                poJSON = poClientInstitutionContact.openRecord(contactId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Client_Institution_Contact_Person", contactId, poClientInstitutionContact);
                     return poClientInstitutionContact;
                 } else {
                     poClientInstitutionContact.initialize();
@@ -316,17 +353,32 @@ public class Model_AR_Client_Master extends Model{
             return poClientInstitutionContact;
         }
     }
-    
-        public Model_Client_Mobile ClientMobile() throws SQLException, GuanzonException{
-            System.out.println("mobile == " + (String) getValue("sClientID"));
-        if (!"".equals((String) getValue("sClientID"))) {
+
+    public Model_Client_Mobile ClientMobile() throws SQLException, GuanzonException{
+        if (poClientMobile == null) {
+            poClientMobile = new Model_Client_Mobile();
+            poClientMobile.setApplicationDriver(poGRider);
+            poClientMobile.setXML("Model_Client_Mobile");
+            poClientMobile.setTableName("Client_Mobile");
+            poClientMobile.initialize();
+        }
+
+        String clientId = (String) getValue("sClientID");
+
+        System.out.println("mobile == " + clientId);
+        if (!"".equals(clientId)) {
             if (poClientMobile.getEditMode() == EditMode.READY
-                    && poClientMobile.getClientId().equals((String) getValue("sClientID"))) {
+                    && poClientMobile.getClientId().equals(clientId)) {
                 return poClientMobile;
             } else {
-                poJSON = poClientMobile.openRecord((String) getValue("sClientID"));
+                if (ReferenceCache.tryLoad("Client_Mobile", clientId, poClientMobile)) {
+                    return poClientMobile;
+                }
+
+                poJSON = poClientMobile.openRecord(clientId);
 
                 if ("success".equals((String) poJSON.get("result"))) {
+                    ReferenceCache.store("Client_Mobile", clientId, poClientMobile);
                     return poClientMobile;
                 } else {
                     poClientMobile.initialize();

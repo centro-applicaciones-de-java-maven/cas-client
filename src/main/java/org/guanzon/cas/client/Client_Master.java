@@ -3,6 +3,7 @@ package org.guanzon.cas.client;
 import java.sql.SQLException;
 import org.guanzon.appdriver.agent.ShowDialogFX;
 import org.guanzon.appdriver.agent.services.Parameter;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.base.SQLUtil;
@@ -77,6 +78,13 @@ public class Client_Master extends Parameter {
     @Override
     public Model_Client_Master getModel() {
         return poModel;
+    }
+
+    @Override
+    protected void saveComplete() {
+        //Every lazy Client() accessor across the model layer serves repeat lookups for this id
+        //from ReferenceCache - drop the stale snapshot now that the record has changed.
+        ReferenceCache.invalidate("Client_Master", poModel.getClientId());
     }
 
     @Override

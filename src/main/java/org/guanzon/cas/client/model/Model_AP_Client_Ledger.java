@@ -7,8 +7,8 @@ import org.guanzon.appdriver.agent.services.Model;
 import org.guanzon.appdriver.base.GuanzonException;
 import org.guanzon.appdriver.base.MiscUtil;
 import org.guanzon.appdriver.constant.EditMode;
+import org.guanzon.appdriver.agent.services.ReferenceCache;
 import org.guanzon.cas.parameter.model.Model_xxxTransactionSource;
-import org.guanzon.cas.parameter.services.ParamModels;
 import org.json.simple.JSONObject;
 
 public class Model_AP_Client_Ledger extends Model {
@@ -44,11 +44,9 @@ public class Model_AP_Client_Ledger extends Model {
             ID3 = "sSourceCd";
             ID4 = "sSourceNo";
 
-            //initialize reference objects
-            
-
-            this.poTransactionSource = (new ParamModels(this.poGRider)).TransactionSource();
-            //end - initialize reference objects
+            //poTransactionSource is intentionally NOT constructed here - see TransactionSource()
+            //below, which builds it lazily on first access so opening this record never touches
+            //the xxxTransactionSource table.
             pnEditMode = EditMode.UNKNOWN;
         } catch (SQLException e) {
             logwrapr.severe(e.getMessage());
@@ -139,13 +137,27 @@ public class Model_AP_Client_Ledger extends Model {
     }
     
         public Model_xxxTransactionSource TransactionSource() throws SQLException, GuanzonException {
-        if (!"".equals(getValue("sSourceCd"))) {
+        if (this.poTransactionSource == null) {
+            this.poTransactionSource = new Model_xxxTransactionSource();
+            this.poTransactionSource.setApplicationDriver(poGRider);
+            this.poTransactionSource.setXML("Model_xxxTransactionSource");
+            this.poTransactionSource.setTableName("xxxTransactionSource");
+            this.poTransactionSource.initialize();
+        }
+
+        String sourceCode = (String) getValue("sSourceCd");
+
+        if (!"".equals(sourceCode)) {
             if (this.poTransactionSource.getEditMode() == 1 && this.poTransactionSource
-                    .getSourceCode().equals(getValue("sSourceCd"))) {
+                    .getSourceCode().equals(sourceCode)) {
                 return this.poTransactionSource;
             }
-            this.poJSON = this.poTransactionSource.openRecord((String) getValue("sSourceCd"));
+            if (ReferenceCache.tryLoad("xxxTransactionSource", sourceCode, this.poTransactionSource)) {
+                return this.poTransactionSource;
+            }
+            this.poJSON = this.poTransactionSource.openRecord(sourceCode);
             if ("success".equals(this.poJSON.get("result"))) {
+                ReferenceCache.store("xxxTransactionSource", sourceCode, this.poTransactionSource);
                 return this.poTransactionSource;
             }
             this.poTransactionSource.initialize();
